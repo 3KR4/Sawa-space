@@ -1,42 +1,1070 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
-}
-
-a {
-  color: inherit;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-padding-top: 2rem;
+  scroll-behavior: smooth;
+  list-style: none;
   text-decoration: none;
 }
+:root {
+  --body-color:   #ffffff;
+  --main-color:   #ff8e31;
+  --second-color:   #ccebff;
+  --third-color:   #ffc187;
+  --title-color:   #454545;
+  --second-section-color:#d5d5d5;
+  --paragraph-color : #858585;
+  --section-color: #f1f1f1;
+  --section-color2:#ffffff;
+  --border-color: #d4d4d4;
+  --red-color: #df3a3a;
+  --box-shadow: rgb(0 0 0 / 17%) 0px 0px 23px -5px;
+  --back-grident: linear-gradient(60deg, #ff9b30 30%, #ff6b14 93%);
+}
+body.dark {
+  --body-color:   #171918;
+  --title-color:   #c8c8c8;
+  --second-section-color:#fff;
+  --paragraph-color :   #909090;
+  --section-color:#212121;
+  --section-color2:#171918;
+  --border-color: #525252;
+  --box-shadow: rgb(0 0 0 / 24%) 0px 0px 23px -5px;
+}
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+body {
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  font-family: 'Rubik', sans-serif;
+  background-color: var(--body-color) !important;
+}  
+
+.App {
+  display: flex;
+  gap: 10px;
+  color: white;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 5rem;
+}
+
+/* Mozilla browsers (Firefox) */
+::-moz-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+::-moz-scrollbar-track {
+  background: transparent;
+}
+::-moz-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 5rem;
+}
+
+/* Microsoft browsers (Edge, IE) */
+::-ms-scrollbar {
+  width: 6px;
+  height: 8px;
+}
+::-ms-scrollbar-track {
+  background: transparent;
+}
+::-ms-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+a {
+  text-decoration: none;
+}                                                                   
+h1,h2,h3,h4,h5,h6,li,svg,a {
+  margin: 0;
+  padding: 0;
+  color: var(--title-color);
+}
+svg{
+  transition: 0.3s;
+  cursor: pointer;
+}
+p {
+  margin: 0;
+  padding: 0;
+  color: var(--paragraph-color);
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding:0;
+}
+hr {
+  background: var(--border-color);
+  height: 2px;
+  border: none;
+}
+input {
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--title-color);
+  background: transparent;
+  font-family: cairo;
+}
+body.ar input {
+  direction: rtl;
+  font-size: 14px !important;
+}
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Small */
+@media (min-width: 768px) {
+  .container {
+    width: 800px;
   }
+}
+/* Medium */
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+/* Large */
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+@media (min-width: 1600px) {
+  .container {
+    width: 1470px;
+  }
+}
+
+body > main {
+  flex: 1;
+}
+
+.chats {
+  background: var(--body-color);
+  width: 334px;
+  border-radius: 11px;
+  padding: 13px 0;
+  height: 97vh;
+  position: sticky;
+  top: 0;
+  transition: 0.3s;
+  outline: 2px solid #e8e8e8;
+  z-index: 10;
+}
+body:has(.pirsonChat) .chats .userMenu {
+  top: 15%;
+}
+.chats .open-close {
+  position: absolute;
+  top: 50%;
+  color: white;
+  transform: translateY(-50%);
+  background: var(--back-grident);
+  border-radius: 0px 15px 15px 0px;
+  height: 45px;
+  padding: 6px;
+  width: 9px;
+  right: -12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: right 0.2s, width 0.3s;
+}
+.chats .open-close:hover,
+.chats.hide:hover .open-close {
+  width: 27px;
+  right: -27px;
+  transition: right 0.4s, width 0.3s;
+}
+.chats .open-close svg {
+  color: white;
+  font-size: 18px;
+}
+.chats .top {
+  display: flex;
+  gap: 19px;
+  margin-bottom: 12px;
+  align-items: center;
+  padding: 0px 19px;
+}
+.chats .top h4 {
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.search-holder {
+  position: relative;
+  flex: 1;
+}
+.chats .search-holder input {
+  padding: 4px 33px 4px 34px !important;
+  width: 100% !important;
+}
+
+.chats hr {
+  margin: 13px 0 12px;
+  padding: 0px 19px;
+}
+
+.chats .filters {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 16px;
+  gap: 5px;
+  padding: 0px 19px;
+}
+.chats .filters li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 35px;
+  overflow: hidden;
+  transition: 0.35s;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.chats .filters li.active,
+.chats .filters li:hover {
+  width: 97px !important;
+  border-radius: 5px;
+  color: white;
+  background: var(--back-grident);
+}
+.chats .filters li.active {
+  background: var(--main-color);
+}
+.chats .filters li.active svg,
+.chats .filters li:hover svg {
+  color: white;
+}
+.chats .filters:has(li:not(.active):hover) li.active {
+  width: 35px !important;
+  background: transparent;
+}
+.chats .filters:has(li:not(.active):hover) li.active svg {
+  color: var(--title-color);
+}
+.chats .filters li:nth-child(3).active,
+.chats .filters li:nth-child(3):hover {
+  width: 108px !important;
+}
+.chats .filters li:first-child.active,
+.chats .filters li:first-child:hover {
+  width: 105px !important;
+}
+.chats .filters li svg {
+  min-width: 23px;
+  min-height: 23px;
+}
+.chats .filters li:nth-child(5) svg {
+  min-width: 25px;
+  min-height: 17px;
+}
+.chats .holder {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  overflow-y: auto;
+  max-height: 84vh;
+  overflow-x: hidden;
+}
+.chats .chat {
+  display: flex;
+  align-items: center;
+  width: 320px;
+  transition: 0.3s;
+  border-radius: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.chats .chat:hover {
+  background: var(--border-color);
+}
+.chats .chat img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+.chats .chat .name-lastmessage {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 10px;
+  transition: 0.3s;
+}
+.chats .chat .name-lastmessage p {
+  width: 194px;
+}
+.chats .chat .details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.chats .chat .details span {
+  color: var(--title-color);
+  font-weight: 500;
+  width: max-content;
+}
+.chats .chat .details span.count {
+  background: var(--back-grident);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: rgb(44, 44, 44);
+  font-size: 12px;
+  transition: 0.3s;
+  color: white;
+}
+.chats .chatico {
+  display: none;
+}
+
+.chats .userMenu {
+  position: absolute;
+  right: -168px;
+  top: 13%;
+  background: var(--section-color);
+  border-radius: 7px;
+  overflow: hidden;
+  width: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  box-shadow: 0px 0px 8px 1px #d1d1d1;
+}
+.chats .userMenu.active {
+  right: -185px;
+  opacity: 1;
+  visibility: visible;
+}
+.chats .userMenu .top {
+  justify-content: space-between;
+  padding: 10px 13px 10px 15px;
+  margin: 0;
+  margin-bottom: 0;
+  background: var(--back-grident);
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+}
+.chats .userMenu .top svg {
+  color: white;
+  font-size: 19px;
+}
+.chats .userMenu ul {
+  padding: 6px;
+}
+.chats .userMenu li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+  cursor: pointer;
+}
+.chats .userMenu li:hover {
+  background: var(--border-color);
+}
+.chats .userMenu li.danger:hover {
+  color: white;
+  background-color: var(--red-color);
+}
+.chats .userMenu li.danger:hover svg {
+  color: white;
+}
+.chats .userMenu li svg {
+  transform: translateY(1px);
+  font-size: 17px;
+}
+
+
+
+
+
+.chats.hide .chat {
+  width: 46px;
+  min-height: 53px;
+  overflow: hidden;
+  padding: 7px 0;
+  position: relative;
+}
+.chats.hide .chat .details span.count {
+  font-size: 12px;
+  position: absolute;
+  left: -4px;
+  top: 0;
+  padding: 1px 4px;
+}
+.chats.hide .name-lastmessage, 
+.chats.hide .details span:first-child {
+  opacity: 0;
+  visibility: hidden;
+}
+.chats.hide .filters,
+.chats.hide .search-holder,
+.chats.hide .top h4 {
+  display: none;
+}
+.chats.hide {
+  min-width: unset;
+  width: 60px;
+  padding: 13px 8px;
+}
+.chats.hide > .top {
+  padding: 0;
+  justify-content: center;
+}
+.chats.hide .holder {
+  padding: 0;
+  overflow-y: hidden;
+  max-height: 90vh;
+}
+.chats.hide .chatico {
+  display: flex;
+  font-size: 33px;
+  color: var(--main-color);
+}
+.chats.hide hr {
+  margin: -4px 0 12px;
+}
+.chats.hide .open-close svg {
+  rotate: 180deg;
+}
+
+
+.pirsonChat {
+  height: 89.2vh;
+  border-radius: 15px;
+  outline: 2px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.pirsonChat > .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #dedede;
+  padding: 8px 15px;
+  background: var(--body-color);
+}
+.pirsonChat .top .user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+.pirsonChat .top .user img {
+  color: transparent;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.pirsonChat .actions {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  border-top: 2px solid #dedede;
+  padding: 10px;
+  background: var(--body-color);
+}
+.pirsonChat .tools {
+  display: flex;
+}
+.pirsonChat .actions button {
+  display: flex;
+  width: 50px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+  font-family: 'Rubik';
+  font-weight: 500;
+  color: var(--title-color);
+}
+.pirsonChat .actions button:hover {
+  background: var(--border-color);
+}
+.pirsonChat .tools button:last-child {
+  width: unset;
+  padding: 10px 14px;
+}
+.pirsonChat svg {
+  color: var(--title-color);
+  font-size: 17px;
+}
+.pirsonChat .actions textarea {
+  flex: 1;
+  margin: 0 1px;
+  padding: 10px 12px;
+  height: 42px;
+  font-family: 'Rubik';
+  max-height: 105px;
+  resize: none;
+  border: 2px solid #dedede;
+  color: var(--title-color);
+  letter-spacing: 0.3px;
+  font-size: 14px;
+  border-radius: 7px;
+}
+.pirsonChat .actions textarea:focus {
+  outline: none;
+}
+.pirsonChat .messages {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.pirsonChat > img {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  inset: 0px;
+  top: 0px;
+  color: transparent;
+  z-index: -1;
+  opacity: 0.08;
+  object-fit: contain;
+}
+.pirsonChat .messages .msg {
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.3s;
+}
+.pirsonChat.selectMode .messages .msg {
+  background: #f1740d17;
+  border-bottom: 1px solid #0000001c;
+}
+.pirsonChat.selectMode .messages .msg.selected {
+  background: #f1740d7a;
+}
+.pirsonChat .messages .msg .body {
+  background: var(--body-color);
+  padding: 10px 13px;
+  border-radius: 5px;
+  max-width: 40%;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+  gap: 9px;
+  outline: 2px solid #dedede;
+  position: relative;
+}
+.pirsonChat .messages .msg .body .top {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.pirsonChat .messages .msg .top small {
+  font-size: 12px;
+  color: var(--paragraph-color);
+  font-weight: 400;
+}
+.pirsonChat .messages .msg.me .top {
+  justify-content: flex-end;
+}
+.pirsonChat .messages .msg.me {
+  display: flex;
+  width: 100%;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+.pirsonChat .messages .msg.me .body::before {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(280deg, #ff9b30 28%, #ff6b14 93%);
+}
+.pirsonChat .messages .msg.me .body::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -9px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--main-color);
+  border-radius: 0 0 20px;
+}
+.focusedMsg {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff00;
+  scale: 0.1;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 100;
+  border-radius: 50%;
+  transition: scale 0.3s, border-radius 0.3s, opacity 0.3s, visibility 0.3s, background 0.8s;
+}
+.focusedMsg.active {
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
+  background: #ffffffcf;
+  border-radius: 0;
+}
+.focusedMsg img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 7px;
+}
+.focusedMsg .closeMsg {
+  display: flex;
+  position: absolute;
+  right: 1%;
+  top: 2%;
+  width: 35px;
+  height: 35px;
+  background: var(--section-color);
+  padding: 5px;
+  border-radius: 5px;
+}
+.focusedMsg .closeMsg:hover {
+  background: var(--red-color);
+  color: white;
+}
+.focusedMsg p {
+  background: #d5d5d596;
+  padding: 8px 14px;
+  border-radius: 7px;
+  max-width: 75%;
+  max-height: 144px;
+  overflow: auto;
+}
+.pirsonChat .messages .msg .body > img {
+  max-width: 100%;
+  max-height: 535px;
+  transition: 0.3s;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.pirsonChat .messages .msg .body .reply {
+  background: var(--section-color);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-left: -2px;
+  opacity: 0.9;
+  position: relative;
+}
+.pirsonChat .messages .msg .body .reply:has(img) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pirsonChat .messages .msg .body .reply::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(280deg, #ff9b30 28%, #ff6b14 93%);
+  border-radius: 5px;
+}
+.pirsonChat .messages .msg .body .reply .left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pirsonChat .messages .msg .body .reply .left svg {
+  display: flex;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.pirsonChat .messages .msg .body .reply img {
+  width: 57px;
+  height: 43px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.pirsonChat .messages .msg .body .reply h5 {
+  font-family: sans-serif;
+  font-weight: 700;
+}
+.pirsonChat .messages .msg .body .reply p {
+  font-size: 15px;
+}
+
+body:has(.pirsonChat) .open-close {
+  display: none;
+}
+
+.input[type="checkbox"] {
+  display: none;
+}
+
+
+  /* Style for the custom checkbox */
+.custom-checkbox {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--title-color);
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+}
+
+  /* Style for the custom checkmark */
+.custom-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: var(--title-color);
+  border-radius: 2px;
+  opacity: 0;
+}
+
+  /* Show the checkmark when checkbox is checked */
+.input[type="checkbox"]:checked + .custom-checkbox::after {
+  opacity: 1;
+}
+
+.pirsonChat .messages .messageAction {
+  background: var(--section-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 255px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px 0px #b8b8b8;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 0;
+}
+.pirsonChat .messages .messageAction .emojes {
+
+}
+.pirsonChat .messages .messageAction hr {
+  margin: 5px 0;
+}
+.pirsonChat .messages .messageAction button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 0 10px;
+  transition: 0.3s;
+}
+.pirsonChat .messages .messageAction button:hover {
+  background: var(--border-color);
+}
+.pirsonChat .messages .messageAction button svg {
+
+}
+
+/*! HEADER */
+
+header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--body-color);
+  border-radius: 10px;
+  padding: 10px 25px;
+  outline: 2px solid #e8e8e8;
+  margin-bottom: 16px;
+}
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-left: -5px;
+}
+header .logo img {
+  width: auto;
+  height: 67px;
+  margin: -21px 0;
+}
+.search-holder {
+  position: relative;
+}
+.search-holder input {
+  font-size: 14px;
+  padding: 5px 33px 5px 34px;
+  border-radius: 5px;
+  border: 2px solid var(--border-color);
+  width: 190px;
+  transition: 0.3s;
+}
+.search-holder:has(input:focus) svg:first-child,
+.search-holder:has(input:not(:placeholder-shown)) svg:first-child {
+  color: var(--main-color);
+}
+.search-holder input:focus,
+.search-holder input:not(:placeholder-shown) {
+  border: 2px solid var(--main-color);
+  width: 230px;
+}
+.search-holder svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #828282;
+}
+.search-holder svg.delete {
+  right: 4px;
+  left: unset;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+}
+.search-holder svg.delete:hover {
+  color: var(--red-color);
+}
+.search-holder .result {
+  display: none;
+}
+header nav {
+  display: flex;
+  gap: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+header nav a {
+  padding: 14px 25px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+  position: relative;
+}
+header nav a:hover {
+  color: var(--title-color) !important;
+}
+header nav a.active {
+  color: white;
+  background: var(--back-grident);
+}
+header nav a:hover {
+  color: white !important;
+  background: var(--back-grident);
+}
+header .events {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+header .events > li {
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+header .events li:hover {
+  background: var(--main-color);
+  border-color: transparent;
+}
+header .events li:hover svg {
+  color: white;
+}
+header .events li span.length {
+  position: absolute;
+  right: -7px;
+  top: -7px;
+  font-size: 11px;
+  background: var(--back-grident);
+  color: var(--body-color);
+  padding: 3px 4px;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+header .events li:hover span.length {
+  color: var(--body-color);
+  background-color: var(--title-color);
+}
+header .events li img {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+header .events li.user {
+  border: none;
+  padding: 0;
+  background: transparent !important;
+}
+header .events > li.user > svg {
+  position: absolute;
+  right: -2px;
+  top: 23px;
+  font-size: 14px;
+  background: var(--title-color) !important;
+  color: white;
+  border-radius: 50%;
+  padding: 1px;
+}
+header .events > li.user:has(.menu.active) > svg {
+  right: 0;
+  top: 0;
+  rotate: -360deg;
+  color: var(--body-color);
+  font-size: 40px;
+  padding: 8px;
+  background: var(--back-grident) !important;
+}
+header .events > li.user > svg.x {
+  opacity: 0;
+}
+header .events > li.user:has(.menu.active) > svg.x {
+  opacity: 1;
+}
+header .events > li.user:has(.menu.active) > svg.angle {
+  opacity: 0;
+}
+header .events li.notifications svg {
+  font-size: 23px;
+}
+
+header .events .menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: -moz-fit-content;
+  background: var(--section-color);
+  border-radius: 8px;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.35s;
+  z-index: 100;
+  box-shadow: 0px 0px 15px 0px #b8b8b8;
+}
+header .events .userMenu {
+  right: -24px;
+  top: 50px;
+  width: 270px;
+}
+header .events .userMenu.active {
+  visibility: visible;
+  opacity: 1;
+  top: 59px;
+}
+
+header .events .userMenu ul {
+  padding: 9px;
+  padding-top: 6px;
+}
+header .events .userMenu > a {
+  border-radius: 0;
+  background: var(--back-grident);
+  padding: 16px 22px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.3s;
+}
+header .events .userMenu > a:hover {
+  background: var(--border-color);
+  color: var(--title-color);
+}
+header .events .userMenu ul > button:last-child:hover {
+  color: white;
+  background: var(--red-color);
+}
+header .events .userMenu > a svg {
+  color: white !important;
+}
+header .events .userMenu > a:hover svg {
+  color: var(--title-color) !important;
+}
+header .events .userMenu ul > button:last-child:hover svg {
+  color: white !important;
+}
+header .events .userMenu button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 15px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+  width: 100%;
+  font-family: 'Rubik';
+}
+header .events .userMenu button:hover {
+  background: var(--second-section-color);
+}
+header .events .userMenu svg {
+  font-size: 24px;
+  color: var(--title-color) !important;
 }
