@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header>
       <div className="logo">
-          <Image src={'/logo.png'} width={80} height={80}/>
+          <Image src={'/logo.png'} width={80} height={80} alt={`logo`}/>
         <div className="search-holder">
           <IoSearch/>
           <input type="text" placeholder='Search anything...'/>
@@ -42,7 +42,7 @@ export default function Header() {
           <span className="length">20</span>
         </li>
         <li className='user' onClick={()=> setUserMenu(prev => !prev)}>
-          <Image src={'/avatar.png'} width={45} height={45}/>
+          <Image src={'/avatar.png'} width={45} height={45} alt={`user Image`}/>
           <IoClose className='x'/> <FaCaretDown className='angle'/>
           <div className={`menu userMenu ${userMenu && 'active'}`}>
             <Link href={`/`}><FaUser style={{fontSize: '22px'}}/> Mahmoud Elshazly</Link>

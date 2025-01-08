@@ -117,13 +117,14 @@ hr {
   height: 2px;
   border: none;
 }
-input {
+input,
+textarea {
   outline: none;
   border: none;
   border-radius: 6px;
   color: var(--title-color);
   background: transparent;
-  font-family: cairo;
+  font-family: 'Rubik';
 }
 body.ar input {
   direction: rtl;
@@ -133,6 +134,7 @@ button {
   background: transparent;
   border: none;
   cursor: pointer;
+  font-family: 'Rubik' !important;
 }
 
 .container {
@@ -179,10 +181,7 @@ body > main {
   top: 0;
   transition: 0.3s;
   outline: 2px solid #e8e8e8;
-  z-index: 10;
-}
-body:has(.pirsonChat) .chats .userMenu {
-  top: 15%;
+  z-index: 81;
 }
 .chats .open-close {
   position: absolute;
@@ -227,7 +226,7 @@ body:has(.pirsonChat) .chats .userMenu {
   flex: 1;
 }
 .chats .search-holder input {
-  padding: 4px 33px 4px 34px !important;
+  padding: 6px 33px 6px 34px !important;
   width: 100% !important;
 }
 
@@ -310,11 +309,15 @@ body:has(.pirsonChat) .chats .userMenu {
   cursor: pointer;
 }
 .chats .chat:hover {
-  background: var(--border-color);
+  background: #e2e2e2;
 }
 .chats .chat img {
   border-radius: 50%;
   object-fit: cover;
+}
+.chats .chat img.status {
+  outline: 2px solid var(--main-color);
+  padding: 2px;
 }
 .chats .chat .name-lastmessage {
   display: flex;
@@ -325,6 +328,9 @@ body:has(.pirsonChat) .chats .userMenu {
 }
 .chats .chat .name-lastmessage p {
   width: 194px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 .chats .chat .details {
   display: flex;
@@ -333,6 +339,7 @@ body:has(.pirsonChat) .chats .userMenu {
   align-items: flex-end;
   font-size: 13px;
   transition: 0.3s;
+  height: 38px;
 }
 .chats .chat .details span {
   color: var(--title-color);
@@ -353,20 +360,18 @@ body:has(.pirsonChat) .chats .userMenu {
 }
 
 .chats .userMenu {
-  position: absolute;
-  right: -168px;
-  top: 13%;
-  background: var(--section-color);
+  position: fixed;
   border-radius: 7px;
   overflow: hidden;
   width: auto;
+  left: 18.9%;
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
+  background: var(--section-color);
   box-shadow: 0px 0px 8px 1px #d1d1d1;
 }
 .chats .userMenu.active {
-  right: -185px;
   opacity: 1;
   visibility: visible;
 }
@@ -478,6 +483,22 @@ body:has(.pirsonChat) .chats .userMenu {
   justify-content: space-between;
   position: relative;
 }
+.pirsonChat .emoji-holder {
+  width: fit-content;
+  position: absolute;
+  z-index: 100;
+  bottom: 62px;
+  left: 15px;
+  scale: 0.5;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.2s;
+}
+.pirsonChat .emoji-holder.active {
+  scale: 1;
+  visibility: visible;
+  opacity: 1;
+}
 .pirsonChat > .top {
   display: flex;
   align-items: center;
@@ -499,7 +520,7 @@ body:has(.pirsonChat) .chats .userMenu {
 }
 .pirsonChat .actions {
   display: flex;
-  gap: 4px;
+  gap: 1px;
   align-items: flex-end;
   border-top: 2px solid #dedede;
   padding: 10px;
@@ -508,6 +529,7 @@ body:has(.pirsonChat) .chats .userMenu {
 .pirsonChat .tools {
   display: flex;
 }
+.pirsonChat .tools button,
 .pirsonChat .actions button {
   display: flex;
   width: 50px;
@@ -517,10 +539,11 @@ body:has(.pirsonChat) .chats .userMenu {
   align-items: center;
   justify-content: center;
   transition: 0.3s;
-  font-family: 'Rubik';
   font-weight: 500;
   color: var(--title-color);
+  position: relative;
 }
+.pirsonChat .tools button:hover,
 .pirsonChat .actions button:hover {
   background: var(--border-color);
 }
@@ -532,12 +555,24 @@ body:has(.pirsonChat) .chats .userMenu {
   color: var(--title-color);
   font-size: 17px;
 }
+.pirsonChat .tools button small {
+  position: absolute;
+  right: 14px;
+  top: 24px;
+  color: var(--main-color);
+  font-weight: 800;
+  font-size: 12px;
+  transition: 0.3s;
+}
+.pirsonChat .tools button:hover small {
+  color: var(--title-color);
+}
 .pirsonChat .actions textarea {
   flex: 1;
-  margin: 0 1px;
+  margin: 0 4px;
   padding: 10px 12px;
   height: 42px;
-  font-family: 'Rubik';
+
   max-height: 105px;
   resize: none;
   border: 2px solid #dedede;
@@ -567,6 +602,84 @@ body:has(.pirsonChat) .chats .userMenu {
   opacity: 0.08;
   object-fit: contain;
 }
+
+.pirsonChat .top .pin-holder {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  padding: 7px 16px;
+  background: #ffffffcf;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: space-between;
+  z-index: 80;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.pirsonChat .top .pin-holder:hover {
+  background: #f1f1f1c4;
+}
+.pirsonChat .top .pin-holder .left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+}
+.pirsonChat .top .pin-holder .left .pagin {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  height: 60%;
+  left: 18px;
+  margin-right: 4px;
+  position: absolute;
+}
+.pirsonChat .top .pin-holder .left .pagin span {
+  width: 3px;
+  flex: 1 1;
+  border-radius: 3px;
+  background: var(--paragraph-color);
+}
+.pirsonChat .top .pin-holder .left .pagin span.active {
+  background: var(--main-color);
+}
+.pirsonChat .top .pin-holder .left svg {
+  color: var(--title-color);
+  font-size: 16px;
+}
+.pirsonChat .top .pin-holder .left h3 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--main-color);
+}
+.pirsonChat .top .pin-holder .left p {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  font-size: 14px;
+}
+.pirsonChat .top .pin-holder .right {
+  color: var(--title-color);
+  font-weight: 500;
+  border-radius: 5px;
+  transition: 0.3s;
+  padding: 8px 14px;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -1;
+}
+.pirsonChat .top .pin-holder .right:hover {
+  background: var(--body-color);
+}
+.pirsonChat .top .pin-holder:hover .right {
+  visibility: visible;
+  opacity: 1;
+  z-index: 1;
+}
+
 .pirsonChat .messages .msg {
   padding: 14px 40px;
   display: flex;
@@ -656,7 +769,8 @@ body:has(.pirsonChat) .chats .userMenu {
   scale: 1;
   opacity: 1;
   visibility: visible;
-  background: #ffffffcf;
+  background: #ffffff4f;
+  backdrop-filter: blur(10px);
   border-radius: 0;
 }
 .focusedMsg img {
@@ -740,6 +854,9 @@ body:has(.pirsonChat) .chats .userMenu {
 }
 .pirsonChat .messages .msg .body .reply p {
   font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 body:has(.pirsonChat) .open-close {
@@ -782,18 +899,128 @@ body:has(.pirsonChat) .open-close {
 }
 
 .pirsonChat .messages .messageAction {
-  background: var(--section-color);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
   width: 255px;
+  gap: 1px;
+  padding: 8px 0;
+}
+.pirsonChat .messages .forwordMenu {
+  width: 340px;
+}
+.pirsonChat .messages .forwordMenu h1 {
+  font-size: 18px;
+  margin: 10px 15px -2px;
+}
+.pirsonChat .messages .forwordMenu .search-chosen {
+  background: var(--body-color);
+  margin: 10px;
+  border-radius: 5px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.pirsonChat .messages .forwordMenu ul.result {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  padding: 10px 10px 0;
+}
+.pirsonChat .messages .forwordMenu ul li {
+  background: var(--main-color);
+  color: white;
+  padding: 5px 7px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.pirsonChat .messages .forwordMenu input {
+  border-bottom: 2px solid var(--border-color);
+  border-radius: 0;
+  padding: 9px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Rubik';
+  transition: 0.3s;
+}
+.pirsonChat .messages .search-chosen:has(.result) input {
+  padding: 7px 15px;
+}
+.pirsonChat .messages .forwordMenu input:focus,
+.pirsonChat .messages .forwordMenu input:not(:placeholder-shown) {
+  border-color: var(--main-color);
+}
+.pirsonChat .messages .forwordMenu .mainbtn {
+  background: var(--main-color);
+  color: white;
+  padding: 12px;
+  border-radius: 7px;
+  font-family: 'Rubik';
+  font-size: 14px;
+  margin: 0 10px 10px; 
+}
+.pirsonChat .messages .forwordMenu h4 {
+  margin: 12px 16px 10px;
+  font-size: 14px;
+  color: var(--paragraph-color);
+}
+.pirsonChat .messages .forwordMenu .holder {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 7px 10px;
+  overflow: auto;
+  max-height: 362px;
+}
+.pirsonChat .messages .forwordMenu .holder .chat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 11px;
+  border-radius: 7px;
+  gap: 10px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.pirsonChat .messages .forwordMenu .holder .chat:hover {
+  background: var(--border-color);
+}
+.pirsonChat .messages .forwordMenu .holder img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+.pirsonChat .messages .forwordMenu .holder .name-lastmessage {
+  flex: 1;
+}
+.pirsonChat .messages .forwordMenu .holder .name-lastmessage h4 {
+  margin: 0;
+  color: var(--title-color);
+}
+.pirsonChat .messages .forwordMenu .holder .name-lastmessage p {
+  font-size: 15px;
+}
+.pirsonChat .messages .forwordMenu .holder .chat label {
+  display: flex;
+  scale: 0.75;
+}
+.pirsonChat .messages .forwordMenu .holder .chat label > span {
+  border-color: var(--paragraph-color);
+}
+.sideMenu {
+  position: fixed;
+  z-index: 100;
+  background: var(--section-color);
   border-radius: 8px;
   box-shadow: 0px 0px 15px 0px #b8b8b8;
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  padding: 8px 0;
+  scale: 0.5;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, scale 0.3s;
+}
+.pirsonChat .messages .sideMenu.active {
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
 }
 .pirsonChat .messages .messageAction .emojes {
 
@@ -813,8 +1040,12 @@ body:has(.pirsonChat) .open-close {
 .pirsonChat .messages .messageAction button:hover {
   background: var(--border-color);
 }
-.pirsonChat .messages .messageAction button svg {
-
+.pirsonChat .messages .messageAction button.danger:hover {
+  color: white;
+  background: var(--red-color);
+}
+.pirsonChat .messages .messageAction button.danger:hover svg {
+  color: white;
 }
 
 /*! HEADER */
@@ -846,7 +1077,7 @@ header .logo img {
 }
 .search-holder input {
   font-size: 14px;
-  padding: 5px 33px 5px 34px;
+  padding: 7px 33px 7px 34px;
   border-radius: 5px;
   border: 2px solid var(--border-color);
   width: 190px;
