@@ -13,6 +13,15 @@ import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
+
+  const [hasChatInUrl, setHasChatInUrl] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.href.includes('chat')) {
+      setHasChatInUrl(true);
+    }
+  }, []);
+
   const [hideChats, setHideChats] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
   const [curentUserId, setCurentUserId] = useState(false)
@@ -20,6 +29,7 @@ export default function Chats() {
   const [menuPosition, setMenuPosition] = useState(0);
 
   const actionMenu = useRef(null);
+
 
 
   const handleMessageActions = (event) => {
@@ -36,7 +46,7 @@ export default function Chats() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (actionMenu.current && !actionMenu.current.contains(event.target)) {
-        setMessageAction(false); 
+        setUserMenu(false); 
       }
     };
   
@@ -45,12 +55,14 @@ export default function Chats() {
   }, []);
 
   return (
-    <div className={`chats ${hideChats && 'hide'}`}>
-      <div className="open-close" onClick={()=> {
-        setHideChats(prev => !prev)
-      }}>
-        <FaAngleLeft/>
-      </div>
+    <div className={`chats ${hideChats && !hasChatInUrl && 'hide'}`}>
+      {!hasChatInUrl && (
+        <div className="open-close" onClick={()=> {
+          setHideChats(prev => !prev)
+        }}>
+          <FaAngleLeft/>
+        </div>
+      )}
       <div className="top">
         <h4>Friends</h4>
         <FaUserFriends className='chatico'/>

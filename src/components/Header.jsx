@@ -29,6 +29,7 @@ export default function Header() {
       </div>
       <nav>
         <Link href='/' className='active'>Explore</Link>
+        <Link href='/chat'>Chat</Link>
         <Link href='/'>Pages</Link>
         <Link href='/'>Communities</Link>
         <Link href='/'>Market Place</Link>
