@@ -191,7 +191,7 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:00", 
-    pin: true,
+    pin: false,
   },
   {
     id: 2,
@@ -229,7 +229,61 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:20", 
-    pin: true,
+    pin: false,
+  },
+  {
+    id: 616,
+    history: true,
+    time: '1/14/2025',
+  },
+  {
+    id: 626,
+    actor : 'endy',
+    action: 'added',
+    targetPerson: '3kr4',
+  },
+  {
+    id: 6116,
+    history: true,
+    time: 'tharathday',
+  },
+  {
+    id: 6684,
+    actor : 'endy',
+    action: 'join the group using via link',
+  },
+  {
+    id: 6476,
+    actor : 'ixon',
+    action: 'left',
+  },
+  {
+    id: 61416,
+    history: true,
+    time: 'Today',
+  },
+  {
+    id: 6160,
+    actor : 'endy',
+    action: 'giveAadmin',
+    targetPerson: '3kr4',
+  },
+  {
+    id: 615,
+    actor : '3kr4',
+    action: 'remove',
+    targetPerson: 'fares',
+  },
+  {
+    id: 69,
+    actor : '3kr4',
+    action: 'removeAdmin',
+    targetPerson: 'endy',
+  },
+  {
+    id: 6136,
+    history: true,
+    time: '1/14/2026',
   },
   {
     id: 6,
@@ -355,7 +409,6 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:35", 
-    pin: true,
     emojis: [
       {
         id: 1,
@@ -410,6 +463,936 @@ export let messages = [
   },
   {
     id: 10,
+    user: "Bob",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:45",
+  },
+
+  {
+    id: 11,
+    user: "Alice",
+    message: "",
+    img: "/chat3.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:00", 
+  },
+  {
+    id: 12,
+    user: "Bob",
+    message: "I'm good, thanks! How about you?",
+    img: "",
+    replyId: 1,
+    date: "2024-10-12",
+    time: "16:05", 
+  },
+  {
+    id: 13,
+    user: "Alice",
+    message: "Doing well, just working on a project.",
+    img: "/chat4.png",
+    replyId: 2,
+    date: "2024-10-12",
+    time: "16:10", 
+  },
+  {
+    id: 14,
+    user: "Bob",
+    message: "That's great! What's the project about?",
+    img: "",
+    replyId: 3,
+    date: "2024-10-12",
+    time: "16:15", 
+    deleted: true,
+  },
+  {
+    id: 15,
+    user: "Alice",
+    message: "It's a web app for managing tasks. What about you?",
+    img: "/chat5.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:20", 
+  },
+  {
+    id: 16,
+    user: "Bob",
+    message: "Just learning new things in React.",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:25", 
+  },
+  {
+    id: 17,
+    user: "Alice",
+    message: "React is amazing! Have you tried Next.js?",
+    img: "",
+    replyId: 6,
+    date: "2024-10-12",
+    time: "16:30", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 4,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 5,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 6,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 7,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 8,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 9,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 10,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤩',
+      },
+      {
+        id: 11,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥶',
+      },
+      {
+        id: 12,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤮',
+      },
+    ]
+  },
+  {
+    id: 18,
+    user: "Bob",
+    message: "Not yet, but it's on my list. Do you use it?",
+    img: "/chat1.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:35", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥰',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      }
+    ] 
+  },
+  {
+    id: 19,
+    user: "Alice",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "/chat2.jpg",
+    replyId: 8,
+    date: "2024-10-12",
+    time: "16:40", 
+  },
+  {
+    id: 20,
+    user: "Bob",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:45",
+  },
+
+  {
+    id: 21,
+    user: "Alice",
+    message: "",
+    img: "/chat3.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:00", 
+  },
+  {
+    id: 22,
+    user: "Bob",
+    message: "I'm good, thanks! How about you?",
+    img: "",
+    replyId: 1,
+    date: "2024-10-12",
+    time: "16:05", 
+  },
+  {
+    id: 23,
+    user: "Alice",
+    message: "Doing well, just working on a project.",
+    img: "/chat4.png",
+    replyId: 2,
+    date: "2024-10-12",
+    time: "16:10", 
+  },
+  {
+    id: 24,
+    user: "Bob",
+    message: "That's great! What's the project about?",
+    img: "",
+    replyId: 3,
+    date: "2024-10-12",
+    time: "16:15", 
+    deleted: true,
+  },
+  {
+    id: 25,
+    user: "Alice",
+    message: "It's a web app for managing tasks. What about you?",
+    img: "/chat5.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:20", 
+  },
+  {
+    id: 26,
+    user: "Bob",
+    message: "Just learning new things in React.",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:25", 
+  },
+  {
+    id: 27,
+    user: "Alice",
+    message: "React is amazing! Have you tried Next.js?",
+    img: "",
+    replyId: 6,
+    date: "2024-10-12",
+    time: "16:30", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 4,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 5,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 6,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 7,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 8,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 9,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 10,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤩',
+      },
+      {
+        id: 11,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥶',
+      },
+      {
+        id: 12,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤮',
+      },
+    ]
+  },
+  {
+    id: 28,
+    user: "Bob",
+    message: "Not yet, but it's on my list. Do you use it?",
+    img: "/chat13.jpg",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:35", 
+    pin: false,
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥰',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      }
+    ] 
+  },
+  {
+    id: 29,
+    user: "Alice",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "/chat5.png",
+    replyId: 8,
+    date: "2024-10-12",
+    time: "16:40", 
+  },
+  {
+    id: 30,
+    user: "Bob",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:45",
+  },
+
+  {
+    id: 31,
+    user: "Alice",
+    message: "",
+    img: "/chat6.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:00", 
+  },
+  {
+    id: 32,
+    user: "Bob",
+    message: "I'm good, thanks! How about you?",
+    img: "",
+    replyId: 1,
+    date: "2024-10-12",
+    time: "16:05", 
+  },
+  {
+    id: 33,
+    user: "Alice",
+    message: "Doing well, just working on a project.",
+    img: "/chat7.jpg",
+    replyId: 2,
+    date: "2024-10-12",
+    time: "16:10", 
+  },
+  {
+    id: 34,
+    user: "Bob",
+    message: "That's great! What's the project about?",
+    img: "",
+    replyId: 3,
+    date: "2024-10-12",
+    time: "16:15", 
+    deleted: true,
+  },
+  {
+    id: 35,
+    user: "Alice",
+    message: "It's a web app for managing tasks. What about you?",
+    img: "/chat8.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:20", 
+  },
+  {
+    id: 36,
+    user: "Bob",
+    message: "Just learning new things in React.",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:25", 
+  },
+  {
+    id: 37,
+    user: "Alice",
+    message: "React is amazing! Have you tried Next.js?",
+    img: "",
+    replyId: 6,
+    date: "2024-10-12",
+    time: "16:30", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 4,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 5,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 6,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 7,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 8,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 9,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 10,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤩',
+      },
+      {
+        id: 11,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥶',
+      },
+      {
+        id: 12,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤮',
+      },
+    ]
+  },
+  {
+    id: 38,
+    user: "Bob",
+    message: "Not yet, but it's on my list. Do you use it?",
+    img: "/chat1.png",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:35", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥰',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      }
+    ] 
+  },
+  {
+    id: 39,
+    user: "Alice",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "/chat9.ico",
+    replyId: 8,
+    date: "2024-10-12",
+    time: "16:40", 
+  },
+  {
+    id: 40,
+    user: "Bob",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:45",
+  },
+
+  {
+    id: 41,
+    user: "Alice",
+    message: "",
+    img: "/chat10.jpg",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:00", 
+    pin: false,
+  },
+  {
+    id: 42,
+    user: "Bob",
+    message: "I'm good, thanks! How about you?",
+    img: "",
+    replyId: 1,
+    date: "2024-10-12",
+    time: "16:05", 
+  },
+  {
+    id: 43,
+    user: "Alice",
+    message: "Doing well, just working on a project.",
+    img: "/chat11.jpeg",
+    replyId: 2,
+    date: "2024-10-12",
+    time: "16:10", 
+  },
+  {
+    id: 44,
+    user: "Bob",
+    message: "That's great! What's the project about?",
+    img: "",
+    replyId: 3,
+    date: "2024-10-12",
+    time: "16:15", 
+    deleted: true,
+  },
+  {
+    id: 45,
+    user: "Alice",
+    message: "It's a web app for managing tasks. What about you?",
+    img: "/chat12.jpeg",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:20", 
+  },
+  {
+    id: 46,
+    user: "Bob",
+    message: "Just learning new things in React.",
+    img: "",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:25", 
+  },
+  {
+    id: 47,
+    user: "Alice",
+    message: "React is amazing! Have you tried Next.js?",
+    img: "",
+    replyId: 6,
+    date: "2024-10-12",
+    time: "16:30", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 4,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 5,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 6,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 7,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🧐',
+      },
+      {
+        id: 8,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤓',
+      },
+      {
+        id: 9,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😭',
+      },
+      {
+        id: 10,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤩',
+      },
+      {
+        id: 11,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥶',
+      },
+      {
+        id: 12,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🤮',
+      },
+    ]
+  },
+  {
+    id: 48,
+    user: "Bob",
+    message: "Not yet, but it's on my list. Do you use it?",
+    img: "/chat13.jpg",
+    replyId: null,
+    date: "2024-10-12",
+    time: "16:35", 
+    emojis: [
+      {
+        id: 1,
+        user: {
+          name: 'Alias',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '🥰',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Bob',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '👎🏻',
+      },
+      {
+        id: 3,
+        user: {
+          name: 'sass',
+          img: 'https://via.placeholder.com/50',
+        },
+        emoji: '😂',
+      }
+    ] 
+  },
+  {
+    id: 49,
+    user: "Alice",
+    message: "Yes, I use it for most of my projects. It's really powerful!",
+    img: "/chat2.jpg",
+    replyId: 8,
+    date: "2024-10-12",
+    time: "16:40", 
+  },
+  {
+    id: 50,
     user: "Bob",
     message: "Yes, I use it for most of my projects. It's really powerful!",
     img: "",

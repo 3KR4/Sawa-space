@@ -3,29 +3,30 @@ import React, { useState, useRef, useEffect } from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import { maxLength } from '@/Methods';
-import EmojiPicker from 'emoji-picker-react';
-import PinHolder from '@/components/chat/PinHolder';
 import { messages, users } from '@/Data';
-
+import EmojiPicker from 'emoji-picker-react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
+import '../../Css/chat.css';
+
+import PinHolder from '@/components/chat/PinHolder';
 
 //Icons 
-import { IoClose, IoCopy } from "react-icons/io5";
-import { MdOutlinePermMedia, MdContentCopy, MdOutlineAddReaction } from "react-icons/md";
+import { GoPin } from "react-icons/go";
+import { HiReply } from "react-icons/hi";
+import { RiLinksLine } from "react-icons/ri";
 import { BsEmojiSmile } from "react-icons/bs";
+import { AiOutlineSend } from "react-icons/ai";
+import { IoClose, IoCopy } from "react-icons/io5";
 import { TiMicrophoneOutline } from "react-icons/ti";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { LuSaveAll, LuFileSliders } from "react-icons/lu";
+import { MdOutlinePermMedia, MdContentCopy, MdOutlineAddReaction } from "react-icons/md";
 import { FaStar, FaShare, FaRegStar, FaAngleDown, FaRegUserCircle } from "react-icons/fa";
 import { FaRegImages, FaRegTrashCan, FaRegSquareCheck, FaPlus, FaUserGroup } from "react-icons/fa6";
-import { GoPin } from "react-icons/go";
-import { LuSaveAll, LuFileSliders } from "react-icons/lu";
-import { HiReply } from "react-icons/hi";
-import { AiOutlineSend } from "react-icons/ai";
-import { RiLinksLine } from "react-icons/ri";
-
 
 export default function Chat({ params }) {
+
   const [text, setText] = useState("");
   const [imgFocus, setImgFocus] = useState();
   const [selectMode, setSelectMode] = useState(false);
@@ -57,7 +58,13 @@ export default function Chat({ params }) {
 
   const handleImageClick = (id, index) => {
     setImgFocus(id)
-    swiperRef.slideTo(index, 500);
+
+    if (index === '') {
+      const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
+      swiperRef.slideTo(mediaIndex, 500);
+    } else {
+      swiperRef.slideTo(index, 500);
+    }
   };
 
   const chatRef = useRef(null);
@@ -76,7 +83,7 @@ export default function Chat({ params }) {
 
   const currentfocusdMsg = messages.find((msg) => msg.id === imgFocus);
 
-  const mediaMsgs = (selectedOverView === 'Media' || imgFocus) && messages.filter((msg) => msg.img !== '');
+  const mediaMsgs = messages.filter((msg) => msg.img);
 
   const currentReplyMsg = replyingOnMsg ? messages.find((msg) => msg.id === replyingOnMsg) : null;
 
@@ -261,11 +268,58 @@ const handleEmojiClick = (event) => {
   }, 0);
 };
 
+  const historyRefs = useRef([]); // لتخزين عناصر div.history
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeout = useRef(null); // To track the scroll timeout
+
+  useEffect(() => {
+    const topElement = document.querySelector(".topUser"); // Reference to the top element
+    const topElementRect = topElement.getBoundingClientRect(); // Get dimensions of `.topUser`
+
+    const handleScroll = () => {
+      setIsScrolling(true); // Set scrolling to true on every scroll event
+
+      // Clear previous timeout and set a new one to detect scroll stop
+      clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = setTimeout(() => {
+        setIsScrolling(false); // Set scrolling to false after 1 second
+      }, 1000);
+
+      const messagesContainer = document.querySelector(".messages");
+
+      historyRefs.current.forEach((ref, index) => {
+        if (ref) {
+          const refRect = ref.getBoundingClientRect(); // Get dimensions of the history element
+          const containerRect = messagesContainer.getBoundingClientRect();
+
+          // Check if the element is near the top of the messages container
+          if (
+            refRect.top >= containerRect.top && // It is at or below the container's top
+            refRect.top <= containerRect.top + topElementRect.height // It is within the range
+          ) {
+            setActiveIndex(index); // Set the active index
+          } else if (activeIndex === index) {
+            setActiveIndex(null); // Reset if no longer in view
+          }
+        }
+      });
+    };
+
+    const messagesContainer = document.querySelector(".messages");
+    messagesContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      messagesContainer.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout.current); // Clear timeout on unmount
+    };
+  }, [activeIndex]);
+
   return (
     <div className={`pirsonChat ${selectMode && 'selectMode'}`}>
         <>
           <Image src={'/Screenshot 2025-01-03 040444.png'} alt={`Screenshot`} fill/>
-          <div className='top'>
+          <div className='top topUser'>
             <div className='user' onClick={()=> setOverViewMenu(true)}>
               <Image src={'/avatar.png'} width={40} height={40} alt={`Screenshot`}/>
               <h4>Kilwa</h4>
@@ -317,7 +371,7 @@ const handleEmojiClick = (event) => {
                   ) : selectedOverView === `Media` ?  (
                     <div className='media'>
                       {mediaMsgs.length > 1 ? (
-                          mediaMsgs.map(x => (
+                          mediaMsgs.map((x, index) => (
                               <div 
                                   className={`msg ${selectedMsgs.includes(x.id) ? 'selected' : ''}`} 
                                   key={x.id} 
@@ -335,7 +389,7 @@ const handleEmojiClick = (event) => {
                                       src={`${x.img}`} 
                                       onClick={() => {
                                           if (!selectMode) {
-                                              setImgFocus(x.id);
+                                            handleImageClick(x.id ,index)
                                           }
                                       }} 
                                       alt='xxxx'
@@ -375,7 +429,6 @@ const handleEmojiClick = (event) => {
             {pinedMsgs.length > 0 && <PinHolder data={pinedMsgs} />}
           </div>
 
-          {imgFocus && (
             <div ref={closeImgHolderRef} className={`focusedMsg ${imgFocus && 'active'}`}>
               <div className='hold'>
                 {imgFocus && <IoClose className='closeMsg'         
@@ -406,6 +459,7 @@ const handleEmojiClick = (event) => {
                     <img 
                         src={x.img} 
                         alt={`Slide ${index}`}
+                        className={`${imgFocus == x.id && 'active'}`}
                         style={{
                             maxWidth: '90%',
                             maxHeight: '90%',
@@ -419,7 +473,6 @@ const handleEmojiClick = (event) => {
               )}
 
             </div>
-          )}
 
           <div className='messages' ref={chatRef} style={{overflow: messageAction || forwordAction || reactsAction || isAddReact ? 'hidden' : 'auto', paddingRight: messageAction || forwordAction || reactsAction || isAddReact ? '6px' : '0px'}}>
 
@@ -508,12 +561,16 @@ const handleEmojiClick = (event) => {
               </div>
             )}
 
-              {messages.map((x) => {
+              {messages.map((x, i) => {
                 const replyMsg = x.replyId ? messages.find((msg) => msg.id === x.replyId) : null;
                 return (
-                  <div key={x.id} id={`message-${x.id}`} className={`msg ${x.user === 'Bob' ? 'me' : ''} ${selectedMsgs.includes(x.id) && 'selected'}`}
+                  <div key={x.id} id={`message-${x.id}`} className={`msg ${x.history || x.action ? 'middle' : ''} ${x.history ? 'history' : ''} ${isScrolling ? "visible" : ""} ${x.user === 'Bob' ? 'me' : ''} ${selectedMsgs.includes(x.id) && 'selected'} ${activeIndex === i ? "sticky" : ""} ${activeIndex === i && !isScrolling ? "hidden" : ""}`}
+                  ref={(el) => {
+                    if (x.history) historyRefs.current[i] = el;
+                  }}
+                  data-index={i}
                     onClick={() => {
-                      if (selectMode) {
+                      if (selectMode && !x.history && !x.deleted && !x.action) {
                         setSelectedMsgs(prev => 
                           prev.includes(x.id)
                             ? prev.filter(id => id !== x.id)
@@ -521,72 +578,92 @@ const handleEmojiClick = (event) => {
                         )}
                     }}>
 
-                    {selectMode && (
+                    {(selectMode && !x.history && !x.deleted && !x.action) && (
                       <label>
                         <input type="checkbox" className="input" checked={selectedMsgs.includes(x.id) ? true : false} onChange={()=> console.log('x')}/>
                         <span className="custom-checkbox"></span>
                       </label>
                     )}
 
-                    <div className={'body'} onContextMenu={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
-                      <div className='top'>{x.user !== 'Bob' && <h5>{x.user}</h5>} <small>{formatTime(x.time)}</small></div>
-                      {replyMsg && (
-                        <div className="reply" onClick={()=> handlePinClick(replyMsg.id)}>
-                          {replyMsg.img ? (
-                            <>
-                            <div className='left'>
-                              <h5>{replyMsg.user === 'Bob' ? 'You' : replyMsg.user}</h5>
-                              <p>{replyMsg.message ? maxLength(replyMsg.message, 37) : <><FaRegImages/> Image</>}</p>
+                    <div className={'body'} onContextMenu={(e) => (!selectMode && !x.history && !x.deleted && !x.action) && handleMessageActions(e, 'actions', x )}>
+                      {x.history ? (
+                        <div>{x.time}<small>Tuseday, junary</small></div>
+                      )  : x.deleted ? (
+                        <div>This message has deleted</div>
+                      ) : x.a ? (
+                        <div>Nagi Left</div>
+                      ) : x.deleted ? (
+                        <div>This message has deleted</div>
+                      ) : (x.action === 'left' || x.action === 'join the group using via link') ? (
+                        <div>{x.actor} {x.action}</div>
+                      ) : x.action === 'giveAadmin' ? (
+                        <div>{x.actor} make {x.targetPerson} an admin</div>
+                      ) : x.action === 'removeAdmin' ? (
+                        <div>{x.actor} dismiss {x.targetPerson} from admin</div>
+                      ) : x.action ? (
+                        <div>{x.actor} {x.action} {x.targetPerson}</div>
+                      ) : (
+                        <>
+                          <div className='top'>{x.user !== 'Bob' && <h5>{x.user}</h5>} <small>{formatTime(x.time)}</small></div>
+                          {replyMsg && (
+                            <div className="reply" onClick={()=> handlePinClick(replyMsg.id)}>
+                              {replyMsg.img ? (
+                                <>
+                                <div className='left'>
+                                  <h5>{replyMsg.user === 'Bob' ? 'You' : replyMsg.user}</h5>
+                                  <p>{replyMsg.message ? maxLength(replyMsg.message, 37) : <><FaRegImages/> Image</>}</p>
+                                </div>
+                                <img src={replyMsg.img} alt='reply msg img'/>
+                                </>
+                              ) : (
+                                <>
+                                  <h5>{replyMsg.user === 'Bob' ? 'You' : replyMsg.user}</h5>
+                                  <p>{maxLength(replyMsg.message, 40)}</p>
+                                </>
+                              )}
                             </div>
-                            <img src={replyMsg.img} alt='reply msg img'/>
-                            </>
-                          ) : (
-                            <>
-                              <h5>{replyMsg.user === 'Bob' ? 'You' : replyMsg.user}</h5>
-                              <p>{maxLength(replyMsg.message, 40)}</p>
-                            </>
                           )}
-                        </div>
-                      )}
-                      {x.img != "" && <img src={`${x.img}`} 
-                        onClick={()=> {
-                          if (!selectMode) {
-                            setImgFocus(x.id)
+                          {x.img != "" && <img src={`${x.img}`} 
+                            onClick={()=> {
+                              if (!selectMode) {
+                                handleImageClick(x.id , '')
+                              }
+                            }}
+                            alt='xxxx'/>
                           }
-                        }}
-                        alt='xxxx'/>
-                      }
-                      {x.message != "" && <p>{x.message}</p>}
+                          {x.message != "" && <p>{x.message}</p>}
 
-                      {x.emojis?.length > 0 && (
-                        <div className='reacts' onClick={(e) => !selectMode && handleMessageActions(e, 'emojis', x.id)}>
-                            {(() => {
-                                const uniqueEmojis = [...new Map(x.emojis.map(emoji => [emoji.emoji, emoji])).values()];
-                                const displayedEmojis = uniqueEmojis.slice(0, 5);
-                                const remainingCount = x.emojis.length - displayedEmojis.length;
+                          {x.emojis?.length > 0 && (
+                            <div className='reacts' onClick={(e) => !selectMode && handleMessageActions(e, 'emojis', x.id)}>
+                                {(() => {
+                                    const uniqueEmojis = [...new Map(x.emojis.map(emoji => [emoji.emoji, emoji])).values()];
+                                    const displayedEmojis = uniqueEmojis.slice(0, 5);
+                                    const remainingCount = x.emojis.length - displayedEmojis.length;
 
-                                return (
-                                    <>
-                                        {displayedEmojis.map((emoji, index) => (
-                                            <span key={index}>{emoji.emoji}</span>
-                                        ))}
+                                    return (
+                                        <>
+                                            {displayedEmojis.map((emoji, index) => (
+                                                <span key={index}>{emoji.emoji}</span>
+                                            ))}
 
-                                        {/* Only show the counter if there are hidden emojis */}
-                                        {remainingCount > 0 && (
-                                            <span className='counter'>+{remainingCount}</span>
-                                        )}
-                                    </>
-                                );
-                            })()}
+                                            {/* Only show the counter if there are hidden emojis */}
+                                            {remainingCount > 0 && (
+                                                <span className='counter'>+{remainingCount}</span>
+                                            )}
+                                        </>
+                                    );
+                                })()}
+                            </div>
+                        )}
+
+                        <div className='interact'>
+                          <div className='holder' onClick={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
+                            <MdOutlineAddReaction/>
+                            <FaAngleDown/>
+                          </div>
                         </div>
+                      </>
                     )}
-
-                    <div className='interact'>
-                      <div className='holder' onClick={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
-                        <MdOutlineAddReaction/>
-                        <FaAngleDown/>
-                      </div>
-                    </div>
                     </div>
                   </div>
                 );

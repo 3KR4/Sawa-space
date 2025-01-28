@@ -24,13 +24,19 @@ export default function Chats() {
 
   const [hideChats, setHideChats] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
-  const [curentUserId, setCurentUserId] = useState(false)
+  const [curentUserId, setCurentUserId] = useState()
 
   const [menuPosition, setMenuPosition] = useState(0);
 
   const actionMenu = useRef(null);
 
+  useEffect(() => {
+    const path = window.location.pathname; // Example: "/chat/1"
+    const extractedId = path.split('/').pop(); // Extracts "1"
+    setCurentUserId(extractedId);
+  }, []);
 
+console.log(curentUserId);
 
   const handleMessageActions = (event) => {
     event.preventDefault(); 
@@ -92,7 +98,7 @@ export default function Chats() {
         </div>
         <div className="holder">
           {users?.map((x) => (
-            <Link key={x.id} href={`/chat/${x.id}`} className="chat" onContextMenu={(e) => {
+            <Link key={x.id} href={`/chat/${x.id}`} className={`chat ${curentUserId == x.id && 'active'}`} onClick={() => setCurentUserId(x.id)} onContextMenu={(e) => {
               handleMessageActions(e)
               setCurentUserId(x.id)
             }}>
