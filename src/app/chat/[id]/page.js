@@ -8,6 +8,7 @@ import EmojiPicker from 'emoji-picker-react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 import '../../Css/chat.css';
+import { use } from "react";
 
 import PinHolder from '@/components/chat/PinHolder';
 
@@ -27,6 +28,7 @@ import { FaRegImages, FaRegTrashCan, FaRegSquareCheck, FaPlus, FaUserGroup } fro
 
 export default function Chat({ params }) {
 
+  const [curentChat, setCurentChat] = useState({});
   const [text, setText] = useState("");
   const [imgFocus, setImgFocus] = useState();
   const [selectMode, setSelectMode] = useState(false);
@@ -55,6 +57,14 @@ export default function Chat({ params }) {
   const [forwordSearch, setForwordSearch] = useState('');
 
   const [swiperRef, setSwiperRef] = useState(null);
+
+
+  const { id } = use(params); // Unwrap the Promise
+
+  useEffect(() => {
+    let currentChat = users.find(x => x.id == id);
+    setCurentChat(currentChat);
+  }, [id]);
 
   const handleImageClick = (id, index) => {
     setImgFocus(id)
@@ -113,7 +123,7 @@ export default function Chat({ params }) {
         setMentionHolder(true);
         const searchTerm = mentionMatch[1].toLowerCase();
         setFilteredMentinUser(
-            users.filter(user => user.name.toLowerCase().startsWith(searchTerm))
+            users.filter(user => user.name.toLowerCase().contains(searchTerm))
         );
     } else {
         setMentionHolder(false);
@@ -232,16 +242,6 @@ const handleMessageActions = (event, type, msg) => {
     };
   }, []); 
 
-  const formatTime = (time) => {
-    if (typeof window !== 'undefined') {
-      const [hours, minutes] = time.split(":");
-      const formattedHours = (hours % 12) || 12;  // Convert to 12-hour format
-      const period = hours >= 12 ? "PM" : "AM";
-      return `${formattedHours}:${minutes} ${period}`;
-    }
-    return time; // return raw time during SSR
-  };
-
   //! setPinedMsgs 
   useEffect(() => {
     const filteredMsgs = messages.filter(msg => msg.pin);
@@ -321,8 +321,8 @@ const handleEmojiClick = (event) => {
           <Image src={'/Screenshot 2025-01-03 040444.png'} alt={`Screenshot`} fill/>
           <div className='top topUser'>
             <div className='user' onClick={()=> setOverViewMenu(true)}>
-              <Image src={'/avatar.png'} width={40} height={40} alt={`Screenshot`}/>
-              <h4>Kilwa</h4>
+              {curentChat.img && (<Image src={curentChat.img}  width={40} height={40} alt={curentChat?.name}/>)}
+              <h4>{curentChat?.name}</h4>
             </div>
             <div className='tools'>
 
@@ -352,13 +352,18 @@ const handleEmojiClick = (event) => {
                   {selectedOverView === `Overview` ? 
                   (<div className='overview'>
                     <div className='center'>
-                      <Image src={'/avatar.png'} width={45} height={45} alt={`user Image`}/>
-                      <h4>{users[0].name}</h4>
-                      <p>{users[0].bio}</p>
+                    <Image 
+                      src={curentChat?.img || null} 
+                      width={45} 
+                      height={45} 
+                      alt="user Image" 
+                    />
+                      <h4>{curentChat?.name}</h4>
+                      <p>{curentChat?.bio}</p>
                     </div>
 
                     <label>Phone Number</label>
-                    <p>{users[0].number}</p>
+                    <p>{curentChat?.number}</p>
 
                     <div className='btn-holder'>
                       <button>archive chat</button>
@@ -386,7 +391,7 @@ const handleEmojiClick = (event) => {
                                   }}
                               >
                                   <img 
-                                      src={`${x.img}`} 
+                                      src={x?.img || null} 
                                       onClick={() => {
                                           if (!selectMode) {
                                             handleImageClick(x.id ,index)
@@ -436,7 +441,7 @@ const handleEmojiClick = (event) => {
                 {currentfocusdMsg?.user !== 'Bob' && <h5>{currentfocusdMsg?.user}</h5>}
                 {currentfocusdMsg?.img && (
                   <img 
-                    src={currentfocusdMsg.img} 
+                    src={currentfocusdMsg?.img} 
                     alt={currentfocusdMsg.user ? `${currentfocusdMsg.user}'s image` : "User image"} 
                   />
                 )}
@@ -527,7 +532,7 @@ const handleEmojiClick = (event) => {
                               : [...prev, x.name]
                           )
                       }}>
-                        <Image src={x.img} width={40} height={40} alt={`user Image`}/>
+                        <Image src={x.img ? x.img : null} width={40} height={40} alt={`user Image`}/>
                         <div className="name-lastmessage">
                           <h4>{x.name}</h4>
                           <p>{maxLength(x.isGroup ? x.groupMembers.slice(0,5) : x.bio, 25)}</p>
@@ -550,7 +555,7 @@ const handleEmojiClick = (event) => {
                     msgsEmojis?.map((x) => (
                       <div key={x.id} className="user">
                         <div className="info">
-                          <Image src={x.user.img} width={40} height={40} alt={`user Image`}/>
+                          <Image src={x.user.img ? x.user.img : null} width={40} height={40} alt={`user Image`}/>
                           <h4>{x.user.name}</h4>
                         </div>
                         <span>{x.emoji}</span>
@@ -564,7 +569,7 @@ const handleEmojiClick = (event) => {
               {messages.map((x, i) => {
                 const replyMsg = x.replyId ? messages.find((msg) => msg.id === x.replyId) : null;
                 return (
-                  <div key={x.id} id={`message-${x.id}`} className={`msg ${x.history || x.action ? 'middle' : ''} ${x.history ? 'history' : ''} ${isScrolling ? "visible" : ""} ${x.user === 'Bob' ? 'me' : ''} ${selectedMsgs.includes(x.id) && 'selected'} ${activeIndex === i ? "sticky" : ""} ${activeIndex === i && !isScrolling ? "hidden" : ""}`}
+                  <div key={x.id} id={`message-${x.id}`} className={`msg ${x.history || x.action ? 'middle' : ''} ${x.history ? 'history' : ''} ${x.user === 'Bob' ? 'me' : ''} ${selectedMsgs.includes(x.id) && 'selected'} ${activeIndex === i ? "sticky" : ""} ${activeIndex === i && !isScrolling ? "hidden" : ""}`}
                   ref={(el) => {
                     if (x.history) historyRefs.current[i] = el;
                   }}
@@ -604,7 +609,7 @@ const handleEmojiClick = (event) => {
                         <div>{x.actor} {x.action} {x.targetPerson}</div>
                       ) : (
                         <>
-                          <div className='top'>{x.user !== 'Bob' && <h5>{x.user}</h5>} <small>{formatTime(x.time)}</small></div>
+                          <div className='top'>{x.user !== 'Bob' && <h5>{x.user}</h5>} <small>{x.time}</small></div>
                           {replyMsg && (
                             <div className="reply" onClick={()=> handlePinClick(replyMsg.id)}>
                               {replyMsg.img ? (
@@ -623,7 +628,7 @@ const handleEmojiClick = (event) => {
                               )}
                             </div>
                           )}
-                          {x.img != "" && <img src={`${x.img}`} 
+                          {x.img && <img src={x?.img || null}  
                             onClick={()=> {
                               if (!selectMode) {
                                 handleImageClick(x.id , '')
@@ -682,7 +687,7 @@ const handleEmojiClick = (event) => {
             <button><MdOutlinePermMedia/></button>
             <button onClick={()=> {setEmojiHolder(true); textarea.current.focus()}}><BsEmojiSmile/></button>
             <div className='big-holder'>
-              {mentionHolder && (
+              {mentionHolder && filteredUsers.length < 1 && mentionsPeople.length < 1 && (
                   <div ref={mentionRef} className={`mentionMenu MenuOfUsers sideMenu active`}>
 
                         {filteredUsers.length > 0 && (
@@ -692,7 +697,7 @@ const handleEmojiClick = (event) => {
                               {
                                 filteredUsers.map((x) => (
                                   <div key={x.id} className="user" onClick={() => handleUserClick(x)}>
-                                    <Image src={x.img} width={40} height={40} alt={`user Image`} />
+                                    <Image src={x.img ? x.img : null} width={40} height={40} alt={`user Image`} />
                                     <div className="info">
                                       <h4>{x.name}</h4>
                                       <span>{x.bio}</span>

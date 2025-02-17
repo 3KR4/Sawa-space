@@ -80,6 +80,7 @@
   flex: 1;
   cursor: pointer;
   padding: 8px 15px;
+  height: 56px;
 }
 .pirsonChat .top .user img {
   color: transparent;
@@ -800,6 +801,10 @@
 .pirsonChat .messages .msg.sticky.hidden {
   opacity: 0;
   visibility: hidden;
+}
+.pirsonChat .messages .msg.sticky.hidden:hover {
+  opacity: 1;
+  visibility: visible;
 }
 .pirsonChat .messages .msg.history .body {
   box-shadow: 0px 0px 2px 2px #ff8e3161;

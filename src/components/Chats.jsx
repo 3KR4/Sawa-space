@@ -36,7 +36,6 @@ export default function Chats() {
     setCurentUserId(extractedId);
   }, []);
 
-console.log(curentUserId);
 
   const handleMessageActions = (event) => {
     event.preventDefault(); 
