@@ -142,6 +142,7 @@
 
 
 .pirsonChat .overViewMenu {
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   position: absolute;
@@ -477,7 +478,7 @@
   width: fit-content;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   z-index: 2;
   outline: 2px solid #dedede;
   position: relative;
@@ -494,6 +495,7 @@
 }
 .pirsonChat .messages .msg.me .top {
   justify-content: flex-end;
+  margin-top: -2px;
 }
 .pirsonChat .messages .msg.me {
   display: flex;
@@ -785,12 +787,9 @@
 
 .pirsonChat .messages .msg.history {
   position: unset;
-  top: 31px;
+  top: 55px;
   z-index: 10;
   transition: 0.3s;
-}
-.pirsonChat:has(.pin-holder) .msg.history {
-  top: 76px;
 }
 .pirsonChat .messages .msg.sticky {
   position: sticky !important;
@@ -1121,10 +1120,37 @@ body:has(.pirsonChat) .open-close {
   
 }
 @media (max-width: 992px) {
-  
+  .pirsonChat {
+    height: 91.5vh;
+  }
+  .pirsonChat .messages .msg .body {
+    max-width: 75%;
+  }
 }
 @media (max-width: 786px) {
-  
+  .pirsonChat {
+    height: 100vh;
+    border-radius: 0;
+  }
+  body:has(.pirsonChat) header {
+    display: none;
+  }
+  .pirsonChat .tools > button, .pirsonChat .actions > button {
+    width: 40px;
+  }
+  .pirsonChat .messages .msg {
+    padding: 14px;
+  }
+  .focusedMsg .closeMsg {
+    right: 2%;
+  }
+  .focusedMsg img {
+    max-width: 96%;
+  }
+  .pirsonChat .custom-checkbox {
+    width: 18px;
+    height: 18px;
+  }
 }
 @media (max-width: 500px) {
   

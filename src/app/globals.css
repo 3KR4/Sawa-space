@@ -8,6 +8,10 @@
   list-style: none;
   text-decoration: none;
 }
+.Chats, main {
+  margin: 0;
+  padding: 0;
+}
 :root {
   --body-color:   #ffffff;
   --main-color:   #ff8e31;
@@ -36,19 +40,14 @@ body.dark {
 
 body {
   padding: 15px;
+  width: 100vw;
+  overflow-x: hidden;
   display: flex;
-  gap: 15px;
   font-family: 'Rubik', sans-serif;
   background-color: var(--body-color) !important;
 }  
 
-.App {
-  display: flex;
-  gap: 10px;
-  color: white;
-  flex-direction: column;
-  overflow-x: hidden;
-}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 8px;
@@ -98,7 +97,7 @@ h1,h2,h3,h4,h5,h6,li,svg,a {
   padding: 0;
   color: var(--title-color);
 }
-svg{
+svg {
   transition: 0.3s;
   cursor: pointer;
 }
@@ -108,9 +107,9 @@ p {
   color: var(--paragraph-color);
 }
 ul {
-    list-style: none;
-    margin: 0;
-    padding:0;
+  list-style: none;
+  margin: 0;
+  padding:0;
 }
 hr {
   background: var(--border-color);
@@ -172,6 +171,7 @@ body > main {
 }
 
 .chats {
+  margin-right: 15px;
   background: var(--body-color);
   width: 334px;
   border-radius: 11px;
@@ -220,11 +220,14 @@ body > main {
   font-size: 21px;
   font-weight: 500;
 }
-
+.search-holder .search-btn {
+  display: none;
+}
 .search-holder {
   position: relative;
   flex: 1;
 }
+
 .chats .search-holder input {
   padding: 6px 33px 6px 34px !important;
   width: 100% !important;
@@ -481,11 +484,30 @@ body > main {
   height: 91%;
   filter: grayscale(0.15);
 }
-.chat-page img {
+.chat-page > img {
   width: 55%;
 }
 .chat-page h1 {
   font-size: 30px;
+  text-align: center;
+}
+
+
+.chat-page:has(.chats) {
+  padding: 0;
+}
+.chat-page .chats {
+  width: 100%;
+  height: fit-content;
+}
+.chat-page .chats {
+
+}
+.chat-page .chats {
+
+}
+.chat-page .chats {
+
 }
 
 
@@ -791,13 +813,16 @@ header .events .userMenu svg {
     width: 140px;
   }
   header .logo img {
-    height: 53px;
     margin: -4px 0 -4px -3px;
   }
 }
 @media (max-width: 1200px) {
   body:has(.chats.false) main header nav svg {
     display: flex;
+    font-size: 25px;
+  }
+  header nav a {
+    padding: 8px 15px;
   }
   body:has(.chats.false) main header nav span {
     display: none;
@@ -818,15 +843,117 @@ header .events .userMenu svg {
 
 }
 @media (max-width: 1100px) {
-  
+  header nav a {
+    padding: 8px 9px;
+  }
+  .chats {
+    width: 300px;
+  }
+  .chats .chat .name-lastmessage p {
+    width: 162px;
+  }
 }
 @media (max-width: 1000px) {
   
 }
 @media (max-width: 992px) {
-  
+  body {
+    padding: 10px;
+  }
+  .chats {
+    width: 270px;
+  }
+  .chats .chat .name-lastmessage p {
+    width: 131px;
+  }
+  header .logo img {
+    width: 35px;
+    height: 35px;
+  }
+  .chats {
+    height: 98vh;
+  }
+
+
+  body main header nav span {
+    display: none;
+  }
+  header nav a svg {
+    font-size: 25px;
+  }
+  .chats .filters li {
+    font-size: 13px;
+  }
+  .chats .filters li svg {
+    min-width: 18px;
+  }
+  header .search-holder {
+    position: absolute;
+    bottom: 0;
+    width: 99%;
+    left: 0px;
+    transition: 0.3s;
+    visibility: hidden;
+    z-index: -1;
+    opacity: 0;
+  }
+  .search-btn {
+    display: flex;
+    font-size: 26px;
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 2px solid var(--border-color);
+    color: #686868;
+  }
+  header .events > li {
+    width: 35px;
+    height: 35px;
+  }
+  .chat-page > img {
+    width: 100%;
+  }
 }
 @media (max-width: 786px) {
+  body {
+    padding: 0;
+  }
+  body:has(.chat-page) header {
+    display: none;
+  }
+  .chat-page {
+    justify-content: unset;
+  }
+  .chat-page .chats {
+    margin: 0;
+    padding: 13px 0 0;
+  }
+  .chat-page .chats .chat {
+    width: unset;
+  }
+  .chat-page .chats .chat .name-lastmessage {
+    flex: 1;
+  }
+  .chat-page .chats .chat img {
+    width: 45px;
+    height: 45px;
+  }
+  .chat-page .chats .holder {
+    max-height: 83vh;
+  }
+  .chat-page .chats .filters li {
+    width: 33px;
+  }
+  .chat-page .chats .filters li {
+    font-size: 16px;
+  }
+  .chat-page .chats .filters li svg {
+    min-width: 20px;
+  }
+  .chat-page .chats .chat .name-lastmessage p {
+    width: 100%;
+  } 
   
 }
 @media (max-width: 500px) {

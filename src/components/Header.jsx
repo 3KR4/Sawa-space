@@ -3,23 +3,22 @@ import React, { useState } from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import { IoSearch, IoClose, IoGrid, IoChatbubbleEllipsesOutline, IoCartOutline } from "react-icons/io5";
-import { FaCaretDown, FaUser } from "react-icons/fa";
+import { FaCaretDown, FaUser, FaSearch } from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
 import { RiUserCommunityLine } from "react-icons/ri";
 import { RiColorFilterAiFill,  } from "react-icons/ri";
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
-
 import { LiaPagerSolid } from "react-icons/lia";
-
 
 export default function Header() {
   const [userMenu, setUserMenu] = useState(false)
   return (
     <header>
       <div className="logo">
-          <Image src={'/logo.png'} width={80} height={80} alt={`logo`}/>
+        <Image src={'/logo.png'} width={80} height={80} alt={`logo`}/>
+        <FaSearch className='search-btn'/>
         <div className="search-holder">
           <IoSearch/>
           <input type="text" placeholder='Search anything...'/>
@@ -32,7 +31,7 @@ export default function Header() {
         </div>
       </div>
       <nav>
-        <Link href='/explore' className='active'><MdOutlineExplore/> <span>Explore</span></Link>
+        <Link href='/' className='active'><MdOutlineExplore/> <span>Explore</span></Link>
         <Link href='/chat'><IoChatbubbleEllipsesOutline/> <span>Chat</span></Link>
         <Link href='/pages'><LiaPagerSolid/> <span>Pages</span></Link>
         <Link href='/communities'><RiUserCommunityLine/> <span>Communities</span></Link>

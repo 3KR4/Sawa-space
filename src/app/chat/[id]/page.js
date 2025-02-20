@@ -316,7 +316,7 @@ const handleEmojiClick = (event) => {
   }, [activeIndex]);
 
   return (
-    <div className={`pirsonChat ${selectMode && 'selectMode'}`}>
+    <div className={`pirsonChat ${selectMode && 'selectMode'}`} >
         <>
           <Image src={'/Screenshot 2025-01-03 040444.png'} alt={`Screenshot`} fill/>
           <div className='top topUser'>
@@ -431,6 +431,7 @@ const handleEmojiClick = (event) => {
               </div>
             </div>
           )}
+          
             {pinedMsgs.length > 0 && <PinHolder data={pinedMsgs} />}
           </div>
 
@@ -661,12 +662,15 @@ const handleEmojiClick = (event) => {
                             </div>
                         )}
 
-                        <div className='interact'>
-                          <div className='holder' onClick={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
-                            <MdOutlineAddReaction/>
-                            <FaAngleDown/>
+                        {window.innerWidth > 768 && (
+                          <div className='interact'>
+                            <div className='holder' onClick={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
+                              <MdOutlineAddReaction/>
+                              <FaAngleDown/>
+                            </div>
                           </div>
-                        </div>
+                          )
+                        }
                       </>
                     )}
                     </div>

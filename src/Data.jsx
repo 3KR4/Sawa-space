@@ -191,7 +191,7 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:00", 
-    pin: false,
+    pin: true,
   },
   {
     id: 2,
@@ -229,7 +229,7 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:20", 
-    pin: false,
+    pin: true,
   },
   {
     id: 616,
@@ -1176,7 +1176,7 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:00", 
-    pin: false,
+    pin: true,
   },
   {
     id: 42,
@@ -1401,4 +1401,3 @@ export let messages = [
     time: "16:45",
   },
 ];
-
