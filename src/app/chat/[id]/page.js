@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import Image from "next/image";
 import Link from 'next/link';
 import { maxLength } from '@/Methods';
@@ -11,6 +11,8 @@ import '../../Css/chat.css';
 import { use } from "react";
 
 import PinHolder from '@/components/chat/PinHolder';
+import { AllContext } from '@/app/Context';
+
 
 //Icons 
 import { GoPin } from "react-icons/go";
@@ -27,6 +29,8 @@ import { FaStar, FaShare, FaRegStar, FaAngleDown, FaRegUserCircle } from "react-
 import { FaRegImages, FaRegTrashCan, FaRegSquareCheck, FaPlus, FaUserGroup } from "react-icons/fa6";
 
 export default function Chat({ params }) {
+
+  const { screenSize } = useContext(AllContext)
 
   const [curentChat, setCurentChat] = useState({});
   const [text, setText] = useState("");
@@ -662,7 +666,7 @@ const handleEmojiClick = (event) => {
                             </div>
                         )}
 
-                        {window.innerWidth > 768 && (
+                        {screenSize !== 'small' && (
                           <div className='interact'>
                             <div className='holder' onClick={(e) => !selectMode && handleMessageActions(e, 'actions', x )}>
                               <MdOutlineAddReaction/>
