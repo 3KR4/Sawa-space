@@ -55,12 +55,33 @@ export default function Header() {
     };
   }, []);
   
-  
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (screenSize !== 'small') return; // Stop if not a small screen
+
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 0) {
+        setIsVisible(false); // Hide header when scrolling down
+      } else {
+        setIsVisible(true); // Show header when scrolling up
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY, screenSize]);
   
   
 
   return (
-    <header>
+    <header className={`${screenSize === 'small' && !isVisible && "hidden"}`}>
       <div className="logo">
         <Image src={'/logo.png'} width={80} height={80} alt={`logo`}/>
         {screenSize === 'small' &&

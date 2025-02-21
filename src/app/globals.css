@@ -513,7 +513,6 @@ body > main {
 /*! HEADER */
 
 header {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -522,7 +521,10 @@ header {
   padding: 6px 25px;
   outline: 2px solid #e8e8e8;
   margin-bottom: 16px;
+  position: sticky;
+  top: 12px;
 }
+
 header .logo {
   display: flex;
   align-items: center;
@@ -967,6 +969,9 @@ header .events .userMenu svg {
     transition: 0.3s;
     width: 95%;
     margin: 10px auto;
+  }
+  header.hidden {
+    top: -120px;
   }
   header .logo {
     width: 100%;
