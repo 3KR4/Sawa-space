@@ -13,7 +13,6 @@ import { use } from "react";
 import PinHolder from '@/components/chat/PinHolder';
 import { AllContext } from '@/app/Context';
 
-
 //Icons 
 import { GoPin } from "react-icons/go";
 import { HiReply } from "react-icons/hi";
@@ -117,23 +116,24 @@ export default function Chat({ params }) {
     textarea.style.height = `${textarea.value === '' ? '42px' : textarea.scrollHeight + 4}px`;
     setText(textarea.value);
 
-    // Detect mentions in the text
     const caretPosition = textarea.selectionStart;
     const textBeforeCaret = textarea.value.slice(0, caretPosition);
     const mentionMatch = textBeforeCaret.match(/@(\w*)$/);
 
-    // Show mention suggestions if typing @
     if (mentionMatch) {
-        setMentionHolder(true);
-        const searchTerm = mentionMatch[1].toLowerCase();
-        setFilteredMentinUser(
-            users.filter(user => user.name.toLowerCase().contains(searchTerm))
-        );
-    } else {
-        setMentionHolder(false);
-    }
+      setMentionHolder(true);
+      const searchTerm = mentionMatch[1].toLowerCase();
+  
+      setFilteredMentinUser(
+          searchTerm
+              ? users.filter(user => user.name.toLowerCase().includes(searchTerm))
+              : users // Show all users if no search term
+      );
+  } else {
+      setMentionHolder(false);
+      setFilteredMentinUser(users); // Reset to default users when there's no match
+  }
 
-    // ✅ Keep mentionsPeople array in sync with text content
     const mentionedNames = [...textarea.value.matchAll(/@(\w+)/g)].map(match => match[1]);
     setMentionsPeople((prev) =>
         prev.filter((user) => mentionedNames.includes(user.name))
@@ -147,7 +147,6 @@ const handleUserClick = (user) => {
   const textBeforeCaret = text.slice(0, caretPosition);
   const textAfterCaret = text.slice(caretPosition);
 
-  // Replace @mention only if the user had typed @
   const newText = /@\w*$/.test(textBeforeCaret) 
       ? textBeforeCaret.replace(/@\w*$/, `@${user.name}`) + textAfterCaret
       : `${textBeforeCaret} @${user.name} ${textAfterCaret}`;
@@ -695,7 +694,7 @@ const handleEmojiClick = (event) => {
             <button><MdOutlinePermMedia/></button>
             <button onClick={()=> {setEmojiHolder(true); textarea.current.focus()}}><BsEmojiSmile/></button>
             <div className='big-holder'>
-              {mentionHolder && filteredUsers.length < 1 && mentionsPeople.length < 1 && (
+              {mentionHolder && (
                   <div ref={mentionRef} className={`mentionMenu MenuOfUsers sideMenu active`}>
 
                         {filteredUsers.length > 0 && (
