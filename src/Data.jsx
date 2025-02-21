@@ -2,7 +2,7 @@ export const users = [
   {
       id: 1,
       name: 'Ahmed',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user1.png',
       lastMessage: { type: 'text', content: 'Hey there!' },
       bio: 'Tech enthusiast',
       number: '+20 112 972 7995',
@@ -15,31 +15,31 @@ export const users = [
   {
       id: 2,
       name: 'Sara',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user2.png',
       lastMessage: { type: 'img' },
       bio: 'Photographer',
       lastMsgTime: '10:15 PM',
       isGroup: false,
-      unReadCounter: 5,
+      unReadCounter: 13,
       groupMembers: [],
       newStatus: true,
   },
   {
       id: 3,
       name: 'Football Fans',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user3.png',
       lastMessage: { type: 'sticker', content: '⚽' },
       bio: 'Group of football lovers',
       lastMsgTime: '9:50 PM',
       isGroup: true,
-      unReadCounter: 3,
+      unReadCounter: 0,
       groupMembers: ['Ali', 'Hassan', 'Omar'],
       newStatus: false,
   },
   {
       id: 4,
       name: 'Ali',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user4.png',
       lastMessage: { type: 'text', content: 'How was your day?' },
       bio: 'Gamer',
       lastMsgTime: '9:00 PM',
@@ -51,31 +51,31 @@ export const users = [
   {
       id: 5,
       name: 'Family Chat',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user5.png',
       lastMessage: { type: 'text', content: 'Dinner plans?' },
       bio: 'Family chat group',
       lastMsgTime: '8:30 PM',
       isGroup: true,
-      unReadCounter: 4,
+      unReadCounter: 0,
       groupMembers: ['Dad', 'Mom', 'Sister'],
       newStatus: false,
   },
   {
       id: 6,
       name: 'Omar',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user6.png',
       lastMessage: { type: 'sticker', content: '🎉' },
       bio: 'Musician',
       lastMsgTime: '7:45 PM',
       isGroup: false,
-      unReadCounter: 0,
+      unReadCounter: 8,
       groupMembers: [],
       newStatus: true,
   },
   {
       id: 7,
       name: 'Study Crew',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user7.png',
       lastMessage: { type: 'img' },
       bio: 'Group for study discussions',
       lastMsgTime: '7:00 PM',
@@ -87,31 +87,31 @@ export const users = [
   {
       id: 8,
       name: 'Nour',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user8.png',
       lastMessage: { type: 'text', content: 'Call me later.' },
       bio: 'Traveler',
       lastMsgTime: '6:30 PM',
       isGroup: false,
-      unReadCounter: 1,
+      unReadCounter: 0,
       groupMembers: [],
       newStatus: true,
   },
   {
       id: 9,
       name: 'Gaming Legends',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user9.png',
       lastMessage: { type: 'sticker', content: '🎮' },
       bio: 'Gaming chat',
       lastMsgTime: '5:50 PM',
       isGroup: true,
-      unReadCounter: 6,
+      unReadCounter: 0,
       groupMembers: ['Ali', 'Ahmed', 'Sara'],
       newStatus: false,
   },
   {
       id: 10,
       name: 'Hassan',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user10.png',
       lastMessage: { type: 'img' },
       bio: 'Coder',
       lastMsgTime: '5:15 PM',
@@ -123,60 +123,60 @@ export const users = [
   {
       id: 11,
       name: 'Music Lovers',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user11.png',
       lastMessage: { type: 'text', content: 'Check out this song!' },
       bio: 'For music sharing',
       lastMsgTime: '4:45 PM',
       isGroup: true,
-      unReadCounter: 3,
+      unReadCounter: 0,
       groupMembers: ['Ahmed', 'Omar', 'Nour'],
       newStatus: false,
   },
   {
       id: 12,
       name: 'Mike',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user12.png',
       lastMessage: { type: 'sticker', content: '🤓' },
       bio: 'Developer',
       lastMsgTime: '4:00 PM',
       isGroup: false,
-      unReadCounter: 1,
+      unReadCounter: 0,
       groupMembers: [],
       newStatus: false,
   },
   {
       id: 13,
       name: 'Book Circle',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user13.png',
       lastMessage: { type: 'img' },
       bio: 'Book enthusiasts',
       lastMsgTime: '3:30 PM',
       isGroup: true,
-      unReadCounter: 4,
+      unReadCounter: 0,
       groupMembers: ['Sara', 'John', 'Ali'],
       newStatus: true,
   },
   {
       id: 14,
       name: 'John',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user14.png',
       lastMessage: { type: 'text', content: 'Meeting at 5?' },
       bio: 'Entrepreneur',
       lastMsgTime: '3:00 PM',
       isGroup: false,
-      unReadCounter: 2,
+      unReadCounter: 0,
       groupMembers: [],
       newStatus: false,
   },
   {
       id: 15,
       name: 'Tech World',
-      img: 'https://via.placeholder.com/50',
+      img: '/users/user15.png',
       lastMessage: { type: 'text', content: 'New iPhone launched!' },
       bio: 'Latest technology updates',
       lastMsgTime: '2:30 PM',
       isGroup: true,
-      unReadCounter: 5,
+      unReadCounter: 0,
       groupMembers: ['Ahmed', 'Nour', 'Sara'],
       newStatus: true,
   }
@@ -207,9 +207,14 @@ export let messages = [
     user: "Alice",
     message: "Doing well, just working on a project.",
     img: "/chat4.png",
-    replyId: 2,
+    replyId: 12,
     date: "2024-10-12",
     time: "16:10", 
+  },
+  {
+    id: 6684,
+    actor : 'endy',
+    action: 'join the group using via link',
   },
   {
     id: 4,
@@ -225,7 +230,7 @@ export let messages = [
     id: 5,
     user: "Alice",
     message: "It's a web app for managing tasks. What about you?",
-    img: "/chat5.png",
+    img: "/chat6.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:20", 
@@ -242,49 +247,22 @@ export let messages = [
     action: 'added',
     targetPerson: '3kr4',
   },
-  {
-    id: 6116,
-    history: true,
-    time: 'tharathday',
-  },
-  {
-    id: 6684,
-    actor : 'endy',
-    action: 'join the group using via link',
-  },
+
+
   {
     id: 6476,
     actor : 'ixon',
     action: 'left',
   },
-  {
-    id: 61416,
-    history: true,
-    time: 'Today',
-  },
+
   {
     id: 6160,
     actor : 'endy',
     action: 'giveAadmin',
     targetPerson: '3kr4',
   },
-  {
-    id: 615,
-    actor : '3kr4',
-    action: 'remove',
-    targetPerson: 'fares',
-  },
-  {
-    id: 69,
-    actor : '3kr4',
-    action: 'removeAdmin',
-    targetPerson: 'endy',
-  },
-  {
-    id: 6136,
-    history: true,
-    time: '1/14/2026',
-  },
+
+
   {
     id: 6,
     user: "Bob",
@@ -307,7 +285,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -315,7 +293,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user2.png',
         },
         emoji: '🤓',
       },
@@ -323,7 +301,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user4.png',
         },
         emoji: '😭',
       },
@@ -331,7 +309,7 @@ export let messages = [
         id: 4,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user6.png',
         },
         emoji: '🧐',
       },
@@ -339,7 +317,7 @@ export let messages = [
         id: 5,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user7.png',
         },
         emoji: '🤓',
       },
@@ -347,7 +325,7 @@ export let messages = [
         id: 6,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user8.png',
         },
         emoji: '😭',
       },
@@ -355,7 +333,7 @@ export let messages = [
         id: 7,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user10.png',
         },
         emoji: '🧐',
       },
@@ -363,7 +341,7 @@ export let messages = [
         id: 8,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user12.png',
         },
         emoji: '🤓',
       },
@@ -371,7 +349,7 @@ export let messages = [
         id: 9,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user15.png',
         },
         emoji: '😭',
       },
@@ -379,7 +357,7 @@ export let messages = [
         id: 10,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤩',
       },
@@ -387,7 +365,7 @@ export let messages = [
         id: 11,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user2.png',
         },
         emoji: '🥶',
       },
@@ -395,7 +373,7 @@ export let messages = [
         id: 12,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user4.png',
         },
         emoji: '🤮',
       },
@@ -414,7 +392,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user2.png',
         },
         emoji: '🥰',
       },
@@ -422,7 +400,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user8.png',
         },
         emoji: '👎🏻',
       },
@@ -430,7 +408,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user7.png',
         },
         emoji: '😂',
       },
@@ -438,7 +416,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user10.png',
         },
         emoji: '👎🏻',
       },
@@ -446,7 +424,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user12.png',
         },
         emoji: '😂',
       }
@@ -456,7 +434,7 @@ export let messages = [
     id: 9,
     user: "Alice",
     message: "Yes, I use it for most of my projects. It's really powerful!",
-    img: "/chat2.jpg",
+    img: "/chat2.png",
     replyId: 8,
     date: "2024-10-12",
     time: "16:40", 
@@ -485,7 +463,7 @@ export let messages = [
     user: "Bob",
     message: "I'm good, thanks! How about you?",
     img: null,
-    replyId: 1,
+    replyId: 4,
     date: "2024-10-12",
     time: "16:05", 
   },
@@ -509,6 +487,12 @@ export let messages = [
     deleted: true,
   },
   {
+    id: 61416,
+    history: true,
+    time: 'Today',
+  },
+
+  {
     id: 15,
     user: "Alice",
     message: "It's a web app for managing tasks. What about you?",
@@ -527,6 +511,13 @@ export let messages = [
     time: "16:25", 
   },
   {
+    id: 615,
+    actor : '3kr4',
+    action: 'remove',
+    targetPerson: 'fares',
+  },
+
+  {
     id: 17,
     user: "Alice",
     message: "React is amazing! Have you tried Next.js?",
@@ -534,104 +525,6 @@ export let messages = [
     replyId: 6,
     date: "2024-10-12",
     time: "16:30", 
-    emojis: [
-      {
-        id: 1,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 3,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 4,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 5,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 6,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 7,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 8,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 9,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 10,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤩',
-      },
-      {
-        id: 11,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🥶',
-      },
-      {
-        id: 12,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤮',
-      },
-    ]
   },
   {
     id: 18,
@@ -646,7 +539,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🥰',
       },
@@ -654,7 +547,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -662,7 +555,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       },
@@ -670,7 +563,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -678,7 +571,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       }
@@ -688,7 +581,7 @@ export let messages = [
     id: 19,
     user: "Alice",
     message: "Yes, I use it for most of my projects. It's really powerful!",
-    img: "/chat2.jpg",
+    img: "/chat2.png",
     replyId: 8,
     date: "2024-10-12",
     time: "16:40", 
@@ -707,7 +600,7 @@ export let messages = [
     id: 21,
     user: "Alice",
     message: "",
-    img: "/chat3.png",
+    img: "/chat18.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:00", 
@@ -717,15 +610,21 @@ export let messages = [
     user: "Bob",
     message: "I'm good, thanks! How about you?",
     img: null,
-    replyId: 1,
+    replyId: 14,
     date: "2024-10-12",
     time: "16:05", 
   },
   {
+    id: 6116,
+    history: true,
+    time: 'tharathday',
+  },
+
+  {
     id: 23,
     user: "Alice",
     message: "Doing well, just working on a project.",
-    img: "/chat4.png",
+    img: "/chat17.png",
     replyId: 2,
     date: "2024-10-12",
     time: "16:10", 
@@ -739,6 +638,12 @@ export let messages = [
     date: "2024-10-12",
     time: "16:15", 
     deleted: true,
+  },
+  {
+    id: 69,
+    actor : '3kr4',
+    action: 'removeAdmin',
+    targetPerson: 'endy',
   },
   {
     id: 25,
@@ -771,7 +676,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -779,7 +684,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -787,7 +692,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -795,7 +700,7 @@ export let messages = [
         id: 4,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -803,7 +708,7 @@ export let messages = [
         id: 5,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -811,7 +716,7 @@ export let messages = [
         id: 6,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -819,7 +724,7 @@ export let messages = [
         id: 7,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -827,7 +732,7 @@ export let messages = [
         id: 8,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -835,7 +740,7 @@ export let messages = [
         id: 9,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -843,7 +748,7 @@ export let messages = [
         id: 10,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤩',
       },
@@ -851,7 +756,7 @@ export let messages = [
         id: 11,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🥶',
       },
@@ -859,7 +764,7 @@ export let messages = [
         id: 12,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤮',
       },
@@ -869,7 +774,7 @@ export let messages = [
     id: 28,
     user: "Bob",
     message: "Not yet, but it's on my list. Do you use it?",
-    img: "/chat13.jpg",
+    img: "/chat13.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:35", 
@@ -879,7 +784,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🥰',
       },
@@ -887,7 +792,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -895,7 +800,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       },
@@ -903,7 +808,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -911,7 +816,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       }
@@ -921,10 +826,15 @@ export let messages = [
     id: 29,
     user: "Alice",
     message: "Yes, I use it for most of my projects. It's really powerful!",
-    img: "/chat5.png",
-    replyId: 8,
+    img: "/chat15.png",
+    replyId: 18,
     date: "2024-10-12",
     time: "16:40", 
+  },
+  {
+    id: 6136,
+    history: true,
+    time: '1/14/2026',
   },
   {
     id: 30,
@@ -950,7 +860,7 @@ export let messages = [
     user: "Bob",
     message: "I'm good, thanks! How about you?",
     img: null,
-    replyId: 1,
+    replyId: 19,
     date: "2024-10-12",
     time: "16:05", 
   },
@@ -958,8 +868,8 @@ export let messages = [
     id: 33,
     user: "Alice",
     message: "Doing well, just working on a project.",
-    img: "/chat7.jpg",
-    replyId: 2,
+    img: "/chat7.png",
+    replyId: 22,
     date: "2024-10-12",
     time: "16:10", 
   },
@@ -999,162 +909,13 @@ export let messages = [
     replyId: 6,
     date: "2024-10-12",
     time: "16:30", 
-    emojis: [
-      {
-        id: 1,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 3,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 4,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 5,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 6,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 7,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🧐',
-      },
-      {
-        id: 8,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤓',
-      },
-      {
-        id: 9,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😭',
-      },
-      {
-        id: 10,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤩',
-      },
-      {
-        id: 11,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🥶',
-      },
-      {
-        id: 12,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🤮',
-      },
-    ]
-  },
-  {
-    id: 38,
-    user: "Bob",
-    message: "Not yet, but it's on my list. Do you use it?",
-    img: "/chat1.png",
-    replyId: null,
-    date: "2024-10-12",
-    time: "16:35", 
-    emojis: [
-      {
-        id: 1,
-        user: {
-          name: 'Alias',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '🥰',
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '👎🏻',
-      },
-      {
-        id: 3,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😂',
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Bob',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '👎🏻',
-      },
-      {
-        id: 3,
-        user: {
-          name: 'sass',
-          img: 'https://via.placeholder.com/50',
-        },
-        emoji: '😂',
-      }
-    ] 
   },
   {
     id: 39,
     user: "Alice",
     message: "Yes, I use it for most of my projects. It's really powerful!",
     img: "/chat9.ico",
-    replyId: 8,
+    replyId: 13,
     date: "2024-10-12",
     time: "16:40", 
   },
@@ -1172,7 +933,7 @@ export let messages = [
     id: 41,
     user: "Alice",
     message: "",
-    img: "/chat10.jpg",
+    img: "/chat10.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:00", 
@@ -1191,8 +952,8 @@ export let messages = [
     id: 43,
     user: "Alice",
     message: "Doing well, just working on a project.",
-    img: "/chat11.jpeg",
-    replyId: 2,
+    img: "/chat11.png",
+    replyId: 23,
     date: "2024-10-12",
     time: "16:10", 
   },
@@ -1210,7 +971,7 @@ export let messages = [
     id: 45,
     user: "Alice",
     message: "It's a web app for managing tasks. What about you?",
-    img: "/chat12.jpeg",
+    img: "/chat12.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:20", 
@@ -1237,7 +998,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -1245,7 +1006,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -1253,7 +1014,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -1261,7 +1022,7 @@ export let messages = [
         id: 4,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -1269,7 +1030,7 @@ export let messages = [
         id: 5,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -1277,7 +1038,7 @@ export let messages = [
         id: 6,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -1285,7 +1046,7 @@ export let messages = [
         id: 7,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🧐',
       },
@@ -1293,7 +1054,7 @@ export let messages = [
         id: 8,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤓',
       },
@@ -1301,7 +1062,7 @@ export let messages = [
         id: 9,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😭',
       },
@@ -1309,7 +1070,7 @@ export let messages = [
         id: 10,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤩',
       },
@@ -1317,7 +1078,7 @@ export let messages = [
         id: 11,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🥶',
       },
@@ -1325,7 +1086,7 @@ export let messages = [
         id: 12,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🤮',
       },
@@ -1335,7 +1096,7 @@ export let messages = [
     id: 48,
     user: "Bob",
     message: "Not yet, but it's on my list. Do you use it?",
-    img: "/chat13.jpg",
+    img: "/chat13.png",
     replyId: null,
     date: "2024-10-12",
     time: "16:35", 
@@ -1344,7 +1105,7 @@ export let messages = [
         id: 1,
         user: {
           name: 'Alias',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '🥰',
       },
@@ -1352,7 +1113,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -1360,7 +1121,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       },
@@ -1368,7 +1129,7 @@ export let messages = [
         id: 2,
         user: {
           name: 'Bob',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '👎🏻',
       },
@@ -1376,7 +1137,7 @@ export let messages = [
         id: 3,
         user: {
           name: 'sass',
-          img: 'https://via.placeholder.com/50',
+          img: '/users/user1.png',
         },
         emoji: '😂',
       }
@@ -1386,7 +1147,7 @@ export let messages = [
     id: 49,
     user: "Alice",
     message: "Yes, I use it for most of my projects. It's really powerful!",
-    img: "/chat2.jpg",
+    img: "/chat19.png",
     replyId: 8,
     date: "2024-10-12",
     time: "16:40", 

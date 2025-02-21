@@ -41,6 +41,7 @@ body.dark {
 body {
   padding: 15px;
   width: 100vw;
+  height: 2000px;
   overflow-x: hidden;
   display: flex;
   font-family: 'Rubik', sans-serif;
