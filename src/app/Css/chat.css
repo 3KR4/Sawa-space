@@ -455,9 +455,9 @@
   opacity: 1;
   z-index: 1;
 }
-.pirsonChat:has(.pin-holder) .messages {
-  padding-top: 45px;
-}
+.pirsonChat:has(.pin-holder) .messages .msg:first-child {
+  margin-top: 45px;
+} 
 
 .pirsonChat .messages .msg {
   padding: 14px 40px;

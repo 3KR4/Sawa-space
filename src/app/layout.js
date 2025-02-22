@@ -21,7 +21,9 @@ function LayoutContent({ children }) {
         {screenSize !== "small" ? <Chats /> : null}
         <main>
           <Header />
-          {children}
+          <div className="holder">
+            {children}
+          </div>
         </main>
       </body>
     </html>
