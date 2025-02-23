@@ -1163,7 +1163,6 @@ export let messages = [
   },
 ];
 
-
 export let posts = [
   {
     id: 1,
@@ -1183,76 +1182,73 @@ export let posts = [
       count: 15,
       topUseage: ['❤️','😂']
     },
-    comments: {
-      count: 9,
-      friends: [
-        {
-          id: 1,
-          name:'yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 1,
-          name:'ali',
-          img:'/users/user6.png',
-        },
-      ],
-      friendsCount:3,
+    comments : {
+      count: 5,
       allComments: [
         {
           id: 1,
-          name: 'lana henrikseen',
-          time: '2 days ago',
-          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
-          likesCount: 3,
-          image: '/users/user1.png',
+          name: 'john doe',
+          time: '3 hours ago',
+          paragraph: 'This is an interesting discussion! I love the insights shared here.',
+          likesCount: 6,
+          image: '/users/user10.png',
           replays: [
             {
               id: 1,
-              name: 'david kim',
-              time: '2 days ago',
-              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
-              likesCount: 1,
+              name: 'emma stone',
+              time: '2 hours ago',
+              paragraph: 'Absolutely! Some great points have been raised.',
+              likesCount: 2,
+              image: '/users/user14.png',
+              reacts: {
+                count: 2,
+                topUseage: ['👍', '🔥'],
+              },
               replays: [
                 {
                   id: 1,
-                  name: 'lana henrikseen',
-                  time: '1 days ago',
-                  paragraph: 'Lorem ipsum dolor sit amet.',
-                  likesCount: 1,
-                }
-              ]
-            }
-          ]
+                  name: 'emma stone',
+                  time: '2 hours ago',
+                  paragraph: 'Absolutely! Some great Absolutely! Some great points have been raised. points have been raised.',
+                  likesCount: 2,
+                  image: '/users/user4.png',
+                  reacts: {
+                    count: 2,
+                    topUseage: ['😘', '😠'],
+                  },
+                },
+              ],
+            },
+            {
+              id: 2,
+              name: 'ahmed ashraf',
+              time: '5 hours ago',
+              paragraph: 'I completely agree! Looking forward to more conversations.',
+              likesCount: 5,
+              image: '/users/user6.png',
+              reacts: {
+                count: 1,
+                topUseage: ['😂'],
+              },
+              replays: [],
+            },
+          ],
+          reacts: {
+            count: 4,
+            topUseage: ['❤️', '😂', '😮'],
+          },
         },
         {
           id: 2,
-          name: 'lana henrikseen',
-          time: '2 days ago',
-          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
-          likesCount: 5,
-          image: '/users/user3.png',
-          replays: [
-            {
-              id: 1,
-              name: 'david kim',
-              time: '2 days ago',
-              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
-              likesCount: 1,
-            }
-          ]
+          name: 'sophia miller',
+          time: '1 hour ago',
+          paragraph: 'I completely agree! Looking forward to more conversations like this.',
+          likesCount: 3,
+          image: '/users/user12.png',
+          replays: [],
         },
-        {
-          id: 3,
-          name: 'lana henrikseen',
-          time: '2 days ago',
-          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
-          likesCount: 2,
-          image: '/users/user6.png',
-        },
-      ]
+      ],
     },
-    react:'👍❤️😂😘😠',
   },
   {
     id: 2,
@@ -1273,20 +1269,7 @@ export let posts = [
       topUseage: ['👍','😘']
     },
     comments: {
-      count: 5,
-      friends: [
-        {
-          id: 1,
-          name:'yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 1,
-          name:'ali',
-          img:'/users/user6.png',
-        },
-      ],
-      friendsCount:3,
+      count: 0,
     },
     react:'👍❤️😂😘😠',
   },
@@ -1308,23 +1291,32 @@ export let posts = [
       count: 9,
       topUseage: ['👍','😘']
     },
-    comments: {
-      count: 5,
+    comments : {
+      count: 1,
       friends: [
         {
           id: 1,
-          name:'yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 1,
-          name:'ali',
-          img:'/users/user6.png',
+          name: 'lisa brown',
+          img: '/users/user13.png',
         },
       ],
-      friendsCount:3,
+      friendsCount: 1,
+      allComments: [
+        {
+          id: 1,
+          name: 'lisa brown',
+          time: '5 minutes ago',
+          paragraph: 'This looks great! Thanks for sharing.',
+          likesCount: 1,
+          image: '/users/user13.png',
+          replays: [],
+          reacts: {
+            count: 1,
+            topUseage: ['❤️'],
+          },
+        },
+      ],
     },
-    react:'👍❤️😂😘😠',
   },
   {
     id: 4,
@@ -1345,20 +1337,7 @@ export let posts = [
       topUseage: ['👍','😘']
     },
     comments: {
-      count: 5,
-      friends: [
-        {
-          id: 1,
-          name:'yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 1,
-          name:'ali',
-          img:'/users/user6.png',
-        },
-      ],
-      friendsCount:3,
+      count: 0,
     },
     react:'👍❤️😂😘😠',
   },
@@ -1389,7 +1368,7 @@ export let posts = [
           img:'/users/user3.png',
         },
         {
-          id: 1,
+          id: 2,
           name:'ali',
           img:'/users/user6.png',
         },
@@ -1404,14 +1383,14 @@ export let posts = [
           likesCount: 3,
           replays: [
             {
-              id: 1,
+              id: 2,
               name: 'david kim',
               time: '2 days ago',
               paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
               likesCount: 1,
               replays: [
                 {
-                  id: 1,
+                  id: 3,
                   name: 'lana henrikseen',
                   time: '1 days ago',
                   paragraph: 'Lorem ipsum dolor sit amet.',
@@ -1429,13 +1408,39 @@ export let posts = [
           likesCount: 3,
           replays: [
             {
-              id: 1,
+              id: 3,
               name: 'david kim',
               time: '2 days ago',
               paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
               likesCount: 1,
             }
-          ]
+          ],
+          comments : {
+            count: 1,
+            friends: [
+              {
+                id: 1,
+                name: 'lisa brown',
+                img: '/users/user13.png',
+              },
+            ],
+            friendsCount: 1,
+            allComments: [
+              {
+                id: 1,
+                name: 'lisa brown',
+                time: '5 minutes ago',
+                paragraph: 'This looks great! Thanks for sharing.',
+                likesCount: 1,
+                image: '/users/user13.png',
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ['❤️'],
+                },
+              },
+            ],
+          },          
         },
         {
           id: 3,

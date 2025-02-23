@@ -804,10 +804,30 @@ header .events .userMenu svg {
   gap: 8px;
   border: 1px solid #e8e8e8;
   border-radius: 9px;
-  max-width: 41%;
+  max-width: 43%;
+  min-width: 42%;
   overflow: hidden;
   background: var(--body-color);
 }
+.post .noCommentsYet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 23px 0px 30px;
+}
+.post .noCommentsYet svg {
+  font-size: 67px;
+  color: var(--main-color);
+}
+.post .noCommentsYet h4 {
+  color: var(--main-color);
+  font-size: 18px;
+}
+.post .noCommentsYet p {
+  font-weight: 500;
+  font-size: 15px;
+}
+
 .post img {
   position: relative !important;
 }
@@ -822,6 +842,11 @@ header .events .userMenu svg {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.post .comment .top .left {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 .post .top img {
   border-radius: 50%;
@@ -924,22 +949,22 @@ header .events .userMenu svg {
   position: relative;
 }
 
-.post .bottom .left {
+.post .emojesCounter {
   display: flex;
   align-items: center;
   font-size: 19px;
 }
-.post .bottom .left p {
+.post .emojesCounter p {
   font-size: 18px;
   margin-left: -5px;
   background: var(--section-color);
   border-radius: 50%;
   padding: 2px;
 }
-.post .bottom .left p:first-child {
+.post .emojesCounter p:first-child {
   margin-left: 0;
 }
-.post .bottom .left p:last-child {
+.post .emojesCounter p:last-child {
   font-size: 16px;
   background: transparent;
   margin-left: -1px;
@@ -975,6 +1000,15 @@ header .events .userMenu svg {
   align-items: center;
   gap: 12px;
 }
+.post .comment .right {
+  gap: 0;
+}
+.post .comment .bottom .right {
+  gap: 6px;
+}
+.post .comment .emojesCounter p {
+  font-size: 17px;
+}
 .post .bottom .right div {
   display: flex;
   align-items: center;
@@ -1004,22 +1038,58 @@ header .events .userMenu svg {
 }
 .post .comments .top svg {
   padding: 0;
-  background: var(--red-color);
-  color: white;
   width: 28px;
   height: 28px;
+}
+.post .comments .top svg:hover {
+  background: var(--red-color);
+  color: white;
 }
 .post .comments .holder {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 2px;
+  max-height: 449px;
+  overflow: auto;
 }
 .post .comments .holder .comment {
   display: flex;
   gap: 12px;
-  border: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 10px;
-  border-radius: 6px;
+}
+.post .comments .holder .comment:last-child {
+  border: none;
+}
+.post .comments .holder .comment .image-holder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.post .comments .holder .comment .image-holder span {
+  position: relative;
+  height: 100%;
+}
+.post .comments .holder .comment .image-holder span::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--border-color);
+  transform: translateX(-50%);
+}
+.post .comments .holder .comment .image-holder span::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--border-color);
+  transform: translate(-50%, -50%);
 }
 .post .comments .holder .comment img {
   border-radius: 50%;
@@ -1027,16 +1097,17 @@ header .events .userMenu svg {
 }
 .post .comments .holder .comment .content h5 {
   margin-top: 5px;
+  font-size: 14px;
 }
 .post .comments .holder .comment .content span {
   color: var(--paragraph-color);
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13px;
   display: flex;
 }
-.post .comments .holder .comment .content p {
+.post .comments .holder .comment .content .holder > p {
   font-size: 15px;
-  margin: 8px 0;
+  margin: 2px 0 1px;
   line-height: 1.3;
 }
 .post .comments .holder .comment .bottom {
@@ -1044,16 +1115,81 @@ header .events .userMenu svg {
   padding: 0;
 }
 .post .comments .holder .comment .bottom .left {
-  gap: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.post .comments .holder .comment .bottom .left svg {
+.post .comments .holder .comment .bottom svg {
   color: var(--paragraph-color);
-  font-size: 17px;
+  font-size: 18px;
 }
-.post .comments .holder .comment .bottom .left button {
+.post .comments .holder .comment .bottom button {
   color: var(--paragraph-color);
   font-weight: 500;
   font-size: 12px;
+  transition: 0.3s;
+}
+.post .comments .holder .comment .bottom button:hover {
+  color: var(--main-color);
+}
+.post .comments .holder .comment .content {
+  flex: 1;
+}
+
+.post .comments .action-holder {
+  border-radius: 7px;
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+.post .comments .action-holder .top {
+
+}
+.post .comments .action-holder .top textarea {
+  flex: 1;
+  resize: none;
+  padding: 12px;
+  height: 74px;
+}
+.post .comments .action-holder .actions  {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 13px 7px 10px;
+  padding-left: 10px;
+  border-top: 1px solid var(--border-color);
+}
+.post .comments .action-holder .actions .left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--title-color);
+}
+.post .comments .action-holder .actions .left img {
+  border-radius: 50%;
+}
+.post .comments .action-holder .actions .right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.post .comments .action-holder .actions .right svg:first-child  {
+  font-size: 16px;
+}
+.post .comments .action-holder .actions .right svg  {
+  font-size: 18px;
+}
+.post .comments .action-holder .actions .right svg:hover  {
+
+}
+.post .comments .action-holder .actions .right button  {
+  background: var(--back-grident);
+  color: white;
+  padding: 11px 15px;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
 
@@ -1065,15 +1201,33 @@ header .events .userMenu svg {
     transform: unset;
     left: unset;
   }
+  .post {
+    max-width: 52%;
+    min-width: 50%;
+  }
 }
 @media (max-width: 1600px) {
   body:has(.chats.false) main header nav svg {
     display: none;
   }
+  .post {
+    max-width: 56%;
+    min-width: 55%;
+  }
 }
-@media (max-width: 1400px) {
+@media (max-width: 1500px) {
   header nav a {
     padding: 14px 11px;
+  }
+  .post {
+    max-width: 61%;
+    min-width: 59%;
+  }
+}
+@media (max-width: 1400px) {
+  .post {
+    max-width: 66%;
+    min-width: 55%;
   }
 }
 @media (max-width: 1300px) {
@@ -1102,20 +1256,10 @@ header .events .userMenu svg {
   body:has(.chats.false) main header nav span {
     display: none;
   }
-
-  .chats {
-
+  .post {
+    max-width: 75%;
+    min-width: 72%;
   }
-  .chats .chat {
-
-  }
-  .chats .chat .name-lastmessage {
-
-  }
-  .chats .chat .name-lastmessage p {
-
-  }
-
 }
 @media (max-width: 1100px) {
   header nav a {
@@ -1126,6 +1270,10 @@ header .events .userMenu svg {
   }
   .chats .chat .name-lastmessage p {
     width: 162px;
+  }
+  .post {
+    max-width: 81%;
+    min-width: 79%;
   }
 }
 @media (max-width: 1000px) {
@@ -1223,6 +1371,10 @@ header .events .userMenu svg {
   .chat-page > img {
     width: 100%;
   }
+  .post {
+    max-width: 100%;
+    min-width: 98%;
+  }
 }
 
 
@@ -1253,6 +1405,9 @@ header .events .userMenu svg {
   }
   header.hidden {
     top: -60px;
+  }
+  header:has(nav.active).hidden {
+    top: -45px;
   }
   header .logo {
     width: 100%;
@@ -1340,7 +1495,42 @@ header .events .userMenu svg {
   .chat-page .chats .chat .name-lastmessage p {
     width: 100%;
   } 
-  
+  .posts-holder {
+    padding: 0 10px;
+  }
+  .post .images.small img {
+    width: 48.3% !important;
+    max-height: 160px;
+  }
+  .post .images.mid img {
+    width: 48.3% !important;
+    max-height: 160px;
+  }
+  .post .images.big img:first-child, .post .images.big img:nth-child(2) {
+    width: 49% !important;
+  }
+  .post .images.big img {
+    width: 31.8% !important;
+    max-height: 122px;
+  }
+  .post .comments {
+    padding: 10px;
+  }
+  .post .comments .action-holder .actions .left {
+    font-size: 11px;
+    line-height: 1;
+  }
+  .post .comments .action-holder .actions .right button {
+    padding: 11px 9px;
+    font-size: 12px;
+  }
+  .post .comments .action-holder .actions .right {
+    gap: 8px;
+  }
+  .post .comments .holder .comment {
+    padding: 8px 6px;
+    gap: 8px;
+  }
 }
 @media (max-width: 500px) {
   
