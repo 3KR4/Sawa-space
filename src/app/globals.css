@@ -894,16 +894,16 @@ header .events .userMenu svg {
 }
 
 .post .images.big img {
-  width: 32.5% !important;
+  width: 32.4% !important;
   max-height: 214px;
 }
 .post .images.big img:first-child,
 .post .images.big img:nth-child(2) {
-  width: 49.4% !important;
+  width: 49.3% !important;
 }
 
 .post .images.mid img {
-  width: 49.4% !important;
+  width: 49.3% !important;
   max-height: 300px;
 }
 .post .images.mid img:first-child {
@@ -911,7 +911,7 @@ header .events .userMenu svg {
 }
 
 .post .images.small img {
-  width: 49.49% !important;
+  width: 49.3% !important;
   max-height: 300px;
 }
 
@@ -986,6 +986,74 @@ header .events .userMenu svg {
 }
 .post .bottom .right div:first-child svg {
   font-size: 19px;
+}
+
+
+.post .comments {
+  padding: 14px;
+}
+.post .comments .top {
+  border: none;
+  padding: unset;
+  margin-bottom: 7px;
+}
+.post .comments .top h3 {
+  color: var(--paragraph-color);
+  font-size: 17px;
+  font-weight: 500;
+}
+.post .comments .top svg {
+  padding: 0;
+  background: var(--red-color);
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+.post .comments .holder {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.post .comments .holder .comment {
+  display: flex;
+  gap: 12px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 6px;
+}
+.post .comments .holder .comment img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+.post .comments .holder .comment .content h5 {
+  margin-top: 5px;
+}
+.post .comments .holder .comment .content span {
+  color: var(--paragraph-color);
+  font-weight: 400;
+  font-size: 12px;
+  display: flex;
+}
+.post .comments .holder .comment .content p {
+  font-size: 15px;
+  margin: 8px 0;
+  line-height: 1.3;
+}
+.post .comments .holder .comment .bottom {
+  border: none;
+  padding: 0;
+}
+.post .comments .holder .comment .bottom .left {
+  gap: 7px;
+}
+.post .comments .holder .comment .bottom .left svg {
+  color: var(--paragraph-color);
+  font-size: 17px;
+}
+.post .comments .holder .comment .bottom .left button {
+  color: var(--paragraph-color);
+  font-weight: 500;
+  font-size: 12px;
 }
 
 

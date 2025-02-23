@@ -1198,6 +1198,59 @@ export let posts = [
         },
       ],
       friendsCount:3,
+      allComments: [
+        {
+          id: 1,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 3,
+          image: '/users/user1.png',
+          replays: [
+            {
+              id: 1,
+              name: 'david kim',
+              time: '2 days ago',
+              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
+              likesCount: 1,
+              replays: [
+                {
+                  id: 1,
+                  name: 'lana henrikseen',
+                  time: '1 days ago',
+                  paragraph: 'Lorem ipsum dolor sit amet.',
+                  likesCount: 1,
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 5,
+          image: '/users/user3.png',
+          replays: [
+            {
+              id: 1,
+              name: 'david kim',
+              time: '2 days ago',
+              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
+              likesCount: 1,
+            }
+          ]
+        },
+        {
+          id: 3,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 2,
+          image: '/users/user6.png',
+        },
+      ]
     },
     react:'👍❤️😂😘😠',
   },
@@ -1349,14 +1402,14 @@ export let posts = [
           time: '2 days ago',
           paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
           likesCount: 3,
-          replys: [
+          replays: [
             {
               id: 1,
               name: 'david kim',
               time: '2 days ago',
               paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
               likesCount: 1,
-              replys: [
+              replays: [
                 {
                   id: 1,
                   name: 'lana henrikseen',
@@ -1374,7 +1427,7 @@ export let posts = [
           time: '2 days ago',
           paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
           likesCount: 3,
-          replys: [
+          replays: [
             {
               id: 1,
               name: 'david kim',

@@ -49,7 +49,7 @@ export default function Home() {
 
           return (
             <div className={`post`}>
-              {false ?
+              {true ?
               (
                 <>
                   <div className='top'>
@@ -114,17 +114,52 @@ export default function Home() {
                     <IoIosClose/>
                   </div>
                   <div className='holder'>
-                    {x.comments.allComments.length > 0 ? (
+                    {x.comments && Array.isArray(x.comments.allComments) && x.comments.allComments.length > 0 ? (
                       x.comments.allComments.map((comment, index) => (
                         <div key={index} className='comment'> 
-                          <Image src={comment.image} alt="Comment Image" width={50} height={50} />
+                          <Image src={comment.image} alt="Comment Image" width={40} height={40} />
                           <div className='content'>
-                            <div className='top'>
+                            <h5>{comment.name}</h5>
+                            <span>{comment.time}</span>
+                            <p>{comment.paragraph}</p>
+                            <div className='bottom'>
+                              <div className='left'>
+                                <MdOutlineAddReaction/>
+                                <button>Reply</button>
+                                <button>Edit</button>
+                              </div>
                               <div className='right'>
-                                <h5></h5>
+                                {x.reacts.topUseage.map(x => <p>{x}</p>)}
+                                <p>{x.reacts.count}</p>
                               </div>
                             </div>
+                            
                           </div>
+
+                          {comment.replys && Array.isArray(reply.replys) && comment.replys.length > 0 && (
+                            comment.replys.map((replay, index) => (
+                              <div key={index} className='comment replay'> 
+                                <Image src={replay.image} alt="replay Image" width={40} height={40} />
+                                <div className='content'>
+                                  <h5>{replay.name}</h5>
+                                  <span>{replay.time}</span>
+                                  <p>{replay.paragraph}</p>
+                                  <div className='bottom'>
+                                    <div className='left'>
+                                      <MdOutlineAddReaction/>
+                                      <button>Reply</button>
+                                      <button>Edit</button>
+                                    </div>
+                                    <div className='right'>
+                                      {x.reacts.topUseage.map(x => <p>{x}</p>)}
+                                      <p>{x.reacts.count}</p>
+                                    </div>
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                            ))
+                          )}
                         </div>
                       ))
                     ) : (
