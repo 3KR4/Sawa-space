@@ -1162,3 +1162,237 @@ export let messages = [
     time: "16:45",
   },
 ];
+
+
+export let posts = [
+  {
+    id: 1,
+    link: "https://fb.watch/xVFJl_Q7i0/",
+    img: ["/chat7.png"],
+    paragraph: "Thanks a lot to @Gaelle and @Rolf for this wonderful team lunch. The food was really tasty and we had some great laughs. Thanks to all the team, you're all awesome !",
+    date: "2024-10-12",
+    time: "16:00", 
+    user: {
+      name: 'ahmed',
+      img: '/users/user1.png',
+      bio: '',
+      mutualFriends: 2,
+    },
+    shareCount: 3,
+    reacts: {
+      count: 15,
+      topUseage: ['❤️','😂']
+    },
+    comments: {
+      count: 9,
+      friends: [
+        {
+          id: 1,
+          name:'yasser',
+          img:'/users/user3.png',
+        },
+        {
+          id: 1,
+          name:'ali',
+          img:'/users/user6.png',
+        },
+      ],
+      friendsCount:3,
+    },
+    react:'👍❤️😂😘😠',
+  },
+  {
+    id: 2,
+    link: "https://fb.watch/xVFJl_Q7i0/",
+    img: ["/chat17.png", "/chat7.png"],
+    paragraph: "",
+    date: "2024-10-12",
+    time: "16:00", 
+    user: {
+      name: 'ahmed',
+      img: '/users/user4.png',
+      bio: '',
+      mutualFriends: 2,
+    },
+    shareCount: 3,
+    reacts: {
+      count: 9,
+      topUseage: ['👍','😘']
+    },
+    comments: {
+      count: 5,
+      friends: [
+        {
+          id: 1,
+          name:'yasser',
+          img:'/users/user3.png',
+        },
+        {
+          id: 1,
+          name:'ali',
+          img:'/users/user6.png',
+        },
+      ],
+      friendsCount:3,
+    },
+    react:'👍❤️😂😘😠',
+  },
+  {
+    id: 3,
+    link: "",
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    paragraph: "Thanks a lot to @Gaelle and @Rolf for this wonderful team lunch. The food was really tasty and we had some great laughs.",
+    date: "2024-10-12",
+    time: "16:00", 
+    user: {
+      name: 'ahmed',
+      img: '/users/user4.png',
+      bio: '',
+      mutualFriends: 2,
+    },
+    shareCount: 3,
+    reacts: {
+      count: 9,
+      topUseage: ['👍','😘']
+    },
+    comments: {
+      count: 5,
+      friends: [
+        {
+          id: 1,
+          name:'yasser',
+          img:'/users/user3.png',
+        },
+        {
+          id: 1,
+          name:'ali',
+          img:'/users/user6.png',
+        },
+      ],
+      friendsCount:3,
+    },
+    react:'👍❤️😂😘😠',
+  },
+  {
+    id: 4,
+    link: "",
+    img: ["/chat17.png", "/chat6.png", "/chat16.png", "/chat7.png", "/chat13.png"],
+    paragraph: "",
+    date: "2024-10-12",
+    time: "16:00", 
+    user: {
+      name: 'ahmed',
+      img: '/users/user4.png',
+      bio: '',
+      mutualFriends: 2,
+    },
+    shareCount: 3,
+    reacts: {
+      count: 9,
+      topUseage: ['👍','😘']
+    },
+    comments: {
+      count: 5,
+      friends: [
+        {
+          id: 1,
+          name:'yasser',
+          img:'/users/user3.png',
+        },
+        {
+          id: 1,
+          name:'ali',
+          img:'/users/user6.png',
+        },
+      ],
+      friendsCount:3,
+    },
+    react:'👍❤️😂😘😠',
+  },
+  {
+    id: 5,
+    link: "",
+    img: null,
+    paragraph: "Thanks a lot to @Gaelle and @Rolf for this wonderful team lunch. The food was really tasty and we had some great laughs.",
+    date: "2024-10-12",
+    time: "16:00", 
+    user: {
+      name: 'ahmed',
+      img: '/users/user4.png',
+      bio: '',
+      mutualFriends: 2,
+    },
+    shareCount: 3,
+    reacts: {
+      count: 9,
+      topUseage: ['👍','😘']
+    },
+    comments: {
+      count: 5,
+      friends: [
+        {
+          id: 1,
+          name:'yasser',
+          img:'/users/user3.png',
+        },
+        {
+          id: 1,
+          name:'ali',
+          img:'/users/user6.png',
+        },
+      ],
+      friendsCount:3,
+      allComments: [
+        {
+          id: 1,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 3,
+          replys: [
+            {
+              id: 1,
+              name: 'david kim',
+              time: '2 days ago',
+              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
+              likesCount: 1,
+              replys: [
+                {
+                  id: 1,
+                  name: 'lana henrikseen',
+                  time: '1 days ago',
+                  paragraph: 'Lorem ipsum dolor sit amet.',
+                  likesCount: 1,
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 3,
+          replys: [
+            {
+              id: 1,
+              name: 'david kim',
+              time: '2 days ago',
+              paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua.',
+              likesCount: 1,
+            }
+          ]
+        },
+        {
+          id: 3,
+          name: 'lana henrikseen',
+          time: '2 days ago',
+          paragraph: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris consequat.',
+          likesCount: 3,
+        },
+      ]
+    },
+    react:'👍❤️😂😘😠',
+  },
+]
