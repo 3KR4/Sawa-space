@@ -5,9 +5,6 @@ import Link from 'next/link';
 import { maxLength } from '@/Methods';
 import { messages, users } from '@/Data';
 import EmojiPicker from 'emoji-picker-react';
-import { Swiper, SwiperSlide } from "swiper/react";
-import 'swiper/css';
-import '../../Css/chat.css';
 import { use } from "react";
 
 import PinHolder from '@/components/chat/PinHolder';
@@ -26,6 +23,7 @@ import { LuSaveAll, LuFileSliders } from "react-icons/lu";
 import { MdOutlinePermMedia, MdContentCopy, MdOutlineAddReaction } from "react-icons/md";
 import { FaStar, FaShare, FaRegStar, FaAngleDown, FaRegUserCircle } from "react-icons/fa";
 import { FaRegImages, FaRegTrashCan, FaRegSquareCheck, FaPlus, FaUserGroup } from "react-icons/fa6";
+import ImagesSwiper from '@/components/ImagesSwiper';
 
 export default function Chat({ params }) {
 
@@ -34,6 +32,7 @@ export default function Chat({ params }) {
   const [curentChat, setCurentChat] = useState({});
   const [text, setText] = useState("");
   const [imgFocus, setImgFocus] = useState();
+  const [imgIndex, setImgIndex] = useState();
   const [selectMode, setSelectMode] = useState(false);
   const [messageAction, setMessageAction] = useState(false);
   const [forwordAction, setForwordAction] = useState(false);
@@ -59,7 +58,6 @@ export default function Chat({ params }) {
 
   const [forwordSearch, setForwordSearch] = useState('');
 
-  const [swiperRef, setSwiperRef] = useState(null);
 
 
   const { id } = use(params); // Unwrap the Promise
@@ -71,14 +69,15 @@ export default function Chat({ params }) {
 
   const handleImageClick = (id, index) => {
     setImgFocus(id)
-
     if (index === '') {
       const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
-      swiperRef.slideTo(mediaIndex, 500);
+      setImgIndex(mediaIndex)
     } else {
-      swiperRef.slideTo(index, 500);
+      setImgIndex(index)
     }
   };
+
+
 
   const chatRef = useRef(null);
   const menuRef = useRef(null);
@@ -94,7 +93,6 @@ export default function Chat({ params }) {
   ? users.filter(user => user.name.toLowerCase().includes(forwordSearch.toLowerCase()))
   : users;
 
-  const currentfocusdMsg = messages.find((msg) => msg.id === imgFocus);
 
   const mediaMsgs = messages.filter((msg) => msg.img);
 
@@ -438,50 +436,17 @@ const handleEmojiClick = (event) => {
             {pinedMsgs.length > 0 && <PinHolder data={pinedMsgs} />}
           </div>
 
-            <div ref={closeImgHolderRef} className={`focusedMsg ${imgFocus && 'active'}`}>
-              <div className='hold'>
-                {imgFocus && <IoClose className='closeMsg'         
-                  onClick={() => setImgFocus(null)}/>}
-                {currentfocusdMsg?.user !== 'Bob' && <h5>{currentfocusdMsg?.user}</h5>}
-                {currentfocusdMsg?.img && (
-                  <img 
-                    src={currentfocusdMsg?.img} 
-                    alt={currentfocusdMsg.user ? `${currentfocusdMsg.user}'s image` : "User image"} 
-                  />
-                )}
-                {currentfocusdMsg?.message && <p>{currentfocusdMsg?.message}</p>}
-              </div>
-              {mediaMsgs.length > 1 && (
-                <Swiper
-                onSwiper={setSwiperRef}
-                spaceBetween={5}
-                slidesPerView={'auto'}
-                centeredSlides={true}
-                loop={false}
-              >
-                {mediaMsgs.map((x, index) => (
-                  <SwiperSlide 
-                      key={index}
-                      onClick={() => handleImageClick(x.id ,index)}
-                      style={{ display: 'flex', justifyContent: 'center' }}
-                  >
-                    <img 
-                        src={x.img} 
-                        alt={`Slide ${index}`}
-                        className={`${imgFocus == x.id && 'active'}`}
-                        style={{
-                            maxWidth: '90%',
-                            maxHeight: '90%',
-                            objectFit: 'cover',
-                            cursor: 'pointer'
-                        }}
-                    />
-                </SwiperSlide>
-                ))}
-              </Swiper> 
-              )}
+          <ImagesSwiper 
+            dataMessage={mediaMsgs} 
+            imgFocus={imgFocus} 
+            setImgFocus={setImgFocus} 
+            overviewRef={overviewRef} 
+            imgIndex={imgIndex} 
+            setImgIndex={setImgIndex} 
+            closeImgHolderRef={closeImgHolderRef}
+          />
 
-            </div>
+
 
           <div className='messages' ref={chatRef} style={{overflow: messageAction || forwordAction || reactsAction || isAddReact ? 'hidden' : 'auto', paddingRight: messageAction || forwordAction || reactsAction || isAddReact ? '6px' : '0px'}}>
 

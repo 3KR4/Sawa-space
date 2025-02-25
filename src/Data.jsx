@@ -1188,6 +1188,7 @@ export let posts = [
         {
           id: 1,
           name: 'John Doe',
+          img: '/chat8.png',
           time: '3 hours ago',
           paragraph: 'The food looks incredible! You guys always have the best team events.',
           likesCount: 6,

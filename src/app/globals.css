@@ -1091,9 +1091,15 @@ header .events .userMenu svg {
   background: var(--border-color);
   transform: translate(-50%, -50%);
 }
-.post .comments .holder .comment img {
+.post .comments .holder .comment .image-holder img {
   border-radius: 50%;
   object-fit: cover;
+}
+.post .comments .holder .comment .content img {
+  border-radius: 10px;
+  position: relative !important;
+  max-height: 110px;
+  width: fit-content !important;
 }
 .post .comments .holder .comment .content h5 {
   margin-top: 5px;

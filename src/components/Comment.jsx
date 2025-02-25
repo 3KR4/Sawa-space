@@ -28,6 +28,7 @@ function Comment({data}) {
           )}
         </div>
         <p>{data.paragraph}</p>
+        {data?.img && <Image src={data?.img} alt={'comment image'} fill/>}
         <div className='bottom'>
           <div className='left'>
             {data.replays && Array.isArray(data.replays) && data.replays.length > 0 && (
