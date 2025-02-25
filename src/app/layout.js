@@ -14,7 +14,8 @@ export default function RootLayout({ children }) {
 }
 
 function LayoutContent({ children }) {
-  const { screenSize } = useContext(AllContext);
+  const {screenSize} = useContext(AllContext);
+  
   return (
     <html lang="en">
       <body>

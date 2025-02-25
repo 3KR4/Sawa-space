@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { AllContext } from '@/app/Context';
 import { posts } from '@/Data';
 
+import ImagesSwiper from "@/components/ImagesSwiper";
 import Post from '@/components/Post';
 
 
@@ -37,13 +38,14 @@ export default function Home() {
   // }, []);
 
   return (
-    <>
+    <div className='home'>
+      <ImagesSwiper/>
       <div className='posts-holder'>
         {posts.map((x, index) => {
           return <Post key={index} data={x}/>
         })}
       </div>
-    </>
+    </div>
   );
 }
 

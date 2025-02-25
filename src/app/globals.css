@@ -529,7 +529,7 @@ header {
   justify-content: space-between;
   background-color: var(--body-color);
   border-radius: 10px;
-  padding: 6px 25px;
+  padding: 7px 25px;
   outline: 2px solid #e8e8e8;
   margin-bottom: 16px;
   position: sticky;
@@ -1196,6 +1196,21 @@ header .events .userMenu svg {
   padding: 11px 15px;
   border-radius: 6px;
   font-weight: 500;
+}
+
+.home .focusedMsg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  min-width: 100%;
+  background: #ffffff57;
+  backdrop-filter: blur(17px);
+}
+body:has(.focusedMsg.active) header,
+body:has(.focusedMsg.active) .chats {
+  z-index: unset;
 }
 
 

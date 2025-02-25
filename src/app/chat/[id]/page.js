@@ -8,6 +8,8 @@ import EmojiPicker from 'emoji-picker-react';
 import { use } from "react";
 
 import PinHolder from '@/components/chat/PinHolder';
+import ImagesSwiper from "@/components/ImagesSwiper";
+
 import { AllContext } from '@/app/Context';
 
 //Icons 
@@ -23,16 +25,21 @@ import { LuSaveAll, LuFileSliders } from "react-icons/lu";
 import { MdOutlinePermMedia, MdContentCopy, MdOutlineAddReaction } from "react-icons/md";
 import { FaStar, FaShare, FaRegStar, FaAngleDown, FaRegUserCircle } from "react-icons/fa";
 import { FaRegImages, FaRegTrashCan, FaRegSquareCheck, FaPlus, FaUserGroup } from "react-icons/fa6";
-import ImagesSwiper from '@/components/ImagesSwiper';
 
 export default function Chat({ params }) {
-
-  const { screenSize } = useContext(AllContext)
+  const {
+    screenSize,
+    setDataSwiperType,
+    dataForSwiper, 
+    setDataForSwiper, 
+    imgFocus, 
+    setImgFocus, 
+    setImgIndex,
+    closeImgHolderRef 
+  } = useContext(AllContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [text, setText] = useState("");
-  const [imgFocus, setImgFocus] = useState();
-  const [imgIndex, setImgIndex] = useState();
   const [selectMode, setSelectMode] = useState(false);
   const [messageAction, setMessageAction] = useState(false);
   const [forwordAction, setForwordAction] = useState(false);
@@ -58,6 +65,7 @@ export default function Chat({ params }) {
 
   const [forwordSearch, setForwordSearch] = useState('');
 
+  const mediaMsgs = messages.filter((msg) => msg.img);
 
 
   const { id } = use(params); // Unwrap the Promise
@@ -68,16 +76,17 @@ export default function Chat({ params }) {
   }, [id]);
 
   const handleImageClick = (id, index) => {
+    setDataSwiperType('msg')
     setImgFocus(id)
+    setDataForSwiper(mediaMsgs)
+
     if (index === '') {
-      const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
+      const mediaIndex = dataForSwiper.findIndex((msg) => msg.id == id);
       setImgIndex(mediaIndex)
     } else {
       setImgIndex(index)
     }
   };
-
-
 
   const chatRef = useRef(null);
   const menuRef = useRef(null);
@@ -87,14 +96,14 @@ export default function Chat({ params }) {
   const reactsMenuRef = useRef(null);
   const mentionRef = useRef(null);
   const overviewRef = useRef(null);
-  const closeImgHolderRef = useRef(null);
 
   const curentSearchUser = forwordSearch
   ? users.filter(user => user.name.toLowerCase().includes(forwordSearch.toLowerCase()))
   : users;
 
-
-  const mediaMsgs = messages.filter((msg) => msg.img);
+  useEffect(()=> {
+    setDataForSwiper(mediaMsgs)
+  },[imgFocus, messages])
 
   const currentReplyMsg = replyingOnMsg ? messages.find((msg) => msg.id === replyingOnMsg) : null;
 
@@ -125,11 +134,11 @@ export default function Chat({ params }) {
       setFilteredMentinUser(
           searchTerm
               ? users.filter(user => user.name.toLowerCase().includes(searchTerm))
-              : users // Show all users if no search term
+              : users 
       );
   } else {
       setMentionHolder(false);
-      setFilteredMentinUser(users); // Reset to default users when there's no match
+      setFilteredMentinUser(users);
   }
 
     const mentionedNames = [...textarea.value.matchAll(/@(\w+)/g)].map(match => match[1]);
@@ -137,7 +146,6 @@ export default function Chat({ params }) {
         prev.filter((user) => mentionedNames.includes(user.name))
     );
 };
-
 
 const handleUserClick = (user) => {
   const textareaa = textarea?.current;
@@ -155,17 +163,15 @@ const handleUserClick = (user) => {
     if (!prev.some(mentioned => mentioned.id === user.id)) {
       return [...prev, user];
     }
-    return prev; // If user already exists, return the same array without adding
+    return prev; 
   });
   
-  // Keep the mention menu open and focus on textarea
   setTimeout(() => {
     textareaa.focus();
     textareaa.setSelectionRange(newText.length + 1, newText.length + 1);
   }, 0);
 };
 
-// Filter out already mentioned users
 const filteredUsers = filteredMentinUser.filter(
   (user) => !mentionsPeople.some(mentioned => mentioned.id === user.id)
 );
@@ -376,8 +382,8 @@ const handleEmojiClick = (event) => {
                   </div>
                   ) : selectedOverView === `Media` ?  (
                     <div className='media'>
-                      {mediaMsgs.length > 1 ? (
-                          mediaMsgs.map((x, index) => (
+                      {dataForSwiper?.length > 1 ? (
+                          dataForSwiper.map((x, index) => (
                               <div 
                                   className={`msg ${selectedMsgs.includes(x.id) ? 'selected' : ''}`} 
                                   key={x.id} 
@@ -436,17 +442,7 @@ const handleEmojiClick = (event) => {
             {pinedMsgs.length > 0 && <PinHolder data={pinedMsgs} />}
           </div>
 
-          <ImagesSwiper 
-            dataMessage={mediaMsgs} 
-            imgFocus={imgFocus} 
-            setImgFocus={setImgFocus} 
-            overviewRef={overviewRef} 
-            imgIndex={imgIndex} 
-            setImgIndex={setImgIndex} 
-            closeImgHolderRef={closeImgHolderRef}
-          />
-
-
+          <ImagesSwiper/>
 
           <div className='messages' ref={chatRef} style={{overflow: messageAction || forwordAction || reactsAction || isAddReact ? 'hidden' : 'auto', paddingRight: messageAction || forwordAction || reactsAction || isAddReact ? '6px' : '0px'}}>
 
@@ -563,10 +559,6 @@ const handleEmojiClick = (event) => {
                       {x.history ? (
                         <div>{x.time}<small>Tuseday, junary</small></div>
                       )  : x.deleted ? (
-                        <div>This message has deleted</div>
-                      ) : x.a ? (
-                        <div>Nagi Left</div>
-                      ) : x.deleted ? (
                         <div>This message has deleted</div>
                       ) : (x.action === 'left' || x.action === 'join the group using via link') ? (
                         <div>{x.actor} {x.action}</div>

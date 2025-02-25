@@ -1,10 +1,10 @@
 'use client'
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useRef, useState, useEffect } from "react";
 
 export const AllContext = createContext();
 
 export const AllProvider = ({ children }) => {
-  const [screenSize, setScreenSize] = useState("large"); // Default value (SSR safe)
+  const [screenSize, setScreenSize] = useState("large");
 
   useEffect(() => {
     function getScreenSize() {
@@ -27,8 +27,25 @@ export const AllProvider = ({ children }) => {
     };
   }, []);
 
+  const [dataSwiperType, setDataSwiperType] = useState();
+  const [dataForSwiper, setDataForSwiper] = useState([]);
+  const [imgFocus, setImgFocus] = useState(false);
+  const [imgIndex, setImgIndex] = useState(false);
+  const closeImgHolderRef = useRef(null);
+
   return (
-    <AllContext.Provider value={{ screenSize }}>
+    <AllContext.Provider value={{
+      screenSize,
+      dataSwiperType,
+      setDataSwiperType,
+      dataForSwiper, 
+      setDataForSwiper, 
+      imgFocus, 
+      setImgFocus, 
+      imgIndex, 
+      setImgIndex,
+      closeImgHolderRef
+    }}>
       {children}
     </AllContext.Provider>
   );

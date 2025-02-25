@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
-
 import Comment from '@/components/Comment';
+import { AllContext } from '@/app/Context';
+
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComment } from "react-icons/fa";
@@ -14,9 +15,25 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({data}) {
+  const {
+    screenSize,
+    setDataSwiperType,
+    dataForSwiper, 
+    setDataForSwiper, 
+    imgFocus, 
+    setImgFocus, 
+    setImgIndex,
+    closeImgHolderRef 
+  } = useContext(AllContext);
+
   const [seeComments, setSeeComments] = useState(false)
 
-
+  const handleImageClick = (id, index) => {
+    setDataSwiperType('post')
+    setImgFocus(id)
+    setDataForSwiper(data)
+    setImgIndex(index)
+  };
 
   return (
     <div className={`post`}>
@@ -49,7 +66,7 @@ function Post({data}) {
             ) : (
               <div className={`images ${data.img.length >= 4 ? 'big' : data.img.length === 3 ? 'mid' : 'small'}`}>
                 {data.img.map((img, index) => (
-                  <Image key={index} src={img} alt={`Post Image ${index + 1}`} fill />
+                  <Image key={index} src={img} alt={`Post Image ${index + 1}`} fill onClick={()=> {handleImageClick(data.id , index)}} />
                 ))}
               </div>
             )

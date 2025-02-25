@@ -1,14 +1,29 @@
 import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { messages, users } from '@/Data';
 import 'swiper/css';
 import '../app/Css/chat.css';
+import { AllContext } from '@/app/Context';
+
 import { IoClose, IoCopy } from "react-icons/io5";
 
 
-function ImagesSwiper({dataMessage, imgFocus, setImgFocus, overviewRef, imgIndex, setImgIndex, closeImgHolderRef}) {
-  const [swiperRef, setSwiperRef] = useState(null);
+function ImagesSwiper() {
+  const {
+    dataSwiperType,
+    dataForSwiper,
+    imgFocus,
+    setImgFocus,
+    imgIndex,
+    setImgIndex,
+    closeImgHolderRef
+  } = useContext(AllContext);
+  
+
+  console.log(dataForSwiper);
+  
+  const [swiperRef, setSwiperRef] = useState(null);  
 
   const currentfocusdMsg = messages.find((msg) => msg.id === imgFocus);
 
@@ -16,7 +31,7 @@ function ImagesSwiper({dataMessage, imgFocus, setImgFocus, overviewRef, imgIndex
     if (swiperRef) {
       swiperRef.slideTo(imgIndex);
     }
-  }, [imgIndex, swiperRef]); // Add swiperRef as a dependency
+  }, [imgIndex, swiperRef]);
   
 
   const handleImageClick = (id, index) => {
@@ -32,7 +47,7 @@ function ImagesSwiper({dataMessage, imgFocus, setImgFocus, overviewRef, imgIndex
   };
 
   return (
-    <div ref={closeImgHolderRef} className={`focusedMsg ${imgFocus && 'active'}`}>
+    <div ref={closeImgHolderRef} className={`focusedMsg ${imgFocus && 'active'} ${dataSwiperType}`}>
     <div className='hold'>
       {imgFocus && <IoClose className='closeMsg'         
         onClick={() => setImgFocus(null)}/>}
@@ -45,7 +60,7 @@ function ImagesSwiper({dataMessage, imgFocus, setImgFocus, overviewRef, imgIndex
       )}
       {currentfocusdMsg?.message && <p>{currentfocusdMsg?.message}</p>}
     </div>
-    {dataMessage.length > 1 && (
+    {dataForSwiper?.length > 1 && (
       <Swiper
         onSwiper={setSwiperRef}
         spaceBetween={5}
@@ -53,26 +68,26 @@ function ImagesSwiper({dataMessage, imgFocus, setImgFocus, overviewRef, imgIndex
         centeredSlides={true}
         loop={false}
       >
-      {dataMessage.map((x, index) => (
-        <SwiperSlide 
-            key={index}
-            onClick={() => handleImageClick(x.id, index)}
-            style={{ display: 'flex', justifyContent: 'center' }}
-        >
-          <img 
-              src={x.img} 
-              alt={`Slide ${index}`}
-              className={`${imgFocus == x.id && 'active'}`}
-              style={{
-                  maxWidth: '90%',
-                  maxHeight: '90%',
-                  objectFit: 'cover',
-                  cursor: 'pointer'
-              }}
-          />
-      </SwiperSlide>
-      ))}
-    </Swiper> 
+        {dataForSwiper.map((x, index) => (
+          <SwiperSlide 
+              key={index}
+              onClick={() => handleImageClick(x.id, index)}
+              style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <img 
+                src={x.img} 
+                alt={`Slide ${index}`}
+                className={`${imgFocus == x.id && 'active'}`}
+                style={{
+                    maxWidth: '90%',
+                    maxHeight: '90%',
+                    objectFit: 'cover',
+                    cursor: 'pointer'
+                }}
+            />
+        </SwiperSlide>
+        ))}
+      </Swiper> 
     )}
 
   </div>
