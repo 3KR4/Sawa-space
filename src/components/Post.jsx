@@ -32,7 +32,10 @@ function Post({data}) {
     setDataSwiperType('post')
     setImgFocus(id)
     setDataForSwiper(data)
-    setImgIndex(index)
+    
+    if (index !== '') {
+      setImgIndex(index)
+    }
   };
 
   return (
@@ -61,7 +64,7 @@ function Post({data}) {
           {data.img && Array.isArray(data.img) && data.img.length > 0 ? (
             data.img.length === 1 ? (
               <div className='image'>
-                <Image src={data.img[0]} alt="Post Image" fill />
+                <Image src={data.img[0]} alt="Post Image" fill onClick={()=> {handleImageClick(data.id , '')}} />
               </div>
             ) : (
               <div className={`images ${data.img.length >= 4 ? 'big' : data.img.length === 3 ? 'mid' : 'small'}`}>

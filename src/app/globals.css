@@ -888,8 +888,8 @@ header .events .userMenu svg {
   font-weight: 400;
   font-size: 14px;
 }
-.post .middle p {
-
+.post .middle a:focus-visible {
+  outline: none;
 }
 .post .middle .image {
   display: flex;
@@ -1205,12 +1205,137 @@ header .events .userMenu svg {
   width: 100%;
   height: 100vh;
   min-width: 100%;
-  background: #ffffff57;
-  backdrop-filter: blur(17px);
+  backdrop-filter:unset;
+  background: var(--body-color) !important;
 }
 body:has(.focusedMsg.active) header,
 body:has(.focusedMsg.active) .chats {
   z-index: unset;
+}
+.focusedMsg .post {
+  width: 100%;
+  max-width: unset;
+  flex-direction: row;
+  background: transparent;
+  height: 100%;
+  justify-content: space-between;
+}
+.focusedMsg .post .left-img {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 20px;
+  flex: 1;
+}
+
+.focusedMsg .post .left-img .hold img {
+  max-width: 90%;
+  max-height: 95%;
+  border-radius: 7px;
+}
+.focusedMsg .post .right-info {
+  min-width: 30%;
+  max-width: 31%;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  border-left: 1px solid var(--border-color);
+}
+.focusedMsg .post .top svg {
+  padding: 5px;
+}
+.focusedMsg .post .top svg:first-child {
+  padding: 6px;
+}
+.focusedMsg .post .middle {
+  flex: 1;
+}
+.focusedMsg .post .comments {
+  padding: 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-between;
+}
+
+.focusedMsg .post .comments .topHolderComments {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: -1px;
+  border-radius: 4px;  
+}
+.focusedMsg .post .comments .holder {
+  max-height: unset;
+  overflow: unset;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.focusedMsg .post .comments .holder .comment {
+  padding: 10px 0;
+}
+.focusedMsg .post .comments .holder .comment .image-holder img {
+  border-radius: 50%;
+  object-fit: cover;
+  min-width: 35px;
+  height: 35px;
+}
+.focusedMsg .post .comments .topHolderComments:has(.noCommentsYet) {
+  border: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.focusedMsg .post .noCommentsYet p {
+  font-weight: 500;
+  font-size: 15px;
+  background: transparent;
+  padding: 0;
+}
+
+.focusedMsg .post .bottom .actions {
+  position: relative;
+  left: unset;
+  top: unset;
+  transform: unset;
+}
+.focusedMsg .post .bottom .actions svg {
+  background: #e6e6e6;
+  width: 70px;
+  border-radius: 6px;
+  padding: 7px;
+  height: 36px;
+  color: var(--paragraph-color);
+}
+.focusedMsg .post .bottom .actions svg:hover {
+  background: var(--main-color);
+  color: white;
+}
+.focusedMsg .post .swiper .swiper-slide img {
+  height: unset;
+}
+.focusedMsg .post .swiper {
+  height: 75px;
+}
+.focusedMsg .post .left-img .hold {
+  padding: 0;
+}
+.focusedMsg .post .middle > p {
+  max-width: 100%;
+  background: transparent;
+}
+.focusedMsg .post .comments p {
+  max-width: 95%;
+}
+.focusedMsg .post .comments .content .holder:has(img) p {
+  margin-bottom: 3px !important;
+}
+
+.focusedMsg .post .hold {
+  max-height: unset;
+}
+.focusedMsg .post:has(.swiper) .hold {
+  max-height: 90%;
 }
 
 
@@ -1226,6 +1351,10 @@ body:has(.focusedMsg.active) .chats {
     max-width: 52%;
     min-width: 50%;
   }
+  .focusedMsg .post .right-info {
+    min-width: 34%;
+    max-width: 35%;
+  }
 }
 @media (max-width: 1600px) {
   body:has(.chats.false) main header nav svg {
@@ -1234,6 +1363,10 @@ body:has(.focusedMsg.active) .chats {
   .post {
     max-width: 56%;
     min-width: 55%;
+  }
+  .focusedMsg .post .left-img .hold img {
+    max-width: 98%;
+    max-height: 100%;
   }
 }
 @media (max-width: 1500px) {
@@ -1244,11 +1377,19 @@ body:has(.focusedMsg.active) .chats {
     max-width: 61%;
     min-width: 59%;
   }
+  .focusedMsg .post .right-info {
+    min-width: 35%;
+    max-width: 37%;
+  }
 }
 @media (max-width: 1400px) {
   .post {
     max-width: 66%;
     min-width: 55%;
+  }
+  .focusedMsg .post .right-info {
+    min-width: 37%;
+    max-width: 39%;
   }
 }
 @media (max-width: 1300px) {
@@ -1265,6 +1406,10 @@ body:has(.focusedMsg.active) .chats {
   header .logo img {
     margin: -4px 0 -4px -3px;
   }
+  .focusedMsg .post .right-info {
+    min-width: 39%;
+    max-width: 40%;
+  }
 }
 @media (max-width: 1200px) {
   body:has(.chats.false) main header nav svg {
@@ -1280,6 +1425,10 @@ body:has(.focusedMsg.active) .chats {
   .post {
     max-width: 75%;
     min-width: 72%;
+  }
+  .focusedMsg .post .right-info {
+    min-width: 42%;
+    max-width: 43%;
   }
 }
 @media (max-width: 1100px) {

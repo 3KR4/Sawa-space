@@ -625,6 +625,7 @@
 }
 .focusedMsg .swiper .swiper-slide {
   width: fit-content;
+  align-items: center;
 }
 .focusedMsg .swiper .swiper-slide img {
   min-width: 100%;

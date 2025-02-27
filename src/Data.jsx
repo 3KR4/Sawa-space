@@ -1167,7 +1167,7 @@ export let posts = [
   {
     id: 1,
     link: "https://fb.watch/xVFJl_Q7i0/",
-    img: ["/chat7.png" ],
+    img: ["/chat7.png", "/chat1.png", "/chat19.png"],
     paragraph: "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
     date: "2024-10-12",
     time: "16:00", 
