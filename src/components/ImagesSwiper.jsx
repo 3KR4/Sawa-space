@@ -35,11 +35,7 @@ function ImagesSwiper() {
 
   const [swiperRef, setSwiperRef] = useState(null);
 
-  const data =
-    dataSwiperType === "msg"
-      ? messages.find((msg) => msg.id === imgFocus)
-      : posts.find((post) => post.id === imgFocus);
-
+  const data = dataSwiperType === "msg" && messages.find((msg) => msg.id === imgFocus)
 
   useEffect(() => {
     if (swiperRef) {
@@ -59,9 +55,6 @@ function ImagesSwiper() {
     }
   };
 
-  console.log(data);
-  console.log(dataForSwiper);
-  
 
   return (
     <div
@@ -72,14 +65,14 @@ function ImagesSwiper() {
         <div className={`post`}>
 
           <div className="left-img">
-          <div className="hold">
-            {data?.img && (
-              <img
-                src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
-                alt={data?.user ? `${data?.user.name}'s image` : "User image"}
-              />
-            )}
-          </div>
+            <div className="hold">
+              {dataForSwiper?.img && (
+                <img
+                  src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
+                  alt={dataForSwiper?.user ? `${dataForSwiper?.user.name}'s image` : "User image"}
+                />
+              )}
+            </div>
           {dataForSwiper?.img?.length > 1 && (
             <Swiper
               onSwiper={setSwiperRef}
@@ -116,13 +109,13 @@ function ImagesSwiper() {
             <div className="top">
               <div className="left">
                 <Image
-                  src={data?.user.img || "/users/default.png"}
-                  alt={data?.user.name}
+                  src={dataForSwiper?.user.img || "/users/default.png"}
+                  alt={dataForSwiper?.user.name}
                   width={40}
                   height={40}
                 />
                 <div className="info">
-                  <h5>{data?.user.name}</h5>
+                  <h5>{dataForSwiper?.user.name}</h5>
                   <span>July 19 2018, 19:42pm</span>
                 </div>
               </div>
@@ -130,19 +123,19 @@ function ImagesSwiper() {
               <HiDotsVertical
                 onClick={(e) => {
                   handleMessageActions(e);
-                  setCurentUserId(data?.id);
+                  setCurentUserId(dataForSwiper?.id);
                 }}
               />
                 <IoClose className="close" onClick={() => setImgFocus(null)} />
               </div>
             </div>
             <div className="bottom">
-              {data?.reacts.count !== 0 && (
+              {dataForSwiper?.reacts.count !== 0 && (
                 <div className="left emojesCounter">
-                  {data?.reacts.topUseage.map((x, index) => (
+                  {dataForSwiper?.reacts.topUseage.map((x, index) => (
                     <p key={index}>{x}</p>
                   ))}
-                  <p>{data?.reacts.count}</p>
+                  <p>{dataForSwiper?.reacts.count}</p>
                 </div>
               )}
               <div className="actions">
@@ -153,28 +146,28 @@ function ImagesSwiper() {
               <div className="right">
                 <div>
                   <PiShareFat />
-                  {data?.shareCount}
+                  {dataForSwiper?.shareCount}
                 </div>
                 <div>
                   <FaRegComment />
-                  {data?.comments.count}
+                  {dataForSwiper?.comments.count}
                 </div>
               </div>
             </div>
             <div className="middle">
-              {data?.link && <Link href={data?.link}>{data?.link}</Link>}
-              {data?.paragraph && <p>{data?.paragraph}</p>}
+              {dataForSwiper?.link && <Link href={dataForSwiper?.link}>{dataForSwiper?.link}</Link>}
+              {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
 
               <div className="comments">
                 <div className="topHolderComments">
                   <div className="top">
-                    <h3>Comments ({data?.comments.count})</h3>
+                    <h3>Comments ({dataForSwiper?.comments.count})</h3>
                   </div>
                   <div className="holder">
-                    {data?.comments &&
-                    Array.isArray(data?.comments.allComments) &&
-                    data?.comments.allComments.length > 0 ? (
-                      data?.comments.allComments.map((comment) => (
+                    {dataForSwiper?.comments &&
+                    Array.isArray(dataForSwiper?.comments.allComments) &&
+                    dataForSwiper?.comments.allComments.length > 0 ? (
+                      dataForSwiper?.comments.allComments.map((comment) => (
                         <Comment data={comment} />
                       ))
                     ) : (

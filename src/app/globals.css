@@ -1304,7 +1304,7 @@ body:has(.focusedMsg.active) .chats {
   width: 70px;
   border-radius: 6px;
   padding: 7px;
-  height: 36px;
+  height: 34px;
   color: var(--paragraph-color);
 }
 .focusedMsg .post .bottom .actions svg:hover {
