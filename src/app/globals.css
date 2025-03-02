@@ -1543,7 +1543,24 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 100%;
-    min-width: 98%;
+    min-width: 100%;
+  }
+
+  .post .middle {
+    padding: 2px 10px;
+  }
+  .focusedMsg .post .right-info {
+    max-width: 100%;
+    min-width: 100%;
+  }
+  .focusedMsg .post .left-img {
+    padding: 0;
+  }
+  .focusedMsg .post .middle > p {
+    font-size: 18px;
+  }
+  .focusedMsg .post:has(.swiper) .hold {
+    max-height: 750px;
   }
 }
 
@@ -1700,6 +1717,33 @@ body:has(.focusedMsg.active) .chats {
   .post .comments .holder .comment {
     padding: 8px 6px;
     gap: 8px;
+  }
+
+  .focusedMsg .post .comments {
+    padding: 0;}
+    .focusedMsg .post .left-img {
+      padding: 0;
+      margin-bottom: 6px;
+  }
+  .focusedMsg .post .left-img {
+    gap: 6px;
+    }
+  .focusedMsg .post .swiper {
+    height: 58px;
+    }
+  .post .comments .holder .comment .content .holder > p {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  .focusedMsg .post .middle > p {
+    padding: 4px;
+    font-size: 16px;
+  }
+  .focusedMsg .post:has(.swiper) .hold {
+    max-height: 560px;
+  }
+  .focusedMsg .post .middle {
+    padding: 2px 10px 10px; 
   }
 }
 @media (max-width: 500px) {

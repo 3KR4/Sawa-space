@@ -31,6 +31,7 @@ function ImagesSwiper() {
     imgIndex,
     setImgIndex,
     closeImgHolderRef,
+    screenSize
   } = useContext(AllContext);
 
   const [swiperRef, setSwiperRef] = useState(null);
@@ -64,53 +65,54 @@ function ImagesSwiper() {
       {dataSwiperType === "post" ? (
         <div className={`post`}>
 
-          <div className="left-img">
-            <div className="hold">
-              {dataForSwiper?.img && (
-                <img
-                  src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
-                  alt={dataForSwiper?.user ? `${dataForSwiper?.user.name}'s image` : "User image"}
-                />
-              )}
-            </div>
-          {dataForSwiper?.img?.length > 1 && (
-            <Swiper
-              onSwiper={setSwiperRef}
-              spaceBetween={5}
-              slidesPerView={"auto"}
-              centeredSlides={true}
-              loop={false}
-            >
-              {dataForSwiper.img.map((x, index) => (
-                <SwiperSlide
-                  key={index}
-                  onClick={() => {handleImageClick(dataForSwiper.id, index); console.log(index);}
-                  }
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
+          {screenSize === 'large' && (
+            <div className="left-img">
+              <div className="hold">
+                {dataForSwiper?.img && (
                   <img
-                    src={x}
-                    alt={`Slide ${index}`}
-                    className={`${imgIndex == index && "active"}`}
-                    style={{
-                      maxWidth: "90%",
-                      maxHeight: "90%",
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
+                    src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
+                    alt={dataForSwiper?.user ? `${dataForSwiper?.user.name}'s image` : "User image"}
                   />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+                )}
+              </div>
+            {dataForSwiper?.img?.length > 1 && (
+              <Swiper
+                onSwiper={setSwiperRef}
+                spaceBetween={5}
+                slidesPerView={"auto"}
+                centeredSlides={true}
+                loop={false}
+              >
+                {dataForSwiper.img.map((x, index) => (
+                  <SwiperSlide
+                    key={index}
+                    onClick={() => {handleImageClick(dataForSwiper.id, index); console.log(index);}
+                    }
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <img
+                      src={x}
+                      alt={`Slide ${index}`}
+                      className={`${imgIndex == index && "active"}`}
+                      style={{
+                        maxWidth: "90%",
+                        maxHeight: "90%",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+            </div>
           )}
-          </div>
-
           <div className="right-info">
             <div className="top">
               <div className="left">
                 <Image
-                  src={dataForSwiper?.user.img || "/users/default.png"}
-                  alt={dataForSwiper?.user.name}
+                  src={dataForSwiper?.user?.img || "/users/default.png"}
+                  alt={dataForSwiper?.user?.name}
                   width={40}
                   height={40}
                 />
@@ -154,6 +156,51 @@ function ImagesSwiper() {
                 </div>
               </div>
             </div>
+
+            {screenSize !== 'large' && (
+              <div className="left-img">
+                <div className="hold">
+                  {dataForSwiper?.img && (
+                    <img
+                      src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
+                      alt={dataForSwiper?.user ? `${dataForSwiper?.user.name}'s image` : "User image"}
+                    />
+                  )}
+                </div>
+              {dataForSwiper?.img?.length > 1 && (
+                <Swiper
+                  onSwiper={setSwiperRef}
+                  spaceBetween={5}
+                  slidesPerView={"auto"}
+                  centeredSlides={true}
+                  loop={false}
+                >
+                  {dataForSwiper.img.map((x, index) => (
+                    <SwiperSlide
+                      key={index}
+                      onClick={() => {handleImageClick(dataForSwiper.id, index); console.log(index);}
+                      }
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <img
+                        src={x}
+                        alt={`Slide ${index}`}
+                        className={`${imgIndex == index && "active"}`}
+                        style={{
+                          maxWidth: "90%",
+                          maxHeight: "90%",
+                          objectFit: "cover",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+              </div>
+            )}
+
+
             <div className="middle">
               {dataForSwiper?.link && <Link href={dataForSwiper?.link}>{dataForSwiper?.link}</Link>}
               {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
