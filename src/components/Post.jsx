@@ -3,6 +3,8 @@ import { useState, useContext } from 'react';
 import Image from "next/image";
 import Link from 'next/link';
 import Comment from '@/components/Comment';
+import ReactsHolder from "@/components/ReactsHolder";
+
 import { AllContext } from '@/app/Context';
 
 import { IoLink } from "react-icons/io5";
@@ -23,10 +25,13 @@ function Post({data}) {
     imgFocus, 
     setImgFocus, 
     setImgIndex,
-    closeImgHolderRef 
+    closeImgHolderRef,
+    handleMessageActions,
   } = useContext(AllContext);
 
   const [seeComments, setSeeComments] = useState(false)
+  const [reactsHolder, setReactsHolder] = useState(false);
+
 
   const handleImageClick = (id, index) => {
     setDataSwiperType('post')
@@ -76,17 +81,30 @@ function Post({data}) {
           ) : null}
         </div>
         <div className='bottom'>
-          {data.reacts.count !== 0 && (
             <div className='left emojesCounter'>
-              {data.reacts.topUseage.map((x, index) => <p key={index}>{x}</p>)}
-              <p>{data.reacts.count}</p>
+              {data.reacts.count !== 0 && (
+                <>
+                  {data.reacts.topUseage.map((x, index) => <p key={index}>{x}</p>)}
+                  <p>{data.reacts.count}</p>
+                </>
+              )}
             </div>
-          )}
+
           <div className='actions'>
-            <MdOutlineAddReaction/>
-            <FaRegComment onClick={()=> setSeeComments(true)}/>
-            <IoLink/>
-            <PiShareFat/>
+            <div>
+              <MdOutlineAddReaction onClick={()=> setReactsHolder(prev => !prev)}/>
+              {reactsHolder && <ReactsHolder reactsHolder={reactsHolder} setReactsHolder={setReactsHolder} id={data.id}/>}
+            </div>
+            <div>
+              <FaRegComment onClick={()=> setSeeComments(true)}/>
+            </div>
+            <div>
+              <IoLink/>
+            </div>
+            <div>
+              <PiShareFat/>
+            </div>
+
           </div>
           <div className='right'>
             <div>

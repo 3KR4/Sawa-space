@@ -117,7 +117,7 @@ function ImagesSwiper() {
                   height={40}
                 />
                 <div className="info">
-                  <h5>{dataForSwiper?.user.name}</h5>
+                  <h5>{dataForSwiper?.user?.name}</h5>
                   <span>July 19 2018, 19:42pm</span>
                 </div>
               </div>
@@ -132,19 +132,23 @@ function ImagesSwiper() {
               </div>
             </div>
             <div className="bottom">
-              {dataForSwiper?.reacts.count !== 0 && (
+              {dataForSwiper?.reacts?.count !== 0 && (
                 <div className="left emojesCounter">
-                  {dataForSwiper?.reacts.topUseage.map((x, index) => (
+                  {dataForSwiper?.reacts?.topUseage.map((x, index) => (
                     <p key={index}>{x}</p>
                   ))}
-                  <p>{dataForSwiper?.reacts.count}</p>
+                  <p>{dataForSwiper?.reacts?.count}</p>
                 </div>
               )}
-              <div className="actions">
-                <MdOutlineAddReaction />
-                <IoLink />
-                <PiShareFat />
-              </div>
+
+              {screenSize !== 'small' && (
+                <div className="actions">
+                  <MdOutlineAddReaction />
+                  <IoLink />
+                  <PiShareFat />
+                </div>
+              )}
+
               <div className="right">
                 <div>
                   <PiShareFat />
@@ -152,18 +156,17 @@ function ImagesSwiper() {
                 </div>
                 <div>
                   <FaRegComment />
-                  {dataForSwiper?.comments.count}
+                  {dataForSwiper?.comments?.count}
                 </div>
               </div>
             </div>
-
             {screenSize !== 'large' && (
               <div className="left-img">
                 <div className="hold">
                   {dataForSwiper?.img && (
                     <img
                       src={dataForSwiper?.img[dataForSwiper?.img.length === 1 ? 0 : imgIndex]}
-                      alt={dataForSwiper?.user ? `${dataForSwiper?.user.name}'s image` : "User image"}
+                      alt={dataForSwiper?.user ? `${dataForSwiper?.user?.name}'s image` : "User image"}
                     />
                   )}
                 </div>
@@ -204,6 +207,14 @@ function ImagesSwiper() {
             <div className="middle">
               {dataForSwiper?.link && <Link href={dataForSwiper?.link}>{dataForSwiper?.link}</Link>}
               {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
+
+              {screenSize === 'small' && (
+                <div className="actions">
+                  <MdOutlineAddReaction />
+                  <IoLink />
+                  <PiShareFat />
+                </div>
+              )}
 
               <div className="comments">
                 <div className="topHolderComments">

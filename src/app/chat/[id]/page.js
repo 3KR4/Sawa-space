@@ -35,11 +35,14 @@ export default function Chat({ params }) {
     imgFocus, 
     setImgFocus, 
     setImgIndex,
-    closeImgHolderRef 
+    closeImgHolderRef,
+    handleEmojiClick,
+    InputRef,
+    messageText,
+    setMessageText
   } = useContext(AllContext);
 
   const [curentChat, setCurentChat] = useState({});
-  const [text, setText] = useState("");
   const [selectMode, setSelectMode] = useState(false);
   const [messageAction, setMessageAction] = useState(false);
   const [forwordAction, setForwordAction] = useState(false);
@@ -91,7 +94,6 @@ export default function Chat({ params }) {
   const chatRef = useRef(null);
   const menuRef = useRef(null);
   const emojiRef = useRef(null);
-  const textarea = useRef(null);
   const forwordMenuRef = useRef(null);
   const reactsMenuRef = useRef(null);
   const mentionRef = useRef(null);
@@ -121,7 +123,7 @@ export default function Chat({ params }) {
     const textarea = e.target;
     textarea.style.height = "43px"; 
     textarea.style.height = `${textarea.value === '' ? '42px' : textarea.scrollHeight + 4}px`;
-    setText(textarea.value);
+    setMessageText(textarea.value);
 
     const caretPosition = textarea.selectionStart;
     const textBeforeCaret = textarea.value.slice(0, caretPosition);
@@ -148,7 +150,7 @@ export default function Chat({ params }) {
 };
 
 const handleUserClick = (user) => {
-  const textareaa = textarea?.current;
+  const textareaa = InputRef?.current;
   const caretPosition = textareaa.selectionStart;
   const textBeforeCaret = text.slice(0, caretPosition);
   const textAfterCaret = text.slice(caretPosition);
@@ -157,7 +159,7 @@ const handleUserClick = (user) => {
       ? textBeforeCaret.replace(/@\w*$/, `@${user.name}`) + textAfterCaret
       : `${textBeforeCaret} @${user.name} ${textAfterCaret}`;
 
-  setText(newText.trim() + ' ');
+  setMessageText(newText.trim() + ' ');
 
   setMentionsPeople((prev) => {
     if (!prev.some(mentioned => mentioned.id === user.id)) {
@@ -167,8 +169,8 @@ const handleUserClick = (user) => {
   });
   
   setTimeout(() => {
-    textareaa.focus();
-    textareaa.setSelectionRange(newText.length + 1, newText.length + 1);
+    InputRef.focus();
+    InputRef.setSelectionRange(newText.length + 1, newText.length + 1);
   }, 0);
 };
 
@@ -226,7 +228,7 @@ const handleMessageActions = (event, type, msg) => {
       }
       if (
         !((emojiRef.current && emojiRef.current.contains(event.target)) || 
-          (textarea.current && textarea.current.contains(event.target))
+          (InputRef.current && InputRef.current.contains(event.target))
         )) {
         setEmojiHolder(false);
         setIsAddReact(false)
@@ -254,26 +256,6 @@ const handleMessageActions = (event, type, msg) => {
     const filteredMsgs = messages.filter(msg => msg.pin);
     setPinedMsgs(filteredMsgs);
 }, [messages]);
-  
-const handleEmojiClick = (event) => {
-  console.log(event);
-  const emoji = String.fromCodePoint(
-    ...event.unified.split('-').map((code) => parseInt(code, 16))
-  );
-
-  const { selectionStart, selectionEnd } = textarea.current;
-  const currentValue = textarea.current.value;
-  const newText = 
-    currentValue.slice(0, selectionStart) + 
-    emoji + 
-    currentValue.slice(selectionEnd);
-  setText(newText);
-
-  setTimeout(() => {
-    textarea.current.focus();
-    textarea.current.selectionStart = textarea.current.selectionEnd = selectionStart + emoji.length;
-  }, 0);
-};
 
   const historyRefs = useRef([]); // لتخزين عناصر div.history
   const [activeIndex, setActiveIndex] = useState(null);
@@ -448,7 +430,7 @@ const handleEmojiClick = (event) => {
 
             {messageAction && (
               <div ref={menuRef} className={`messageAction sideMenu ${messageAction && 'active'}`} style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px`}}>
-                <div className='emojes'>
+                <div className='reacts'>
                   <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f44d.png"/>
                   <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/2764-fe0f.png"/>
                   <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f602.png"/>
@@ -645,11 +627,11 @@ const handleEmojiClick = (event) => {
                 theme="light"
                 emojiStyle="facebook"
                 previewConfig={{ showPreview: false }}
-                width={400}
+                width={350}
               />
             </div>
             <button><MdOutlinePermMedia/></button>
-            <button onClick={()=> {setEmojiHolder(true); textarea.current.focus()}}><BsEmojiSmile/></button>
+            <button onClick={()=> {setEmojiHolder(true); InputRef.current.focus()}}><BsEmojiSmile/></button>
             <div className='big-holder'>
               {mentionHolder && (
                   <div ref={mentionRef} className={`mentionMenu MenuOfUsers sideMenu active`}>
@@ -707,14 +689,14 @@ const handleEmojiClick = (event) => {
                 </div>
               )} 
               <textarea
-                ref={textarea}
-                value={text}
+                ref={InputRef}
+                value={messageText}
                 onInput={handleInput}
                 placeholder="Type a message..."
               />
             </div>
 
-            {text ? 
+            {messageText ? 
               <button><AiOutlineSend style={{fontSize: '21px'}}/></button>
             : 
               <button><TiMicrophoneOutline/></button>

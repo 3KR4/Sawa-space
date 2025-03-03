@@ -8,19 +8,7 @@
   position: relative;
   z-index: 1;
 }
-.pirsonChat .emoji-holder {
-  width: fit-content;
-  z-index: 100;
-  scale: 0.5;
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.2s;
-}
-.pirsonChat .emoji-holder.active {
-  scale: 1;
-  visibility: visible;
-  opacity: 1;
-}
+
 .pirsonChat .mentionMenu {
   position: absolute;
   left: 0;
@@ -613,6 +601,7 @@
 }
 .focusedMsg p {
   background: #d5d5d596;
+  color: #212121;
   padding: 8px 14px;
   border-radius: 7px;
   max-width: 75%;
@@ -867,31 +856,7 @@ body:has(.pirsonChat) .open-close {
   gap: 1px;
   padding: 8px 0;
 }
-.pirsonChat .messages .messageAction .emojes {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  margin: 3px 15px 0;
-}
-.pirsonChat .messages .messageAction .emojes > * {
-  min-width: 30px;
-  min-height: 30px;
-  padding: 2px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.pirsonChat .messages .messageAction .emojes img:hover {
-  scale: 1.3;
-}
-.pirsonChat .messages .messageAction .emojes > svg {
-  padding: 4px;
-}
-.pirsonChat .messages .messageAction .emojes > svg:hover {
-  padding: 6px;
-  background: var(--main-color);
-  color: white;
-}
+
 .pirsonChat .messages .forwordMenu {
   width: 340px;
 }

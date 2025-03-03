@@ -176,6 +176,11 @@ body > main > .holder{
   overflow: auto;
 }
 
+body > main:has(.emoji-holder.active) > .holder {
+  overflow: hidden;
+  padding-right: 5.5px;
+}
+
 .chats {
   margin-right: 15px;
   background: var(--body-color);
@@ -805,7 +810,7 @@ header .events .userMenu svg {
   border: 1px solid #e8e8e8;
   border-radius: 9px;
   max-width: 43%;
-  min-width: 42%;
+  min-width: 43%;
   overflow: hidden;
   background: var(--body-color);
 }
@@ -837,6 +842,9 @@ header .events .userMenu svg {
   justify-content: space-between;
   border-bottom: 1px solid #e8e8e8;
   padding: 7px 12px;
+}
+.post .top .icons-holder {
+  display: flex;
 }
 .post .top .left {
   display: flex;
@@ -887,6 +895,7 @@ header .events .userMenu svg {
   font-family: 'Rubik';
   font-weight: 400;
   font-size: 14px;
+  width: fit-content;
 }
 .post .middle a:focus-visible {
   outline: none;
@@ -903,6 +912,7 @@ header .events .userMenu svg {
   max-width: 100%;
   object-fit: contain;
   border-radius: 7px;
+  cursor: pointer;
 }
 .post .middle .images {
   display: flex;
@@ -916,6 +926,7 @@ header .events .userMenu svg {
   border-radius: 6px;
   width: fit-content;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .post .images.big img {
@@ -953,6 +964,7 @@ header .events .userMenu svg {
   display: flex;
   align-items: center;
   font-size: 19px;
+  min-width: 65px;
 }
 .post .emojesCounter p {
   font-size: 18px;
@@ -999,6 +1011,7 @@ header .events .userMenu svg {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 65px;
 }
 .post .comment .right {
   gap: 0;
@@ -1057,6 +1070,7 @@ header .events .userMenu svg {
   gap: 12px;
   border-bottom: 1px solid var(--border-color);
   padding: 10px;
+  padding-left: 0;
 }
 .post .comments .holder .comment:last-child {
   border: none;
@@ -1230,12 +1244,12 @@ body:has(.focusedMsg.active) .chats {
 }
 
 .focusedMsg .post .left-img .hold img {
-  max-width: 90%;
+  max-width: 95%;
   max-height: 95%;
   border-radius: 7px;
 }
 .focusedMsg .post .right-info {
-  min-width: 30%;
+  min-width: 31%;
   max-width: 31%;
   display: flex;
   overflow: auto;
@@ -1293,13 +1307,19 @@ body:has(.focusedMsg.active) .chats {
   padding: 0;
 }
 
-.focusedMsg .post .bottom .actions {
+.post .middle > .actions,
+.post .bottom > .actions {
   position: relative;
   left: unset;
   top: unset;
   transform: unset;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: center;
 }
-.focusedMsg .post .bottom .actions svg {
+.post .middle > .actions svg,
+.post .bottom > .actions > div > svg {
   background: #e6e6e6;
   width: 70px;
   border-radius: 6px;
@@ -1307,7 +1327,24 @@ body:has(.focusedMsg.active) .chats {
   height: 34px;
   color: var(--paragraph-color);
 }
-.focusedMsg .post .bottom .actions svg:hover {
+.posts-holder .post .bottom > .actions {
+  gap: 4px;
+}
+.posts-holder .post .bottom > .actions > div {
+  display: flex;
+}
+.posts-holder .post .bottom > .actions > div > svg {
+  width: 50px;
+  padding: 7px;
+}
+.posts-holder .post .bottom > .actions > div:nth-child(2) svg {
+  padding: 8.3px;
+}
+.posts-holder .post .bottom > .actions > div:last-child svg {
+  padding: 8px;
+}
+.post .middle > .actions svg:hover,
+.post .bottom > .actions > div > svg:hover {
   background: var(--main-color);
   color: white;
 }
@@ -1338,6 +1375,73 @@ body:has(.focusedMsg.active) .chats {
   max-height: 90%;
 }
 
+.reacts {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 3px 15px 0;
+}
+.reacts > * {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.reacts img:hover {
+  scale: 1.5;
+  transform: translateY(-4px);
+}
+.reacts > svg {
+  padding: 4px;
+}
+.reacts > svg:hover {
+  padding: 6px;
+  background: var(--main-color);
+  color: white;
+}
+
+.sideMenu.reactsHolder {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sideMenu.reactsHolder .reacts {
+  margin: 0;
+  padding: 5px;
+}
+.sideMenu.reactsHolder .reacts > * {
+  width: 32px;
+  height: 32px;
+}
+.sideMenu.reactsHolder .reacts > svg {
+  background: var(--second-section-color);
+  color: #656565;
+  width: 30px;
+  height: 30px;
+}
+.sideMenu.reactsHolder .reacts > svg:hover {
+  background: var(--main-color);
+  color: white;
+}
+.emoji-holder {
+  position: fixed;
+  width: fit-content;
+  z-index: 101;
+  scale: 0.5;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.2s;
+}
+.emoji-holder.active {
+  scale: 1;
+  visibility: visible;
+  opacity: 1;
+}
 
 /*! Media */
 
@@ -1349,10 +1453,10 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 52%;
-    min-width: 50%;
+    min-width: 52%;
   }
   .focusedMsg .post .right-info {
-    min-width: 34%;
+    min-width: 35%;
     max-width: 35%;
   }
 }
@@ -1362,7 +1466,7 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 56%;
-    min-width: 55%;
+    min-width: 56%;
   }
   .focusedMsg .post .left-img .hold img {
     max-width: 98%;
@@ -1375,20 +1479,20 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 61%;
-    min-width: 59%;
+    min-width: 61%;
   }
   .focusedMsg .post .right-info {
-    min-width: 35%;
+    min-width: 37%;
     max-width: 37%;
   }
 }
 @media (max-width: 1400px) {
   .post {
     max-width: 66%;
-    min-width: 55%;
+    min-width: 66%;
   }
   .focusedMsg .post .right-info {
-    min-width: 37%;
+    min-width: 39%;
     max-width: 39%;
   }
 }
@@ -1407,7 +1511,7 @@ body:has(.focusedMsg.active) .chats {
     margin: -4px 0 -4px -3px;
   }
   .focusedMsg .post .right-info {
-    min-width: 39%;
+    min-width: 40%;
     max-width: 40%;
   }
 }
@@ -1424,10 +1528,10 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 75%;
-    min-width: 72%;
+    min-width: 75%;
   }
   .focusedMsg .post .right-info {
-    min-width: 42%;
+    min-width: 43%;
     max-width: 43%;
   }
 }
@@ -1443,7 +1547,7 @@ body:has(.focusedMsg.active) .chats {
   }
   .post {
     max-width: 81%;
-    min-width: 79%;
+    min-width: 81%;
   }
 }
 @media (max-width: 1000px) {
@@ -1744,6 +1848,25 @@ body:has(.focusedMsg.active) .chats {
   }
   .focusedMsg .post .middle {
     padding: 2px 10px 10px; 
+  }
+  .focusedMsg .post .middle > .actions svg {
+    width: -webkit-fill-available;
+    padding: 7px;
+    height: 36px;
+  }
+  .posts-holder .post .bottom > .actions > div > svg {
+    width: 36px;
+    height: 28px;
+    padding: 5px;
+  }
+  .posts-holder .post .bottom > .actions > div:last-child svg {
+    padding: 5px;
+  }
+  .posts-holder .post .bottom > .actions > div:nth-child(2) svg {
+    padding: 6px;
+  }
+  body:has(.focusedMsg.active) {
+    overflow: hidden;
   }
 }
 @media (max-width: 500px) {
