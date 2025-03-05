@@ -17,6 +17,7 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({data}) {
+
   const {
     screenSize,
     setDataSwiperType,
@@ -26,7 +27,7 @@ function Post({data}) {
     setImgFocus, 
     setImgIndex,
     closeImgHolderRef,
-    handleMessageActions,
+    handleMenus,
   } = useContext(AllContext);
 
   const [seeComments, setSeeComments] = useState(false)
@@ -37,7 +38,6 @@ function Post({data}) {
     setDataSwiperType('post')
     setImgFocus(id)
     setDataForSwiper(data)
-    
     if (index !== '') {
       setImgIndex(index)
     }
@@ -57,8 +57,7 @@ function Post({data}) {
             </div>
           </div>
           <HiDotsVertical onClick={(e) => {
-            handleMessageActions(e)
-            setCurentUserId(data.id)
+            handleMenus(e, 'postSettings', data.id)
           }}/>
         </div>
         <div className='middle'>
@@ -89,23 +88,24 @@ function Post({data}) {
                 </>
               )}
             </div>
+          {screenSize !== 'small' && (
+            <div className='actions'>
+              <div>
+                <MdOutlineAddReaction onClick={()=> setReactsHolder(prev => !prev)}/>
+                {reactsHolder && <ReactsHolder reactsHolder={reactsHolder} setReactsHolder={setReactsHolder} id={data.id}/>}
+              </div>
+              <div>
+                <FaRegComment onClick={()=> setSeeComments(true)}/>
+              </div>
+              <div>
+                <IoLink/>
+              </div>
+              <div>
+                <PiShareFat/>
+              </div>
 
-          <div className='actions'>
-            <div>
-              <MdOutlineAddReaction onClick={()=> setReactsHolder(prev => !prev)}/>
-              {reactsHolder && <ReactsHolder reactsHolder={reactsHolder} setReactsHolder={setReactsHolder} id={data.id}/>}
             </div>
-            <div>
-              <FaRegComment onClick={()=> setSeeComments(true)}/>
-            </div>
-            <div>
-              <IoLink/>
-            </div>
-            <div>
-              <PiShareFat/>
-            </div>
-
-          </div>
+          )}
           <div className='right'>
             <div>
               <PiShareFat/>
@@ -117,6 +117,24 @@ function Post({data}) {
             </div>
           </div>
         </div>
+        {screenSize === 'small' && (
+            <div className='actions'>
+              <div>
+                <MdOutlineAddReaction onClick={()=> setReactsHolder(prev => !prev)}/>
+                {reactsHolder && <ReactsHolder reactsHolder={reactsHolder} setReactsHolder={setReactsHolder} id={data.id}/>}
+              </div>
+              <div>
+                <FaRegComment onClick={()=> setSeeComments(true)}/>
+              </div>
+              <div>
+                <IoLink/>
+              </div>
+              <div>
+                <PiShareFat/>
+              </div>
+
+            </div>
+          )}
       </>
     ) : (
       <div className='comments'>

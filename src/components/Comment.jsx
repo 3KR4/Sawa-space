@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState } from 'react';
-import { MdOutlineAddReaction } from "react-icons/md";
+import ReactsHolder from "@/components/ReactsHolder";
 import Image from "next/image";
 
+import { MdOutlineAddReaction } from "react-icons/md";
 
 function Comment({data}) {
   const [seeReplays, setSeeReplays] = useState(false)
+  const [reactsHolder, setReactsHolder] = useState(false);
 
   return (
     <div key={data.id} className='comment'> 
@@ -36,7 +38,10 @@ function Comment({data}) {
             )}
           </div>
           <div className='right'>
-            <MdOutlineAddReaction/>
+            <div>
+              <MdOutlineAddReaction onClick={()=> setReactsHolder(prev => !prev)}/>
+              {reactsHolder && <ReactsHolder reactsHolder={reactsHolder} setReactsHolder={setReactsHolder} id={data.id}/>}
+            </div>
             <button>Reply</button>
           </div>
 

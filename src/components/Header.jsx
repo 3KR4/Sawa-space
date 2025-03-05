@@ -13,10 +13,9 @@ import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
 import { AllContext } from '@/app/Context';
 
-
 export default function Header() {
+  const { screenSize, setOpenPostForm } = useContext(AllContext);
   const [userMenu, setUserMenu] = useState(false)
-  const {screenSize} = useContext(AllContext)
   const [phoneMenu, setPhoneMenu] = useState(false)
   const [phoneSearch, setPhoneSearch] = useState(false)
 
@@ -24,9 +23,14 @@ export default function Header() {
   const phoneSearchRef = useRef(null);
   const menuBtnRef = useRef(null);
   const searchBtnRef = useRef(null);
+  const userMenuRef = useRef(null);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setUserMenu(false); 
+      }
+
       if (
         phoneMenuRef.current && phoneMenuRef.current.contains(event.target)
       ) return;
@@ -77,38 +81,39 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY, screenSize]);
-  
-  
 
   return (
-    <header className={`${screenSize === 'small' && !isVisible && "hidden"}`}>
+    <header className={`${screenSize === "small" && !isVisible && "hidden"}`}>
       <div className="logo">
-        <Image src={'/logo.png'} width={80} height={80} alt={`logo`}/>
-        {screenSize === 'small' &&
-        <div className='icons'>
-          <FaSearch 
-            ref={searchBtnRef} 
-            className={`search-btn ${phoneSearch ? 'active' : ''}`} 
-            onClick={() => {
-              setPhoneMenu(false);  // Close menu first
-              setPhoneSearch(prev => !prev); // Then toggle search
-            }}
-          />
-          <IoMenu
-            ref={menuBtnRef}
-            className={phoneMenu ? 'active' : ''}
-            onClick={() => {
-              setPhoneSearch(false);  // Close search menu first
-              setPhoneMenu(prev => !prev); // Then toggle menu
-            }}
-          />
-        </div>
-        }
-        <div ref={phoneSearchRef} className={`search-holder ${phoneSearch && 'active'}`}>
-          <div className='theInput'>
-            <IoSearch/>
-            <input type="text" placeholder='Search anything...'/>
-            <IoClose className='delete'/>
+        <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
+        {screenSize === "small" && (
+          <div className="icons">
+            <FaSearch
+              ref={searchBtnRef}
+              className={`search-btn ${phoneSearch ? "active" : ""}`}
+              onClick={() => {
+                setPhoneMenu(false); // Close menu first
+                setPhoneSearch((prev) => !prev); // Then toggle search
+              }}
+            />
+            <IoMenu
+              ref={menuBtnRef}
+              className={phoneMenu ? "active" : ""}
+              onClick={() => {
+                setPhoneSearch(false); // Close search menu first
+                setPhoneMenu((prev) => !prev); // Then toggle menu
+              }}
+            />
+          </div>
+        )}
+        <div
+          ref={phoneSearchRef}
+          className={`search-holder ${phoneSearch && "active"}`}
+        >
+          <div className="theInput">
+            <IoSearch />
+            <input type="text" placeholder="Search anything..." />
+            <IoClose className="delete" />
           </div>
           <div className="result">
             <ul>
@@ -128,57 +133,103 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <nav ref={phoneMenuRef} className={phoneMenu && 'active'}>
-        <Link href='/' className='active'><MdOutlineExplore/> <span>Explore</span></Link>
-        <Link href='/chat'><IoChatbubbleEllipsesOutline/> <span>Chat</span></Link>
-        <Link href='/pages'><LiaPagerSolid/> <span>Pages</span></Link>
-        <Link href='/communities'><RiUserCommunityLine/> <span>Communities</span></Link>
-        <Link href='/marketplace'><IoCartOutline/> <span>Market Place</span></Link>
+      <nav ref={phoneMenuRef} className={phoneMenu && "active"}>
+        <Link href="/" className="active">
+          <MdOutlineExplore /> <span>Explore</span>
+        </Link>
+        <Link href="/chat">
+          <IoChatbubbleEllipsesOutline /> <span>Chat</span>
+        </Link>
+        <Link href="/pages">
+          <LiaPagerSolid /> <span>Pages</span>
+        </Link>
+        <Link href="/communities">
+          <RiUserCommunityLine /> <span>Communities</span>
+        </Link>
+        <Link href="/marketplace">
+          <IoCartOutline /> <span>Market Place</span>
+        </Link>
       </nav>
 
       <div className="events">
-        {screenSize === 'small' ? (
+        {screenSize === "small" ? (
           <>
-            <li className='use-case'>
+            <li className="use-case" onClick={() => setOpenPostForm(true)}>
               <IoGrid />
             </li>
-            <li className='user' onClick={() => setUserMenu(prev => !prev)}>
-              <Image src={'/avatar.png'} width={45} height={45} alt={`user Image`} />
-              <IoClose className='x' /> <FaCaretDown className='angle' />
-              <div className={`menu userMenu ${userMenu && 'active'}`}>
-                <Link href={`/`}><FaUser style={{ fontSize: '22px' }} /> Mahmoud Elshazly</Link>
+            <li className="user" onClick={() => setUserMenu((prev) => !prev)}>
+              <Image
+                src={"/avatar.png"}
+                width={45}
+                height={45}
+                alt={`user Image`}
+              />
+              <FaUser className="x" /> <FaCaretDown className="angle" />
+              <div
+                ref={userMenuRef}
+                className={`menu userMenu ${userMenu && "active"}`}
+              >
+                <Link href={`/`}>
+                  <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
+                </Link>
                 <ul>
-                  <button><IoMdSettings /> Setting & Privacy</button>
-                  <button><BiSupport /> Help & Support</button>
-                  <button><RiColorFilterAiFill /> Display & Accessibility</button>
-                  <button className='logOut'><TbLogout2 /> Log Out</button>
+                  <button>
+                    <IoMdSettings /> Setting & Privacy
+                  </button>
+                  <button>
+                    <BiSupport /> Help & Support
+                  </button>
+                  <button>
+                    <RiColorFilterAiFill /> Display & Accessibility
+                  </button>
+                  <button className="logOut">
+                    <TbLogout2 /> Log Out
+                  </button>
                 </ul>
               </div>
             </li>
-            <li className='notifications'>
+            <li className="notifications">
               <MdNotificationsActive />
               <span className="length">20</span>
             </li>
           </>
         ) : (
           <>
-            <li className='use-case'>
+            <li className="use-case" onClick={() => setOpenPostForm(true)}>
               <IoGrid />
             </li>
-            <li className='notifications'>
+            <li className="notifications">
               <MdNotificationsActive />
               <span className="length">20</span>
             </li>
-            <li className='user' onClick={() => setUserMenu(prev => !prev)}>
-              <Image src={'/avatar.png'} width={45} height={45} alt={`user Image`} />
-              <IoClose className='x' /> <FaCaretDown className='angle' />
-              <div className={`menu userMenu ${userMenu && 'active'}`}>
-                <Link href={`/`}><FaUser style={{ fontSize: '22px' }} /> Mahmoud Elshazly</Link>
+            <li className="user" onClick={() => setUserMenu((prev) => !prev)}>
+              <Image
+                src={"/avatar.png"}
+                width={45}
+                height={45}
+                alt={`user Image`}
+              />
+              <FaUser className="x" /> <FaCaretDown className="angle" />
+              <div
+                ref={userMenuRef}
+                className={`menu userMenu ${userMenu && "active"}`}
+              >
+                <Link href={`/`}>
+                  <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
+                </Link>
                 <ul>
-                  <button><IoMdSettings /> Setting & Privacy</button>
-                  <button><BiSupport /> Help & Support</button>
-                  <button><RiColorFilterAiFill /> Display & Accessibility</button>
-                  <button className='logOut'><TbLogout2 /> Log Out</button>
+                  <button>
+                    <IoMdSettings /> Setting & Privacy
+                  </button>
+                  <button>
+                    <BiSupport /> Help & Support
+                  </button>
+                  <button>
+                    <RiColorFilterAiFill /> Display & Accessibility
+                  </button>
+                  <button className="logOut">
+                    <TbLogout2 /> Log Out
+                  </button>
                 </ul>
               </div>
             </li>
@@ -186,7 +237,7 @@ export default function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
 
 

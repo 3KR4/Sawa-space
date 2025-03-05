@@ -1166,86 +1166,97 @@ export let messages = [
 export let posts = [
   {
     id: 1,
-    link: "https://fb.watch/xVFJl_Q7i0/",
-    img: ["/chat7.png", "/chat1.png", "/chat19.png"],
-    paragraph: "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    img: ["/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/", "www.google.com"],
+    hashtags: ["gaming", "studying", "kids"],
+    mentions: [
+      { userId: 1, userName: "nagi" },
+      { userId: 2, userName: "3kr4" },
+      { userId: 3, userName: "osama" },
+    ],
+    paragraph:
+      "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    shareCount: 3,
     date: "2024-10-12",
-    time: "16:00", 
+    time: "16:00",
     user: {
-      name: 'Ahmed',
-      img: '/users/user1.png',
-      bio: '',
+      name: "Ahmed",
+      img: "/users/user1.png",
+      bio: "",
       mutualFriends: 2,
     },
-    shareCount: 3,
     reacts: {
       count: 15,
-      topUseage: ['❤️','😂']
+      topUseage: ["❤️", "😂"],
     },
-    comments : {
+    comments: {
       count: 5,
       allComments: [
         {
           id: 1,
-          name: 'John Doe',
-          img: '/chat8.png',
-          time: '3 hours ago',
-          paragraph: 'The food looks incredible! You guys always have the best team events.',
+          name: "John Doe",
+          img: "/chat8.png",
+          time: "3 hours ago",
+          paragraph:
+            "The food looks incredible! You guys always have the best team events.",
           likesCount: 6,
-          image: '/users/user10.png' ,
+          image: "/users/user10.png",
           replays: [
             {
               id: 1,
-              name: 'Emma Stone',
-              time: '2 hours ago',
-              paragraph: 'Totally agree! I wish I could join next time!',
+              name: "Emma Stone",
+              time: "2 hours ago",
+              paragraph: "Totally agree! I wish I could join next time!",
               likesCount: 2,
-              image: '/users/user14.png',
+              image: "/users/user14.png",
               reacts: {
                 count: 2,
-                topUseage: ['👍', '😊'],
+                topUseage: ["👍", "😊"],
               },
               replays: [
                 {
                   id: 1,
-                  name: 'Emma Stone',
-                  time: '2 hours ago',
-                  paragraph: 'It’s always fun when we get together. Looking forward to the next one!',
+                  name: "Emma Stone",
+                  time: "2 hours ago",
+                  paragraph:
+                    "It’s always fun when we get together. Looking forward to the next one!",
                   likesCount: 2,
-                  image: '/users/user4.png',
+                  image: "/users/user4.png",
                   reacts: {
                     count: 2,
-                    topUseage: ['😘', '😎'],
+                    topUseage: ["😘", "😎"],
                   },
                 },
               ],
-             },
+            },
             {
               id: 2,
-              name: 'Ahmed Ashraf',
-              time: '5 hours ago',
-              paragraph: 'I completely agree! These gatherings are always memorable.',
+              name: "Ahmed Ashraf",
+              time: "5 hours ago",
+              paragraph:
+                "I completely agree! These gatherings are always memorable.",
               likesCount: 5,
-              image: '/users/user6.png',
+              image: "/users/user6.png",
               reacts: {
                 count: 1,
-                topUseage: ['😂'],
-               },
+                topUseage: ["😂"],
+              },
               replays: [],
             },
           ],
           reacts: {
             count: 4,
-            topUseage: ['❤️', '😂', '😮'],
+            topUseage: ["❤️", "😂", "😮"],
           },
         },
-         {
+        {
           id: 2,
-          name: 'Sophia Miller',
-          time: '1 hour ago',
-          paragraph: 'Looks like you all had a blast! Can’t wait for the next one.',
-           likesCount: 3,
-          image: '/users/user12.png',
+          name: "Sophia Miller",
+          time: "1 hour ago",
+          paragraph:
+            "Looks like you all had a blast! Can’t wait for the next one.",
+          likesCount: 3,
+          image: "/users/user12.png",
           replays: [],
         },
       ],
@@ -1253,67 +1264,71 @@ export let posts = [
   },
   {
     id: 2,
-    link: "https://fb.watch/xVFJl_Q7i0/",
-    img: ["/chat17.png", "/chat12.png"],
-    paragraph: "Just spent the afternoon at the park with friends. Such a beautiful day!",
-    date: "2024-10-12",
-    time: "16:00", 
-    user: {
-      name: 'Ali',
-      img: '/users/user4.png',
-      bio: '',
-       mutualFriends: 2,
-    },
+    img: ["/chat17.png", "/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/"],
+    hashtags: ["nature", "friends", "outdoor"],
+    mentions: [],
+    paragraph:
+      "Just spent the afternoon at the park with friends. Such a beautiful day!",
     shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Ali",
+      img: "/users/user4.png",
+      bio: "",
+      mutualFriends: 2,
+    },
     reacts: {
       count: 9,
-      topUseage: ['👍','😘']
+      topUseage: ["👍", "😘"],
     },
     comments: {
       count: 0,
     },
-    react:'👍❤️😂😘😠',
-  }, 
+  },
   {
     id: 3,
-    link: "",
-    img: ["/chat6.png", "/chat1.png", "/chat19.png"],
-    paragraph: "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    link: [],
+    img: [
+      "/chat17.png",
+      "/chat6.png",
+      "/chat16.png",
+      "/chat7.png",
+      "/chat13.png",
+    ],
+
+    hashtags: ["hiking", "adventure", "nature"],
+    mentions: [],
+    paragraph:
+      "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    shareCount: 3,
     date: "2024-10-12",
-    time: "16:00", 
+    time: "16:00",
     user: {
-      name: 'Hassan',
-      img: '/users/user10.png',
-      bio: '',
+      name: "Hassan",
+      img: "/users/user10.png",
+      bio: "",
       mutualFriends: 2,
     },
-    shareCount: 3,
     reacts: {
       count: 9,
-      topUseage: ['👍','😘']
+      topUseage: ["👍", "😘"],
     },
-    comments : {
+    comments: {
       count: 1,
-      friends: [
-        {
-          id: 1,
-           name: 'Lisa Brown',
-          img: '/users/user13.png',
-        },
-      ],
-      friendsCount: 1,
       allComments: [
         {
           id: 1,
-          name: 'Lisa Brown',
-          time: '5 minutes ago',
-          paragraph: 'Your photos look stunning! I need to plan a hike soon.',
+          name: "Lisa Brown",
+          time: "5 minutes ago",
+          paragraph: "Your photos look stunning! I need to plan a hike soon.",
           likesCount: 1,
-          image: '/users/user13.png',
+          image: "/users/user13.png",
           replays: [],
           reacts: {
             count: 1,
-            topUseage: ['❤️'],
+            topUseage: ["❤️"],
           },
         },
       ],
@@ -1321,250 +1336,221 @@ export let posts = [
   },
   {
     id: 4,
-    link: "",
-    img: ["/chat4.png",  "/chat10.png", "/chat16.png", "/chat5.png", "/chat13.png"],
-    paragraph: "Exploring the city this weekend – so many hidden gems to discover!",
+    link: [],
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    hashtags: ["citylife", "exploration", "travel"],
+    mentions: [],
+    paragraph:
+      "Exploring the city this weekend – so many hidden gems to discover!",
+    shareCount: 3,
     date: "2024-10-12",
-    time: "16:00", 
+    time: "16:00",
     user: {
-      name: 'Nour',
-      img: '/users/user8.png',
-      bio: '',
+      name: "Nour",
+      img: "/users/user8.png",
+      bio: "",
       mutualFriends: 2,
     },
-    shareCount: 3,
     reacts: {
       count: 9,
-      topUseage: ['👍','😘']
+      topUseage: ["👍", "😘"],
     },
     comments: {
       count: 0,
     },
-     react:'👍❤️😂😘😠',
   },
   {
     id: 5,
-    link: "",
-    paragraph: "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
-    date: "2024-10-12",
-    time: "16:00", 
-    user: {
-      name: 'Nagi',
-      img: '/users/user7.png',
-      bio: '',
-      mutualFriends: 2,
-    } ,
+    link: [],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
     shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nagi",
+      img: "/users/user7.png",
+      bio: "",
+      mutualFriends: 2,
+    },
     reacts: {
       count: 9,
-      topUseage: ['👍','😘']
+      topUseage: ["👍", "😘"],
     },
-    img : ['/chat18.png', '/chat11.png'],
-
     comments: {
       count: 6,
-      friends: [
+      allComments: [
         {
           id: 1,
-          name:'Yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 2,
-          name:'Ali',
-          img:'/users/user6.png',
-        },
-      ],
-      friendsCount:3,
-       allComments: [
-        {
-          id: 1,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-          paragraph: 'What was the book? I’m always on the lookout for new reads.',
-          likesCount: 3 ,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
           replays: [
             {
               id: 2,
-              name: 'David Kim',
-              time: '2 days ago',
-              paragraph: 'It was “The Alchemist” by Paulo Coelho. Truly life-changing.',
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
               likesCount: 1,
               replays: [
                 {
-                   id: 3,
-                  name: 'Lana Henrikseen',
-                  time: '1 days ago',
-                  paragraph: 'Perfect, adding it to my list!',
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
                   likesCount: 1,
-                }
-              ]
-            }
-          ]
+                },
+              ],
+            },
+          ],
         },
         {
           id: 2,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-           paragraph: 'I’ve been meaning to read more this year. Any other recommendations?',
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
           likesCount: 3,
           replays: [
             {
               id: 3,
-              name: 'David Kim',
-              time: '2 days ago',
-              paragraph: 'Try “Sapiens” by Yuval Noah Harari. It’s fascinating!',
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
               likesCount: 1,
-            }
+            },
           ],
-          comments : {
+          comments: {
             count: 1,
-            friends: [
-              {
-                id: 1,
-                name: 'Lisa Brown',
-                 img: '/users/user13.png',
-              },
-            ],
-            friendsCount: 1,
             allComments: [
               {
                 id: 1,
-                 name: 'Lisa Brown',
-                time: '5 minutes ago',
-                paragraph: 'Thanks for the tips! I’ll check them out.',
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
                 likesCount: 1,
-                image : '/users/user13.png',
+                image: "/users/user13.png",
                 replays: [],
                 reacts: {
                   count: 1,
-                  topUseage: ['❤️'],
+                  topUseage: ["❤️"],
                 },
               },
-             ],
-          },          
+            ],
+          },
         },
         {
           id: 3,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-          paragraph: 'Reading really opens up new worlds. Love these discussions!',
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
           likesCount: 3,
         },
-      ]
+      ],
     },
-    react:'👍❤️😂😘😠',
   },
   {
     id: 6,
-    link: "",
-    img: ['/chat8.png'],
-    paragraph: "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
-    date: "2024-10-12",
-    time: "16:00", 
-    user: {
-      name: 'john',
-      img: '/users/user14.png',
-      bio: '',
-      mutualFriends: 2,
-    } ,
+    img: ["/chat19.png"],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
     shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "John",
+      img: "/users/user14.png",
+      bio: "",
+      mutualFriends: 2,
+    },
     reacts: {
       count: 9,
-      topUseage: ['👍','😘']
+      topUseage: ["👍", "😘"],
     },
     comments: {
       count: 6,
-      friends: [
+      allComments: [
         {
           id: 1,
-          name:'Yasser',
-          img:'/users/user3.png',
-        },
-        {
-          id: 2,
-          name:'Ali',
-          img:'/users/user6.png',
-        },
-      ],
-      friendsCount:3,
-       allComments: [
-        {
-          id: 1,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-          paragraph: 'What was the book? I’m always on the lookout for new reads.',
-          likesCount: 3 ,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
           replays: [
             {
               id: 2,
-              name: 'David Kim',
-              time: '2 days ago',
-              paragraph: 'It was “The Alchemist” by Paulo Coelho. Truly life-changing.',
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
               likesCount: 1,
               replays: [
                 {
-                   id: 3,
-                  name: 'Lana Henrikseen',
-                  time: '1 days ago',
-                  paragraph: 'Perfect, adding it to my list!',
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
                   likesCount: 1,
-                }
-              ]
-            }
-          ]
+                },
+              ],
+            },
+          ],
         },
         {
           id: 2,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-           paragraph: 'I’ve been meaning to read more this year. Any other recommendations?',
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
           likesCount: 3,
           replays: [
             {
               id: 3,
-              name: 'David Kim',
-              time: '2 days ago',
-              paragraph: 'Try “Sapiens” by Yuval Noah Harari. It’s fascinating!',
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
               likesCount: 1,
-            }
+            },
           ],
-          comments : {
+          comments: {
             count: 1,
-            friends: [
-              {
-                id: 1,
-                name: 'Lisa Brown',
-                 img: '/users/user13.png',
-              },
-            ],
-            friendsCount: 1,
             allComments: [
               {
                 id: 1,
-                 name: 'Lisa Brown',
-                time: '5 minutes ago',
-                paragraph: 'Thanks for the tips! I’ll check them out.',
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
                 likesCount: 1,
-                image : '/users/user13.png',
+                image: "/users/user13.png",
                 replays: [],
                 reacts: {
                   count: 1,
-                  topUseage: ['❤️'],
+                  topUseage: ["❤️"],
                 },
               },
-             ],
-          },          
+            ],
+          },
         },
         {
           id: 3,
-          name: 'Lana Henrikseen',
-          time: '2 days ago',
-          paragraph: 'Reading really opens up new worlds. Love these discussions!',
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
           likesCount: 3,
         },
-      ]
+      ],
     },
-    react:'👍❤️😂😘😠',
   },
-]
+];

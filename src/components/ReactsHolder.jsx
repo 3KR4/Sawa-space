@@ -11,6 +11,7 @@ function ReactsHolder({reactsHolder, setReactsHolder, id}) {
   const {
     handleMessageActions
   } = useContext(AllContext);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (reactsRef.current && !reactsRef.current.contains(event.target)) {

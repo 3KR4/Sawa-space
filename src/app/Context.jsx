@@ -1,10 +1,9 @@
-'use client'
+"use client";
 import { createContext, useContext, useRef, useState, useEffect } from "react";
 
 export const AllContext = createContext();
 
 export const AllProvider = ({ children }) => {
-
   // MEDIA QUERY
   const [screenSize, setScreenSize] = useState("large");
   useEffect(() => {
@@ -37,102 +36,144 @@ export const AllProvider = ({ children }) => {
 
   // HANDLE COMPONENTS OPEN POSITION
 
-  const [messageText, setMessageText] = useState('');
+  const [openPostForm, setOpenPostForm] = useState(false);
+  const [messageText, setMessageText] = useState("");
   const [menuPosition, setMenuPosition] = useState();
+  const [emojiHolder, setEmojiHolder] = useState(false);
   const [selectedDev, setSelectedDev] = useState(false);
 
-  const [emojiHolder, setEmojiHolder] = useState(false);
+  const [openUsersSelection, setOpenUsersSelection] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUsersNames, setSelectedUsersNames] = useState([]);
+  const [selectionMenuTitle, setSelectionMenuTitle] = useState("");
+  const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
 
-
-  const handleMessageActions = (event, type, id) => {
+  const handleMenus = (event, type, id) => {
     event.preventDefault();
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
     const cursorY = event.clientY;
     const cursorX = event.clientX;
-  
-    const menuWidth = type == 'emojiHolder' ? 350 : null
-    const menuHeight = type == 'emojiHolder' ? 450 : null
-    
-    const top = cursorY + menuHeight > windowHeight ? Math.max(cursorY - menuHeight, 50) : cursorY;
-    const left = cursorX + menuWidth > windowWidth ? Math.max(cursorX - menuWidth, 10) : cursorX;
-    
-    if (type === 'emojiHolder') {
+
+    const menuWidth =
+      type == "emojiHolder" ? 350 : type == "usersSelection" ? 340 : null;
+    const menuHeight =
+      type == "emojiHolder" ? 450 : type === "usersSelection" ? 450 : null;
+
+    const top =
+      cursorY + menuHeight > windowHeight
+        ? Math.max(cursorY - menuHeight, 50)
+        : cursorY;
+    const left =
+      cursorX + menuWidth > windowWidth
+        ? Math.max(cursorX - menuWidth, 10)
+        : cursorX;
+
+    if (type === "emojiHolder") {
       setEmojiHolder(true);
     }
-    id && setSelectedDev(id);
+    if (type == "usersSelection") {
+      setOpenUsersSelection(true);
+    }
 
+    id && setSelectedDev(id);
     setMenuPosition({ top, left });
   };
-  
+
   const emojiRef = useRef(null);
   const InputRef = useRef(null);
-// handleClickOutside
+  const usersSelectionRef = useRef(null);
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (emojiRef.current && !emojiRef.current.contains(event.target)) {
-      setEmojiHolder(false); 
+  // handleClickOutside
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiRef.current && !emojiRef.current.contains(event.target)) {
+        setEmojiHolder(false);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      document.addEventListener("mousedown", handleClickOutside);
     }
+    return () => {
+      if (typeof window !== "undefined") {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+    };
+  }, []);
+
+  const handleEmojiClick = (event) => {
+    const emoji = String.fromCodePoint(
+      ...event.unified.split("-").map((code) => parseInt(code, 16))
+    );
+
+    if (!InputRef.current) return;
+
+    const { selectionStart, selectionEnd } = InputRef.current;
+    const currentValue = InputRef.current.value;
+    const newText =
+      currentValue.slice(0, selectionStart) +
+      emoji +
+      currentValue.slice(selectionEnd);
+
+    setMessageText(newText);
+
+    // تخزين موضع المؤشر لاستخدامه بعد تحديث الحالة
+    setCursorPosition(selectionStart + emoji.length);
   };
 
-  if (typeof window !== 'undefined') {
-    document.addEventListener('mousedown', handleClickOutside);
-  }
-  return () => {
-    if (typeof window !== 'undefined') {
-      document.removeEventListener('mousedown', handleClickOutside);
+  const [cursorPosition, setCursorPosition] = useState(null);
+
+  useEffect(() => {
+    if (InputRef.current && cursorPosition !== null) {
+      InputRef.current.focus();
+      InputRef.current.selectionStart = InputRef.current.selectionEnd =
+        cursorPosition;
     }
-  };
-}, []); 
-
-// handle add emoji 
-const handleEmojiClick = (event) => {
-  console.log(event);
-  const emoji = String.fromCodePoint(
-    ...event.unified.split('-').map((code) => parseInt(code, 16))
-  );
-
-  const { selectionStart, selectionEnd } = InputRef.current;
-  const currentValue = InputRef.current.value;
-  const newText = 
-    currentValue.slice(0, selectionStart) + 
-    emoji + 
-    currentValue.slice(selectionEnd);
-  setMessageText(newText);
-
-  setTimeout(() => {
-    InputRef.current.focus();
-    InputRef.current.selectionStart = InputRef.current.selectionEnd = selectionStart + emoji.length;
-  }, 0);
-};
-
+  }, [messageText]); //
 
   return (
-    <AllContext.Provider value={{
-      screenSize,
-      dataSwiperType,
-      setDataSwiperType,
-      dataForSwiper, 
-      setDataForSwiper, 
-      imgFocus, 
-      setImgFocus, 
-      imgIndex, 
-      setImgIndex,
-      closeImgHolderRef,
-      handleMessageActions,
-      menuPosition,
-      setMenuPosition,
-      selectedDev,
-      setSelectedDev,
-      emojiHolder,
-      setEmojiHolder,
-      handleEmojiClick,
-      InputRef,
-      messageText,
-      setMessageText,
-      emojiRef,
-    }}>
+    <AllContext.Provider
+      value={{
+        screenSize,
+        dataSwiperType,
+        setDataSwiperType,
+        dataForSwiper,
+        setDataForSwiper,
+        imgFocus,
+        setImgFocus,
+        imgIndex,
+        setImgIndex,
+        closeImgHolderRef,
+        handleMenus,
+        menuPosition,
+        setMenuPosition,
+        selectedDev,
+        setSelectedDev,
+        emojiHolder,
+        setEmojiHolder,
+        handleEmojiClick,
+        InputRef,
+        InputRef,
+        messageText,
+        setMessageText,
+        emojiRef,
+        openPostForm,
+        setOpenPostForm,
+        openUsersSelection,
+        setOpenUsersSelection,
+        selectedUsers,
+        setSelectedUsers,
+        selectedUsersNames,
+        setSelectedUsersNames,
+        selectionMenuTitle,
+        setSelectionMenuTitle,
+        usersSelectionSearch,
+        setUsersSelectionSearch,
+        usersSelectionRef,
+      }}
+    >
       {children}
     </AllContext.Provider>
   );
