@@ -10,14 +10,14 @@ function EmojesHolder() {
     menuPosition,
     emojiRef,
     emojiHolder,
-    handleEmojiClick,
+    handleMenus,
   } = useContext(AllContext);
   
 
   return (
     <div ref={emojiRef} className={`emoji-holder ${emojiHolder && 'active'}`} style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px`}}>
     <EmojiPicker
-      onEmojiClick={handleEmojiClick}
+      onEmojiClick={handleMenus}
       theme="light"
       emojiStyle="facebook"
       previewConfig={{ showPreview: false }}

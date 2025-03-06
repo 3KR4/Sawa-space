@@ -214,7 +214,7 @@ export default function Header() {
                 ref={userMenuRef}
                 className={`menu userMenu ${userMenu && "active"}`}
               >
-                <Link href={`/`}>
+                <Link href={`/user/4`}>
                   <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
                 </Link>
                 <ul>

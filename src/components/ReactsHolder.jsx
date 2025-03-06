@@ -9,7 +9,7 @@ function ReactsHolder({reactsHolder, setReactsHolder, id}) {
   const reactsRef = useRef(null);
 
   const {
-    handleMessageActions
+    handleMenus
   } = useContext(AllContext);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function ReactsHolder({reactsHolder, setReactsHolder, id}) {
           <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png"/>
           <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png"/>
           <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png"/>
-          <FaPlus onClick={(e) => handleMessageActions(e, 'emojiHolder', id)}/>
+          <FaPlus onClick={(e) => handleMenus(e, 'emojiHolder', id)}/>
         </div>
       </div>
   )

@@ -392,7 +392,7 @@ function PostForm() {
               setisSubmited(true);
             }}
           >
-            {false ? "Update Product" : "Create Product"}
+            {false ? "Update Post" : "Create Post"}
           </button>
         </div>
       </div>
