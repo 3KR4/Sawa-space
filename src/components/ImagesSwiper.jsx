@@ -9,18 +9,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Comment from "@/components/Comment";
 import ActionsBtns from "@/components/ActionsBtns";
-import ReactsHolder from "@/components/ReactsHolder";
+import TypeComment from "@/components/TypeComment";
 
-
-import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
+import { FaRegComments } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
-import { MdOutlineAddReaction,MdOutlinePhotoSizeSelectActual } from "react-icons/md";
-import { IoIosClose } from "react-icons/io";
-import { FaRegComments } from "react-icons/fa6";
-import { BsEmojiSmile } from "react-icons/bs";
-import { IoClose, IoCopy } from "react-icons/io5";
+
+import { IoClose } from "react-icons/io5";
 
 function ImagesSwiper() {
   const {
@@ -31,13 +27,13 @@ function ImagesSwiper() {
     imgIndex,
     setImgIndex,
     closeImgHolderRef,
-    screenSize
+    screenSize,
+    setMessageText,
   } = useContext(AllContext);
 
   const [swiperRef, setSwiperRef] = useState(null);
-  const [reactsHolder, setReactsHolder] = useState(false);
-
-  const data = dataSwiperType === "msg" && messages.find((msg) => msg.id === imgFocus)
+  const data =
+    dataSwiperType === "msg" && messages.find((msg) => msg.id === imgFocus);
 
   useEffect(() => {
     if (swiperRef) {
@@ -60,7 +56,9 @@ function ImagesSwiper() {
   return (
     <div
       ref={closeImgHolderRef}
-      className={`focusedMsg ${imgFocus && "active"} ${dataSwiperType}`}
+      className={`focusedMsg forPosts ${
+        imgFocus && "active"
+      } ${dataSwiperType}`}
     >
       {dataSwiperType === "post" ? (
         <div className={`post`}>
@@ -133,11 +131,17 @@ function ImagesSwiper() {
               <div className="icons-holder">
                 <HiDotsVertical
                   onClick={(e) => {
-                    handleMenus(e, 'postSettings', data.id)
+                    handleMenus(e, "postSettings", data.id);
                     setCurentUserId(dataForSwiper?.id);
                   }}
                 />
-                <IoClose className="close" onClick={() => setImgFocus(null)} />
+                <IoClose
+                  className="close"
+                  onClick={() => {
+                    setImgFocus(null);
+                    setMessageText("");
+                  }}
+                />
               </div>
             </div>
             <div className="bottom">
@@ -246,38 +250,7 @@ function ImagesSwiper() {
                   </div>
                 </div>
 
-                <div className="action-holder">
-                  <div className="top">
-                    <textarea placeholder="Write a comment.."></textarea>
-                  </div>
-                  <div className="actions">
-                    <div className="left">
-                      <Image
-                        src={"/avatar.png"}
-                        alt={"user"}
-                        width={40}
-                        height={40}
-                      />
-                      Mahmoud Elshazly
-                    </div>
-                    <div className="right">
-                      <div>
-                        <MdOutlineAddReaction
-                          onClick={() => setReactsHolder((prev) => !prev)}
-                        />
-                        {reactsHolder && (
-                          <ReactsHolder
-                            reactsHolder={reactsHolder}
-                            setReactsHolder={setReactsHolder}
-                            id={data.id}
-                          />
-                        )}
-                      </div>
-                      <MdOutlinePhotoSizeSelectActual />
-                      <button>Post a Comment</button>
-                    </div>
-                  </div>
-                </div>
+                <TypeComment id={dataForSwiper.id} />
               </div>
             </div>
           </div>

@@ -38,7 +38,8 @@ export const AllProvider = ({ children }) => {
 
   const [openPostForm, setOpenPostForm] = useState(false);
   const [messageText, setMessageText] = useState("");
-  const [menuPosition, setMenuPosition] = useState();
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [selectedDev, setSelectedDev] = useState(false);
 
@@ -47,18 +48,34 @@ export const AllProvider = ({ children }) => {
   const [selectedUsersNames, setSelectedUsersNames] = useState([]);
   const [selectionMenuTitle, setSelectionMenuTitle] = useState("");
   const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
+  const [userInfoData, setUserInfoData] = useState(null);
 
   const handleMenus = (event, type, id) => {
-    event.preventDefault();
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
+
     const cursorY = event.clientY;
     const cursorX = event.clientX;
 
     const menuWidth =
-      type == "emojiHolder" ? 350 : type == "usersSelection" ? 340 : null;
+      type == "emojiHolder"
+        ? 350
+        : type == "usersSelection"
+        ? 340
+        : type == "userInfo"
+        ? 340
+        : null;
     const menuHeight =
-      type == "emojiHolder" ? 450 : type === "usersSelection" ? 450 : null;
+      type == "emojiHolder"
+        ? 450
+        : type === "usersSelection"
+        ? 450
+        : type == "userInfo"
+        ? 198
+        : null;
 
     const top =
       cursorY + menuHeight > windowHeight
@@ -74,6 +91,9 @@ export const AllProvider = ({ children }) => {
     }
     if (type == "usersSelection") {
       setOpenUsersSelection(true);
+    }
+    if (type == "userInfo") {
+      setUserInfoData(true);
     }
 
     id && setSelectedDev(id);
@@ -172,6 +192,8 @@ export const AllProvider = ({ children }) => {
         usersSelectionSearch,
         setUsersSelectionSearch,
         usersSelectionRef,
+        userInfoData,
+        setUserInfoData,
       }}
     >
       {children}

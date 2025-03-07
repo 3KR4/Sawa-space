@@ -1,70 +1,80 @@
-'use client'
-import React, { useState, useEffect, useContext, useRef } from 'react'
+"use client";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Image from "next/image";
-import Link from 'next/link';
-import { IoSearch, IoClose, IoGrid, IoChatbubbleEllipsesOutline, IoCartOutline, IoMenu } from "react-icons/io5";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import {
+  IoSearch,
+  IoClose,
+  IoGrid,
+  IoChatbubbleEllipsesOutline,
+  IoCartOutline,
+  IoMenu,
+} from "react-icons/io5";
 import { FaCaretDown, FaUser, FaSearch } from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
 import { RiUserCommunityLine } from "react-icons/ri";
-import { RiColorFilterAiFill,  } from "react-icons/ri";
+import { RiColorFilterAiFill } from "react-icons/ri";
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
-import { AllContext } from '@/app/Context';
+import { AllContext } from "@/app/Context";
 
 export default function Header() {
-  const { screenSize, setOpenPostForm } = useContext(AllContext);
-  const [userMenu, setUserMenu] = useState(false)
-  const [phoneMenu, setPhoneMenu] = useState(false)
-  const [phoneSearch, setPhoneSearch] = useState(false)
+  const pathname = usePathname();
+  const { screenSize, setOpenPostForm, setMessageText } =
+    useContext(AllContext);
+  const [userMenu, setUserMenu] = useState(false);
+  const [phoneMenu, setPhoneMenu] = useState(false);
+  const [phoneSearch, setPhoneSearch] = useState(false);
 
   const phoneMenuRef = useRef(null);
   const phoneSearchRef = useRef(null);
   const menuBtnRef = useRef(null);
   const searchBtnRef = useRef(null);
   const userMenuRef = useRef(null);
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setUserMenu(false); 
+        setUserMenu(false);
       }
 
-      if (
-        phoneMenuRef.current && phoneMenuRef.current.contains(event.target)
-      ) return;
-  
-      if (
-        menuBtnRef.current && menuBtnRef.current.contains(event.target)
-      ) return;
+      if (phoneMenuRef.current && phoneMenuRef.current.contains(event.target))
+        return;
+
+      if (menuBtnRef.current && menuBtnRef.current.contains(event.target))
+        return;
 
       setPhoneMenu(false);
 
       if (
-        phoneSearchRef.current && phoneSearchRef.current.contains(event.target)
-      ) return;
-  
-      if (
-        searchBtnRef.current && searchBtnRef.current.contains(event.target)
-      ) return;
-  
-      setPhoneSearch(false);  // Close search when clicking outside
+        phoneSearchRef.current &&
+        phoneSearchRef.current.contains(event.target)
+      )
+        return;
+
+      if (searchBtnRef.current && searchBtnRef.current.contains(event.target))
+        return;
+
+      setPhoneSearch(false); // Close search when clicking outside
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (screenSize !== 'small') return; // Stop if not a small screen
+      if (screenSize !== "small") return; // Stop if not a small screen
 
       const currentScrollY = window.scrollY;
 
@@ -83,7 +93,11 @@ export default function Header() {
   }, [lastScrollY, screenSize]);
 
   return (
-    <header className={`${screenSize === "small" && !isVisible && "hidden"}`}>
+    <header
+      className={`${
+        screenSize === "small" && !isVisible ? "hidden" : "active"
+      }`}
+    >
       <div className="logo">
         <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
         {screenSize === "small" && (
@@ -133,20 +147,26 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <nav ref={phoneMenuRef} className={phoneMenu && "active"}>
-        <Link href="/" className="active">
+      <nav ref={phoneMenuRef} className={phoneMenu ? "active" : ""}>
+        <Link href="/" className={pathname === "/" ? "active" : ""}>
           <MdOutlineExplore /> <span>Explore</span>
         </Link>
-        <Link href="/chat">
+        <Link href="/chat" className={pathname === "/chat" ? "active" : ""}>
           <IoChatbubbleEllipsesOutline /> <span>Chat</span>
         </Link>
-        <Link href="/pages">
+        <Link href="/pages" className={pathname === "/pages" ? "active" : ""}>
           <LiaPagerSolid /> <span>Pages</span>
         </Link>
-        <Link href="/communities">
+        <Link
+          href="/communities"
+          className={pathname === "/communities" ? "active" : ""}
+        >
           <RiUserCommunityLine /> <span>Communities</span>
         </Link>
-        <Link href="/marketplace">
+        <Link
+          href="/marketplace"
+          className={pathname === "/marketplace" ? "active" : ""}
+        >
           <IoCartOutline /> <span>Market Place</span>
         </Link>
       </nav>
@@ -195,7 +215,13 @@ export default function Header() {
           </>
         ) : (
           <>
-            <li className="use-case" onClick={() => setOpenPostForm(true)}>
+            <li
+              className="use-case"
+              onClick={() => {
+                setOpenPostForm(true);
+                setMessageText("");
+              }}
+            >
               <IoGrid />
             </li>
             <li className="notifications">
@@ -239,5 +265,3 @@ export default function Header() {
     </header>
   );
 }
-
-

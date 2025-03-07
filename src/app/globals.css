@@ -155,6 +155,30 @@ svg.close:hover {
   background: var(--red-color) !important;
   color: white !important;
 }
+.main-button {
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: 0.3s;
+  cursor: pointer;
+  background: #ebebeb;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--title-color);
+}
+.main-button:hover,
+.main-button.active {
+  color: white;
+  background: var(--main-color);
+}
+.main-button svg {
+  font-size: 15px;
+}
+.main-button:hover svg,
+.main-button.active svg {
+  color: white;
+}
 
 .container {
   padding-left: 15px;
@@ -191,11 +215,11 @@ body > main {
 }
 body > main > .holder {
   position: sticky;
-  max-height: 92vh;
+  max-height: 93vh;
   overflow: auto;
 }
 body > main > .holder:has(.register-page) {
-    height: -webkit-fill-available;
+  height: -webkit-fill-available;
   align-items: center;
   display: flex;
 }
@@ -205,7 +229,7 @@ body > main:has(.emoji-holder.active) > .holder {
 }
 
 .chats {
-  margin-right: 15px;
+  margin-right: 10px;
   background: var(--body-color);
   width: 334px;
   border-radius: 11px;
@@ -899,8 +923,38 @@ header .events .userMenu svg {
 .post .middle {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+
   padding: 2px 16px;
+}
+.post .Links {
+  display: flex;
+  gap: 2px;
+  flex-direction: column;
+}
+.post .Links div {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+.post .mentions {
+  display: flex;
+  gap: 5px;
+  row-gap: 1px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.post .mentions h5 {
+  font-size: 14px;
+}
+.post .mentions a {
+  color: var(--title-color) !important;
+  font-weight: 600 !important;
+  text-decoration: unset !important;
+}
+.post .mentions a:hover {
+  color: #005dff !important;
+  text-decoration: underline !important;
 }
 .post .middle a {
   color: #005dff;
@@ -1029,7 +1083,6 @@ header .events .userMenu svg {
 .post .comments .top {
   border: none;
   padding: unset;
-  margin-bottom: 7px;
 }
 .post .comments .top h3 {
   color: var(--paragraph-color);
@@ -1150,12 +1203,29 @@ header .events .userMenu svg {
   flex-direction: column;
 }
 .post .comments .action-holder .top {
+  align-items: unset;
 }
+
 .post .comments .action-holder .top textarea {
-  flex: 1;
   resize: none;
   padding: 12px;
-  height: 74px;
+  flex: 1;
+  min-height: 100px;
+}
+.post .comments .action-holder .top:has(img) textarea {
+  padding-right: 0px;
+}
+.post .action-holder .top img {
+  width: 224px;
+  border-radius: 8px;
+  height: 150px !important;
+  margin: 7px;
+  object-fit: cover;
+}
+.post .action-holder .top svg {
+  width: 20px;
+  height: 20px;
+  right: 0;
 }
 .post .comments .action-holder .actions {
   display: flex;
@@ -1203,7 +1273,7 @@ header .events .userMenu svg {
   box-shadow: unset;
 }
 
-.home .focusedMsg {
+.focusedMsg.forPosts {
   position: fixed;
   top: 0;
   left: 0;
@@ -1434,7 +1504,7 @@ body:has(.focusedMsg.active) .chats {
   scale: 0.5;
   visibility: hidden;
   opacity: 0;
-  transition: 0.2s;
+  transition: scale 0.2s;
 }
 .emoji-holder.active {
   scale: 1;
@@ -1582,16 +1652,17 @@ body:has(.focusedMsg.active) .chats {
   object-fit: cover;
 }
 .uploaded svg {
-  background: var(--red-color);
+  background: var(--red-color) !important;
   color: white;
-  border-radius: 50%;
+  border-radius: 50% !important;
   cursor: pointer;
-  padding: 3px;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: 7px;
-  top: 7px;
+  padding: 3px !important;
+  width: 20px !important;
+  height: 20px !important;
+  position: absolute !important;
+  right: 7px !important;
+  top: 7px !important;
+  left: unset !important;
 }
 .imgHolder {
   display: grid;
@@ -1993,12 +2064,92 @@ form button.remove svg:hover {
   background: var(--section-color);
   gap: 0;
 }
+
+body:has(.sideMenu.active) > main > .holder {
+  overflow: hidden;
+  padding-right: 6px;
+}
+
 .mentionsHolder h4 {
   margin: 10px;
   font-size: 15px;
   margin-bottom: -10px;
   font-weight: 500;
 }
+
+.userInfo.sideMenu {
+  background: var(--body-color);
+  padding: 15px;
+  width: 340px;
+  gap: 10px;
+}
+.userInfo.sideMenu img {
+  position: relative !important;
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.userInfo.sideMenu .info {
+  width: 100%;
+}
+.userInfo.sideMenu .holder {
+  display: flex;
+  gap: 12px;
+}
+.userInfo.sideMenu img {
+  position: relative !important;
+  width: 85px !important;
+  height: 85px !important;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userInfo.sideMenu .info .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.userInfo.sideMenu .info > p {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 8px;
+  margin-top: -2px;
+}
+.userInfo.sideMenu .info > h5 {
+  margin-bottom: 1px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.userInfo.sideMenu .info .top h4 {
+  font-size: 18px;
+}
+.userInfo.sideMenu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.userInfo.sideMenu .info ul li {
+  font-size: 14px;
+  color: var(--title-color);
+  font-weight: 500;
+}
+.userInfo.sideMenu .info ul span {
+  color: var(--paragraph-color);
+  font-weight: 500;
+}
+.userInfo.sideMenu .actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.userInfo.sideMenu .actions > *:last-child {
+  margin-left: auto;
+}
+.userInfo svg.close {
+  width: 27px;
+  height: 27px;
+}
+
 /*! Media */
 
 @media (min-width: 1000px) {
@@ -2029,7 +2180,7 @@ form button.remove svg:hover {
   }
 }
 @media (max-width: 1600px) {
-  body:has(.chats.false) main header nav svg {
+  body:has(.chats.active) main header nav svg {
     display: none;
   }
   .post {
@@ -2066,7 +2217,7 @@ form button.remove svg:hover {
 }
 @media (max-width: 1300px) {
   header nav a {
-    padding: 14px 10px;
+    padding: 11px 12px;
   }
   .search-holder input {
     width: 118px;
@@ -2084,14 +2235,14 @@ form button.remove svg:hover {
   }
 }
 @media (max-width: 1200px) {
-  body:has(.chats.false) main header nav svg {
+  body:has(.chats.active) main header nav svg {
     display: flex;
     font-size: 25px;
   }
   header nav a {
     padding: 8px 15px;
   }
-  body:has(.chats.false) main header nav span {
+  body:has(.chats.active) main header nav span {
     display: none;
   }
   .post {

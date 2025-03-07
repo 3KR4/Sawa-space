@@ -1,8 +1,11 @@
+body:has(.userPage) header {
+  margin-bottom: 0;
+}
 .userPage {
-  width: 90%;
+  width: 80%;
   margin: auto;
 }
-.userPage .top {
+.userPage > .top {
   gap: 8px;
   display: flex;
   flex-direction: column;
@@ -31,28 +34,42 @@
   transition: 0.3s;
 }
 
-.userPage svg {
+.userPage .editICo svg {
   color: white;
 }
+.userPage .right-btns {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 7px;
+}
+.userPage .right-btns .search-holder {
+  flex: unset;
+}
+.userPage .right-btns .search-holder svg,
+.userPage .right-btns .search-holder input::placeholder {
+  color: var(--title-color);
+}
 .userPage nav {
-  gap: 15px;
+  gap: 10px;
   position: relative;
   border-radius: 12px;
   border: 0.5px solid #e8e8e8;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 12px 22px;
   background: var(--body-color);
+  flex-direction: column;
+}
+.userPage nav .top {
+  display: flex;
 }
 .userPage nav .userImg {
   position: relative;
   width: 140px;
   height: 140px;
   z-index: 30;
-  border: 3px solid var(--title-color);
+  border: 2px solid var(--title-color);
   border-radius: 50%;
-  transform: translateY(-25px);
 }
 
 .userPage .userImg .editICo {
@@ -69,31 +86,54 @@
   object-fit: cover;
   border-radius: 50%;
 }
+.userPage nav .top .right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 0px 0px 12px;
+  flex: 1;
+}
+.userPage nav .top .right .left-data {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 18px;
+}
+.userPage nav .bottom {
+  display: flex;
+  justify-content: space-between;
+}
 .userPage nav .leftHolder {
   display: flex;
   align-items: center;
   gap: 20px;
+  margin: -104px 0;
+  width: fit-content;
+  height: fit-content;
+}
+.userPage nav .top h4 {
   font-size: 30px;
-  margin: -75px 0;
-  z-index: 5;
 }
-.userPage nav .userImg svg {
-}
-.userPage nav ul {
+.userPage nav .bottom div {
   display: flex;
   gap: 5px;
 }
-.userPage nav ul li {
-  padding: 9px 16px;
-  border-radius: 6px;
-  font-weight: 500;
+
+.userPage .search-holder input {
+  width: 95px;
+  padding: 7px 15px 7px 34px;
   transition: 0.3s;
-  cursor: pointer;
   background: #ebebeb;
+  border: unset;
 }
-.userPage nav ul li:hover {
-  color: white;
-  background: var(--main-color);
+.userPage .search-holder svg {
+  color: var(--title-color) !important;
+}
+.userPage .search-holder input:focus {
+  width: 150px;
+}
+.userPage .search-holder input:not(:placeholder-shown) {
+  padding: 7px 31px 7px 34px;
 }
 
 .userPage .bottom-holder {
@@ -101,20 +141,53 @@
   justify-content: space-between;
   margin-top: 30px;
   position: relative;
-  gap: 10px;
+  margin-top: 7px;
+  gap: 7px;
 }
 .userPage .bottom-holder .side-menu {
+  height: fit-content;
+  position: sticky;
+  top: 10px;
+  min-width: 33%;
+}
+body:has(.chats.hide) .userPage .bottom-holder .side-menu {
+  min-width: 29%;
+}
+body:has(.chats.hide) .userPage .post .middle .image img {
+  max-height: 100%;
+}
+.userPage .bottom-holder .side-menu > * {
   background: var(--body-color);
   border-radius: 10px;
   padding: 15px 17px;
-  height: fit-content;
-  position: sticky;
-  top: 0;
-  max-height: 90vh;
-  width: 45%;
   overflow: auto;
   border: 0.5px solid #e8e8e8;
+  margin-bottom: 7px;
 }
+.userPage .bottom-holder .side-menu .top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.userPage .bottom-holder .side-menu .about .top {
+  margin-bottom: -2px;
+}
+.userPage .bottom-holder .side-menu .top h4 {
+}
+.userPage .bottom-holder .side-menu .top button {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.userPage .bottom-holder .side-menu .top button svg {
+  font-size: 15px;
+}
+.userPage .bottom-holder .side-menu .top button:hover,
+.userPage .bottom-holder .side-menu .top button:hover svg {
+  color: var(--main-color);
+}
+
 .userPage .bottom-holder .side-menu .about {
   display: flex;
   flex-direction: column;
@@ -122,37 +195,317 @@
   font-weight: 600;
 }
 .userPage .bottom-holder .side-menu .about li {
-  font-weight: 600;
-  color: var(--title-color);
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 .userPage .bottom-holder .side-menu .about li span {
   font-weight: 500;
   font-size: 15px;
   color: var(--paragraph-color);
 }
-.userPage .bottom-holder .side-menu .images {
+.userPage .bottom-holder .side-menu .images .hold {
   position: relative;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
 }
 .userPage .bottom-holder .side-menu .images img {
   position: relative !important;
-  width: unset !important;
-  height: unset !important;
   max-width: 100%;
+  height: 132px !important;
+  width: 100% !important;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.userPage .bottom-holder .side-menu .friends .hold {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.userPage .bottom-holder .side-menu .friends .chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.userPage .bottom-holder .side-menu .friends img {
+  width: 100%;
+  height: 100%;
+  max-height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+  cursor: pointer;
+}
+.userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
+  font-size: 14px;
+  text-align: center;
+}
+.userPage .bottom-holder .side-menu .friends .name-lastmessage p {
+  font-size: 14px;
+  margin-top: -2px;
 }
 
-.userPage .bottom-holder .posts-list .actions {
+.userPage .bottom-holder .bigSection {
+  width: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-bottom: 15px;
+}
+.userPage .bottom-holder .bigSection > .actions {
   background: var(--body-color);
   padding: 19px 14px;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.userPage .bottom-holder .posts-list .posts-holder .post {
+.userPage .bottom-holder .bigSection > .actions h4 {
+  text-transform: capitalize;
+}
+.userPage .bottom-holder .bigSection .posts-holder {
+  margin-top: 0;
+  gap: 7px;
+}
+.userPage .bottom-holder .bigSection .posts-holder .post {
   max-width: 100%;
   min-width: 100% !important;
 }
-.userPage .bottom-holder .posts-list .posts-holder .post .top {
+
+.userPage .bottom-holder .bigSection .posts-holder .post .top {
   flex-direction: row !important;
+}
+.userPage .posts-holder .post .middle .image img {
+  max-height: 100%;
+}
+
+.userPage .bigSection .friends {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+.userPage .bigSection .friends > div {
+  background: var(--body-color);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px;
+  cursor: pointer;
+}
+.userPage .bigSection .friends > div img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.userPage .bigSection .friends > div div {
+  display: flex;
+  flex-direction: column;
+}
+.userPage .bigSection .friends > div p {
+  font-size: 14px;
+}
+.userPage .bigSection .photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+.userPage .bigSection .photos img {
+  position: relative !important;
+  max-width: 100%;
+  height: 260px !important;
+  object-fit: cover;
+  border-radius: 9px;
+}
+.userPage .bigSection .about {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+  background: var(--body-color);
+  padding: 15px;
+  border-radius: 8px;
+  border: 0.5px solid #e8e8e8;
+}
+.userPage .bigSection .about li {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.userPage .bigSection .about li span {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--paragraph-color);
+}
+
+@media (min-width: 1700px) {
+  .userPage .posts-holder .post .images.small img {
+    max-height: 450px;
+  }
+  .userPage .posts-holder .post .images.mid img {
+    max-height: 372px;
+  }
+  .userPage .posts-holder .post .images.big img {
+    max-height: 362px;
+  }
+}
+
+@media (max-width: 1700px) {
+  .userPage .bottom-holder .side-menu {
+    min-width: 38%;
+  }
+  body:has(.chats.hide) .userPage .bottom-holder .side-menu {
+    min-width: 37% !important;
+  }
+}
+@media (max-width: 1600px) {
+  .userPage .bottom-holder .side-menu {
+    min-width: 42%;
+  }
+  body:has(.chats.active) .userPage {
+    width: 95%;
+  }
+}
+
+@media (max-width: 1500px) {
+  .userPage .bottom-holder .side-menu {
+    min-width: 45%;
+  }
+}
+
+@media (max-width: 1400px) {
+  body:has(.chats.active) .userPage nav .top .right {
+    margin: 40px 0px 0px 12px;
+    flex-direction: column;
+  }
+  body:has(.chats.active) .userPage .leftHolder {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  body:has(.chats.active) .userPage nav .bottom {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+  }
+  body:has(.chats.active) .userPage nav .top .right .left-data {
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 8px;
+  }
+  .userPage .bottom-holder .side-menu .images img {
+    height: 124px !important;
+  }
+  .userPage .bottom-holder .side-menu .friends img {
+    max-height: 122px;
+  }
+  .userPage .bottom-holder .side-menu .friends .name-lastmessage p {
+    font-size: 12px;
+  }
+  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .userPage {
+    width: 95%;
+  }
+  .posts-holder {
+    gap: 7px;
+  }
+  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
+    font-size: 13px;
+  }
+
+  body:has(.chats.active) .userPage .bottom-holder {
+    flex-direction: column;
+  }
+  body:has(.chats.active) .userPage .bottom-holder .side-menu {
+    width: 100%;
+    position: unset;
+  }
+  body:has(.chats.active) .userPage .bottom-holder .side-menu .hold {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+  body:has(.chats.active) .userPage .bottom-holder .side-menu img {
+    max-height: 131px;
+    min-height: 130px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .userPage {
+    width: 100%;
+  }
+  .userPage .bottom-holder {
+    flex-direction: column;
+  }
+  .userPage .bottom-holder .side-menu {
+    width: 100%;
+    position: unset;
+  }
+  .userPage .bottom-holder .side-menu img {
+    max-height: 131px;
+    min-height: 130px;
+  }
+}
+@media (max-width: 1100px) {
+}
+@media (max-width: 1000px) {
+  .userPage nav .top .right {
+    margin: 40px 0px 0px 12px;
+    flex-direction: column;
+  }
+  .userPage .leftHolder {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .userPage nav .bottom {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+  }
+  .userPage nav .top .right .left-data {
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 8px;
+  }
+  body:has(.chats.active) .userPage .top .cover {
+    height: 255px;
+  }
+  .userPage .top .cover {
+    height: 380px;
+  }
+  .userPage nav .userImg {
+    width: 125px;
+    height: 125px;
+  }
+  .userPage nav .top .right {
+    margin: 30px 0px 0px 12px;
+  }
+  .userPage .bottom-holder .side-menu .images img {
+    height: 170px !important;
+    max-height: unset;
+  }
+  .userPage .bottom-holder .side-menu .friends img {
+    max-height: 200px;
+  }
+  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4,
+  .userPage .bottom-holder .side-menu .friends .name-lastmessage p {
+    font-size: 16px;
+  }
+
+  body:has(.chats.active) .userPage .bottom-holder .side-menu .hold,
+  .userPage .bottom-holder .side-menu .hold {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+@media (max-width: 768px) {
 }

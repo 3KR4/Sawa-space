@@ -60,7 +60,7 @@ export default function Chats() {
   }, []);
 
   return (
-    <div className={`chats ${hideChats && !hasChatInUrl && 'hide'}`}>
+    <div className={`chats ${hideChats && !hasChatInUrl ? 'hide': 'active'}`}>
       {!hasChatInUrl && (
         <div className="open-close" onClick={()=> {
           setHideChats(prev => !prev)

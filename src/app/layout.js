@@ -1,10 +1,11 @@
 "use client";
-import "./globals.css";
+import { usePathname } from "next/navigation"; // Import usePathname
+import { useContext } from "react";
 import Header from "@/components/Header";
 import AllComponents from "@/components/AllComponents";
 import Chats from "@/components/Chats";
 import { AllProvider, AllContext } from "./Context";
-import { useContext } from "react";
+import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
@@ -15,18 +16,19 @@ export default function RootLayout({ children }) {
 }
 
 function LayoutContent({ children }) {
-  const {screenSize} = useContext(AllContext);
-  
+  const { screenSize } = useContext(AllContext);
+  const pathname = usePathname(); // Get the current URL path
+
   return (
     <html lang="en">
       <body>
-        {screenSize !== "small" ? <Chats /> : null}
+        {!pathname.includes("auth") && screenSize !== "small" && <Chats />}
+
         <main>
-          <Header />
-          <AllComponents/>
-          <div className="holder">
-            {children}
-          </div>
+          {!pathname.includes("auth") && <Header />}
+
+          <AllComponents />
+          <div className="holder">{children}</div>
         </main>
       </body>
     </html>

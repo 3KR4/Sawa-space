@@ -57,11 +57,13 @@ function PostForm() {
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
+
   const handleInputChange = (e) => {
     const files = Array.from(e.target.files);
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
+  
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((image, i) => i !== index));
   };

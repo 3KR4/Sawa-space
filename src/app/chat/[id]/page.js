@@ -23,6 +23,7 @@ import { IoClose, IoCopy } from "react-icons/io5";
 import { TiMicrophoneOutline } from "react-icons/ti";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { LuSaveAll, LuFileSliders } from "react-icons/lu";
+
 import {
   MdOutlinePermMedia,
   MdContentCopy,
@@ -111,16 +112,10 @@ export default function Chat({ params }) {
   const chatRef = useRef(null);
   const menuRef = useRef(null);
   const emojiRef = useRef(null);
-  const forwordMenuRef = useRef(null);
   const reactsMenuRef = useRef(null);
   const mentionRef = useRef(null);
   const overviewRef = useRef(null);
 
-  const curentSearchUser = forwordSearch
-    ? users.filter((user) =>
-        user.name.toLowerCase().includes(forwordSearch.toLowerCase())
-      )
-    : users;
 
   useEffect(() => {
     setDataForSwiper(mediaMsgs);
