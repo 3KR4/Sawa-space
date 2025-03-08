@@ -129,8 +129,6 @@
   color: var(--title-color);
 }
 
-
-
 .pirsonChat .overViewMenu {
   max-width: 100%;
   display: flex;
@@ -165,7 +163,7 @@
   background: var(--section-color);
 }
 .pirsonChat .overViewMenu .left li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   width: 4px;
@@ -260,7 +258,6 @@
   display: grid;
   gap: 6px;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-
 }
 .pirsonChat .overViewMenu .right .media .msg {
   height: 94px;
@@ -306,8 +303,6 @@
   background-color: var(--title-color);
 }
 
-
-
 .pirsonChat .actions .big-holder {
   position: relative;
   flex: 1;
@@ -332,6 +327,8 @@
   border-radius: 50%;
   padding: 2px;
   font-size: 19px;
+  width: unset;
+  height: unset;
 }
 .pirsonChat .actions textarea {
   padding: 10px 12px;
@@ -447,7 +444,7 @@
 }
 .pirsonChat:has(.pin-holder) .messages .msg:first-child {
   margin-top: 45px;
-} 
+}
 
 .pirsonChat .messages .msg {
   padding: 14px 40px;
@@ -497,7 +494,7 @@
   justify-content: flex-start;
 }
 .pirsonChat .messages .msg.me .body::before {
-  content: '';
+  content: "";
   position: absolute;
   right: -2px;
   top: 0;
@@ -552,7 +549,7 @@
   position: absolute;
   right: 0;
   top: 0;
-    height: 100%;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -564,7 +561,8 @@
   visibility: hidden;
   z-index: 100;
   border-radius: 50%;
-  transition: scale 0.3s, border-radius 0.3s, opacity 0.3s, visibility 0.3s, background 0.8s;
+  transition: scale 0.3s, border-radius 0.3s, opacity 0.3s, visibility 0.3s,
+    background 0.8s;
 }
 .focusedMsg.active {
   scale: 1;
@@ -656,7 +654,7 @@
   align-items: center;
 }
 .pirsonChat .reply::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -1px;
   top: 0;
@@ -810,11 +808,10 @@
   text-align: center;
 }
 
-.pirsonChat .messages .msg .interact svg  {
+.pirsonChat .messages .msg .interact svg {
   color: var(--title-color);
 }
 .pirsonChat .messages .msg .interact:hover svg {
-  
 }
 
 body:has(.pirsonChat) .open-close {
@@ -824,8 +821,7 @@ body:has(.pirsonChat) .open-close {
   display: none;
 }
 
-
-  /* Style for the custom checkbox */
+/* Style for the custom checkbox */
 .custom-checkbox {
   display: inline-block;
   width: 20px;
@@ -836,7 +832,7 @@ body:has(.pirsonChat) .open-close {
   cursor: pointer;
 }
 
-  /* Style for the custom checkmark */
+/* Style for the custom checkmark */
 .custom-checkbox::after {
   content: "";
   position: absolute;
@@ -850,16 +846,11 @@ body:has(.pirsonChat) .open-close {
   opacity: 0;
 }
 
-  /* Show the checkmark when checkbox is checked */
+/* Show the checkmark when checkbox is checked */
 .input[type="checkbox"]:checked + .custom-checkbox::after {
   opacity: 1;
 }
 
-.pirsonChat .messages .messageAction {
-  width: 255px;
-  gap: 1px;
-  padding: 8px 0;
-}
 .sideMenu {
   position: fixed;
   z-index: 100;
@@ -872,16 +863,23 @@ body:has(.pirsonChat) .open-close {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, scale 0.3s;
+  width: 255px;
+  gap: 0px;
+  padding: 8px 0;
 }
 .sideMenu.active {
   scale: 1;
   opacity: 1;
   visibility: visible;
 }
-.pirsonChat .messages .messageAction hr {
+.sideMenu > h4 {
+  margin: 10px 15px;
+  margin-bottom: 4px;
+}
+.sideMenu hr {
   margin: 5px 0;
 }
-.pirsonChat .messages .messageAction button {
+.sideMenu > button {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -890,18 +888,27 @@ body:has(.pirsonChat) .open-close {
   margin: 0 10px;
   transition: 0.3s;
 }
-.pirsonChat .messages .messageAction button:hover {
+.sideMenu > button:hover {
   background: var(--border-color);
 }
-.pirsonChat .messages .messageAction button.danger:hover {
+.sideMenu button.danger:hover {
   color: white;
   background: var(--red-color);
 }
-.pirsonChat .messages .messageAction button svg {
+.sideMenu button svg {
   font-size: 17px;
 }
-.pirsonChat .messages .messageAction button.danger:hover svg {
+.sideMenu button.danger:hover svg {
   color: white;
+}
+
+.sideMenu.nistedUserSetting {
+  position: absolute;
+  right: 10px;
+  bottom: 60px;
+  top: unset;
+  transform: unset;
+  left: unset;
 }
 
 .MenuOfUsers {
@@ -952,20 +959,11 @@ body:has(.pirsonChat) .open-close {
   margin-left: 1px;
 }
 
-
-
-
-
-
-
-
 /*! Media */
 
 @media (max-width: 1700px) {
-
 }
 @media (max-width: 1600px) {
-
   .pirsonChat .messages .msg .body {
     max-width: 43%;
   }
@@ -986,10 +984,8 @@ body:has(.pirsonChat) .open-close {
   }
 }
 @media (max-width: 1100px) {
-  
 }
 @media (max-width: 1000px) {
-  
 }
 @media (max-width: 992px) {
   .pirsonChat {
@@ -1007,7 +1003,8 @@ body:has(.pirsonChat) .open-close {
   body:has(.pirsonChat) header {
     display: none;
   }
-  .pirsonChat .tools > button, .pirsonChat .actions > button {
+  .pirsonChat .tools > button,
+  .pirsonChat .actions > button {
     width: 40px;
   }
   .pirsonChat .messages .msg {
@@ -1031,8 +1028,6 @@ body:has(.pirsonChat) .open-close {
   }
 }
 @media (max-width: 500px) {
-  
 }
 @media (max-width: 360px) {
-  
 }

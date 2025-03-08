@@ -2,19 +2,26 @@ import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import { AllContext } from "@/app/Context";
 import Image from "next/image";
+import { users } from "@/Data";
+import SettingMenu from "@/components/SettingMenu";
 
+import { IoPersonRemoveSharp } from "react-icons/io5";
+import { MdBlock } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
-import { users } from "@/Data";
 
 function UserInfo() {
   const { selectedDev, userInfoData, setUserInfoData, menuPosition } =
     useContext(AllContext);
+  const [settingmenuPosition, setSettingMenuPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+  const [nistedSettingMenu, setNistedSettingMenu] = useState(false);
 
   const userInfoMenu = useRef(null);
-
-  console.log(userInfoData);
+  const nistedSettingMenuRef = useRef(null);
 
   let currentUserData = users.find((x) => x.id == selectedDev);
 
@@ -25,6 +32,12 @@ function UserInfo() {
         !userInfoMenu.current.contains(event.target)
       ) {
         setUserInfoData(null);
+      }
+      if (
+        nistedSettingMenuRef.current &&
+        !nistedSettingMenuRef.current.contains(event.target)
+      ) {
+        setNistedSettingMenu(null);
       }
     };
 
@@ -37,9 +50,25 @@ function UserInfo() {
   return (
     <div
       ref={userInfoMenu}
-      className={`userInfo sideMenu ${userInfoData && "active"}`}
+      className={`userInfo sideMenu ${userInfoData ? 'active' : ''}`}
       style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
     >
+      {nistedSettingMenu && (
+        <div
+          ref={nistedSettingMenuRef}
+          className={`sideMenu nistedUserSetting ${
+            nistedSettingMenu ? "active" : ""
+          }`}
+        >
+          <h4>Actions</h4>
+          <button className="danger">
+            <IoPersonRemoveSharp /> Remove Friend
+          </button>
+          <button className="danger">
+            <MdBlock /> Block
+          </button>
+        </div>
+      )}
       <div className="holder">
         <Image
           src={currentUserData?.img || "/user/default.png"}
@@ -72,7 +101,10 @@ function UserInfo() {
           Add Friend
         </button>
         <button className="main-button">See Profile</button>
-        <button className="main-button">
+        <button
+          className="main-button"
+          onClick={() => setNistedSettingMenu(true)}
+        >
           <BsThreeDots />
         </button>
       </div>

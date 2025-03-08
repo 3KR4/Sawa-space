@@ -57,7 +57,7 @@ console.log(selectionMenuTitle);
   return (
     <div
       ref={usersSelectionRef}
-      className={`usersSelection sideMenu ${openUsersSelection && "active"}`}
+      className={`usersSelection sideMenu ${openUsersSelection ? 'active' : ''}`}
       style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
     >
       <h1>{selectionMenuTitle}</h1>

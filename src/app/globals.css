@@ -212,6 +212,9 @@ svg.close:hover {
 
 body > main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 body > main > .holder {
   position: sticky;
@@ -472,8 +475,13 @@ body > main:has(.emoji-holder.active) > .holder {
   color: white;
   background-color: var(--red-color);
 }
-.chats .userMenu li.danger:hover svg {
+.chats .userMenu li.danger:hover svg,
+.chats .userMenu li.yellow:hover {
   color: white;
+}
+.chats .userMenu li.yellow:hover {
+  color: white;
+  background-color: orange;
 }
 .chats .userMenu li svg {
   transform: translateY(1px);
@@ -574,7 +582,6 @@ header {
   border-radius: 10px;
   padding: 7px 25px;
   outline: 2px solid #e8e8e8;
-  margin-bottom: 16px;
   position: sticky;
   top: 12px;
   z-index: 100;
@@ -589,7 +596,6 @@ header .logo {
 header .logo img {
   width: 40px;
   height: 40px;
-  margin: -51px 0 -52px -3px;
   border-radius: 50%;
   z-index: 1;
 }
@@ -693,7 +699,7 @@ header .events li:hover {
   background: var(--main-color);
   border-color: transparent;
 }
-header .events li:hover svg {
+header .events li:hover > svg {
   color: white;
 }
 header .events li span.length {
@@ -768,22 +774,22 @@ header .events .menu {
   z-index: 100;
   box-shadow: 0px 0px 15px 0px #b8b8b8;
 }
-header .events .userMenu {
+header .events .menu {
   right: -24px;
   top: 50px;
   width: 270px;
 }
-header .events .userMenu.active {
+header .events .menu.active {
   visibility: visible;
   opacity: 1;
-  top: 59px;
+  top: 52px;
 }
 
-header .events .userMenu ul {
+header .events .menu ul {
   padding: 9px;
   padding-top: 6px;
 }
-header .events .userMenu > a {
+header .events .menu > .title {
   border-radius: 0;
   background: var(--back-grident);
   padding: 16px 22px;
@@ -793,7 +799,7 @@ header .events .userMenu > a {
   gap: 7px;
   transition: 0.3s;
 }
-header .events .userMenu > a:hover {
+header .events .userMenu > .title:hover {
   background: var(--border-color);
   color: var(--title-color);
 }
@@ -801,16 +807,16 @@ header .events .userMenu ul > button:last-child:hover {
   color: white;
   background: var(--red-color);
 }
-header .events .userMenu > a svg {
+header .events .menu > a svg {
   color: white !important;
 }
-header .events .userMenu > a:hover svg {
+header .events .menu > a:hover svg {
   color: var(--title-color) !important;
 }
 header .events .userMenu ul > button:last-child:hover svg {
   color: white !important;
 }
-header .events .userMenu button {
+header .events .menu button {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -823,12 +829,16 @@ header .events .userMenu button {
   width: 100%;
   font-family: "Rubik";
 }
-header .events .userMenu button:hover {
+header .events .menu button:hover {
   background: var(--second-section-color);
 }
-header .events .userMenu svg {
+header .events .menu svg {
   font-size: 24px;
   color: var(--title-color) !important;
+}
+
+header .events .menu.createMenu svg {
+  font-size: 20px;
 }
 
 .posts-holder {
@@ -836,9 +846,8 @@ header .events .userMenu svg {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 12px;
   margin-bottom: 65px;
-  gap: 15px;
+  gap: 7px;
 }
 .post {
   display: flex;
@@ -1055,6 +1064,39 @@ header .events .userMenu svg {
   gap: 12px;
   min-width: 65px;
 }
+
+.comments .sideMenu.reactsHolder {
+  left: calc(100% - 250px);
+  transform: unset;
+  box-shadow: unset;
+}
+.sideMenu.reactsHolder {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  padding: 0;
+  transform: translateX(-50%);
+}
+
+.sideMenu.reactsHolder .reacts {
+  margin: 0;
+  padding: 5px;
+}
+.sideMenu.reactsHolder .reacts > * {
+  width: 32px;
+  height: 32px;
+}
+.sideMenu.reactsHolder .reacts > svg {
+  background: var(--second-section-color);
+  color: #656565;
+  width: 30px;
+  height: 30px;
+}
+.sideMenu.reactsHolder .reacts > svg:hover {
+  background: var(--main-color);
+  color: white !important;
+}
+
 .post .comment .right {
   gap: 0;
 }
@@ -1472,28 +1514,30 @@ body:has(.focusedMsg.active) .chats {
   color: white;
 }
 
-.sideMenu.reactsHolder {
+.sideMenu {
   position: absolute;
   top: -48px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.sideMenu.reactsHolder .reacts {
+.sideMenu .reacts {
   margin: 0;
   padding: 5px;
 }
-.sideMenu.reactsHolder .reacts > * {
+.sideMenu .reacts > * {
   width: 32px;
   height: 32px;
 }
-.sideMenu.reactsHolder .reacts > svg {
+.sideMenu .reacts > svg {
   background: var(--second-section-color);
   color: #656565;
   width: 30px;
   height: 30px;
+  padding: 5px !important;
+  min-height: 30px !important;
 }
-.sideMenu.reactsHolder .reacts > svg:hover {
+.sideMenu .reacts > svg:hover {
   background: var(--main-color);
   color: white !important;
 }
@@ -1718,7 +1762,7 @@ body:has(.focusedMsg.active) .chats {
 }
 
 .usersSelection {
-  width: 340px;
+  width: 340px !important;
 }
 .usersSelection h1 {
   font-size: 18px;
@@ -2467,11 +2511,11 @@ body:has(.sideMenu.active) > main > .holder {
     padding: 6px 9px;
   }
   header .events > li.user:has(.menu.active) > svg {
-    right: -2px;
+    right: -3px;
     top: -2px;
     padding: 8px;
   }
-  header .events .userMenu {
+  header .events .menu {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
@@ -2479,7 +2523,7 @@ body:has(.sideMenu.active) > main > .holder {
     bottom: 45px;
     top: unset;
   }
-  header .events .userMenu.active {
+  header .events .menu.active {
     bottom: 55px;
     top: unset;
   }
@@ -2645,6 +2689,9 @@ body:has(.sideMenu.active) > main > .holder {
   .focusedMsg .postForm > div {
     max-height: unset;
     overflow: unset;
+  }
+  body > main > .holder {
+    padding-right: 0px !important;
   }
 }
 @media (max-width: 500px) {

@@ -12,7 +12,14 @@ import {
   IoCartOutline,
   IoMenu,
 } from "react-icons/io5";
-import { FaCaretDown, FaUser, FaSearch } from "react-icons/fa";
+import {
+  FaCaretDown,
+  FaUser,
+  FaSearch,
+  FaUsers,
+  FaPager,
+  FaHistory,
+} from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
 import { RiUserCommunityLine } from "react-icons/ri";
@@ -21,12 +28,15 @@ import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
 import { AllContext } from "@/app/Context";
+import { BsFillPostcardFill } from "react-icons/bs";
+import { HiUsers } from "react-icons/hi2";
 
 export default function Header() {
   const pathname = usePathname();
-  const { screenSize, setOpenPostForm, setMessageText } =
+  const { screenSize, setOpenPostForm } =
     useContext(AllContext);
   const [userMenu, setUserMenu] = useState(false);
+  const [createMenu, setCreateMenu] = useState(false);
   const [phoneMenu, setPhoneMenu] = useState(false);
   const [phoneSearch, setPhoneSearch] = useState(false);
 
@@ -35,6 +45,8 @@ export default function Header() {
   const menuBtnRef = useRef(null);
   const searchBtnRef = useRef(null);
   const userMenuRef = useRef(null);
+  const createMenuRef = useRef(null);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -42,22 +54,33 @@ export default function Header() {
         setUserMenu(false);
       }
 
-      if (phoneMenuRef.current && phoneMenuRef.current.contains(event.target))
-        return;
+      if (
+        createMenuRef.current &&
+        !createMenuRef.current.contains(event.target)
+      ) {
+        setCreateMenu(false);
+      }
 
-      if (menuBtnRef.current && menuBtnRef.current.contains(event.target))
+      if (phoneMenuRef.current && phoneMenuRef.current.contains(event.target)) {
         return;
+      }
+
+      if (menuBtnRef.current && menuBtnRef.current.contains(event.target)) {
+        return;
+      }
 
       setPhoneMenu(false);
 
       if (
         phoneSearchRef.current &&
         phoneSearchRef.current.contains(event.target)
-      )
+      ) {
         return;
+      }
 
-      if (searchBtnRef.current && searchBtnRef.current.contains(event.target))
+      if (searchBtnRef.current && searchBtnRef.current.contains(event.target)) {
         return;
+      }
 
       setPhoneSearch(false); // Close search when clicking outside
     };
@@ -99,7 +122,9 @@ export default function Header() {
       }`}
     >
       <div className="logo">
-        <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
+        <Link href="/" style={{display: 'flex'}}>
+          <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
+        </Link>
         {screenSize === "small" && (
           <div className="icons">
             <FaSearch
@@ -122,7 +147,7 @@ export default function Header() {
         )}
         <div
           ref={phoneSearchRef}
-          className={`search-holder ${phoneSearch && "active"}`}
+          className={`search-holder ${phoneSearch ? 'active' : ''}`}
         >
           <div className="theInput">
             <IoSearch />
@@ -174,10 +199,38 @@ export default function Header() {
       <div className="events">
         {screenSize === "small" ? (
           <>
-            <li className="use-case" onClick={() => setOpenPostForm(true)}>
+            <li
+              ref={createMenuRef}
+              className="use-case"
+              onClick={() => setCreateMenu((prev) => !prev)}
+            >
               <IoGrid />
+              <div className={`menu createMenu ${createMenu ? 'active' : ''}`}>
+                <h4 className="title">Creation Menu</h4>
+                <ul>
+                  <button onClick={() => setOpenPostForm(true)}>
+                    <BsFillPostcardFill /> Create Post
+                  </button>
+                  <button>
+                    <FaHistory /> Create Story
+                  </button>
+                  <button>
+                    <HiUsers /> Create Group
+                  </button>
+                  <button>
+                    <FaPager /> Create Page
+                  </button>
+                  <button>
+                    <FaUsers /> Create Community
+                  </button>
+                </ul>
+              </div>
             </li>
-            <li className="user" onClick={() => setUserMenu((prev) => !prev)}>
+            <li
+              ref={userMenuRef}
+              className="user"
+              onClick={() => setUserMenu((prev) => !prev)}
+            >
               <Image
                 src={"/avatar.png"}
                 width={45}
@@ -185,11 +238,8 @@ export default function Header() {
                 alt={`user Image`}
               />
               <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div
-                ref={userMenuRef}
-                className={`menu userMenu ${userMenu && "active"}`}
-              >
-                <Link href={`/`}>
+              <div className={`menu userMenu ${userMenu ? 'active' : ''}`}>
+                <Link href={`/user/4`} className="title">
                   <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
                 </Link>
                 <ul>
@@ -216,19 +266,41 @@ export default function Header() {
         ) : (
           <>
             <li
+              ref={createMenuRef}
               className="use-case"
-              onClick={() => {
-                setOpenPostForm(true);
-                setMessageText("");
-              }}
+              onClick={() => setCreateMenu((prev) => !prev)}
             >
               <IoGrid />
+              <div className={`menu createMenu ${createMenu ? 'active' : ''}`}>
+                <h4 className="title">Creation Menu</h4>
+                <ul>
+                  <button onClick={() => setOpenPostForm(true)}>
+                    <BsFillPostcardFill /> Create Post
+                  </button>
+                  <button>
+                    <FaHistory /> Create Story
+                  </button>
+                  <button>
+                    <HiUsers /> Create Group
+                  </button>
+                  <button>
+                    <FaPager /> Create Page
+                  </button>
+                  <button>
+                    <FaUsers /> Create Community
+                  </button>
+                </ul>
+              </div>
             </li>
             <li className="notifications">
               <MdNotificationsActive />
               <span className="length">20</span>
             </li>
-            <li className="user" onClick={() => setUserMenu((prev) => !prev)}>
+            <li
+              ref={userMenuRef}
+              className="user"
+              onClick={() => setUserMenu((prev) => !prev)}
+            >
               <Image
                 src={"/avatar.png"}
                 width={45}
@@ -236,11 +308,8 @@ export default function Header() {
                 alt={`user Image`}
               />
               <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div
-                ref={userMenuRef}
-                className={`menu userMenu ${userMenu && "active"}`}
-              >
-                <Link href={`/user/4`}>
+              <div className={`menu userMenu ${userMenu ? 'active' : ''}`}>
+                <Link href={`/user/4`} className="title">
                   <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
                 </Link>
                 <ul>
@@ -265,3 +334,5 @@ export default function Header() {
     </header>
   );
 }
+
+

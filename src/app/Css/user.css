@@ -506,6 +506,22 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   .userPage .bottom-holder .side-menu .hold {
     grid-template-columns: repeat(3, 1fr) !important;
   }
+  .userPage .bottom-holder {
+    flex-direction: column-reverse !important;
+    padding-bottom: 60px;
+  }
 }
 @media (max-width: 768px) {
+  .userPage .bottom-holder .bigSection {
+    padding: 12px;
+  }
+  .userPage .bigSection .photos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .userPage .bottom-holder .bigSection .posts-holder {
+    padding: 0;
+  }
+  .userPage .bottom-holder {
+    padding-bottom: 60px;
+  }
 }

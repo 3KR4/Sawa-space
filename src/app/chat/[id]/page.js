@@ -10,6 +10,7 @@ import UsersSelection from "@/components/UsersSelection";
 
 import PinHolder from "@/components/chat/PinHolder";
 import ImagesSwiper from "@/components/ImagesSwiper";
+import SettingMenu from "@/components/SettingMenu";
 
 import { AllContext } from "@/app/Context";
 
@@ -61,11 +62,13 @@ export default function Chat({ params }) {
     openUsersSelection,
     handleMenus,
     setSelectionMenuTitle,
+    settingMenu,
+    setSettingMenu,
+    selectedDev,
   } = useContext(AllContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [selectMode, setSelectMode] = useState(false);
-  const [messageAction, setMessageAction] = useState(false);
   const [reactsAction, setReactsAction] = useState(false);
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [mentionHolder, setMentionHolder] = useState(false);
@@ -78,14 +81,14 @@ export default function Chat({ params }) {
 
   const [selectedMsgs, setSelectedMsgs] = useState([]);
 
+  console.log(selectedMsgs);
+
   const [mentionsPeople, setMentionsPeople] = useState([]);
 
   const [currentActionMsg, setCurrentActionMsg] = useState({});
   const [pinedMsgs, setPinedMsgs] = useState([]);
 
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-
-  const [forwordSearch, setForwordSearch] = useState("");
+  const [menuPositions, setMenuPositions] = useState({ top: 0, left: 0 });
 
   const mediaMsgs = messages.filter((msg) => msg.img);
 
@@ -115,7 +118,6 @@ export default function Chat({ params }) {
   const reactsMenuRef = useRef(null);
   const mentionRef = useRef(null);
   const overviewRef = useRef(null);
-
 
   useEffect(() => {
     setDataForSwiper(mediaMsgs);
@@ -226,21 +228,20 @@ export default function Chat({ params }) {
       setReactsAction(true);
       setCurrentActionMsg(msg);
     } else if (type == "addReact") {
-      setMessageAction(false);
+      setSettingMenu(false);
       setEmojiHolder(true);
       setIsAddReact(true);
     } else {
-      setMessageAction(true);
-      setCurrentActionMsg(msg);
+      null;
     }
-    setMenuPosition({ top, left });
+    setMenuPositions({ top, left });
   };
 
   //! handleClickOutside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMessageAction(false);
+        setSettingMenu(false);
       }
       if (
         reactsMenuRef.current &&
@@ -366,8 +367,9 @@ export default function Chat({ params }) {
                 </button>
                 <button
                   onClick={(e) => {
-                    handleMenus(e, "usersSelection");
-                    setSelectionMenuTitle("Forword To...");
+                    selectedMsgs.length > 0 && handleMenus(e, "usersSelection");
+                    selectedMsgs.length > 0 &&
+                      setSelectionMenuTitle("Forword To...");
                   }}
                 >
                   <FaShare />{" "}
@@ -393,35 +395,39 @@ export default function Chat({ params }) {
           {overViewMenu && (
             <div
               ref={overviewRef}
-              className={`overViewMenu sideMenu ${overViewMenu && "active"}`}
+              className={`overViewMenu sideMenu ${
+                overViewMenu ? "active" : ""
+              }`}
             >
               <ul className="left">
                 <li
-                  className={`${selectedOverView === `Overview` && "active"}`}
+                  className={`${
+                    selectedOverView === `Overview` ? "active" : ""
+                  }`}
                   onClick={() => setSelectedOverView("Overview")}
                 >
                   <FaRegUserCircle /> Overview
                 </li>
                 <li
-                  className={`${selectedOverView === `Media` && "active"}`}
+                  className={`${selectedOverView === `Media` ? "active" : ""}`}
                   onClick={() => setSelectedOverView("Media")}
                 >
                   <MdOutlinePermMedia /> Media
                 </li>
                 <li
-                  className={`${selectedOverView === `Files` && "active"}`}
+                  className={`${selectedOverView === `Files` ? "active" : ""}`}
                   onClick={() => setSelectedOverView("Files")}
                 >
                   <LuFileSliders /> Files
                 </li>
                 <li
-                  className={`${selectedOverView === `Links` && "active"}`}
+                  className={`${selectedOverView === `Links` ? "active" : ""}`}
                   onClick={() => setSelectedOverView("Links")}
                 >
                   <RiLinksLine /> Links
                 </li>
                 <li
-                  className={`${selectedOverView === `Groups` && "active"}`}
+                  className={`${selectedOverView === `Groups` ? "active" : ""}`}
                   onClick={() => setSelectedOverView("Groups")}
                 >
                   <FaUserGroup /> Groups
@@ -482,7 +488,7 @@ export default function Chat({ params }) {
                             }}
                             alt="xxxx"
                           />
-                          <label className={`${selectMode && "active"}`}>
+                          <label className={`${selectMode ? "active" : ""}`}>
                             <input
                               type="checkbox"
                               className="input"
@@ -521,102 +527,91 @@ export default function Chat({ params }) {
         </div>
 
         <ImagesSwiper />
+        {settingMenu && (
+          <SettingMenu type={"message-settingMenu"}>
+            <div className="reacts">
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f44d.png" />
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/2764-fe0f.png" />
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f602.png" />
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png" />
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png" />
+              <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png" />
+              <FaPlus
+                onClick={(e) =>
+                  !selectMode &&
+                  handleMessageActions(e, "addReact", currentActionMsg)
+                }
+              />
+            </div>
+            <hr />
+            <button
+              onClick={() => {
+                setReplyingOnMsg(selectedDev);
+                setSettingMenu(false);
+              }}
+            >
+              <HiReply /> Reply
+            </button>
+            {currentActionMsg?.message && (
+              <button>
+                <MdContentCopy /> Copy
+              </button>
+            )}
+            {currentActionMsg?.img && (
+              <button>
+                <LuSaveAll /> Save as..
+              </button>
+            )}
+            <hr />
+            <button
+              onClick={(e) => {
+                handleMenus(e, "usersSelection", currentActionMsg.id);
+                setSelectionMenuTitle("Forword To...");
+              }}
+            >
+              <HiReply style={{ transform: "rotateY(180deg)" }} /> Forward
+            </button>
+            <button>
+              <FaRegStar /> Star
+            </button>
+            <button>
+              <GoPin /> Pin
+            </button>
+            <button
+              onClick={() => {
+                setSelectedMsgs([selectedDev]);
+                setSelectMode(true);
+                setSettingMenu(false);
+              }}
+            >
+              <FaRegSquareCheck /> Select
+            </button>
+            <hr />
+            <button className="danger">
+              <FaRegTrashCan /> Delete for me
+            </button>
+          </SettingMenu>
+        )}
 
         <div
           className="messages"
           ref={chatRef}
           style={{
             overflow:
-              messageAction || openUsersSelection || reactsAction || isAddReact
+              settingMenu || openUsersSelection || reactsAction || isAddReact
                 ? "hidden"
                 : "auto",
-            paddingRight:
-              messageAction || openUsersSelection || reactsAction || isAddReact
-                ? "6px"
-                : "0px",
           }}
         >
-          {messageAction && (
-            <div
-              ref={menuRef}
-              className={`messageAction sideMenu ${messageAction && "active"}`}
-              style={{
-                top: `${menuPosition.top}px`,
-                left: `${menuPosition.left}px`,
-              }}
-            >
-              <div className="reacts">
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f44d.png" />
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/2764-fe0f.png" />
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f602.png" />
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png" />
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png" />
-                <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png" />
-                <FaPlus
-                  onClick={(e) =>
-                    !selectMode &&
-                    handleMessageActions(e, "addReact", currentActionMsg)
-                  }
-                />
-              </div>
-              <hr />
-              <button
-                onClick={() => {
-                  setReplyingOnMsg(currentActionMsg.id);
-                  setMessageAction(false);
-                }}
-              >
-                <HiReply /> Reply
-              </button>
-              {currentActionMsg?.message && (
-                <button>
-                  <MdContentCopy /> Copy
-                </button>
-              )}
-              {currentActionMsg?.img && (
-                <button>
-                  <LuSaveAll /> Save as..
-                </button>
-              )}
-              <hr />
-              <button
-                onClick={(e) =>
-                  {handleMenus(e, "usersSelection", currentActionMsg.id);
-                setSelectionMenuTitle('Forword To...')}
-                }
-              >
-                <HiReply style={{ transform: "rotateY(180deg)" }} /> Forward
-              </button>
-              <button>
-                <FaRegStar /> Star
-              </button>
-              <button>
-                <GoPin /> Pin
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedMsgs([currentActionMsg.id]);
-                  setSelectMode(true);
-                  setMessageAction(false);
-                }}
-              >
-                <FaRegSquareCheck /> Select
-              </button>
-              <hr />
-              <button className="danger">
-                <FaRegTrashCan /> Delete for me
-              </button>
-            </div>
-          )}
           {reactsAction && (
             <div
               ref={reactsMenuRef}
               className={`reactsMenu MenuOfUsers sideMenu ${
-                reactsAction && "active"
+                reactsAction ? "active" : ""
               }`}
               style={{
-                top: `${menuPosition.top}px`,
-                left: `${menuPosition.left}px`,
+                top: `${menuPositions.top}px`,
+                left: `${menuPositions.left}px`,
               }}
             >
               <h1>All Emojis</h1>
@@ -687,7 +682,7 @@ export default function Chat({ params }) {
                     !x.history &&
                     !x.deleted &&
                     !x.action &&
-                    handleMessageActions(e, "actions", x)
+                    handleMenus(e, "settingMenu-msg", x.id)
                   }
                 >
                   {x.history ? (
@@ -812,7 +807,7 @@ export default function Chat({ params }) {
                             className="holder"
                             onClick={(e) =>
                               !selectMode &&
-                              handleMessageActions(e, "actions", x)
+                              handleMenus(e, "settingMenu-msg", x.id)
                             }
                           >
                             <MdOutlineAddReaction />
@@ -830,11 +825,11 @@ export default function Chat({ params }) {
         <div className="actions">
           <div
             ref={emojiRef}
-            className={`emoji-holder ${emojiHolder && "active"}`}
+            className={`emoji-holder ${emojiHolder ? "active" : ""}`}
             style={{
               position: !isAddReact ? "absolute" : `fixed`,
-              top: !isAddReact ? "unset" : `${menuPosition.top}px`,
-              left: !isAddReact ? "15px" : `${menuPosition.left}px`,
+              top: !isAddReact ? "unset" : `${menuPositions.top}px`,
+              left: !isAddReact ? "15px" : `${menuPositions.left}px`,
               bottom: !isAddReact ? "calc(100% + -4px)" : `unset`,
             }}
           >

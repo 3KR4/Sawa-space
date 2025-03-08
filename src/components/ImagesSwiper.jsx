@@ -57,7 +57,7 @@ function ImagesSwiper() {
     <div
       ref={closeImgHolderRef}
       className={`focusedMsg forPosts ${
-        imgFocus && "active"
+        imgFocus ? "active" : ""
       } ${dataSwiperType}`}
     >
       {dataSwiperType === "post" ? (
@@ -100,7 +100,7 @@ function ImagesSwiper() {
                       <img
                         src={x}
                         alt={`Slide ${index}`}
-                        className={`${imgIndex == index && "active"}`}
+                        className={`${imgIndex == index ? "active" : ""}`}
                         style={{
                           maxWidth: "90%",
                           maxHeight: "90%",
@@ -205,7 +205,7 @@ function ImagesSwiper() {
                         <img
                           src={x}
                           alt={`Slide ${index}`}
-                          className={`${imgIndex == index && "active"}`}
+                          className={`${imgIndex == index ? "active" : ""}`}
                           style={{
                             maxWidth: "90%",
                             maxHeight: "90%",
@@ -237,8 +237,8 @@ function ImagesSwiper() {
                     {dataForSwiper?.comments &&
                     Array.isArray(dataForSwiper?.comments?.allComments) &&
                     dataForSwiper?.comments?.allComments?.length > 0 ? (
-                      dataForSwiper?.comments?.allComments.map((comment) => (
-                        <Comment data={comment} />
+                      dataForSwiper?.comments?.allComments.map((comment, index) => (
+                        <Comment key={index} data={comment} />
                       ))
                     ) : (
                       <div className="noCommentsYet">
@@ -287,7 +287,7 @@ function ImagesSwiper() {
                   <img
                     src={x.img}
                     alt={`Slide ${index}`}
-                    className={`${imgFocus == x.id && "active"}`}
+                    className={`${imgFocus == x.id ? "active" : ""}`}
                     style={{
                       maxWidth: "90%",
                       maxHeight: "90%",

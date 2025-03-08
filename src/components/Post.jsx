@@ -71,6 +71,7 @@ function Post({ data }) {
                 alt={data.user.name}
                 width={40}
                 height={40}
+                onClick={(e) => handleMenus(e, "userInfo", data.user.id)}
               />
               <div className="info">
                 <h5>{data.user.name}</h5>
@@ -87,7 +88,7 @@ function Post({ data }) {
             {data.link && (
               <div className="Links">
                 {data?.link?.map((x, index) => (
-                  <div>
+                  <div key={index}>
                     {index + 1} -
                     <Link key={index} href={x}>
                       {x}
@@ -234,8 +235,8 @@ function Post({ data }) {
             {data.comments &&
             Array.isArray(data.comments.allComments) &&
             data.comments.allComments.length > 0 ? (
-              data.comments.allComments.map((comment) => (
-                <Comment data={comment} />
+              data.comments.allComments.map((comment, index) => (
+                <Comment key={index} data={comment} />
               ))
             ) : (
               <div className="noCommentsYet">

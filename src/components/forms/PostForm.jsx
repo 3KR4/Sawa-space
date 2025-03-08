@@ -171,7 +171,7 @@ function PostForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className={`focusedMsg FormMenu ${openPostForm && "active"}`}
+      className={`focusedMsg FormMenu ${openPostForm ? 'active' : ''}`}
     >
       <div className="postForm" ref={formMenuRef}>
         <div className="top">
@@ -368,22 +368,22 @@ function PostForm() {
             <div className="right">
               <IoMdImages
                 onClick={() => setAddImages((prev) => !prev)}
-                className={`${addImages && "active"}`}
+                className={`${addImages ? 'active' : ''}`}
               />
               <FaLink
                 onClick={() => setAddLink((prev) => !prev)}
-                className={`${addLink && "active"}`}
+                className={`${addLink ? 'active' : ''}`}
               />
               <VscMention
                 onClick={(e) => {
                   handleMenus(e, "usersSelection");
                   setSelectionMenuTitle("Tag People...");
                 }}
-                className={`${selectedUsersNames.length && "active"}`}
+                className={`${selectedUsersNames.length ? 'active' : ''}`}
               />
               <FaHashtag
                 onClick={() => setAddHashtag((prev) => !prev)}
-                className={`${addHashtag && "active"}`}
+                className={`${addHashtag ? 'active' : ''}`}
               />
             </div>
           </div>

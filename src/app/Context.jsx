@@ -49,6 +49,7 @@ export const AllProvider = ({ children }) => {
   const [selectionMenuTitle, setSelectionMenuTitle] = useState("");
   const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
   const [userInfoData, setUserInfoData] = useState(null);
+  const [settingMenu, setSettingMenu] = useState(false);
 
   const handleMenus = (event, type, id) => {
     if (event && typeof event.preventDefault === "function") {
@@ -67,7 +68,14 @@ export const AllProvider = ({ children }) => {
         ? 340
         : type == "userInfo"
         ? 340
+        : type == "settingMenu-msg"
+        ? 255
+        : type == "settingMenu-user"
+        ? 255
+        : type == "postSettings"
+        ? 255
         : null;
+
     const menuHeight =
       type == "emojiHolder"
         ? 450
@@ -75,16 +83,32 @@ export const AllProvider = ({ children }) => {
         ? 450
         : type == "userInfo"
         ? 198
+        : type == "settingMenu-msg"
+        ? 340
+        : type == "settingMenu-user"
+        ? 130
+        : type == "postSettings"
+        ? 286
         : null;
 
     const top =
       cursorY + menuHeight > windowHeight
-        ? Math.max(cursorY - menuHeight, 50)
+        ? Math.max(cursorY - menuHeight - 10, 50)
         : cursorY;
     const left =
       cursorX + menuWidth > windowWidth
-        ? Math.max(cursorX - menuWidth, 10)
+        ? Math.max(cursorX - menuWidth + menuWidth / 2 - 10, 10)
         : cursorX;
+
+    console.log("menuWidth", menuWidth);
+    console.log("menuHeight", menuHeight);
+    console.log("cursorX", cursorX);
+    console.log("cursorY", cursorY);
+    console.log("windowWidth", windowWidth);
+    console.log("windowHeight", windowHeight);
+
+    console.log("top", top);
+    console.log("left", left);
 
     if (type === "emojiHolder") {
       setEmojiHolder(true);
@@ -94,6 +118,13 @@ export const AllProvider = ({ children }) => {
     }
     if (type == "userInfo") {
       setUserInfoData(true);
+    }
+    if (
+      type == "settingMenu-msg" ||
+      type == "settingMenu-user" ||
+      type == "postSettings"
+    ) {
+      setSettingMenu(true);
     }
 
     id && setSelectedDev(id);
@@ -194,6 +225,8 @@ export const AllProvider = ({ children }) => {
         usersSelectionRef,
         userInfoData,
         setUserInfoData,
+        settingMenu,
+        setSettingMenu,
       }}
     >
       {children}

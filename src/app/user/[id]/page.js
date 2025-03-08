@@ -7,6 +7,7 @@ import { messages, users, posts } from "@/Data";
 import { use } from "react";
 import { AllContext } from "@/app/Context";
 import Post from "@/components/Post";
+import SettingMenu from "@/components/SettingMenu";
 
 import "../../Css/user.css";
 import { FaAngleRight } from "react-icons/fa";
@@ -20,11 +21,14 @@ import { BsFillPostcardFill } from "react-icons/bs";
 
 import { HiUsers } from "react-icons/hi2";
 import { IoMdPhotos } from "react-icons/io";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { IoPersonRemoveSharp } from "react-icons/io5";
+import { MdBlock } from "react-icons/md";
 
 import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function User({ params }) {
-  const { handleMenus } = useContext(AllContext);
+  const { handleMenus, settingMenu, setSettingMenu } = useContext(AllContext);
   const { id } = use(params); // Unwrap the Promise
   const [postSearch, setPostSearch] = useState("");
 
@@ -39,6 +43,18 @@ export default function User({ params }) {
 
   return (
     <div className={`userPage`}>
+      {settingMenu && (
+        <SettingMenu type={"settingMenu-user"}>
+          <h4>Actions</h4>
+          <button className="danger">
+            <IoPersonRemoveSharp /> Remove Friend
+          </button>
+          <button className="danger">
+            <MdBlock /> Block
+          </button>
+        </SettingMenu>
+      )}
+
       <div className="top">
         <div className="cover">
           <Image src={"/chat4.png"} alt="User Cover" fill />
@@ -93,7 +109,7 @@ export default function User({ params }) {
             <div>
               <button
                 className={`main-button ${
-                  currentSelectedData == "posts" && "active"
+                  currentSelectedData == "posts" ? "active" : ""
                 }`}
                 onClick={() => setCurrentSelectedData("posts")}
               >
@@ -102,7 +118,7 @@ export default function User({ params }) {
               </button>
               <button
                 className={`main-button ${
-                  currentSelectedData == "friends" && "active"
+                  currentSelectedData == "friends" ? "active" : ""
                 }`}
                 onClick={() => setCurrentSelectedData("friends")}
               >
@@ -111,7 +127,7 @@ export default function User({ params }) {
               </button>
               <button
                 className={`main-button ${
-                  currentSelectedData == "photos" && "active"
+                  currentSelectedData == "photos" ? "active" : ""
                 }`}
                 onClick={() => setCurrentSelectedData("photos")}
               >
@@ -120,7 +136,7 @@ export default function User({ params }) {
               </button>
               <button
                 className={`main-button ${
-                  currentSelectedData == "about" && "active"
+                  currentSelectedData == "about" ? "active" : ""
                 }`}
                 onClick={() => setCurrentSelectedData("about")}
               >
@@ -128,7 +144,10 @@ export default function User({ params }) {
                 About
               </button>
             </div>
-            <button className={`main-button`}>
+            <button
+              className={`main-button`}
+              onClick={(e) => handleMenus(e, "settingMenu-user", id)}
+            >
               <BsThreeDots />
             </button>
           </div>
@@ -164,8 +183,8 @@ export default function User({ params }) {
                 </button>
               </div>
               <div className="hold">
-                {mediaMsgs.slice(0, 6).map((x) => (
-                  <Image src={x.img} alt="" fill />
+                {mediaMsgs.slice(0, 6).map((x, index) => (
+                  <Image key={index} src={x.img} alt="" fill />
                 ))}
               </div>
             </div>
@@ -237,8 +256,8 @@ export default function User({ params }) {
             </div>
           ) : currentSelectedData === "photos" ? (
             <div className="photos">
-              {mediaMsgs.map((x) => (
-                <Image src={x.img} alt="" fill />
+              {mediaMsgs.map((x, index) => (
+                <Image key={index} src={x.img} alt="" fill />
               ))}
             </div>
           ) : (
