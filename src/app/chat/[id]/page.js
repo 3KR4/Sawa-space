@@ -65,30 +65,24 @@ export default function Chat({ params }) {
     settingMenu,
     setSettingMenu,
     selectedDev,
+    setOpenUsersReact,
+    menuPositions,
+    openUsersReact,
   } = useContext(AllContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [selectMode, setSelectMode] = useState(false);
-  const [reactsAction, setReactsAction] = useState(false);
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [mentionHolder, setMentionHolder] = useState(false);
   const [isAddReact, setIsAddReact] = useState(false);
   const [overViewMenu, setOverViewMenu] = useState(false);
   const [selectedOverView, setSelectedOverView] = useState("Overview");
   const [replyingOnMsg, setReplyingOnMsg] = useState();
-
   const [filteredMentinUser, setFilteredMentinUser] = useState([]);
-
   const [selectedMsgs, setSelectedMsgs] = useState([]);
-
-  console.log(selectedMsgs);
-
   const [mentionsPeople, setMentionsPeople] = useState([]);
-
   const [currentActionMsg, setCurrentActionMsg] = useState({});
   const [pinedMsgs, setPinedMsgs] = useState([]);
-
-  const [menuPositions, setMenuPositions] = useState({ top: 0, left: 0 });
 
   const mediaMsgs = messages.filter((msg) => msg.img);
 
@@ -113,9 +107,7 @@ export default function Chat({ params }) {
   };
 
   const chatRef = useRef(null);
-  const menuRef = useRef(null);
   const emojiRef = useRef(null);
-  const reactsMenuRef = useRef(null);
   const mentionRef = useRef(null);
   const overviewRef = useRef(null);
 
@@ -126,11 +118,6 @@ export default function Chat({ params }) {
   const currentReplyMsg = replyingOnMsg
     ? messages.find((msg) => msg.id === replyingOnMsg)
     : null;
-
-  const currentUserReacts = currentActionMsg
-    ? messages.find((msg) => msg.id === currentActionMsg)
-    : null;
-  const msgsEmojis = currentUserReacts?.emojis;
 
   const handlePinClick = (id) => {
     const element = document.getElementById(`message-${id}`);
@@ -198,57 +185,9 @@ export default function Chat({ params }) {
     (user) => !mentionsPeople.some((mentioned) => mentioned.id === user.id)
   );
 
-  const handleMessageActions = (event, type, msg) => {
-    event.preventDefault();
-    const windowHeight = window.innerHeight;
-    const windowWidth = window.innerWidth;
-    const cursorY = event.clientY;
-    const cursorX = event.clientX;
-
-    const menuWidth = type == "emojis" ? 280 : type == "addReact" ? 400 : 255;
-    const menuHeight =
-      type === "emojis"
-        ? reactsMenuRef.current?.offsetHeight > 297
-          ? reactsMenuRef.current.offsetHeight
-          : 300
-        : type == "addReact"
-        ? 450
-        : 378;
-
-    const top =
-      cursorY + menuHeight > windowHeight
-        ? Math.max(cursorY - menuHeight, 50)
-        : cursorY;
-    const left =
-      cursorX + menuWidth > windowWidth
-        ? Math.max(cursorX - menuWidth, 10)
-        : cursorX;
-
-    if (type == "emojis") {
-      setReactsAction(true);
-      setCurrentActionMsg(msg);
-    } else if (type == "addReact") {
-      setSettingMenu(false);
-      setEmojiHolder(true);
-      setIsAddReact(true);
-    } else {
-      null;
-    }
-    setMenuPositions({ top, left });
-  };
-
   //! handleClickOutside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setSettingMenu(false);
-      }
-      if (
-        reactsMenuRef.current &&
-        !reactsMenuRef.current.contains(event.target)
-      ) {
-        setReactsAction(false);
-      }
       if (mentionRef.current && !mentionRef.current.contains(event.target)) {
         setMentionHolder(false);
       }
@@ -348,6 +287,7 @@ export default function Chat({ params }) {
           <div className="user" onClick={() => setOverViewMenu(true)}>
             {curentChat.img && (
               <Image
+                className="rounded"
                 src={curentChat.img}
                 width={40}
                 height={40}
@@ -440,6 +380,7 @@ export default function Chat({ params }) {
                   <div className="overview">
                     <div className="center">
                       <Image
+                        className="rounded"
                         src={curentChat?.img || null}
                         width={45}
                         height={45}
@@ -527,6 +468,7 @@ export default function Chat({ params }) {
         </div>
 
         <ImagesSwiper />
+
         {settingMenu && (
           <SettingMenu type={"message-settingMenu"}>
             <div className="reacts">
@@ -537,10 +479,7 @@ export default function Chat({ params }) {
               <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png" />
               <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png" />
               <FaPlus
-                onClick={(e) =>
-                  !selectMode &&
-                  handleMessageActions(e, "addReact", currentActionMsg)
-                }
+                onClick={(e) => !selectMode && handleMenus(e, "emojiHolder")}
               />
             </div>
             <hr />
@@ -598,42 +537,12 @@ export default function Chat({ params }) {
           ref={chatRef}
           style={{
             overflow:
-              settingMenu || openUsersSelection || reactsAction || isAddReact
+              settingMenu || openUsersSelection || isAddReact || openUsersReact
                 ? "hidden"
                 : "auto",
+            paddingRight: settingMenu ? "6px" : "unset",
           }}
         >
-          {reactsAction && (
-            <div
-              ref={reactsMenuRef}
-              className={`reactsMenu MenuOfUsers sideMenu ${
-                reactsAction ? "active" : ""
-              }`}
-              style={{
-                top: `${menuPositions.top}px`,
-                left: `${menuPositions.left}px`,
-              }}
-            >
-              <h1>All Emojis</h1>
-              <div className="holder">
-                {msgsEmojis?.map((x) => (
-                  <div key={x.id} className="user">
-                    <div className="info">
-                      <Image
-                        src={x.user.img ? x.user.img : null}
-                        width={40}
-                        height={40}
-                        alt={`user Image`}
-                      />
-                      <h4>{x.user.name}</h4>
-                    </div>
-                    <span>{x.emoji}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {messages.map((x, i) => {
             const replyMsg = x.replyId
               ? messages.find((msg) => msg.id === x.replyId)
@@ -768,10 +677,12 @@ export default function Chat({ params }) {
                       {x.emojis?.length > 0 && (
                         <div
                           className="reacts"
-                          onClick={(e) =>
-                            !selectMode &&
-                            handleMessageActions(e, "emojis", x.id)
-                          }
+                          onClick={(e) => {
+                            if (!selectMode) {
+                              setOpenUsersReact("message");
+                              handleMenus(e, "usersReact", x.id);
+                            }
+                          }}
                         >
                           {(() => {
                             const uniqueEmojis = [
@@ -847,6 +758,8 @@ export default function Chat({ params }) {
           <button
             onClick={() => {
               setEmojiHolder(true);
+              setIsAddReact;
+              true;
               InputRef.current.focus();
             }}
           >
@@ -869,6 +782,7 @@ export default function Chat({ params }) {
                           onClick={() => handleUserClick(x)}
                         >
                           <Image
+                            className="rounded"
                             src={x.img ? x.img : null}
                             width={40}
                             height={40}

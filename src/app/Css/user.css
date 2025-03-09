@@ -68,23 +68,17 @@ body:has(.userPage) header {
   width: 140px;
   height: 140px;
   z-index: 30;
-  border: 2px solid var(--title-color);
-  border-radius: 50%;
+  border: 1px solid var(--title-color);
 }
 
 .userPage .userImg .editICo {
   padding: 6px;
   font-size: 16px;
-  border-radius: 50%;
   right: 2px;
 }
 .userPage .editICo:hover {
   cursor: pointer;
   background: var(--main-color);
-}
-.userPage nav .userImg img {
-  object-fit: cover;
-  border-radius: 50%;
 }
 .userPage nav .top .right {
   display: flex;
@@ -218,6 +212,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   width: 100% !important;
   object-fit: cover;
   border-radius: 8px;
+  cursor: pointer;
 }
 .userPage .bottom-holder .side-menu .friends .hold {
   display: grid;
@@ -299,8 +294,6 @@ body:has(.chats.hide) .userPage .post .middle .image img {
 .userPage .bigSection .friends > div img {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 .userPage .bigSection .friends > div div {
   display: flex;
@@ -320,6 +313,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   height: 260px !important;
   object-fit: cover;
   border-radius: 9px;
+  cursor: pointer;
 }
 .userPage .bigSection .about {
   display: flex;

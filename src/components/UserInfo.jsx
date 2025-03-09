@@ -12,14 +12,18 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function UserInfo() {
-  const { selectedDev, userInfoData, setUserInfoData, menuPosition } =
-    useContext(AllContext);
-  const [settingmenuPosition, setSettingMenuPosition] = useState({
-    top: 0,
-    left: 0,
-  });
+  const {
+    selectedDev,
+    userInfoData,
+    setUserInfoData,
+    menuPosition,
+    menuPosition2,
+    setMenuPosition2,
+  } = useContext(AllContext);
   const [nistedSettingMenu, setNistedSettingMenu] = useState(false);
 
+  let top = menuPosition2.top !== 0 ? menuPosition2.top : menuPosition.top;
+  let left = menuPosition2.left !== 0 ? menuPosition2.left : menuPosition.left;
   const userInfoMenu = useRef(null);
   const nistedSettingMenuRef = useRef(null);
 
@@ -39,6 +43,7 @@ function UserInfo() {
       ) {
         setNistedSettingMenu(null);
       }
+      setMenuPosition2({ top: 0, left: 0 });
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -50,8 +55,11 @@ function UserInfo() {
   return (
     <div
       ref={userInfoMenu}
-      className={`userInfo sideMenu ${userInfoData ? 'active' : ''}`}
-      style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
+      className={`userInfo sideMenu ${userInfoData ? "active" : ""}`}
+      style={{
+        top: `${top}px`,
+        left: `${left}px`,
+      }}
     >
       {nistedSettingMenu && (
         <div
@@ -71,6 +79,7 @@ function UserInfo() {
       )}
       <div className="holder">
         <Image
+          className={`rounded`}
           src={currentUserData?.img || "/user/default.png"}
           alt={currentUserData?.name}
           fill
@@ -78,7 +87,13 @@ function UserInfo() {
         <div className="info">
           <div className="top">
             <h4>{currentUserData?.name}</h4>
-            <IoClose onClick={() => setUserInfoData(null)} className="close" />
+            <IoClose
+              onClick={() => {
+                setUserInfoData(null);
+                setMenuPosition2({ top: 0, left: 0 });
+              }}
+              className="close"
+            />
           </div>
           <p>5 mutual Friends</p>
           <h5>About</h5>

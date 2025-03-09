@@ -57,7 +57,9 @@ console.log(selectionMenuTitle);
   return (
     <div
       ref={usersSelectionRef}
-      className={`usersSelection sideMenu ${openUsersSelection ? 'active' : ''}`}
+      className={`usersSelection sideMenu ${
+        openUsersSelection ? "active" : ""
+      }`}
       style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
     >
       <h1>{selectionMenuTitle}</h1>
@@ -103,6 +105,7 @@ console.log(selectionMenuTitle);
               width={40}
               height={40}
               alt={`user Image`}
+              className={`rounded`}
             />
             <div className="name-lastmessage">
               <h4>{x.name}</h4>

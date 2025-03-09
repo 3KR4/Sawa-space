@@ -8,14 +8,14 @@ import PostForm from "@/components/forms/PostForm";
 import ImagesSwiper from "@/components/ImagesSwiper";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/SettingMenu";
-import { usePathname } from "next/navigation"; // Import usePathname
+import UsersReact from "@/components/UsersReact";
+import { usePathname } from "next/navigation";
 
 import { MdBlock } from "react-icons/md";
-
 import { IoPersonRemove } from "react-icons/io5";
 import { MdReport } from "react-icons/md";
 import { BiSolidHide } from "react-icons/bi";
-import { FaTags } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa";
 
 import { HiUsers } from "react-icons/hi2";
 
@@ -26,6 +26,7 @@ function AllComponents() {
     openUsersSelection,
     userInfoData,
     settingMenu,
+    openUsersReact,
   } = useContext(AllContext);
 
   console.log(userInfoData);
@@ -33,35 +34,38 @@ function AllComponents() {
 
   return (
     <>
-      {settingMenu && !pathname.includes("user") && (
-        <SettingMenu type={"settingMenu-post"}>
-          <button>
-            <FaTags /> Save Post
-          </button>
-          <button>
-            <HiUsers /> Add Friend
-          </button>
-          <hr />
-          <button className="yellow">
-            <BiSolidHide /> Hide
-          </button>
-          <button className="yellow">
-            <MdBlock /> Report
-          </button>
-          <hr />
-          <button className="danger">
-            <IoPersonRemove /> Remove Friend
-          </button>
-          <button className="danger">
-            <MdReport /> Block
-          </button>
-        </SettingMenu>
-      )}
-      {imgFocus && <ImagesSwiper />}
+      {settingMenu &&
+        !pathname.includes("user") &&
+        !pathname.includes("chat") && (
+          <SettingMenu type={"settingMenu-post"}>
+            <button>
+              <FaBookmark /> Save Post
+            </button>
+            <button>
+              <HiUsers /> Add Friend
+            </button>
+            <hr />
+            <button className="yellow">
+              <BiSolidHide /> Hide
+            </button>
+            <button className="yellow">
+              <MdBlock /> Report
+            </button>
+            <hr />
+            <button className="danger">
+              <IoPersonRemove /> Remove Friend
+            </button>
+            <button className="danger">
+              <MdReport /> Block
+            </button>
+          </SettingMenu>
+        )}
+      {imgFocus && !pathname.includes("chat") && <ImagesSwiper />}
       {userInfoData && <UserInfo />}
       {openPostForm && <PostForm />}
-      <EmojesHolder />
+      {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}
+      <EmojesHolder />
     </>
   );
 }

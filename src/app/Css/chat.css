@@ -8,6 +8,7 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
+  padding-right: 0 !important;
 }
 
 .pirsonChat .mentionMenu {
@@ -28,9 +29,6 @@
 .pirsonChat .mentionMenu .user .info span {
   color: var(--paragraph-color);
   font-size: 14px;
-}
-.pirsonChat .mentionMenu img {
-  border-radius: 50%;
 }
 .pirsonChat .mentionMenu .holder-wrap {
   display: flex;
@@ -74,8 +72,6 @@
 }
 .pirsonChat .top .user img {
   color: transparent;
-  border-radius: 50%;
-  object-fit: cover;
 }
 .pirsonChat > .actions {
   position: relative;
@@ -137,6 +133,8 @@
   top: 0;
   left: 0;
   overflow: hidden;
+  transform: unset;
+  width: fit-content;
 }
 .pirsonChat .overViewMenu .left {
   background: var(--body-color);
@@ -206,7 +204,6 @@
   gap: 0px;
 }
 .pirsonChat .overViewMenu .right .overview img {
-  border-radius: 50%;
   width: 31%;
   height: 31%;
 }
@@ -524,6 +521,7 @@
   font-size: 20px;
   letter-spacing: -0.3px;
   cursor: pointer;
+  gap: 0;
   background: var(--body-color);
   border: 1px solid var(--border-color);
 }
@@ -573,34 +571,6 @@
   backdrop-filter: blur(10px);
   border-radius: 0;
 }
-.focusedMsg .hold {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: center;
-  justify-content: center;
-  max-height: 90%;
-}
-.focusedMsg img {
-  max-width: 80%;
-  max-height: 80%;
-  border-radius: 7px;
-}
-.focusedMsg .closeMsg {
-  display: flex;
-  position: absolute;
-  right: 1%;
-  top: 2%;
-  width: 35px;
-  height: 35px;
-  background: var(--section-color);
-  padding: 5px;
-  border-radius: 5px;
-}
-.focusedMsg .closeMsg:hover {
-  background: var(--red-color);
-  color: white;
-}
 .focusedMsg p {
   background: #d5d5d596;
   color: #212121;
@@ -610,7 +580,6 @@
   max-height: 144px;
   overflow: auto;
 }
-
 .focusedMsg .swiper {
   width: 100%;
 }
@@ -627,7 +596,6 @@
 .focusedMsg .swiper .swiper-slide img.active {
   border-bottom: 4px solid var(--main-color);
 }
-
 .pirsonChat .messages .msg .body > img {
   max-width: 100%;
   max-height: 535px;
@@ -911,6 +879,9 @@ body:has(.pirsonChat) .open-close {
   left: unset;
 }
 
+body:has(.pirsonChat) .MenuOfUsers .topFilter {
+  padding: 0;
+}
 .MenuOfUsers {
   width: 280px;
   padding: 6px;
@@ -941,14 +912,11 @@ body:has(.pirsonChat) .open-close {
   align-items: center;
   gap: 7px;
 }
-.MenuOfUsers .info img {
-  border-radius: 50%;
-  object-fit: cover;
-}
 .MenuOfUsers .info h4 {
   font-weight: 500;
   font-size: 15px;
 }
+
 .pirsonChat .reactsMenu span {
   font-size: 24px;
 }
@@ -1010,10 +978,7 @@ body:has(.pirsonChat) .open-close {
   .pirsonChat .messages .msg {
     padding: 14px;
   }
-  .focusedMsg .closeMsg {
-    right: 2%;
-  }
-  .focusedMsg img {
+  .focusedMsg > img {
     max-width: 96%;
   }
   .pirsonChat .custom-checkbox {

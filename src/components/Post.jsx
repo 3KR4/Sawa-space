@@ -32,8 +32,7 @@ function Post({ data }) {
     setImgIndex,
     closeImgHolderRef,
     handleMenus,
-    InputRef,
-    messageText,
+    setOpenUsersReact,
     setMessageText,
   } = useContext(AllContext);
 
@@ -51,15 +50,6 @@ function Post({ data }) {
     }
   };
 
-  const [uploadedImg, setUploadedImg] = useState();
-
-  const handleUploadImg = (e) => {
-    const file = e.target.files[0]; // Get the first file only
-    if (file && file.type.startsWith("image/")) {
-      setUploadedImg(file);
-    }
-  };
-
   return (
     <div className={`post`}>
       {!seeComments ? (
@@ -67,6 +57,7 @@ function Post({ data }) {
           <div className="top">
             <div className="left">
               <Image
+                className="rounded"
                 src={data.user.img || "/users/default.png"}
                 alt={data.user.name}
                 width={40}
@@ -140,15 +131,24 @@ function Post({ data }) {
               <div className="mentions">
                 <h5>{data.user.name} mention</h5>
                 {data.mentions?.map((x, index) => (
-                  <Link key={index} href={`/user/${x.userId}`}>
+                  <button
+                    key={index}
+                    onClick={(e) => handleMenus(e, "userInfo", x.userId)}
+                  >
                     @{x.userName}
-                  </Link>
+                  </button>
                 ))}
               </div>
             )}
           </div>
           <div className="bottom">
-            <div className="left emojesCounter">
+            <div
+              className="left emojesCounter"
+              onClick={(e) => {
+                setOpenUsersReact("post");
+                handleMenus(e, "usersReact", data.id);
+              }}
+            >
               {data.reacts.count !== 0 && (
                 <>
                   {data.reacts.topUseage.map((x, index) => (

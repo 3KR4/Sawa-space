@@ -122,7 +122,7 @@ export default function Header() {
       }`}
     >
       <div className="logo">
-        <Link href="/" style={{display: 'flex'}}>
+        <Link href="/" style={{ display: "flex" }}>
           <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
         </Link>
         {screenSize === "small" && (
@@ -147,7 +147,7 @@ export default function Header() {
         )}
         <div
           ref={phoneSearchRef}
-          className={`search-holder ${phoneSearch ? 'active' : ''}`}
+          className={`search-holder ${phoneSearch ? "active" : ""}`}
         >
           <div className="theInput">
             <IoSearch />
@@ -205,7 +205,7 @@ export default function Header() {
               onClick={() => setCreateMenu((prev) => !prev)}
             >
               <IoGrid />
-              <div className={`menu createMenu ${createMenu ? 'active' : ''}`}>
+              <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
                 <h4 className="title">Creation Menu</h4>
                 <ul>
                   <button onClick={() => setOpenPostForm(true)}>
@@ -232,13 +232,14 @@ export default function Header() {
               onClick={() => setUserMenu((prev) => !prev)}
             >
               <Image
+                className="rounded"
                 src={"/avatar.png"}
                 width={45}
                 height={45}
                 alt={`user Image`}
               />
               <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div className={`menu userMenu ${userMenu ? 'active' : ''}`}>
+              <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
                 <Link href={`/user/4`} className="title">
                   <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
                 </Link>
@@ -271,7 +272,7 @@ export default function Header() {
               onClick={() => setCreateMenu((prev) => !prev)}
             >
               <IoGrid />
-              <div className={`menu createMenu ${createMenu ? 'active' : ''}`}>
+              <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
                 <h4 className="title">Creation Menu</h4>
                 <ul>
                   <button onClick={() => setOpenPostForm(true)}>
@@ -302,13 +303,14 @@ export default function Header() {
               onClick={() => setUserMenu((prev) => !prev)}
             >
               <Image
+                className="rounded"
                 src={"/avatar.png"}
                 width={45}
                 height={45}
                 alt={`user Image`}
               />
               <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div className={`menu userMenu ${userMenu ? 'active' : ''}`}>
+              <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
                 <Link href={`/user/4`} className="title">
                   <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
                 </Link>

@@ -1,23 +1,46 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import ReactsHolder from "@/components/ReactsHolder";
 import Image from "next/image";
+import { AllContext } from "@/app/Context";
+
 
 import { MdOutlineAddReaction } from "react-icons/md";
 
 function Comment({data}) {
+    const {
+      handleMenus,
+      setOpenUsersReact,
+      setDataForSwiper,
+      setImgFocus,
+      setImgIndex,
+      setDataSwiperType,
+    } = useContext(AllContext);
+
   const [seeReplays, setSeeReplays] = useState(false)
   const [reactsHolder, setReactsHolder] = useState(false);
+
+    const handleImageClick = (id, index) => {
+      setDataSwiperType("comment");
+      setImgFocus(id);
+      setDataForSwiper(data);
+      if (index !== "") {
+        setImgIndex(index);
+      }
+    };
+
 
   return (
     <div key={data?.id} className="comment">
       <div className="image-holder">
         <Image
+          className="rounded"
           src={data?.image || "/users/default.png"}
           alt="Comment Image"
           width={40}
           height={40}
           unoptimized
+          onClick={(e) => handleMenus(e, "userInfo", data?.id)}
         />
         <span></span>
       </div>
@@ -29,7 +52,13 @@ function Comment({data}) {
               <span>{data?.time}</span>
             </div>
             {data?.reacts?.count !== 0 && (
-              <div className="right emojesCounter">
+              <div
+                className="right emojesCounter"
+                onClick={(e) => {
+                  setOpenUsersReact("post");
+                  handleMenus(e, "usersReact", data.id);
+                }}
+              >
                 {data?.reacts?.topUseage.map((x, index) => (
                   <p key={index}>{x}</p>
                 ))}
@@ -38,7 +67,14 @@ function Comment({data}) {
             )}
           </div>
           <p>{data?.paragraph}</p>
-          {data?.img && <Image src={data?.img} alt={"comment image"} fill />}
+          {data?.img && (
+            <Image
+              src={data?.img}
+              alt={"comment image"}
+              fill
+              onClick={() => handleImageClick(data)}
+            />
+          )}
           <div className="bottom">
             <div className="left">
               {data?.replays &&

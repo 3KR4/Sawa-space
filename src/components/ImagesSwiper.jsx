@@ -10,6 +10,7 @@ import Link from "next/link";
 import Comment from "@/components/Comment";
 import ActionsBtns from "@/components/ActionsBtns";
 import TypeComment from "@/components/TypeComment";
+import { usePathname } from "next/navigation";
 
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComments } from "react-icons/fa6";
@@ -29,7 +30,9 @@ function ImagesSwiper() {
     closeImgHolderRef,
     screenSize,
     setMessageText,
+    handleMenus,
   } = useContext(AllContext);
+  const pathname = usePathname(); // Get the current URL path
 
   const [swiperRef, setSwiperRef] = useState(null);
   const data =
@@ -56,7 +59,7 @@ function ImagesSwiper() {
   return (
     <div
       ref={closeImgHolderRef}
-      className={`focusedMsg forPosts ${
+      className={`focusedMsg ${!pathname.includes("chat") ? "forPosts" : ""} ${
         imgFocus ? "active" : ""
       } ${dataSwiperType}`}
     >
@@ -122,6 +125,8 @@ function ImagesSwiper() {
                   alt={dataForSwiper?.user?.name}
                   width={40}
                   height={40}
+                  className={`rounded`}
+                  onClick={(e) => handleMenus(e, "userInfo", data?.id)}
                 />
                 <div className="info">
                   <h5>{dataForSwiper?.user?.name}</h5>
@@ -136,7 +141,7 @@ function ImagesSwiper() {
                   }}
                 />
                 <IoClose
-                  className="close"
+                  className="close closeMenu"
                   onClick={() => {
                     setImgFocus(null);
                     setMessageText("");
@@ -237,9 +242,11 @@ function ImagesSwiper() {
                     {dataForSwiper?.comments &&
                     Array.isArray(dataForSwiper?.comments?.allComments) &&
                     dataForSwiper?.comments?.allComments?.length > 0 ? (
-                      dataForSwiper?.comments?.allComments.map((comment, index) => (
-                        <Comment key={index} data={comment} />
-                      ))
+                      dataForSwiper?.comments?.allComments.map(
+                        (comment, index) => (
+                          <Comment key={index} data={comment} />
+                        )
+                      )
                     ) : (
                       <div className="noCommentsYet">
                         <FaRegComments />
@@ -255,11 +262,14 @@ function ImagesSwiper() {
             </div>
           </div>
         </div>
-      ) : (
+      ) : dataSwiperType === "msg" ? (
         <>
           <div className="hold">
             {imgFocus && (
-              <IoClose className="closeMsg" onClick={() => setImgFocus(null)} />
+              <IoClose
+                className="close closeMenu"
+                onClick={() => setImgFocus(null)}
+              />
             )}
             {data?.user !== "Bob" && <h5>{data?.user}</h5>}
             {data?.img && (
@@ -300,6 +310,23 @@ function ImagesSwiper() {
             </Swiper>
           )}
         </>
+      ) : (
+        <div className="hold OneImg">
+          {imgFocus && (
+            <IoClose
+              className="close closeMenu"
+              onClick={() => setImgFocus(null)}
+            />
+          )}
+          {imgFocus?.name !== "Bob" && <h5>{imgFocus?.name}</h5>}
+          {imgFocus?.img && (
+            <img
+              src={imgFocus?.img}
+              alt={imgFocus?.name ? `${imgFocus?.name}'s image` : "User image"}
+            />
+          )}
+          {imgFocus?.paragraph && <p>{imgFocus?.paragraph}</p>}
+        </div>
       )}
     </div>
   );

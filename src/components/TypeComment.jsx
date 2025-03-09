@@ -54,7 +54,13 @@ function TypeComment({id}) {
       </div>
       <div className="actions">
         <div className="left">
-          <Image src={"/avatar.png"} alt={"user"} width={40} height={40} />
+          <Image
+            className="rounded"
+            src={"/avatar.png"}
+            alt={"user"}
+            width={40}
+            height={40}
+          />
           Mahmoud Elshazly
         </div>
         <div className="right">

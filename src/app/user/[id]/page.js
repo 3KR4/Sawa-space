@@ -28,7 +28,16 @@ import { MdBlock } from "react-icons/md";
 import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function User({ params }) {
-  const { handleMenus, settingMenu, setSettingMenu } = useContext(AllContext);
+  const {
+    handleMenus,
+    settingMenu,
+    setDataSwiperType,
+    dataForSwiper,
+    setDataForSwiper,
+    setImgFocus,
+    setImgIndex,
+  } = useContext(AllContext);
+
   const { id } = use(params); // Unwrap the Promise
   const [postSearch, setPostSearch] = useState("");
 
@@ -40,6 +49,19 @@ export default function User({ params }) {
     let currentChat = users.find((x) => x.id == id);
     setCurentChat(currentChat);
   }, [id]);
+
+  const handleImageClick = (id, index) => {
+    setDataSwiperType("msg");
+    setImgFocus(id);
+    setDataForSwiper(mediaMsgs);
+
+    if (index === "") {
+      const mediaIndex = dataForSwiper.findIndex((msg) => msg.id == id);
+      setImgIndex(mediaIndex);
+    } else {
+      setImgIndex(index);
+    }
+  };
 
   return (
     <div className={`userPage`}>
@@ -66,9 +88,14 @@ export default function User({ params }) {
         <nav>
           <div className="top">
             <div className="leftHolder">
-              <div className="userImg">
-                <Image src={curentChat?.img} alt="User Cover" fill />
-                <div className="editICo">
+              <div className="userImg rounded">
+                <Image
+                  className="rounded"
+                  src={curentChat?.img}
+                  alt="User Cover"
+                  fill
+                />
+                <div className="editICo rounded">
                   <MdModeEditOutline />
                 </div>
               </div>
@@ -184,7 +211,15 @@ export default function User({ params }) {
               </div>
               <div className="hold">
                 {mediaMsgs.slice(0, 6).map((x, index) => (
-                  <Image key={index} src={x.img} alt="" fill />
+                  <Image
+                    key={index}
+                    src={x.img}
+                    alt=""
+                    fill
+                    onClick={() => {
+                      handleImageClick(x.id, index);
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -205,6 +240,7 @@ export default function User({ params }) {
                     onClick={(e) => handleMenus(e, "userInfo", x.id)}
                   >
                     <Image
+                      className="rounded"
                       src={x.img ? x.img : null}
                       width={40}
                       height={40}
@@ -242,6 +278,7 @@ export default function User({ params }) {
                   onClick={(e) => handleMenus(e, "userInfo", x.id)}
                 >
                   <Image
+                    className="rounded"
                     src={x.img ? x.img : null}
                     width={40}
                     height={40}
@@ -257,7 +294,13 @@ export default function User({ params }) {
           ) : currentSelectedData === "photos" ? (
             <div className="photos">
               {mediaMsgs.map((x, index) => (
-                <Image key={index} src={x.img} alt="" fill />
+                <Image
+                  key={index}
+                  src={x.img}
+                  alt=""
+                  fill
+                  onClick={() => handleImageClick(x.id, index)}
+                />
               ))}
             </div>
           ) : (

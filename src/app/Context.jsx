@@ -27,18 +27,22 @@ export const AllProvider = ({ children }) => {
     };
   }, []);
 
-  // Swiper
+  const emojiRef = useRef(null);
+  const InputRef = useRef(null);
+  const closeImgHolderRef = useRef(null);
+  const usersreactMenuRef = useRef(null);
+  const usersSelectionRef = useRef(null);
+
   const [dataSwiperType, setDataSwiperType] = useState();
   const [dataForSwiper, setDataForSwiper] = useState([]);
   const [imgFocus, setImgFocus] = useState(false);
   const [imgIndex, setImgIndex] = useState(false);
-  const closeImgHolderRef = useRef(null);
-
-  // HANDLE COMPONENTS OPEN POSITION
 
   const [openPostForm, setOpenPostForm] = useState(false);
   const [messageText, setMessageText] = useState("");
+
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [menuPosition2, setMenuPosition2] = useState({ top: 0, left: 0 });
 
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [selectedDev, setSelectedDev] = useState(false);
@@ -50,6 +54,8 @@ export const AllProvider = ({ children }) => {
   const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
   const [userInfoData, setUserInfoData] = useState(null);
   const [settingMenu, setSettingMenu] = useState(false);
+  const [openUsersReact, setOpenUsersReact] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState(null);
 
   const handleMenus = (event, type, id) => {
     if (event && typeof event.preventDefault === "function") {
@@ -74,6 +80,8 @@ export const AllProvider = ({ children }) => {
         ? 255
         : type == "postSettings"
         ? 255
+        : type == "usersReact"
+        ? 255
         : null;
 
     const menuHeight =
@@ -89,26 +97,18 @@ export const AllProvider = ({ children }) => {
         ? 130
         : type == "postSettings"
         ? 286
+        : type == "usersReact"
+        ? 220
         : null;
 
     const top =
       cursorY + menuHeight > windowHeight
-        ? Math.max(cursorY - menuHeight - 10, 50)
-        : cursorY;
+        ? Math.max(cursorY - menuHeight + 15, 50)
+        : cursorY + 15;
     const left =
       cursorX + menuWidth > windowWidth
-        ? Math.max(cursorX - menuWidth + menuWidth / 2 - 10, 10)
-        : cursorX;
-
-    console.log("menuWidth", menuWidth);
-    console.log("menuHeight", menuHeight);
-    console.log("cursorX", cursorX);
-    console.log("cursorY", cursorY);
-    console.log("windowWidth", windowWidth);
-    console.log("windowHeight", windowHeight);
-
-    console.log("top", top);
-    console.log("left", left);
+        ? Math.max(cursorX - menuWidth + 15, 10)
+        : cursorX + 15;
 
     if (type === "emojiHolder") {
       setEmojiHolder(true);
@@ -131,11 +131,36 @@ export const AllProvider = ({ children }) => {
     setMenuPosition({ top, left });
   };
 
-  const emojiRef = useRef(null);
-  const InputRef = useRef(null);
-  const usersSelectionRef = useRef(null);
+  const handleMenus2 = (event, type, id) => {
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
 
-  // handleClickOutside
+    const cursorY = event.clientY;
+    const cursorX = event.clientX;
+
+    const menuWidth = type == "userInfo" ? 340 : null;
+
+    const menuHeight = type == "userInfo" ? 198 : null;
+
+    const top =
+      cursorY + menuHeight > windowHeight
+        ? Math.max(cursorY - menuHeight + 15, 50)
+        : cursorY + 15;
+    const left =
+      cursorX + menuWidth > windowWidth
+        ? Math.max(cursorX - menuWidth + 15, 10)
+        : cursorX + 15;
+
+    if (type == "userInfo") {
+      setUserInfoData(true);
+    }
+
+    id && setSelectedDev(id);
+    setMenuPosition2({ top, left });
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -154,35 +179,32 @@ export const AllProvider = ({ children }) => {
     };
   }, []);
 
-  const handleEmojiClick = (event) => {
-    const emoji = String.fromCodePoint(
-      ...event.unified.split("-").map((code) => parseInt(code, 16))
-    );
+const handleEmojiClick = (event) => {
+  const emoji = String.fromCodePoint(
+    ...event.unified.split("-").map((code) => parseInt(code, 16))
+  );
 
-    if (!InputRef.current) return;
+  if (!InputRef.current) return;
 
-    const { selectionStart, selectionEnd } = InputRef.current;
-    const currentValue = InputRef.current.value;
-    const newText =
-      currentValue.slice(0, selectionStart) +
-      emoji +
-      currentValue.slice(selectionEnd);
+  const { selectionStart, selectionEnd } = InputRef.current;
+  const currentValue = InputRef.current.value;
+  const newText =
+    currentValue.slice(0, selectionStart) +
+    emoji +
+    currentValue.slice(selectionEnd);
 
-    setMessageText(newText);
+  setMessageText(newText);
 
-    // تخزين موضع المؤشر لاستخدامه بعد تحديث الحالة
-    setCursorPosition(selectionStart + emoji.length);
-  };
-
-  const [cursorPosition, setCursorPosition] = useState(null);
-
-  useEffect(() => {
-    if (InputRef.current && cursorPosition !== null) {
-      InputRef.current.focus();
+  // Use a timeout to ensure the state updates first before adjusting the cursor
+  setTimeout(() => {
+    if (InputRef.current) {
       InputRef.current.selectionStart = InputRef.current.selectionEnd =
-        cursorPosition;
+        selectionStart + emoji.length;
+      InputRef.current.focus();
     }
-  }, [messageText]); //
+  }, 0);
+};
+
 
   return (
     <AllContext.Provider
@@ -227,6 +249,12 @@ export const AllProvider = ({ children }) => {
         setUserInfoData,
         settingMenu,
         setSettingMenu,
+        openUsersReact,
+        setOpenUsersReact,
+        usersreactMenuRef,
+        handleMenus2,
+        menuPosition2,
+        setMenuPosition2,
       }}
     >
       {children}
