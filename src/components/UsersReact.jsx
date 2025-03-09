@@ -67,7 +67,7 @@ function UsersReact() {
             >
               All
             </button>
-            {msgsEmojis.topUseage.map((x, index) => (
+            {msgsEmojis?.topUseage.map((x, index) => (
               <button
                 onClick={() => setEmojiFilter(x)}
                 className={`${emojiFilter == x ? "active" : ""}`}

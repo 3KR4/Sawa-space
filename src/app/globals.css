@@ -227,6 +227,7 @@ body > main {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: 0.5s;
 }
 body > main > .holder {
   overflow: auto;
@@ -591,6 +592,7 @@ header {
   justify-content: space-between;
   outline: 1px solid var(--border-color);
   background-color: var(--body-color);
+  transition: 0.5s !important;
 }
 
 header .logo {
@@ -899,6 +901,11 @@ header .events .menu.createMenu svg {
 .post .top .icons-holder {
   display: flex;
 }
+.focusedMsg.forPosts .icons-holder .closeMenu {
+      position: relative;
+    left: unset;
+    top: unset;
+}
 .post .top .left {
   display: flex;
   align-items: center;
@@ -987,13 +994,12 @@ header .events .menu.createMenu svg {
   justify-content: center;
 }
 .post .middle .image img {
-  width: unset !important;
-  height: unset !important;
   max-height: 400px;
   max-width: 100%;
   object-fit: contain;
   border-radius: 7px;
   cursor: pointer;
+  height: 400px;
 }
 .post .middle .images {
   display: flex;
@@ -1327,7 +1333,6 @@ header .events .menu.createMenu svg {
   box-shadow: unset;
 }
 
-
 .focusedMsg .hold {
   display: flex;
   flex-direction: column;
@@ -1384,7 +1389,7 @@ body:has(.focusedMsg.active) .chats {
 }
 
 .focusedMsg .post .left-img .hold img {
-  max-width: 95%;
+  max-width: 100%;
   max-height: 95%;
   border-radius: 7px;
 }
@@ -2255,7 +2260,6 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   height: 27px;
 }
 
-
 @media (max-width: 1700px) {
   .post {
     max-width: 52%;
@@ -2359,6 +2363,11 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
 @media (max-width: 992px) {
   body {
     padding: 10px;
+    padding-right: 0;
+  }
+
+  header {
+    margin-right: 0;
   }
   .chats {
     width: 270px;
@@ -2399,7 +2408,8 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     visibility: visible;
     z-index: 10;
     opacity: 1;
-    top: 60px;
+    top: 53px;
+
     background: white;
     width: 100%;
     border: 1px solid var(--border-color);
@@ -2473,7 +2483,8 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     padding: 0;
   }
   .focusedMsg .post .middle > p {
-    font-size: 18px;
+        font-size: 18px;
+        padding: 2px 4px;
   }
   .focusedMsg .post:has(.swiper) .hold {
     max-height: 750px;
@@ -2499,22 +2510,23 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   body:has(.chat-page) header {
     display: none;
   }
+    body:has(header.active) > main {
+    padding-top: 60px !important;
+  }
 
   header {
-    flex-direction: column;
+    position: fixed;
     gap: 0;
-    padding: 9px;
-    padding-left: 14px;
-    transition: 0.3s;
-    width: 95%;
-    margin: 10px auto;
-    position: sticky;
-    top: 6px;
-    margin-bottom: 0;
+    top: 0;
+    margin: 0;
+    padding: 9px 11px 9px 16px;
+    width: 100%;
+    flex-direction: column;
   }
   header.hidden {
     top: -60px;
   }
+
   header:has(.search-holder.active).hidden,
   header:has(nav.active).hidden {
     top: 7px;

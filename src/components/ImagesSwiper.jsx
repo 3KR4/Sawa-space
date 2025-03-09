@@ -31,6 +31,7 @@ function ImagesSwiper() {
     screenSize,
     setMessageText,
     handleMenus,
+    setOpenUsersReact,
   } = useContext(AllContext);
   const pathname = usePathname(); // Get the current URL path
 
@@ -151,7 +152,13 @@ function ImagesSwiper() {
             </div>
             <div className="bottom">
               {dataForSwiper?.reacts?.count !== 0 && (
-                <div className="left emojesCounter">
+                <div
+                  className="left emojesCounter"
+                  onClick={(e) => {
+                    setOpenUsersReact("post");
+                    handleMenus(e, "usersReact", dataForSwiper.id);
+                  }}
+                >
                   {dataForSwiper?.reacts?.topUseage.map((x, index) => (
                     <p key={index}>{x}</p>
                   ))}

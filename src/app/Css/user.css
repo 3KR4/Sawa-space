@@ -1,5 +1,12 @@
+body:has(.userPage) {
+  padding-top: 0;
+}
 body:has(.userPage) header {
   margin-bottom: 0;
+}
+
+body:has(.userPage) > main {
+  padding-top: 0;
 }
 .userPage {
   width: 80%;
@@ -123,10 +130,16 @@ body:has(.userPage) header {
 .userPage .search-holder svg {
   color: var(--title-color) !important;
 }
-.userPage .search-holder input:focus {
+.userPage .search-holder input:focus,
+.userPage .search-holder input:not(:placeholder-shown) {
   width: 150px;
 }
-.userPage .search-holder input:not(:placeholder-shown) {
+.userPage
+  .search-holder
+  input:not(:placeholder-shown)
+  .userPage
+  .search-holder
+  input:not(:placeholder-shown) {
   padding: 7px 31px 7px 34px;
 }
 
@@ -449,9 +462,11 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     min-height: 130px;
   }
 }
-@media (max-width: 1100px) {
-}
 @media (max-width: 1000px) {
+  body:has(.userPage) header {
+    top: 6px;
+    margin-right: 9px;
+  }
   .userPage nav .top .right {
     margin: 40px 0px 0px 12px;
     flex-direction: column;
@@ -485,11 +500,18 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     margin: 30px 0px 0px 12px;
   }
   .userPage .bottom-holder .side-menu .images img {
-    height: 170px !important;
+    height: 210px !important;
     max-height: unset;
   }
+  .userPage .bottom-holder .side-menu .images .hold {
+    gap: 10px;
+  }
   .userPage .bottom-holder .side-menu .friends img {
-    max-height: 200px;
+    max-height: 250px;
+  }
+  .userPage .bottom-holder .side-menu .friends .hold {
+    gap: 25px;
+    row-gap: 17px;
   }
   .userPage .bottom-holder .side-menu .friends .name-lastmessage h4,
   .userPage .bottom-holder .side-menu .friends .name-lastmessage p {
@@ -504,8 +526,31 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     flex-direction: column-reverse !important;
     padding-bottom: 60px;
   }
+  .userPage nav .main-button {
+    font-size: 19px;
+  }
+
+  .userPage .search-holder input {
+    font-size: 17px;
+    width: 105px;
+
+    padding: 11px 12px 11px 34px;
+  }
+  .userPage .search-holder input:focus,
+  .userPage .search-holder input:not(:placeholder-shown) {
+    width: 170px;
+  }
+  .userPage .search-holder input:not(:placeholder-shown) {
+    padding: 11px 33px 11px 34px;
+  }
+  .userPage nav .top .right .left-data h5 {
+    font-size: 17px;
+  }
 }
 @media (max-width: 768px) {
+  body:has(.userPage) {
+    height: unset;
+  }
   .userPage .bottom-holder .bigSection {
     padding: 12px;
   }

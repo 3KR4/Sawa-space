@@ -19,10 +19,13 @@ function LayoutContent({ children }) {
   const { screenSize } = useContext(AllContext);
   const pathname = usePathname(); // Get the current URL path
 
+console.log(screenSize);
+console.log(pathname);
+
   return (
     <html lang="en">
       <body>
-        {!pathname.includes("auth") && screenSize !== "small" && <Chats />}
+        {!pathname.includes("auth") && screenSize === "large" && <Chats />}
 
         <main>
           {!pathname.includes("auth") && <Header />}
