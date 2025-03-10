@@ -5,7 +5,8 @@ import Link from "next/link";
 import { maxLength } from "@/Methods";
 import { messages, users, posts } from "@/Data";
 import { use } from "react";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { MenusContext } from "@/app/contexts/MenusContext";
 import Post from "@/components/Post";
 import SettingMenu from "@/components/SettingMenu";
 
@@ -29,14 +30,14 @@ import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function User({ params }) {
   const {
-    handleMenus,
-    settingMenu,
     setDataSwiperType,
     dataForSwiper,
     setDataForSwiper,
     setImgFocus,
     setImgIndex,
-  } = useContext(AllContext);
+  } = useContext(MenusContext);
+
+  const { handleMenus, settingMenu } = useContext(DynamicMenusContext);
 
   const { id } = use(params); // Unwrap the Promise
   const [postSearch, setPostSearch] = useState("");
@@ -91,7 +92,7 @@ export default function User({ params }) {
               <div className="userImg rounded">
                 <Image
                   className="rounded"
-                  src={curentChat?.img}
+                  src={curentChat?.img || "/users/default.png"}
                   alt="User Cover"
                   fill
                 />
@@ -241,9 +242,8 @@ export default function User({ params }) {
                   >
                     <Image
                       className="rounded"
-                      src={x.img ? x.img : null}
-                      width={40}
-                      height={40}
+                      src={x.img || "/users/default.png"}
+                      fill
                       alt={`user Image`}
                     />
                     <div className="name-lastmessage">
@@ -279,9 +279,8 @@ export default function User({ params }) {
                 >
                   <Image
                     className="rounded"
-                    src={x.img ? x.img : null}
-                    width={40}
-                    height={40}
+                    src={x.img || "/users/default.png"}
+                    fill
                     alt={`user Image`}
                   />
                   <div>

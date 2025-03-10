@@ -262,19 +262,18 @@ body > main:has(.emoji-holder.active) > .holder {
   background: var(--back-grident);
   border-radius: 0px 15px 15px 0px;
   height: 45px;
-  padding: 6px;
-  width: 9px;
-  right: -12px;
+  padding: 5px;
+  width: 10px;
+  right: -10px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: right 0.2s, width 0.3s;
+  transition: 0.3s;
 }
 .chats .open-close:hover,
 .chats.hide:hover .open-close {
-  width: 27px;
-  right: -27px;
-  transition: right 0.4s, width 0.3s;
+  width: 22px;
+  transform: translate(12px, -50%);
 }
 .chats .open-close svg {
   color: white;
@@ -332,7 +331,7 @@ body > main:has(.emoji-holder.active) > .holder {
   width: 97px !important;
   border-radius: 5px;
   color: white;
-  background: var(--back-grident);
+  background: var(--main-color);
 }
 .chats .filters li.active {
   background: var(--main-color);
@@ -666,9 +665,6 @@ header nav a {
   align-items: center;
   gap: 4px;
 }
-header nav a:hover {
-  color: var(--title-color) !important;
-}
 header nav a svg {
   font-size: 19px;
 }
@@ -676,13 +672,11 @@ header nav a:hover svg,
 header nav a.active svg {
   color: white;
 }
+header nav a:hover,
 header nav a.active {
-  color: white;
-  background: var(--back-grident);
-}
-header nav a:hover {
   color: white !important;
-  background: var(--back-grident);
+  background: var(--main-color);
+  color: white !important;
 }
 header nav a span {
   width: max-content;
@@ -900,12 +894,9 @@ header .events .menu.createMenu svg {
 }
 .post .top .icons-holder {
   display: flex;
+  gap: 3px;
 }
-.focusedMsg.forPosts .icons-holder .closeMenu {
-      position: relative;
-    left: unset;
-    top: unset;
-}
+
 .post .top .left {
   display: flex;
   align-items: center;
@@ -979,11 +970,14 @@ header .events .menu.createMenu svg {
 }
 .post .middle a {
   color: #005dff;
-  text-decoration: underline;
   font-family: "Rubik";
   font-weight: 400;
   font-size: 14px;
   width: fit-content;
+  transition: 0.3s;
+}
+.post .middle a:hover {
+  text-decoration: underline;
 }
 .post .middle a:focus-visible {
   outline: none;
@@ -2483,8 +2477,8 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     padding: 0;
   }
   .focusedMsg .post .middle > p {
-        font-size: 18px;
-        padding: 2px 4px;
+    font-size: 18px;
+    padding: 2px 4px;
   }
   .focusedMsg .post:has(.swiper) .hold {
     max-height: 750px;
@@ -2494,6 +2488,11 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   }
   .focusedMsg .postForm {
     width: 85%;
+  }
+  .focusedMsg.forPosts .icons-holder .closeMenu {
+    position: relative;
+    left: unset;
+    top: unset;
   }
 }
 
@@ -2510,7 +2509,7 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   body:has(.chat-page) header {
     display: none;
   }
-    body:has(header.active) > main {
+  body:has(header.active) > main {
     padding-top: 60px !important;
   }
 
@@ -2768,6 +2767,13 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     margin: 0;
     height: unset;
     max-height: 100px;
+  }
+  
+  .chats {
+    display: none;  
+  }
+  body:has(.chat-page) .chats {
+    display: unset;  
   }
 }
 @media (max-width: 500px) {

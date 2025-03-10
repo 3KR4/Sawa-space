@@ -1,21 +1,17 @@
-'use client'
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import Link from 'next/link';
-import { AllContext } from '@/app/Context';
-import { posts } from '@/Data';
+"use client";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import Link from "next/link";
+import { posts } from "@/Data";
 
-import Post from '@/components/Post';
-
-
+import Post from "@/components/Post";
 
 export default function Home() {
-
   // const [postMenu, setPostMenu] = useState()
   // const [curentUserId, setCurentUserId] = useState()
   // const [menuPosition, setMenuPosition] = useState(0);
 
   // const handleMessageActions = (event) => {
-  //   event.preventDefault(); 
+  //   event.preventDefault();
   //   const windowHeight = window.innerHeight;
   //   const cursorY = event.clientY;
 
@@ -28,22 +24,21 @@ export default function Home() {
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
   //     if (actionMenu.current && !actionMenu.current.contains(event.target)) {
-  //       setPostMenu(false); 
+  //       setPostMenu(false);
   //     }
   //   };
-  
+
   //   document.addEventListener('mousedown', handleClickOutside);
   //   return () => document.removeEventListener('mousedown', handleClickOutside);
   // }, []);
 
   return (
-    <div className='home'>
-      <div className='posts-holder'>
+    <div className="home">
+      <div className="posts-holder">
         {posts.map((x, index) => {
-          return <Post key={index} data={x}/>
+          return <Post key={index} data={x} />;
         })}
       </div>
     </div>
   );
 }
-

@@ -22,10 +22,7 @@ import {
 let lang = "en";
 
 export default function Auth() {
-  // const { lang } = useContext(AllContext);
-  // const { login } = useContext(AuthContext);
   const [isLoginPage, setIsLoginPage] = useState(false);
-  const [isForgottenPass, setIsForgottenPass] = useState(false);
 
   const {
     register,

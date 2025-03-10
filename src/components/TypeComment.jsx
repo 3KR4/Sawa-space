@@ -2,16 +2,19 @@ import React from "react";
 import { useState, useContext, useRef } from "react";
 import Image from "next/image";
 
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+
 import { IoClose } from "react-icons/io5";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
 import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
-function TypeComment({id}) {
-  const { handleMenus, InputRef, messageText, setMessageText } =
-    useContext(AllContext);
+function TypeComment({ id }) {
+  const { handleMenus } = useContext(DynamicMenusContext);
+  const { messageText, setMessageText, InputRef } =
+    useContext(InputActionsContext);
 
   const inputFileRef = useRef(null);
 
@@ -23,7 +26,7 @@ function TypeComment({id}) {
       setUploadedImg(file);
     }
   };
-  
+
   return (
     <div className="action-holder">
       <div className="top">

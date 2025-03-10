@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { MenusContext } from "@/app/contexts/MenusContext";
+import { ScreenContext } from "@/app/contexts/ScreenContext";
 
 import EmojesHolder from "@/components/EmojesHolder";
 import UsersSelection from "@/components/UsersSelection";
@@ -9,7 +11,6 @@ import ImagesSwiper from "@/components/ImagesSwiper";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/SettingMenu";
 import UsersReact from "@/components/UsersReact";
-import { usePathname } from "next/navigation";
 
 import { MdBlock } from "react-icons/md";
 import { IoPersonRemove } from "react-icons/io5";
@@ -23,14 +24,17 @@ function AllComponents() {
   const {
     imgFocus,
     openPostForm,
+  } = useContext(MenusContext);
+
+  const {
     openUsersSelection,
     userInfoData,
     settingMenu,
     openUsersReact,
-  } = useContext(AllContext);
-
-  console.log(userInfoData);
-  const pathname = usePathname(); // Get the current URL path
+  } = useContext(DynamicMenusContext);
+  const {
+    pathname,
+  } = useContext(ScreenContext);
 
   return (
     <>

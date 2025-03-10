@@ -6,7 +6,10 @@ import Comment from "@/components/Comment";
 import TypeComment from "@/components/TypeComment";
 import ReactsHolder from "@/components/ReactsHolder";
 
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { MenusContext } from "@/app/contexts/MenusContext";
+import { ScreenContext } from "@/app/contexts/ScreenContext";
 import { IoClose } from "react-icons/io5";
 
 import { IoLink } from "react-icons/io5";
@@ -22,19 +25,12 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({ data }) {
-  const {
-    screenSize,
-    setDataSwiperType,
-    dataForSwiper,
-    setDataForSwiper,
-    imgFocus,
-    setImgFocus,
-    setImgIndex,
-    closeImgHolderRef,
-    handleMenus,
-    setOpenUsersReact,
-    setMessageText,
-  } = useContext(AllContext);
+  const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
+    useContext(MenusContext);
+
+  const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
+  const { setMessageText } = useContext(InputActionsContext);
+  const { screenSize } = useContext(ScreenContext);
 
   const inputFileRef = useRef(null);
 
@@ -80,7 +76,8 @@ function Post({ data }) {
               <div className="Links">
                 {data?.link?.map((x, index) => (
                   <div key={index}>
-                    {index + 1} -
+                    {data?.link.length === 1 ? null : `${index + 1} -`}
+
                     <Link key={index} href={x}>
                       {x}
                     </Link>

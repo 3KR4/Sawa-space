@@ -1,3 +1,13 @@
+body:has(.pirsonChat) > main {
+  padding-right: 10px;
+}
+body:has(.pirsonChat) header {
+  margin-right: 0;
+}
+body:has(.pirsonChat) .chats {
+  margin: 0;
+  margin-right: 10px;
+}
 .pirsonChat {
   height: 90vh;
   border-radius: 15px;
@@ -9,8 +19,8 @@
   z-index: 1;
   overflow: hidden;
   padding-right: 0 !important;
+  margin-top: 12px;
 }
-
 .pirsonChat .mentionMenu {
   position: absolute;
   left: 0;
@@ -727,7 +737,7 @@
 }
 .pirsonChat .messages .msg.middle small {
   position: absolute;
-  top: 0;
+  bottom: 0;
   opacity: 0;
   visibility: hidden;
   z-index: -1;
@@ -743,7 +753,7 @@
   transition: 0.3s;
 }
 .pirsonChat .messages .msg.middle .body:hover small {
-  top: -32px;
+  bottom: -32px;
   opacity: 1;
   visibility: visible;
   z-index: 1;
@@ -778,12 +788,6 @@
 
 .pirsonChat .messages .msg .interact svg {
   color: var(--title-color);
-}
-.pirsonChat .messages .msg .interact:hover svg {
-}
-
-body:has(.pirsonChat) .open-close {
-  display: none;
 }
 .input[type="checkbox"] {
   display: none;
@@ -927,10 +931,6 @@ body:has(.pirsonChat) .MenuOfUsers .topFilter {
   margin-left: 1px;
 }
 
-/*! Media */
-
-@media (max-width: 1700px) {
-}
 @media (max-width: 1600px) {
   .pirsonChat .messages .msg .body {
     max-width: 43%;
@@ -951,13 +951,10 @@ body:has(.pirsonChat) .MenuOfUsers .topFilter {
     max-width: 56%;
   }
 }
-@media (max-width: 1100px) {
-}
-@media (max-width: 1000px) {
-}
 @media (max-width: 992px) {
   .pirsonChat {
-    height: 91.5vh;
+    height: 92vh;
+    margin-top: 3px;
   }
   .pirsonChat .messages .msg .body {
     max-width: 75%;
@@ -991,6 +988,16 @@ body:has(.pirsonChat) .MenuOfUsers .topFilter {
   .pirsonChat .overViewMenu .right .overview .btn-holder .row button {
     width: 100%;
   }
+  .pirsonChat > .top {
+    padding-right: 0;
+  }
+  body:has(header.active) > main {
+    padding-top: 0px !important;
+    padding-right: 0 !important;
+}
+body:has(.pirsonChat) > main {
+  padding-right: 0;
+}
 }
 @media (max-width: 500px) {
 }

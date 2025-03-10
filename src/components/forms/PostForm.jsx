@@ -1,33 +1,37 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { MenusContext } from "@/app/contexts/MenusContext";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { GoMention } from "react-icons/go";
 import { IoMdImages } from "react-icons/io";
-import {
-  MdOutlineAddReaction,
-} from "react-icons/md";
+import { MdOutlineAddReaction } from "react-icons/md";
 
 import { VscMention } from "react-icons/vsc";
 
 function PostForm() {
   const {
-    openPostForm,
-    setOpenPostForm,
-    handleMenus,
-    setSelectionMenuTitle,
-    usersSelectionRef,
     setSelectedUsers,
-    InputRef,
-    messageText,
-    setMessageText,
     selectedUsersNames,
     setSelectedUsersNames,
-    emojiRef,
-  } = useContext(AllContext);
+    setSelectionMenuTitle,
+    openPostForm,
+    setOpenPostForm,
+    usersSelectionRef,
+  } = useContext(MenusContext);
+
+  const {
+    handleMenus,
+  } = useContext(DynamicMenusContext);
+  const {
+    messageText,
+    setMessageText,
+    InputRef,
+  } = useContext(InputActionsContext);
 
   const {
     register,
@@ -63,7 +67,7 @@ function PostForm() {
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     setImages((prevImages) => [...prevImages, ...imageFiles]);
   };
-  
+
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((image, i) => i !== index));
   };
@@ -171,7 +175,7 @@ function PostForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className={`focusedMsg FormMenu ${openPostForm ? 'active' : ''}`}
+      className={`focusedMsg FormMenu ${openPostForm ? "active" : ""}`}
     >
       <div className="postForm" ref={formMenuRef}>
         <div className="top">
@@ -368,22 +372,22 @@ function PostForm() {
             <div className="right">
               <IoMdImages
                 onClick={() => setAddImages((prev) => !prev)}
-                className={`${addImages ? 'active' : ''}`}
+                className={`${addImages ? "active" : ""}`}
               />
               <FaLink
                 onClick={() => setAddLink((prev) => !prev)}
-                className={`${addLink ? 'active' : ''}`}
+                className={`${addLink ? "active" : ""}`}
               />
               <VscMention
                 onClick={(e) => {
                   handleMenus(e, "usersSelection");
                   setSelectionMenuTitle("Tag People...");
                 }}
-                className={`${selectedUsersNames.length ? 'active' : ''}`}
+                className={`${selectedUsersNames.length ? "active" : ""}`}
               />
               <FaHashtag
                 onClick={() => setAddHashtag((prev) => !prev)}
-                className={`${addHashtag ? 'active' : ''}`}
+                className={`${addHashtag ? "active" : ""}`}
               />
             </div>
           </div>

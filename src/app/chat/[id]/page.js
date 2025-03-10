@@ -11,9 +11,10 @@ import UsersSelection from "@/components/UsersSelection";
 import PinHolder from "@/components/chat/PinHolder";
 import ImagesSwiper from "@/components/ImagesSwiper";
 import SettingMenu from "@/components/SettingMenu";
-
-import { AllContext } from "@/app/Context";
-
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { MenusContext } from "@/app/contexts/MenusContext";
+import { ScreenContext } from "@/app/contexts/ScreenContext";
 //Icons
 import { GoPin } from "react-icons/go";
 import { HiReply } from "react-icons/hi";
@@ -47,7 +48,6 @@ import {
 
 export default function Chat({ params }) {
   const {
-    screenSize,
     setDataSwiperType,
     dataForSwiper,
     setDataForSwiper,
@@ -55,24 +55,32 @@ export default function Chat({ params }) {
     setImgFocus,
     setImgIndex,
     closeImgHolderRef,
-    handleEmojiClick,
-    InputRef,
-    messageText,
-    setMessageText,
-    openUsersSelection,
-    handleMenus,
     setSelectionMenuTitle,
+  } = useContext(MenusContext);
+
+  const {
+    handleMenus,
+    selectedDev,
+    emojiHolder,
+    setEmojiHolder,
+    openUsersSelection,
     settingMenu,
     setSettingMenu,
-    selectedDev,
-    setOpenUsersReact,
-    menuPositions,
     openUsersReact,
-  } = useContext(AllContext);
+    setOpenUsersReact,
+  } = useContext(DynamicMenusContext);
+  const {
+    messageText,
+    setMessageText,
+    InputRef,
+    handleEmojiClick,
+  } = useContext(InputActionsContext);
+  const {
+    screenSize,
+  } = useContext(ScreenContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [selectMode, setSelectMode] = useState(false);
-  const [emojiHolder, setEmojiHolder] = useState(false);
   const [mentionHolder, setMentionHolder] = useState(false);
   const [isAddReact, setIsAddReact] = useState(false);
   const [overViewMenu, setOverViewMenu] = useState(false);

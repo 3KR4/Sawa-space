@@ -1,34 +1,39 @@
-import React from 'react'
-import { useState, useContext } from 'react';
+import React from "react";
+import { useState, useContext } from "react";
 import ReactsHolder from "@/components/ReactsHolder";
 import Image from "next/image";
-import { AllContext } from "@/app/Context";
-
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { MenusContext } from "@/app/contexts/MenusContext";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 
-function Comment({data}) {
-    const {
-      handleMenus,
-      setOpenUsersReact,
-      setDataForSwiper,
-      setImgFocus,
-      setImgIndex,
-      setDataSwiperType,
-    } = useContext(AllContext);
+function Comment({ data }) {
+  const {
+    setDataSwiperType,
+    setDataForSwiper,
+    setImgFocus,
+    setImgIndex,
+  } = useContext(MenusContext);
 
-  const [seeReplays, setSeeReplays] = useState(false)
+  const {
+    handleMenus,
+    setOpenUsersReact,
+  } = useContext(DynamicMenusContext);
+
+
+
+
+  const [seeReplays, setSeeReplays] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
 
-    const handleImageClick = (id, index) => {
-      setDataSwiperType("comment");
-      setImgFocus(id);
-      setDataForSwiper(data);
-      if (index !== "") {
-        setImgIndex(index);
-      }
-    };
-
+  const handleImageClick = (id, index) => {
+    setDataSwiperType("comment");
+    setImgFocus(id);
+    setDataForSwiper(data);
+    if (index !== "") {
+      setImgIndex(index);
+    }
+  };
 
   return (
     <div key={data?.id} className="comment">
@@ -114,4 +119,4 @@ function Comment({data}) {
   );
 }
 
-export default Comment
+export default Comment;

@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import {
   IoSearch,
@@ -27,14 +26,16 @@ import { RiColorFilterAiFill } from "react-icons/ri";
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
-import { AllContext } from "@/app/Context";
+import { MenusContext } from "@/app/contexts/MenusContext";
+import { ScreenContext } from "@/app/contexts/ScreenContext";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 
 export default function Header() {
-  const pathname = usePathname();
-  const { screenSize, setOpenPostForm } =
-    useContext(AllContext);
+  const { setOpenPostForm } = useContext(MenusContext);
+
+  const { pathname, screenSize } = useContext(ScreenContext);
+
   const [userMenu, setUserMenu] = useState(false);
   const [createMenu, setCreateMenu] = useState(false);
   const [phoneMenu, setPhoneMenu] = useState(false);
@@ -46,7 +47,6 @@ export default function Header() {
   const searchBtnRef = useRef(null);
   const userMenuRef = useRef(null);
   const createMenuRef = useRef(null);
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -176,21 +176,27 @@ export default function Header() {
         <Link href="/" className={pathname === "/" ? "active" : ""}>
           <MdOutlineExplore /> <span>Explore</span>
         </Link>
-        <Link href="/chat" className={pathname === "/chat" ? "active" : ""}>
+        <Link
+          href="/chat"
+          className={pathname.includes("/chat") ? "active" : ""}
+        >
           <IoChatbubbleEllipsesOutline /> <span>Chat</span>
         </Link>
-        <Link href="/pages" className={pathname === "/pages" ? "active" : ""}>
+        <Link
+          href="/pages"
+          className={pathname.includes("/pages") ? "active" : ""}
+        >
           <LiaPagerSolid /> <span>Pages</span>
         </Link>
         <Link
           href="/communities"
-          className={pathname === "/communities" ? "active" : ""}
+          className={pathname.includes("/communities") ? "active" : ""}
         >
           <RiUserCommunityLine /> <span>Communities</span>
         </Link>
         <Link
           href="/marketplace"
-          className={pathname === "/marketplace" ? "active" : ""}
+          className={pathname.includes("/marketplace") ? "active" : ""}
         >
           <IoCartOutline /> <span>Market Place</span>
         </Link>
@@ -336,5 +342,3 @@ export default function Header() {
     </header>
   );
 }
-
-

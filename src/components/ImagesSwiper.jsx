@@ -4,13 +4,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { messages, posts } from "@/Data";
 import "swiper/css";
 import "../app/Css/chat.css";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { MenusContext } from "@/app/contexts/MenusContext";
+import { ScreenContext } from "@/app/contexts/ScreenContext";
 import Image from "next/image";
 import Link from "next/link";
 import Comment from "@/components/Comment";
 import ActionsBtns from "@/components/ActionsBtns";
 import TypeComment from "@/components/TypeComment";
-import { usePathname } from "next/navigation";
 
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComments } from "react-icons/fa6";
@@ -28,12 +30,19 @@ function ImagesSwiper() {
     imgIndex,
     setImgIndex,
     closeImgHolderRef,
-    screenSize,
-    setMessageText,
+  } = useContext(MenusContext);
+
+  const {
     handleMenus,
     setOpenUsersReact,
-  } = useContext(AllContext);
-  const pathname = usePathname(); // Get the current URL path
+  } = useContext(DynamicMenusContext);
+  const {
+    setMessageText,
+  } = useContext(InputActionsContext);
+  const {
+    pathname,
+    screenSize,
+  } = useContext(ScreenContext);
 
   const [swiperRef, setSwiperRef] = useState(null);
   const data =
@@ -233,10 +242,33 @@ function ImagesSwiper() {
             )}
 
             <div className="middle">
-              {dataForSwiper?.link && (
-                <Link href={dataForSwiper?.link}>{dataForSwiper?.link}</Link>
-              )}
+            {dataForSwiper.link && (
+              <div className="Links">
+                {dataForSwiper?.link?.map((x, index) => (
+                  <div key={index}>
+                    {dataForSwiper?.link.length === 1 ? null : `${index + 1} -`}
+                    <Link key={index} href={x}>
+                      {x}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
               {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
+
+              {dataForSwiper.mentions.length > 0 && (
+              <div className="mentions">
+                <h5>{dataForSwiper.user.name} mention</h5>
+                {dataForSwiper.mentions?.map((x, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => handleMenus(e, "userInfo", x.userId)}
+                  >
+                    @{x.userName}
+                  </button>
+                ))}
+              </div>
+            )}
 
               {screenSize === "small" && <ActionsBtns id={dataForSwiper.id} />}
 

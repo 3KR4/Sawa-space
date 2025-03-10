@@ -1,19 +1,23 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
-import { AllContext } from "@/app/Context";
 import Image from "next/image";
 import { messages, posts } from "@/Data";
 
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { MenusContext } from "@/app/contexts/MenusContext";
+
 function UsersReact() {
   const {
+    usersreactMenuRef,
+  } = useContext(MenusContext);
+
+  const {
+    menuPosition,
     selectedDev,
     openUsersReact,
     setOpenUsersReact,
-    usersreactMenuRef,
-    menuPosition,
-    reactsIndix,
     handleMenus2,
-  } = useContext(AllContext);
+  } = useContext(DynamicMenusContext);
 
   const [emojiFilter, setEmojiFilter] = useState("all");
 

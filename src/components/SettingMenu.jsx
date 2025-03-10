@@ -1,8 +1,13 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 
 function SettingMenu({ children, type }) {
-  const { settingMenu, setSettingMenu, menuPosition } = useContext(AllContext);
+
+  const {
+    menuPosition,
+    settingMenu,
+    setSettingMenu,
+  } = useContext(DynamicMenusContext);
   const menuRef = useRef(null);
 
   useEffect(() => {

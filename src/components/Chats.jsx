@@ -1,9 +1,12 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { maxLength } from "../Methods";
 import { users } from "@/Data";
+
+import { ScreenContext } from "@/app/contexts/ScreenContext";
+
 
 import {
   FaUnlink,
@@ -25,16 +28,7 @@ import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
-  const [hasChatInUrl, setHasChatInUrl] = useState(false);
-
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.location.href.includes("chat")
-    ) {
-      setHasChatInUrl(true);
-    }
-  }, []);
+  const { pathname } = useContext(ScreenContext);
 
   const [hideChats, setHideChats] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
@@ -44,38 +38,22 @@ export default function Chats() {
 
   const actionMenu = useRef(null);
 
-  useEffect(() => {
-    const path = window.location.pathname; // Example: "/chat/1"
-    const extractedId = path.split("/").pop(); // Extracts "1"
-    setCurentUserId(extractedId);
-  }, []);
-
   const handleMessageActions = (event) => {
     event.preventDefault();
-    const chatContainer = document.querySelector(".chats"); // Get the chats container
-
+    const chatContainer = document.querySelector(".chats");
     if (!chatContainer) return;
 
-    const chatRect = chatContainer.getBoundingClientRect();
+    const { top, left, width, height } = chatContainer.getBoundingClientRect();
     const menuWidth = 167;
     const menuHeight = 270;
+    const cursorY = event.clientY - top;
+    const cursorX = event.clientX - left;
 
-    const cursorY = event.clientY - chatRect.top; // Relative to `.chats`
-    const cursorX = event.clientX - chatRect.left;
-
-    // Ensure the menu does not overflow from the `.chats` container
-    const top =
-      cursorY + menuHeight > chatRect.height
-        ? Math.max(cursorY - menuHeight + 15, 10)
-        : cursorY + 15;
-
-    const left =
-      cursorX + menuWidth > chatRect.width
-        ? Math.max(cursorX - menuWidth + 15, 10)
-        : cursorX + 15;
+    const topPosition = cursorY + menuHeight > height ? Math.max(cursorY - menuHeight + 15, 10) : cursorY + 15;
+    const leftPosition = cursorX + menuWidth > width ? Math.max(cursorX - menuWidth + 15, 10) : cursorX + 15;
 
     setUserMenu(true);
-    setMenuPosition({ top, left });
+    setMenuPosition({ top: topPosition, left: leftPosition });
   };
 
   useEffect(() => {
@@ -84,14 +62,13 @@ export default function Chats() {
         setUserMenu(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <div className={`chats ${hideChats && !hasChatInUrl ? "hide" : "active"}`}>
-      {!hasChatInUrl && (
+    <div className={`chats ${hideChats ? "hide" : "active"}`}>
+
         <div
           className="open-close"
           onClick={() => {
@@ -100,7 +77,6 @@ export default function Chats() {
         >
           <FaAngleLeft />
         </div>
-      )}
       <div className="top">
         <h4>Friends</h4>
         <FaUserFriends className="chatico" />

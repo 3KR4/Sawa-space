@@ -1,15 +1,14 @@
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
-import { AllContext } from "@/app/Context";
 import { users } from "@/Data";
 import { maxLength } from "@/Methods";
 import Image from "next/image";
 
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { MenusContext } from "@/app/contexts/MenusContext";
+
 function UsersSelection() {
   const {
-    menuPosition,
-    openUsersSelection,
-    setOpenUsersSelection,
     selectedUsers,
     setSelectedUsers,
     selectedUsersNames,
@@ -18,7 +17,10 @@ function UsersSelection() {
     usersSelectionSearch,
     setUsersSelectionSearch,
     usersSelectionRef,
-  } = useContext(AllContext);
+  } = useContext(MenusContext);
+
+  const { menuPosition, openUsersSelection, setOpenUsersSelection } =
+    useContext(DynamicMenusContext);
 
   const curentSearchUser = usersSelectionSearch
     ? users.filter((user) =>
@@ -52,7 +54,7 @@ function UsersSelection() {
     };
   }, []);
 
-console.log(selectionMenuTitle);
+  console.log(selectionMenuTitle);
 
   return (
     <div

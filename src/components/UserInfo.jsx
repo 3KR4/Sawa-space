@@ -1,9 +1,11 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
-import { AllContext } from "@/app/Context";
+import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import Image from "next/image";
 import { users } from "@/Data";
 import SettingMenu from "@/components/SettingMenu";
+
+
 
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
@@ -13,13 +15,15 @@ import { IoClose } from "react-icons/io5";
 
 function UserInfo() {
   const {
+    menuPosition,
     selectedDev,
     userInfoData,
     setUserInfoData,
-    menuPosition,
     menuPosition2,
     setMenuPosition2,
-  } = useContext(AllContext);
+  } = useContext(DynamicMenusContext);
+
+
   const [nistedSettingMenu, setNistedSettingMenu] = useState(false);
 
   let top = menuPosition2.top !== 0 ? menuPosition2.top : menuPosition.top;

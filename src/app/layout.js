@@ -1,31 +1,35 @@
 "use client";
-import { usePathname } from "next/navigation"; // Import usePathname
 import { useContext } from "react";
 import Header from "@/components/Header";
 import AllComponents from "@/components/AllComponents";
 import Chats from "@/components/Chats";
-import { AllProvider, AllContext } from "./Context";
+import { ScreenProvider, ScreenContext } from "./contexts/ScreenContext";
+import { MenuProvider } from "./contexts/DynamicMenus";
+import { MenusProvider } from "./contexts/MenusContext";
+import { InputActionsProvider } from "./contexts/InputActionsContext";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
-    <AllProvider>
-      <LayoutContent>{children}</LayoutContent>
-    </AllProvider>
+    <ScreenProvider>
+      <MenuProvider>
+        <MenusProvider>
+          <InputActionsProvider>
+            <LayoutContent>{children}</LayoutContent>
+          </InputActionsProvider>
+        </MenusProvider>
+      </MenuProvider>
+    </ScreenProvider>
   );
 }
 
 function LayoutContent({ children }) {
-  const { screenSize } = useContext(AllContext);
-  const pathname = usePathname(); // Get the current URL path
-
-console.log(screenSize);
-console.log(pathname);
+  const { screenSize, pathname } = useContext(ScreenContext);
 
   return (
     <html lang="en">
       <body>
-        {!pathname.includes("auth") && screenSize === "large" && <Chats />}
+        {!pathname.includes("auth") && screenSize !== "small" &&  <Chats />}
 
         <main>
           {!pathname.includes("auth") && <Header />}
