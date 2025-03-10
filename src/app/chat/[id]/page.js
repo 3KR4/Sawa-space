@@ -89,7 +89,6 @@ export default function Chat({ params }) {
   const [filteredMentinUser, setFilteredMentinUser] = useState([]);
   const [selectedMsgs, setSelectedMsgs] = useState([]);
   const [mentionsPeople, setMentionsPeople] = useState([]);
-  const [currentActionMsg, setCurrentActionMsg] = useState({});
   const [pinedMsgs, setPinedMsgs] = useState([]);
 
   const mediaMsgs = messages.filter((msg) => msg.img);
@@ -214,7 +213,6 @@ export default function Chat({ params }) {
           (InputRef.current && InputRef.current.contains(event.target))
         )
       ) {
-        setEmojiHolder(false);
         setIsAddReact(false);
       }
     };
@@ -499,12 +497,12 @@ export default function Chat({ params }) {
             >
               <HiReply /> Reply
             </button>
-            {currentActionMsg?.message && (
+            {curentChat?.message && (
               <button>
                 <MdContentCopy /> Copy
               </button>
             )}
-            {currentActionMsg?.img && (
+            {curentChat?.img && (
               <button>
                 <LuSaveAll /> Save as..
               </button>
@@ -512,7 +510,7 @@ export default function Chat({ params }) {
             <hr />
             <button
               onClick={(e) => {
-                handleMenus(e, "usersSelection", currentActionMsg.id);
+                handleMenus(e, "usersSelection", curentChat.id);
                 setSelectionMenuTitle("Forword To...");
               }}
             >
@@ -744,12 +742,12 @@ export default function Chat({ params }) {
         <div className="actions">
           <div
             ref={emojiRef}
-            className={`emoji-holder ${emojiHolder ? "active" : ""}`}
+            className={`emoji-holder ${isAddReact ? "active" : ""}`}
             style={{
-              position: !isAddReact ? "absolute" : `fixed`,
-              top: !isAddReact ? "unset" : `${menuPositions.top}px`,
-              left: !isAddReact ? "15px" : `${menuPositions.left}px`,
-              bottom: !isAddReact ? "calc(100% + -4px)" : `unset`,
+              position: "absolute",
+              top:"unset",
+              left: "15px",
+              bottom: "calc(100% + -4px)",
             }}
           >
             <EmojiPicker
@@ -765,9 +763,7 @@ export default function Chat({ params }) {
           </button>
           <button
             onClick={() => {
-              setEmojiHolder(true);
-              setIsAddReact;
-              true;
+              setIsAddReact(true);
               InputRef.current.focus();
             }}
           >

@@ -156,9 +156,10 @@ body:has(.userPage) > main {
   height: fit-content;
   position: sticky;
   top: 10px;
+  min-width: 35%;
 }
 body:has(.chats.hide) .userPage .bottom-holder .side-menu {
-  max-width: 32%;
+  min-width: 30%;
 }
 body:has(.chats.hide) .userPage .post .middle .image img {
   max-height: 100%;
@@ -180,12 +181,12 @@ body:has(.chats.hide) .userPage .post .middle .image img {
 .userPage .bottom-holder .side-menu .about .top {
   margin-bottom: -2px;
 }
-.userPage .bottom-holder .side-menu .top h4 {
-}
 .userPage .bottom-holder .side-menu .top button {
   font-weight: 500;
   display: flex;
   align-items: center;
+  font-size: 13px;
+  transition: 0.3s;
 }
 .userPage .bottom-holder .side-menu .top button svg {
   font-size: 15px;
@@ -231,6 +232,26 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(3, 1fr);
+}
+.userPage .bottom-holder .side-menu .hold,
+.userPage .bottom-holder .side-menu .hold {
+  gap: 8px !important;
+}
+.userPage .bottom-holder .side-menu .friends .hold > svg,
+.userPage .bottom-holder .side-menu .images .hold > svg,
+.userPage .bigSection .friends > svg,
+.userPage .bigSection .photos > svg {
+  background: var(--section-color);
+  border-radius: 8px;
+  width: 100%;
+}
+.userPage .bigSection .photos > svg {
+  background: var(--body-color);
+  height: 260px;
+}
+.userPage .bigSection .friends > svg {
+  background: var(--body-color);
+  height: 65px;
 }
 .userPage .bottom-holder .side-menu .friends .chat {
   display: flex;
@@ -321,6 +342,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 7px;
+  padding: 0 3px;
 }
 .userPage .bigSection .photos img {
   position: relative !important;
@@ -372,6 +394,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     min-width: 37% !important;
   }
 }
+
 @media (max-width: 1600px) {
   .userPage .bottom-holder .side-menu {
     min-width: 42%;
@@ -495,10 +518,10 @@ body:has(.chats.hide) .userPage .post .middle .image img {
   body:has(.chats.active) .userPage .bottom-holder .side-menu .friends img {
     max-height: 96px;
     min-height: unset;
-}
-body:has(.chats.hide) .userPage .bottom-holder .side-menu img {
-  max-height: 143px !important;
-}
+  }
+  body:has(.chats.hide) .userPage .bottom-holder .side-menu img {
+    max-height: 143px !important;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -584,6 +607,9 @@ body:has(.chats.hide) .userPage .bottom-holder .side-menu img {
   }
   .userPage nav .top .right .left-data h5 {
     font-size: 17px;
+  }
+  body:has(.userPage) {
+    padding-left: 0;
   }
 }
 @media (max-width: 768px) {

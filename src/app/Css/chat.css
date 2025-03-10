@@ -1,12 +1,9 @@
+
 body:has(.pirsonChat) > main {
   padding-right: 10px;
 }
 body:has(.pirsonChat) header {
   margin-right: 0;
-}
-body:has(.pirsonChat) .chats {
-  margin: 0;
-  margin-right: 10px;
 }
 .pirsonChat {
   height: 90vh;
@@ -959,6 +956,9 @@ body:has(.pirsonChat) .MenuOfUsers .topFilter {
   .pirsonChat .messages .msg .body {
     max-width: 75%;
   }
+  body:has(.pirsonChat) {
+  padding-left: 0;
+}
 }
 @media (max-width: 786px) {
   .pirsonChat {

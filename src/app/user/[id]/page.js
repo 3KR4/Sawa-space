@@ -9,6 +9,7 @@ import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { MenusContext } from "@/app/contexts/MenusContext";
 import Post from "@/components/Post";
 import SettingMenu from "@/components/SettingMenu";
+import ContentLoader from "react-content-loader";
 
 import "../../Css/user.css";
 import { FaAngleRight } from "react-icons/fa";
@@ -63,6 +64,11 @@ export default function User({ params }) {
       setImgIndex(index);
     }
   };
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 0); // Adjust as needed
+  }, []);
 
   return (
     <div className={`userPage`}>
@@ -206,22 +212,44 @@ export default function User({ params }) {
             <div className="images">
               <div className="top">
                 <h4>Photos</h4>
-                <button>
-                  See All Photos <FaAngleRight />
-                </button>
+                {mediaMsgs?.length > 6 && (
+                  <button>
+                    See All Photos <FaAngleRight />
+                  </button>
+                )}
               </div>
               <div className="hold">
-                {mediaMsgs.slice(0, 6).map((x, index) => (
-                  <Image
-                    key={index}
-                    src={x.img}
-                    alt=""
-                    fill
-                    onClick={() => {
-                      handleImageClick(x.id, index);
-                    }}
-                  />
-                ))}
+                {loading
+                  ? Array.from({ length: 6 }).map((_, index) => (
+                      <ContentLoader
+                        width={120}
+                        height={120}
+                        speed={4}
+                        viewBox="0 0 120 120"
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                      >
+                        <rect
+                          x="160"
+                          y="120"
+                          rx="3"
+                          ry="3"
+                          width="100%"
+                          height="120"
+                        />
+                      </ContentLoader>
+                    ))
+                  : mediaMsgs.slice(0, 6).map((x, index) => (
+                      <Image
+                        key={index}
+                        src={x.img}
+                        alt=""
+                        fill
+                        onClick={() => {
+                          handleImageClick(x.id, index);
+                        }}
+                      />
+                    ))}
               </div>
             </div>
           )}
@@ -229,28 +257,50 @@ export default function User({ params }) {
             <div className="holder friends">
               <div className="top">
                 <h4>Friends</h4>
-                <button>
-                  See All Friends <FaAngleRight />
-                </button>
+                {users?.length > 6 && (
+                  <button>
+                    See All Friends <FaAngleRight />
+                  </button>
+                )}
               </div>
               <div className="hold">
-                {users?.slice(0, 6).map((x) => (
-                  <div
-                    key={x.id}
-                    className="chat"
-                    onClick={(e) => handleMenus(e, "userInfo", x.id)}
-                  >
-                    <Image
-                      className="rounded"
-                      src={x.img || "/users/default.png"}
-                      fill
-                      alt={`user Image`}
-                    />
-                    <div className="name-lastmessage">
-                      <h4>{x.name}</h4>
-                    </div>
-                  </div>
-                ))}
+                {loading
+                  ? Array.from({ length: 6 }).map((_, index) => (
+                      <ContentLoader
+                        width={120}
+                        height={120}
+                        speed={4}
+                        viewBox="0 0 120 120"
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                      >
+                        <rect
+                          x="160"
+                          y="120"
+                          rx="3"
+                          ry="3"
+                          width="100%"
+                          height="120"
+                        />
+                      </ContentLoader>
+                    ))
+                  : users?.slice(0, 6).map((x) => (
+                      <div
+                        key={x.id}
+                        className="chat"
+                        onClick={(e) => handleMenus(e, "userInfo", x.id)}
+                      >
+                        <Image
+                          className="rounded"
+                          src={x.img || "/users/default.png"}
+                          fill
+                          alt={`user Image`}
+                        />
+                        <div className="name-lastmessage">
+                          <h4>{x.name}</h4>
+                        </div>
+                      </div>
+                    ))}
               </div>
             </div>
           )}
@@ -266,41 +316,184 @@ export default function User({ params }) {
 
           {currentSelectedData === "posts" ? (
             <div className="posts-holder">
-              {posts.map((data, index) => (
-                <Post data={data} key={index} />
-              ))}
+              {loading
+                ? Array.from({ length: 2 }).map((_, index) => (
+                    <div style={{ maxWidth: "700px" }}>
+                      <ContentLoader
+                        className="skeleton skeleton-post"
+                        width={600}
+                        height={350}
+                        speed={5}
+                        viewBox="0 0 600 350"
+                        backgroundColor="#E8E8E8"
+                        foregroundColor="#D5D5D5"
+                      >
+                        {/* Profile Picture */}
+                        <circle cx="35" cy="35" r="20" />
+                        {/* Name & Timestamp */}
+                        <rect
+                          x="65"
+                          y="20"
+                          rx="5"
+                          ry="5"
+                          width="120"
+                          height="12"
+                        />
+                        <rect
+                          x="65"
+                          y="38"
+                          rx="5"
+                          ry="5"
+                          width="100"
+                          height="10"
+                        />
+                        {/* Post Text */}
+                        <rect
+                          x="20"
+                          y="70"
+                          rx="5"
+                          ry="5"
+                          width="93%"
+                          height="10"
+                        />
+                        <rect
+                          x="20"
+                          y="90"
+                          rx="5"
+                          ry="5"
+                          width="500"
+                          height="10"
+                        />
+                        <rect
+                          x="20"
+                          y="110"
+                          rx="5"
+                          ry="5"
+                          width="520"
+                          height="10"
+                        />
+                        {/* Image Placeholder */}
+                        <rect
+                          x="20"
+                          y="140"
+                          rx="5"
+                          ry="5"
+                          width="93%"
+                          height="150"
+                        />
+                        {/* Footer (Likes, Comments, Shares) */}
+                        <rect
+                          x="20"
+                          y="310"
+                          rx="5"
+                          ry="5"
+                          width="30"
+                          height="10"
+                        />{" "}
+                        {/* Like Icon */}
+                        <rect
+                          x="60"
+                          y="310"
+                          rx="5"
+                          ry="5"
+                          width="20"
+                          height="10"
+                        />{" "}
+                        {/* Like Count */}
+                        <rect
+                          x="515"
+                          y="310"
+                          rx="5"
+                          ry="5"
+                          width="30"
+                          height="10"
+                        />{" "}
+                        {/* Comment Icon */}
+                        <rect
+                          x="555"
+                          y="310"
+                          rx="5"
+                          ry="5"
+                          width="20"
+                          height="10"
+                        />{" "}
+                        {/* Comment Count */}
+                      </ContentLoader>
+                    </div>
+                  ))
+                : posts.map((data, index) => <Post data={data} key={index} />)}
             </div>
           ) : currentSelectedData === "friends" ? (
             <div className="friends">
-              {users?.map((x) => (
-                <div
-                  key={x.id}
-                  onClick={(e) => handleMenus(e, "userInfo", x.id)}
-                >
-                  <Image
-                    className="rounded"
-                    src={x.img || "/users/default.png"}
-                    fill
-                    alt={`user Image`}
-                  />
-                  <div>
-                    <h4>{x.name}</h4>
-                    <p>{x.bio}</p>
-                  </div>
-                </div>
-              ))}
+              {loading
+                ? Array.from({ length: 10 }).map((_, index) => (
+                    <ContentLoader
+                      width={120}
+                      height={120}
+                      speed={4}
+                      viewBox="0 0 120 120"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                    >
+                      <rect
+                        x="160"
+                        y="120"
+                        rx="3"
+                        ry="3"
+                        width="100%"
+                        height="120"
+                      />
+                    </ContentLoader>
+                  ))
+                : users?.map((x) => (
+                    <div
+                      key={x.id}
+                      onClick={(e) => handleMenus(e, "userInfo", x.id)}
+                    >
+                      <Image
+                        className="rounded"
+                        src={x.img || "/users/default.png"}
+                        fill
+                        alt={`user Image`}
+                      />
+                      <div>
+                        <h4>{x.name}</h4>
+                        <p>{x.bio}</p>
+                      </div>
+                    </div>
+                  ))}
             </div>
           ) : currentSelectedData === "photos" ? (
             <div className="photos">
-              {mediaMsgs.map((x, index) => (
-                <Image
-                  key={index}
-                  src={x.img}
-                  alt=""
-                  fill
-                  onClick={() => handleImageClick(x.id, index)}
-                />
-              ))}
+              {loading
+                ? Array.from({ length: 10 }).map((_, index) => (
+                    <ContentLoader
+                      width={120}
+                      height={120}
+                      speed={4}
+                      viewBox="0 0 120 120"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                    >
+                      <rect
+                        x="160"
+                        y="120"
+                        rx="3"
+                        ry="3"
+                        width="100%"
+                        height="120"
+                      />
+                    </ContentLoader>
+                  ))
+                : mediaMsgs.map((x, index) => (
+                    <Image
+                      key={index}
+                      src={x.img}
+                      alt=""
+                      fill
+                      onClick={() => handleImageClick(x.id, index)}
+                    />
+                  ))}
             </div>
           ) : (
             <ul className="about">

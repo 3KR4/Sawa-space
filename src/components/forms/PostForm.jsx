@@ -123,9 +123,6 @@ function PostForm() {
       ) {
         return;
       }
-      if (emojiRef.current && emojiRef.current.contains(event.target)) {
-        return;
-      }
       setOpenPostForm(false);
     };
 

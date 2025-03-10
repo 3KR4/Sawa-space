@@ -5,6 +5,7 @@ import Link from "next/link";
 import Comment from "@/components/Comment";
 import TypeComment from "@/components/TypeComment";
 import ReactsHolder from "@/components/ReactsHolder";
+import ContentLoader from "react-content-loader";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -45,6 +46,12 @@ function Post({ data }) {
       setImgIndex(index);
     }
   };
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 0); // Adjust as needed
+  }, []);
 
   return (
     <div className={`post`}>
@@ -229,9 +236,54 @@ function Post({ data }) {
             <IoIosClose onClick={() => setSeeComments(false)} />
           </div>
           <div className="holder">
-            {data.comments &&
-            Array.isArray(data.comments.allComments) &&
-            data.comments.allComments.length > 0 ? (
+            {loading ? (
+              // Display skeleton loader while loading
+              <>
+                <ContentLoader
+                  className="skeleton skeleton-comment"
+                  width="100%"
+                  height={120}
+                  viewBox="0 0 600 120"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#e0e0e0"
+                >
+                  {/* Profile Picture */}
+                  <circle cx="35" cy="35" r="18" />
+
+                  {/* Comment Text & Timestamp */}
+                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+                  {/* Like/Reply Button */}
+                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+                </ContentLoader>
+                <ContentLoader
+                  className="skeleton skeleton-comment"
+                  width="100%"
+                  height={120}
+                  viewBox="0 0 600 120"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#e0e0e0"
+                >
+                  {/* Profile Picture */}
+                  <circle cx="35" cy="35" r="18" />
+
+                  {/* Comment Text & Timestamp */}
+                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+                  {/* Like/Reply Button */}
+                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+                </ContentLoader>
+              </>
+            ) : // If not loading, display the comments or the "no comments" message
+            data.comments.allComments &&
+              Array.isArray(data.comments.allComments) &&
+              data.comments.allComments.length > 0 ? (
               data.comments.allComments.map((comment, index) => (
                 <Comment key={index} data={comment} />
               ))
@@ -243,6 +295,7 @@ function Post({ data }) {
               </div>
             )}
           </div>
+
           <TypeComment id={data.id} />
         </div>
       )}
