@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "action": "action",
+    "pintotop": "pintotop",
+    "addtofavorite": "addtofavorite",
+    "archivechat": "archivechat",
+    "block": "block",
+    "exitgroup": "exitgroup",
+    "add_friend": "add friend",
+    "remove_friend": "remove friend",
+    "hide": "hide",
+    "report": "report",
+    "save_post": "save post",
+    "edit": "edit"
+  },
+  "header": {
+    "explore": "explore",
+    "chats": "chats",
+    "pages": "pages",
+    "communities": "communities",
+    "marketplace": "marketplace",
+    "swithlang": "switch language to ar",
+    "settings_and_privacy": "settings & privacy",
+    "help_and_support": "help & support",
+    "display_and_accessibility": "display & accessibility",
+    "logout": "logout",
+    "create": "create",
+    "createpost": "create post",
+    "createstory": "create story",
+    "creategroup": "create group",
+    "createpage": "create page",
+    "createcommunity": "create community"
+  },
+  "sidechats": {
+    "friends": "friends",
+    "allchat": "allchat",
+    "favorites": "favorites",
+    "groups": "groups",
+    "unread": "unread",
+    "drafts": "drafts"
+  },
+  "post": {
+    "mention": "mention",
+    "thereis_nothing_here_yet": "There's nothing here yet",
+    "be_the_first_to_post_a_comment": "Be the first to post a comment."
+  },
+  "comment": {
+    "reply": "Reply",
+    "see": "see",
+    "replys": "replys",
+    "hide_replays": "hide replays"
+  },
+  "market_place": {
+    "market_place": "market place",
+    "browse_all": "browse all",
+    "following_pages": "following pages",
+    "filter_by_price": "filter by price",
+    "filter_by_categories": "filter by categories",
+    "enter_min_and_max_price": "enter min and max price",
+    "min": "min",
+    "max": "max",
+    "shipping_is_available": "shipping is available",
+    "pickup_only_in": "pickup only in"
+  }
+}

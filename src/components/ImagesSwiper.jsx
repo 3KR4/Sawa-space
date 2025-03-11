@@ -6,6 +6,7 @@ import "swiper/css";
 import "../app/Css/chat.css";
 
 import ContentLoader from "react-content-loader";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -25,6 +26,8 @@ import { HiDotsVertical } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
 function ImagesSwiper() {
+  const { translations } = useLanguage();
+
   const {
     dataSwiperType,
     dataForSwiper,
@@ -332,7 +335,10 @@ function ImagesSwiper() {
                 <div className="comments">
                   <div className="topHolderComments">
                     <div className="top">
-                      <h3>Comments ({dataForSwiper?.comments?.count})</h3>
+                      <h3>
+                        {translations?.post?.comments} (
+                        {dataForSwiper?.comments?.count})
+                      </h3>
                     </div>
                     <div className="holder">
                       {dataForSwiper?.comments &&
@@ -346,8 +352,12 @@ function ImagesSwiper() {
                       ) : (
                         <div className="noCommentsYet">
                           <FaRegComments />
-                          <h4>Nothing in here yet</h4>
-                          <p>Be the first to post a comment.</p>
+                          <h4>
+                            {translations?.post?.thereis_nothing_here_yet}
+                          </h4>
+                          <p>
+                            {translations?.post?.be_the_first_to_post_a_comment}
+                          </p>
                         </div>
                       )}
                     </div>

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { maxLength } from "../Methods";
 import { users } from "@/Data";
 import ContentLoader from "react-content-loader";
-
-import { ScreenContext } from "@/app/contexts/ScreenContext";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import {
   FaUnlink,
@@ -28,7 +27,7 @@ import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
-  const { pathname } = useContext(ScreenContext);
+  const { translations } = useLanguage();
 
   const [hideChats, setHideChats] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
@@ -89,7 +88,7 @@ export default function Chats() {
         <FaAngleLeft />
       </div>
       <div className="top">
-        <h4>Friends</h4>
+        <h4>{translations?.sidechats?.friends}</h4>
         <FaUserFriends className="chatico" />
         <div className="search-holder">
           <IoSearch />
@@ -100,19 +99,19 @@ export default function Chats() {
       <hr />
       <ul className="filters">
         <li className="active">
-          <MdMarkUnreadChatAlt /> AllChat
+          <MdMarkUnreadChatAlt /> {translations?.sidechats?.allchat}
         </li>
         <li>
-          <FaUsers /> groups
+          <FaUsers /> {translations?.sidechats?.groups}
         </li>
         <li>
-          <MdFavorite /> favorites
+          <MdFavorite /> {translations?.sidechats?.favorites}
         </li>
         <li>
-          <FaEyeSlash /> unread
+          <FaEyeSlash /> {translations?.sidechats?.unread}
         </li>
         <li>
-          <FaUnlink /> drafts
+          <FaUnlink /> {translations?.sidechats?.drafts}
         </li>
       </ul>
       <div
@@ -123,19 +122,20 @@ export default function Chats() {
         <div className="top">Actions</div>
         <ul>
           <li>
-            <MdOutlinePushPin /> pin to top
+            <MdOutlinePushPin /> {translations?.actions?.pintotop}
           </li>
           <li>
-            <FaRegHeart style={{ fontSize: "16px" }} /> add to favorite
+            <FaRegHeart style={{ fontSize: "16px" }} />{" "}
+            {translations?.actions?.addtofavorite}
           </li>
           <li className="logOut">
-            <TbArchiveOff /> archive chat
+            <TbArchiveOff /> {translations?.actions?.archivechat}
           </li>
           <li className="danger">
-            <MdBlockFlipped /> block
+            <MdBlockFlipped /> {translations?.actions?.block}
           </li>
           <li className="danger">
-            <TbLogout2 /> Exit Group
+            <TbLogout2 /> {translations?.actions?.exitgroup}
           </li>
         </ul>
       </div>

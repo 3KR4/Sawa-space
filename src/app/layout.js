@@ -7,19 +7,22 @@ import { ScreenProvider, ScreenContext } from "./contexts/ScreenContext";
 import { MenuProvider } from "./contexts/DynamicMenus";
 import { MenusProvider } from "./contexts/MenusContext";
 import { InputActionsProvider } from "./contexts/InputActionsContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
-    <ScreenProvider>
-      <MenuProvider>
-        <MenusProvider>
-          <InputActionsProvider>
-            <LayoutContent>{children}</LayoutContent>
-          </InputActionsProvider>
-        </MenusProvider>
-      </MenuProvider>
-    </ScreenProvider>
+    <LanguageProvider>
+      <ScreenProvider>
+        <MenuProvider>
+          <MenusProvider>
+            <InputActionsProvider>
+              <LayoutContent>{children}</LayoutContent>
+            </InputActionsProvider>
+          </MenusProvider>
+        </MenuProvider>
+      </ScreenProvider>
+    </LanguageProvider>
   );
 }
 
@@ -29,11 +32,10 @@ function LayoutContent({ children }) {
   return (
     <html lang="en">
       <body>
-        {!pathname.includes("auth") && screenSize !== "small" &&  <Chats />}
-
+        {(pathname.includes("chat") || pathname === "/") &&
+          screenSize !== "small" && <Chats />}
         <main>
           {!pathname.includes("auth") && <Header />}
-
           <AllComponents />
           <div className="holder">{children}</div>
         </main>

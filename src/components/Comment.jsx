@@ -2,26 +2,19 @@ import React from "react";
 import { useState, useContext } from "react";
 import ReactsHolder from "@/components/ReactsHolder";
 import Image from "next/image";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { MenusContext } from "@/app/contexts/MenusContext";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 
 function Comment({ data }) {
-  const {
-    setDataSwiperType,
-    setDataForSwiper,
-    setImgFocus,
-    setImgIndex,
-  } = useContext(MenusContext);
+  const { translations } = useLanguage();
 
-  const {
-    handleMenus,
-    setOpenUsersReact,
-  } = useContext(DynamicMenusContext);
+  const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
+    useContext(MenusContext);
 
-
-
+  const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
 
   const [seeReplays, setSeeReplays] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
@@ -87,8 +80,8 @@ function Comment({ data }) {
                 data?.replays.length > 0 && (
                   <button onClick={() => setSeeReplays((prev) => !prev)}>
                     {seeReplays
-                      ? "hide Replays"
-                      : `See ${data?.replays.length} Replays`}
+                      ? `${translations?.comment?.hide_replays}`
+                      : `${translations?.comment?.see} ${data?.replays.length} ${translations?.comment?.replys}`}
                   </button>
                 )}
             </div>
@@ -105,7 +98,7 @@ function Comment({ data }) {
                   />
                 )}
               </div>
-              <button>Reply</button>
+              <button>{translations?.comment?.reply}</button>
             </div>
           </div>
         </div>

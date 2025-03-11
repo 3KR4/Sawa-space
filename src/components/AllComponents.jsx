@@ -11,6 +11,7 @@ import ImagesSwiper from "@/components/ImagesSwiper";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/SettingMenu";
 import UsersReact from "@/components/UsersReact";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import { MdBlock } from "react-icons/md";
 import { IoPersonRemove } from "react-icons/io5";
@@ -19,22 +20,14 @@ import { BiSolidHide } from "react-icons/bi";
 import { FaBookmark } from "react-icons/fa";
 
 import { HiUsers } from "react-icons/hi2";
-
 function AllComponents() {
-  const {
-    imgFocus,
-    openPostForm,
-  } = useContext(MenusContext);
+  const { translations } = useLanguage();
 
-  const {
-    openUsersSelection,
-    userInfoData,
-    settingMenu,
-    openUsersReact,
-  } = useContext(DynamicMenusContext);
-  const {
-    pathname,
-  } = useContext(ScreenContext);
+  const { imgFocus, openPostForm } = useContext(MenusContext);
+
+  const { openUsersSelection, userInfoData, settingMenu, openUsersReact } =
+    useContext(DynamicMenusContext);
+  const { pathname } = useContext(ScreenContext);
 
   return (
     <>
@@ -43,24 +36,24 @@ function AllComponents() {
         !pathname.includes("chat") && (
           <SettingMenu type={"settingMenu-post"}>
             <button>
-              <FaBookmark /> Save Post
+              <FaBookmark /> {translations?.actions?.save_post}
             </button>
             <button>
-              <HiUsers /> Add Friend
+              <HiUsers /> {translations?.actions?.add_friend}
             </button>
             <hr />
             <button className="yellow">
-              <BiSolidHide /> Hide
+              <BiSolidHide /> {translations?.actions?.hide}
             </button>
             <button className="yellow">
-              <MdBlock /> Report
+              <MdBlock /> {translations?.actions?.block}
             </button>
             <hr />
             <button className="danger">
-              <IoPersonRemove /> Remove Friend
+              <IoPersonRemove /> {translations?.actions?.remove_friend}
             </button>
             <button className="danger">
-              <MdReport /> Block
+              <MdReport /> {translations?.actions?.report}
             </button>
           </SettingMenu>
         )}

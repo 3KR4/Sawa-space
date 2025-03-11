@@ -6,6 +6,8 @@ import Comment from "@/components/Comment";
 import TypeComment from "@/components/TypeComment";
 import ReactsHolder from "@/components/ReactsHolder";
 import ContentLoader from "react-content-loader";
+import { useLanguage } from "@/app/contexts/LanguageContext";
+
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -26,6 +28,8 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({ data }) {
+    const { translations } = useLanguage();
+
   const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
     useContext(MenusContext);
 
@@ -133,7 +137,9 @@ function Post({ data }) {
             ) : null}
             {data.mentions.length > 0 && (
               <div className="mentions">
-                <h5>{data.user.name} mention</h5>
+                <h5>
+                  {data.user.name} {translations?.post?.mention}
+                </h5>
                 {data.mentions?.map((x, index) => (
                   <button
                     key={index}
@@ -232,7 +238,9 @@ function Post({ data }) {
       ) : (
         <div className="comments">
           <div className="top">
-            <h3>Comments ({data.comments.count})</h3>
+            <h3>
+              {translations?.post?.comments} ({data.comments.count})
+            </h3>
             <IoIosClose onClick={() => setSeeComments(false)} />
           </div>
           <div className="holder">
@@ -290,8 +298,10 @@ function Post({ data }) {
             ) : (
               <div className="noCommentsYet">
                 <FaRegComments />
-                <h4>Nothing in here yet</h4>
-                <p>Be the first to post a comment.</p>
+                <h4>{translations?.post?.thereis_nothing_here_yet}</h4>
+                <p>
+                  {translations?.post?.be_the_first_to_post_a_comment}
+                </p>
               </div>
             )}
           </div>

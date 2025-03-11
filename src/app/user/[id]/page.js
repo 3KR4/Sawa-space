@@ -10,6 +10,9 @@ import { MenusContext } from "@/app/contexts/MenusContext";
 import Post from "@/components/Post";
 import SettingMenu from "@/components/SettingMenu";
 import ContentLoader from "react-content-loader";
+import { useLanguage } from "@/app/contexts/LanguageContext";
+
+
 
 import "../../Css/user.css";
 import { FaAngleRight } from "react-icons/fa";
@@ -30,6 +33,8 @@ import { MdBlock } from "react-icons/md";
 import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function User({ params }) {
+    const { translations } = useLanguage();
+
   const {
     setDataSwiperType,
     dataForSwiper,
@@ -74,12 +79,12 @@ export default function User({ params }) {
     <div className={`userPage`}>
       {settingMenu && (
         <SettingMenu type={"settingMenu-user"}>
-          <h4>Actions</h4>
+          <h4>{translations?.actions?.action}</h4>
           <button className="danger">
-            <IoPersonRemoveSharp /> Remove Friend
+            <IoPersonRemoveSharp /> {translations?.actions?.remove_friend}
           </button>
           <button className="danger">
-            <MdBlock /> Block
+            <MdBlock /> {translations?.actions?.block}
           </button>
         </SettingMenu>
       )}
@@ -89,7 +94,7 @@ export default function User({ params }) {
           <Image src={"/chat4.png"} alt="User Cover" fill />
           <div className="editICo">
             <MdModeEditOutline />
-            Edit
+            {translations?.actions?.edit}
           </div>
         </div>
         <nav>

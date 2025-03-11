@@ -1593,6 +1593,20 @@ body:has(.focusedMsg.active) .chats {
   background: var(--main-color);
   color: white;
 }
+
+.sideSection {
+}
+body .sideSection + div {
+  width: calc(100% - 312px);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.sideSection {
+}
+.sideSection {
+}
+
 .sideMenu .reacts {
   margin: 0;
   padding: 5px;

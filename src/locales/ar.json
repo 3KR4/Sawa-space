@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "action": "قم بي",
+    "pintotop": "تثبيت في الأعلى",
+    "addtofavorite": "إضافة إلى التفضيلات",
+    "archivechat": "أرشفة المحادثة",
+    "block": "حظر",
+    "exitgroup": "مغادرة المجموعة",
+    "amarket_place": "طلب صداقة",
+    "remove_friend": "إلغاء الصداقة",
+    "hide": "قم بالاخفاء",
+    "report": "ارسر تقرير",
+    "save_post": "حفظ المنشور",
+    "edit": "تعديل"
+  },
+  "header": {
+    "explore": "الرائج",
+    "chats": "الدردشة",
+    "pages": "الصفحات",
+    "communities": "المجتمعات",
+    "marketplace": "المتجر",
+    "swithlang": "تحويل اللغة للانجليزية",
+    "settings_and_privacy": "الإعدادات والخصوصية",
+    "help_and_support": "الدعم والمساعدة",
+    "display_and_accessibility": "الإتاحة والعرض",
+    "logout": "تسجيل الخروج",
+    "create": "قم بأنشاء",
+    "createpost": "إنشاء منشور",
+    "createstory": "إنشاء قصة صغيرة",
+    "creategroup": "تكوين مجموعة",
+    "createpage": "إنشاء صفحة",
+    "createcommunity": "تكوين مجتمع"
+  },
+  "sidechats": {
+    "friends": "الاصدقاء",
+    "allchat": "المحادثات",
+    "favorites": "التفضيلات",
+    "groups": "المجموعات",
+    "unread": "غير مقروءة",
+    "drafts": "المسودات"
+  },
+  "post": {
+    "mention": "قام بذكر",
+    "thereis_nothing_here_yet": "ليس هناك تعليقات حتي الان",
+    "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق"
+  },
+  "comment": {
+    "reply": "قم بالرد",
+    "see": "تفقد",
+    "replys": "من الردود",
+    "hide_replays": "اخفاء الردود"
+  },
+  "market_place": {
+    "market_place": "المتجر",
+    "browse_all": "تصفح الكل",
+    "following_pages": "الصفحات التي تتابعها",
+    "filter_by_price": "تصفية حسب الأسعار",
+    "filter_by_categories": "تصفية حسب الأقسام",
+    "enter_min_and_max_price": "أدخل الحد الأدنى والحد الأقصى للسعر",
+    "min": "الحد الأدنى",
+    "max": "الحد الأقصى",
+    "shipping_is_available": "التوصيل متاح",
+    "pickup_only_in": "الاستلام متاح فقط في"
+  }
+}

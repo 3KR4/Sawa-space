@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 import {
   IoSearch,
   IoClose,
@@ -10,6 +9,7 @@ import {
   IoChatbubbleEllipsesOutline,
   IoCartOutline,
   IoMenu,
+  IoLanguage,
 } from "react-icons/io5";
 import {
   FaCaretDown,
@@ -21,19 +21,20 @@ import {
 } from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
-import { RiUserCommunityLine } from "react-icons/ri";
-import { RiColorFilterAiFill } from "react-icons/ri";
+import { RiColorFilterAiFill, RiUserCommunityLine } from "react-icons/ri";
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
 import { MenusContext } from "@/app/contexts/MenusContext";
 import { ScreenContext } from "@/app/contexts/ScreenContext";
+import { useLanguage } from "../app/contexts/LanguageContext";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 
 export default function Header() {
+  const { translations } = useLanguage();
   const { setOpenPostForm } = useContext(MenusContext);
-
+  const { locale, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
 
   const [userMenu, setUserMenu] = useState(false);
@@ -174,31 +175,33 @@ export default function Header() {
       </div>
       <nav ref={phoneMenuRef} className={phoneMenu ? "active" : ""}>
         <Link href="/" className={pathname === "/" ? "active" : ""}>
-          <MdOutlineExplore /> <span>Explore</span>
+          <MdOutlineExplore /> <span>{translations?.header?.explore}</span>
         </Link>
         <Link
           href="/chat"
           className={pathname.includes("/chat") ? "active" : ""}
         >
-          <IoChatbubbleEllipsesOutline /> <span>Chat</span>
+          <IoChatbubbleEllipsesOutline />{" "}
+          <span>{translations?.header?.chats}</span>
         </Link>
         <Link
           href="/pages"
           className={pathname.includes("/pages") ? "active" : ""}
         >
-          <LiaPagerSolid /> <span>Pages</span>
+          <LiaPagerSolid /> <span>{translations?.header?.pages}</span>
         </Link>
         <Link
           href="/communities"
           className={pathname.includes("/communities") ? "active" : ""}
         >
-          <RiUserCommunityLine /> <span>Communities</span>
+          <RiUserCommunityLine />{" "}
+          <span>{translations?.header?.communities}</span>
         </Link>
         <Link
           href="/marketplace"
           className={pathname.includes("/marketplace") ? "active" : ""}
         >
-          <IoCartOutline /> <span>Market Place</span>
+          <IoCartOutline /> <span>{translations?.header?.marketplace}</span>
         </Link>
       </nav>
 
@@ -251,16 +254,25 @@ export default function Header() {
                 </Link>
                 <ul>
                   <button>
-                    <IoMdSettings /> Setting & Privacy
+                    <IoMdSettings />{" "}
+                    {translations?.header?.settings_and_privacy}
                   </button>
                   <button>
-                    <BiSupport /> Help & Support
+                    <BiSupport /> {translations?.header?.help_and_support}
                   </button>
                   <button>
-                    <RiColorFilterAiFill /> Display & Accessibility
+                    <RiColorFilterAiFill />
+                    {translations?.header?.display_and_accessibility}
+                  </button>
+                  <button
+                    onClick={() =>
+                      changeLanguage(locale === "en" ? "ar" : "en")
+                    }
+                  >
+                    <IoLanguage /> {translations?.header?.swithlang}
                   </button>
                   <button className="logOut">
-                    <TbLogout2 /> Log Out
+                    <TbLogout2 /> {translations?.header?.logout}
                   </button>
                 </ul>
               </div>
@@ -279,22 +291,22 @@ export default function Header() {
             >
               <IoGrid />
               <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
-                <h4 className="title">Creation Menu</h4>
+                <h4 className="title">{translations?.header?.create}</h4>
                 <ul>
                   <button onClick={() => setOpenPostForm(true)}>
-                    <BsFillPostcardFill /> Create Post
+                    <BsFillPostcardFill /> {translations?.header?.createpost}
                   </button>
                   <button>
-                    <FaHistory /> Create Story
+                    <FaHistory /> {translations?.header?.createstory}
                   </button>
                   <button>
-                    <HiUsers /> Create Group
+                    <HiUsers /> {translations?.header?.creategroup}
                   </button>
                   <button>
-                    <FaPager /> Create Page
+                    <FaPager /> {translations?.header?.createpage}
                   </button>
                   <button>
-                    <FaUsers /> Create Community
+                    <FaUsers /> {translations?.header?.createcommunity}
                   </button>
                 </ul>
               </div>
@@ -322,16 +334,25 @@ export default function Header() {
                 </Link>
                 <ul>
                   <button>
-                    <IoMdSettings /> Setting & Privacy
+                    <IoMdSettings />{" "}
+                    {translations?.header?.settings_and_privacy}
                   </button>
                   <button>
-                    <BiSupport /> Help & Support
+                    <BiSupport /> {translations?.header?.help_and_support}
                   </button>
                   <button>
-                    <RiColorFilterAiFill /> Display & Accessibility
+                    <RiColorFilterAiFill />{" "}
+                    {translations?.header?.display_and_accessibility}
+                  </button>
+                  <button
+                    onClick={() =>
+                      changeLanguage(locale === "en" ? "ar" : "en")
+                    }
+                  >
+                    <IoLanguage /> {translations?.header?.swithlang}
                   </button>
                   <button className="logOut">
-                    <TbLogout2 /> Log Out
+                    <TbLogout2 /> {translations?.header?.logout}
                   </button>
                 </ul>
               </div>
