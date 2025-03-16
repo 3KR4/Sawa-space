@@ -32,9 +32,8 @@ import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 
 export default function Header() {
-  const { translations } = useLanguage();
   const { setOpenPostForm } = useContext(MenusContext);
-  const { locale, changeLanguage } = useLanguage();
+  const { translations, locale, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
 
   const [userMenu, setUserMenu] = useState(false);
