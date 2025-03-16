@@ -8,7 +8,15 @@
   list-style: none;
   text-decoration: none;
 }
-.Chats,
+body.ar,
+body.ar * {
+  direction: rtl;
+}
+body.ar .swiper-container,
+body.ar .swiper-container *,
+body.ar .navigations-icons {
+  direction: ltr;
+} 
 main {
   margin: 0;
   padding: 0;
@@ -196,7 +204,9 @@ svg.closeMenu {
   object-fit: cover !important;
   border-radius: 50% !important;
 }
-
+body > main > .holder:has(.register-page) {
+  min-height: 100vh;
+}
 .container {
   padding-left: 15px;
   padding-right: 15px;
@@ -281,9 +291,28 @@ body > main:has(.emoji-holder.active) > .holder {
   right: -27px;
   transition: right 0.4s, width 0.3s;
 }
+body.ar .chats .open-close {
+  left: -12px;
+  right: unset;
+  border-radius: 15px 0px 0px 15px;
+  transition: left 0.2s, width 0.3s;
+}
+body.ar .chats .open-close:hover,
+body.ar .chats.hide:hover .open-close {
+  right: unset;
+  left: -27px;
+  transition: left 0.4s, width 0.3s;
+}
 .chats .open-close svg {
   color: white;
   font-size: 18px;
+}
+body.ar .chats .open-close svg {
+  transform: translateX(-1px) rotate(180deg);
+}
+body.ar .chats .open-close:hover svg,
+body.ar .chats.hide:hover .open-close svg {
+  transform: translateX(1px) rotate(180deg);
 }
 .chats .top {
   display: flex;
@@ -334,7 +363,7 @@ body > main:has(.emoji-holder.active) > .holder {
 }
 .chats .filters li.active,
 .chats .filters li:hover {
-  width: 97px !important;
+  width: 97px;
   border-radius: 5px;
   color: white;
   background: var(--back-grident);
@@ -347,7 +376,7 @@ body > main:has(.emoji-holder.active) > .holder {
   color: white;
 }
 .chats .filters:has(li:not(.active):hover) li.active {
-  width: 35px !important;
+  width: 35px;
   background: transparent;
 }
 .chats .filters:has(li:not(.active):hover) li.active svg {
@@ -355,12 +384,34 @@ body > main:has(.emoji-holder.active) > .holder {
 }
 .chats .filters li:nth-child(3).active,
 .chats .filters li:nth-child(3):hover {
-  width: 108px !important;
+  width: 108px;
 }
+
 .chats .filters li:first-child.active,
 .chats .filters li:first-child:hover {
-  width: 105px !important;
+  width: 105px;
 }
+body.ar .chats .filters li,
+body.ar .chats .filters li {
+  max-height: 31px;
+}
+body.ar .chats .filters li.active,
+body.ar .chats .filters li:hover {
+  width: 114px;
+}
+body.ar .chats .filters li.active,
+body.ar .chats .filters li:hover {
+  width: 114px;
+}
+body.ar .chats .filters li:nth-child(2).active,
+body.ar .chats .filters li:nth-child(2):hover {
+  width: 123px;
+}
+body.ar .chats .filters li:nth-child(4).active,
+body.ar .chats .filters li:nth-child(4):hover {
+  width: 121px;
+}
+
 .chats .filters li svg {
   min-width: 23px;
   min-height: 23px;
@@ -383,12 +434,15 @@ body > main:has(.emoji-holder.active) > .holder {
   width: 320px;
   transition: 0.3s;
   border-radius: 8px;
-  padding: 7px 10px;
+  padding: 7px 5px;
   cursor: pointer;
 }
 .chats .chat:hover,
 .chats .chat.active {
   background: #e2e2e2;
+}
+body.ar .chats.active .chat {
+  padding: 7px 5px;
 }
 .chats .chat img.status {
   outline: 2px solid var(--main-color);
@@ -400,6 +454,10 @@ body > main:has(.emoji-holder.active) > .holder {
   gap: 2px;
   margin-left: 10px;
   transition: 0.3s;
+}
+body.ar .chats .chat .name-lastmessage {
+  margin-left: unset;
+  margin-right: 10px;
 }
 .chats .chat .name-lastmessage p {
   width: 194px;
@@ -439,7 +497,7 @@ body > main:has(.emoji-holder.active) > .holder {
   border-radius: 7px;
   overflow: hidden;
   width: auto;
-  left: 18.9%;
+  z-index: 1;
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
@@ -536,6 +594,9 @@ body > main:has(.emoji-holder.active) > .holder {
   overflow-y: hidden;
   max-height: 90vh;
 }
+body.ar .chats.hide .holder {
+  padding: 0 2px;
+}
 .chats.hide .chatico {
   display: flex;
   font-size: 33px;
@@ -599,7 +660,10 @@ header {
   background-color: var(--body-color);
   transition: 0.5s !important;
 }
-
+body.ar header {
+  margin-right: unset;
+  margin-left: 12px;
+}
 header .logo {
   display: flex;
   align-items: center;
@@ -648,6 +712,14 @@ header .logo img {
 }
 .search-holder svg.delete:hover {
   color: var(--red-color);
+}
+body.ar .search-holder svg {
+  left: unset;
+  right: 10px;
+}
+body.ar .search-holder svg.delete {
+  left: 10px;
+  right: unset;
 }
 .search-holder .result {
   display: none;
@@ -728,6 +800,10 @@ header .events li span.length {
   border-radius: 4px;
   transition: 0.3s;
 }
+body.ar header .events li span.length {
+  left: -5px;
+  right: unset;
+}
 header .events li:hover span.length {
   color: var(--body-color);
   background-color: var(--title-color);
@@ -791,6 +867,10 @@ header .events .menu {
   right: -24px;
   top: 50px;
   width: 270px;
+}
+body.ar header .events .menu {
+  right: unset;
+  left: -10px;
 }
 header .events .menu.active {
   visibility: visible;
@@ -1076,6 +1156,15 @@ header .events .menu.createMenu svg {
   margin-left: -1px;
 }
 
+body.ar .post .emojesCounter p {
+  margin-left: unset;
+  margin-right: -5px;
+}
+body.ar .post .emojesCounter p:last-child {
+  margin-left: unset;
+  margin-right: -1px;
+}
+
 .post .bottom .right {
   display: flex;
   align-items: center;
@@ -1284,6 +1373,10 @@ header .events .menu.createMenu svg {
 .post .comments .action-holder .top:has(img) textarea {
   padding-right: 0px;
 }
+body.ar .post .comments .action-holder .top:has(img) textarea {
+  padding-right: 12px;
+  padding-left: 0px;
+}
 .post .action-holder .top img {
   width: 224px;
   border-radius: 8px;
@@ -1295,6 +1388,10 @@ header .events .menu.createMenu svg {
   width: 20px;
   height: 20px;
   right: 0;
+}
+body.ar .post .action-holder .top svg {
+  left: 0 !important;
+  right: unset !important;
 }
 .post .comments .action-holder .actions {
   display: flex;
@@ -1979,6 +2076,9 @@ pre.placeHolder {
   letter-spacing: 0.7px;
   line-height: 1.3;
 }
+body.ar .inputHolder .holder textarea {
+  padding: 15px 19px 15px 40px;
+}
 textarea::placeholder {
   font-weight: 400;
   font-size: 15px !important;
@@ -2065,6 +2165,10 @@ form button.remove svg:hover {
   height: 35px;
   padding: 7px;
   border-radius: 6px;
+}
+body.ar .inputHolder .holder:has(textarea) > svg {
+  right: unset;
+  left: 7px;
 }
 .inputHolder .holder > svg.eye {
   left: unset;
@@ -2195,7 +2299,10 @@ body:has(.sideMenu.active) > main > .holder {
   overflow: hidden;
   padding-right: 6px;
 }
-
+body.ar:has(.sideMenu.active) > main > .holder {
+  padding-right: unset;
+  padding-left: 6px;
+}
 body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   overflow: hidden;
   padding-right: 0px !important;
@@ -2222,7 +2329,7 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
 }
 
 .settingMenu-post {
-  z-index: 101;
+  z-index: 1001 !important;
 }
 
 .userInfo.sideMenu .info {
@@ -2279,6 +2386,11 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
 .userInfo.sideMenu .actions > *:last-child {
   margin-left: auto;
 }
+.userInfo.sideMenu .actions > *:last-child {
+  margin-left: unset;
+  margin-right: auto;
+}
+
 .userInfo svg.close {
   width: 27px;
   height: 27px;

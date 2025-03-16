@@ -7,6 +7,8 @@ import { messages, users } from "@/Data";
 import EmojiPicker from "emoji-picker-react";
 import { use } from "react";
 import UsersSelection from "@/components/UsersSelection";
+import { convertTime } from "@/utils/convertTime";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import PinHolder from "@/components/chat/PinHolder";
 import ImagesSwiper from "@/components/ImagesSwiper";
@@ -47,6 +49,8 @@ import {
 } from "react-icons/fa6";
 
 export default function Chat({ params }) {
+  const { translations, locale } = useLanguage();
+
   const {
     setDataSwiperType,
     dataForSwiper,
@@ -69,15 +73,9 @@ export default function Chat({ params }) {
     openUsersReact,
     setOpenUsersReact,
   } = useContext(DynamicMenusContext);
-  const {
-    messageText,
-    setMessageText,
-    InputRef,
-    handleEmojiClick,
-  } = useContext(InputActionsContext);
-  const {
-    screenSize,
-  } = useContext(ScreenContext);
+  const { messageText, setMessageText, InputRef, handleEmojiClick } =
+    useContext(InputActionsContext);
+  const { screenSize } = useContext(ScreenContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [selectMode, setSelectMode] = useState(false);
@@ -602,7 +600,7 @@ export default function Chat({ params }) {
                 >
                   {x.history ? (
                     <div>
-                      {x.time}
+                      {convertTime(x?.time, locale, "singleChat")}
                       <small>Tuseday, junary</small>
                     </div>
                   ) : x.deleted ? (
@@ -628,7 +626,7 @@ export default function Chat({ params }) {
                     <>
                       <div className="top">
                         {x.user !== "Bob" && <h5>{x.user}</h5>}{" "}
-                        <small>{x.time}</small>
+                        <small>{convertTime(x?.time, locale, "singleChat")}</small>
                       </div>
                       {replyMsg && (
                         <div
@@ -745,7 +743,7 @@ export default function Chat({ params }) {
             className={`emoji-holder ${isAddReact ? "active" : ""}`}
             style={{
               position: "absolute",
-              top:"unset",
+              top: "unset",
               left: "15px",
               bottom: "calc(100% + -4px)",
             }}

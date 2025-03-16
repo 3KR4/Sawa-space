@@ -5,11 +5,12 @@ import Image from "next/image";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { MenusContext } from "@/app/contexts/MenusContext";
+import { convertTime } from "@/utils/convertTime";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 
 function Comment({ data }) {
-  const { translations } = useLanguage();
+  const { translations, locale } = useLanguage();
 
   const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
     useContext(MenusContext);
@@ -47,7 +48,7 @@ function Comment({ data }) {
           <div className="top">
             <div className="left">
               <h5>{data?.name}</h5>
-              <span>{data?.time}</span>
+              <span>{convertTime(data?.time, locale)}</span>
             </div>
             {data?.reacts?.count !== 0 && (
               <div

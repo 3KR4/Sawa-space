@@ -24,14 +24,9 @@ function PostForm() {
     usersSelectionRef,
   } = useContext(MenusContext);
 
-  const {
-    handleMenus,
-  } = useContext(DynamicMenusContext);
-  const {
-    messageText,
-    setMessageText,
-    InputRef,
-  } = useContext(InputActionsContext);
+  const { handleMenus } = useContext(DynamicMenusContext);
+  const { messageText, setMessageText, InputRef, emojiHolderRef } =
+    useContext(InputActionsContext);
 
   const {
     register,
@@ -72,7 +67,7 @@ function PostForm() {
     setImages((prevImages) => prevImages.filter((image, i) => i !== index));
   };
 
-  // Tags
+  // Tags & Links
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [links, setLinks] = useState([]);
@@ -120,6 +115,12 @@ function PostForm() {
       if (
         usersSelectionRef.current &&
         usersSelectionRef.current.contains(event.target)
+      ) {
+        return;
+      }
+      if (
+        emojiHolderRef.current &&
+        emojiHolderRef.current.contains(event.target)
       ) {
         return;
       }

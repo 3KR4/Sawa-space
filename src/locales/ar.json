@@ -6,12 +6,17 @@
     "archivechat": "أرشفة المحادثة",
     "block": "حظر",
     "exitgroup": "مغادرة المجموعة",
-    "amarket_place": "طلب صداقة",
+    "add_friend": "طلب صداقة",
     "remove_friend": "إلغاء الصداقة",
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
     "save_post": "حفظ المنشور",
     "edit": "تعديل"
+  },
+  "placeHolders": {
+    "search": "ابحث",
+    "search_her": "ابحث هنا...",
+    "search_anything": "ابحث عن اي شئ"
   },
   "header": {
     "explore": "الرائج",
@@ -33,7 +38,7 @@
   },
   "sidechats": {
     "friends": "الاصدقاء",
-    "allchat": "المحادثات",
+    "allchats": "المحادثات",
     "favorites": "التفضيلات",
     "groups": "المجموعات",
     "unread": "غير مقروءة",
@@ -45,15 +50,18 @@
     "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق"
   },
   "comment": {
+    "comments": "التعليقات",
     "reply": "قم بالرد",
     "see": "تفقد",
     "replys": "من الردود",
-    "hide_replays": "اخفاء الردود"
+    "hide_replays": "اخفاء الردود",
+    "post_a_comment": "انشر تعليق",
+    "wright_a_comment": "قم بكتابة تعليق..."
   },
   "market_place": {
     "market_place": "المتجر",
-    "browse_all": "تصفح الكل",
-    "following_pages": "الصفحات التي تتابعها",
+    "browse_all": "تصفح كل المنتجات",
+    "following_pages": "الصفحات التي اتابعها فقط",
     "filter_by_price": "تصفية حسب الأسعار",
     "filter_by_categories": "تصفية حسب الأقسام",
     "enter_min_and_max_price": "أدخل الحد الأدنى والحد الأقصى للسعر",
@@ -61,5 +69,8 @@
     "max": "الحد الأقصى",
     "shipping_is_available": "التوصيل متاح",
     "pickup_only_in": "الاستلام متاح فقط في"
+  },
+  "chats": {
+    "Explore_your_chats": "استكشف الدردشات واختر واحدة للبدء."
   }
 }

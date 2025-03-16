@@ -6,6 +6,7 @@ export const InputActionsContext = createContext();
 export const InputActionsProvider = ({ children }) => {
   // Emojes && IN+nput
   const InputRef = useRef(null);
+  const emojiHolderRef = useRef(null);
   const [messageText, setMessageText] = useState("");
 
   const handleEmojiClick = (event) => {
@@ -34,12 +35,15 @@ export const InputActionsProvider = ({ children }) => {
     }, 0);
   };
 
+
+
   return (
     <InputActionsContext.Provider
       value={{
         messageText,
         setMessageText,
         InputRef,
+        emojiHolderRef,
         handleEmojiClick,
       }}
     >

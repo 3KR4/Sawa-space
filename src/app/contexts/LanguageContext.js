@@ -14,6 +14,10 @@ export const LanguageProvider = ({ children }) => {
     loadTranslations(savedLocale);
   }, []);
 
+  useEffect(() => {
+    document.body.className = `${locale}`; 
+  }, [locale]);
+
   const loadTranslations = async (lang) => {
     try {
       const data = await import(`../../locales/${lang}.json`);

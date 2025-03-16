@@ -13,11 +13,9 @@ import { useLanguage } from "../app/contexts/LanguageContext";
 import { FaAngleRight } from "react-icons/fa";
 import { FaAngleLeft } from "react-icons/fa";
 
-
 export default function ProductsSection({ data, section }) {
-  const { translations } = useLanguage();
   const { setOpenPostForm } = useContext(MenusContext);
-  const { locale, changeLanguage } = useLanguage();
+  const { locale, translations, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
 
   return (
@@ -33,12 +31,18 @@ export default function ProductsSection({ data, section }) {
       <div className="swiper-container">
         <Swiper
           modules={[Navigation]}
-          slidesPerView={5}
           spaceBetween={7}
           speed={1000}
           navigation={{
             nextEl: ".custom-next",
             prevEl: ".custom-prev",
+          }}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            1024: { slidesPerView: 2 },
+            1400: { slidesPerView: 3 },
+            1600: { slidesPerView: 4 },
+            1700: { slidesPerView: 5 },
           }}
         >
           {data?.map((item, index) => (
@@ -108,7 +112,7 @@ export default function ProductsSection({ data, section }) {
                       />
                       <h4>{item?.page?.name || item?.user?.name}</h4>
                     </div>
-                    <span>{convertTime(item?.time)}</span>
+                    <span>{convertTime(item?.time, locale, "product")}</span>
                   </div>
                 </div>
               </div>

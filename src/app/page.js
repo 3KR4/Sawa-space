@@ -18,7 +18,7 @@ export default function Home() {
       <div className="posts-holder">
         {loading
           ? Array.from({ length: 3 }).map((_, index) => (
-              <div>
+              <div key={index}>
                 <ContentLoader
                   className="skeleton skeleton-post"
                   width={600}

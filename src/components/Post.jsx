@@ -7,7 +7,7 @@ import TypeComment from "@/components/TypeComment";
 import ReactsHolder from "@/components/ReactsHolder";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-
+import { convertTime } from "@/utils/convertTime";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -28,7 +28,7 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({ data }) {
-    const { translations } = useLanguage();
+  const { translations, locale } = useLanguage();
 
   const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
     useContext(MenusContext);
@@ -73,7 +73,7 @@ function Post({ data }) {
               />
               <div className="info">
                 <h5>{data.user.name}</h5>
-                <span>July 19 2018, 19:42pm</span>
+                <span>{convertTime(data?.time, locale)}</span>
               </div>
             </div>
             <HiDotsVertical
@@ -239,7 +239,7 @@ function Post({ data }) {
         <div className="comments">
           <div className="top">
             <h3>
-              {translations?.post?.comments} ({data.comments.count})
+              {translations?.comment?.comments} ({data.comments.count})
             </h3>
             <IoIosClose onClick={() => setSeeComments(false)} />
           </div>
@@ -299,9 +299,7 @@ function Post({ data }) {
               <div className="noCommentsYet">
                 <FaRegComments />
                 <h4>{translations?.post?.thereis_nothing_here_yet}</h4>
-                <p>
-                  {translations?.post?.be_the_first_to_post_a_comment}
-                </p>
+                <p>{translations?.post?.be_the_first_to_post_a_comment}</p>
               </div>
             )}
           </div>

@@ -123,6 +123,7 @@ export const MenuProvider = ({ children }) => {
     <DynamicMenusContext.Provider
       value={{
         handleMenus,
+        handleMenus2,
         menuPosition,
         setMenuPosition,
         selectedDev,
@@ -137,7 +138,6 @@ export const MenuProvider = ({ children }) => {
         setSettingMenu,
         openUsersReact,
         setOpenUsersReact,
-        handleMenus2,
         menuPosition2,
         setMenuPosition2,
       }}

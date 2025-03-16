@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import { IoClose } from "react-icons/io5";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
@@ -13,6 +14,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 
 function TypeComment({ id }) {
   const { handleMenus } = useContext(DynamicMenusContext);
+  const { locale, translations } = useLanguage();
   const { messageText, setMessageText, InputRef } =
     useContext(InputActionsContext);
 
@@ -31,7 +33,7 @@ function TypeComment({ id }) {
     <div className="action-holder">
       <div className="top">
         <textarea
-          placeholder="Write a comment.."
+          placeholder={translations?.comment?.wright_a_comment}
           ref={InputRef}
           value={messageText}
           onInput={(e) => setMessageText(e.target.value)}
@@ -71,7 +73,7 @@ function TypeComment({ id }) {
           <MdOutlinePhotoSizeSelectActual
             onClick={() => inputFileRef.current.click()}
           />
-          <button>Post a Comment</button>
+          <button>{translations?.comment?.post_a_comment}</button>
         </div>
       </div>
       <input

@@ -152,7 +152,7 @@ export default function Header() {
         >
           <div className="theInput">
             <IoSearch />
-            <input type="text" placeholder="Search anything..." />
+            <input type="text" placeholder={translations?.placeHolders?.search_anything} />
             <IoClose className="delete" />
           </div>
           <div className="result">

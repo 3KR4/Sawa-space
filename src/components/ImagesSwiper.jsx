@@ -4,9 +4,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { messages, posts } from "@/Data";
 import "swiper/css";
 import "../app/Css/chat.css";
-
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
+import { convertTime } from "@/utils/convertTime";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -26,7 +26,8 @@ import { HiDotsVertical } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
 function ImagesSwiper() {
-  const { translations } = useLanguage();
+  const { translations, locale } = useLanguage();
+  const direction = locale === "ar" ? "rtl" : "ltr";
 
   const {
     dataSwiperType,
@@ -99,6 +100,7 @@ function ImagesSwiper() {
               </div>
               {dataForSwiper?.img?.length > 1 && (
                 <Swiper
+                  dir={direction}
                   onSwiper={setSwiperRef}
                   spaceBetween={5}
                   slidesPerView={"auto"}
@@ -195,7 +197,7 @@ function ImagesSwiper() {
                   />
                   <div className="info">
                     <h5>{dataForSwiper?.user?.name}</h5>
-                    <span>July 19 2018, 19:42pm</span>
+                    <span>{convertTime(dataForSwiper?.time, locale)}</span>
                   </div>
                 </div>
                 <div className="icons-holder">
@@ -264,6 +266,7 @@ function ImagesSwiper() {
                   </div>
                   {dataForSwiper?.img?.length > 1 && (
                     <Swiper
+                      dir={direction}
                       onSwiper={setSwiperRef}
                       spaceBetween={5}
                       slidesPerView={"auto"}
@@ -389,6 +392,7 @@ function ImagesSwiper() {
           </div>
           {dataForSwiper?.length > 1 && (
             <Swiper
+              dir={direction}
               onSwiper={setSwiperRef}
               spaceBetween={5}
               slidesPerView={"auto"}
