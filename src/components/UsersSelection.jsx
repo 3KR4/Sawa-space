@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { users } from "@/Data";

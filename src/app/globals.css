@@ -368,7 +368,7 @@ body.ar .chats.hide:hover .open-close svg {
   justify-content: center;
   border-radius: 5px;
   color: white;
-  background: var(--back-grident);
+  background: var(--main-color);
 }
 .chats .filters li.active {
   background: var(--main-color);
@@ -1072,12 +1072,18 @@ header .events .menu.createMenu svg {
   text-decoration: underline !important;
 }
 .post .middle a {
-  color: #005dff;
+  color: var(--title-color) !important;
+  text-decoration: unset !important;
   text-decoration: underline;
   font-family: "Rubik";
   font-weight: 400;
   font-size: 14px;
   width: fit-content;
+  transition: 0.3s;
+  text-decoration: underline !important;
+}
+.post .middle a:hover {
+  color: #005dff !important;
 }
 .post .middle a:focus-visible {
   outline: none;
@@ -1195,10 +1201,6 @@ body.ar .post .emojesCounter p:last-child {
 body.ar .comments .sideMenu.reactsHolder {
   left: unset;
   right: calc(100% - 250px);
-}
-body.ar .sideMenu.reactsHolder {
-  left: unset;
-  right: 50%;
 }
 .sideMenu.reactsHolder .reacts {
   margin: 0;
@@ -1435,7 +1437,13 @@ body.ar .post .action-holder .top svg {
 .post .comments .action-holder .actions .right svg {
   font-size: 18px;
 }
-.post .comments .action-holder .actions .right svg:hover {
+.actions.forImageSwiper > div {
+  position: unset;
+}
+.actions.forImageSwiper .sideMenu.reactsHolder {
+  right: unset;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .post .comments .action-holder .actions .right button {
   background: var(--back-grident);
@@ -1452,6 +1460,9 @@ body.ar .post .action-holder .top svg {
   align-items: center;
   justify-content: center;
   max-height: 90%;
+}
+.focusedMsg:has(.post) .hold {
+  margin: unset;
 }
 .focusedMsg .hold.OneImg {
   max-height: 100%;
@@ -1595,6 +1606,9 @@ body:has(.focusedMsg.active) .chats {
 .posts-holder .post .bottom > .actions > div {
   display: flex;
 }
+.posts-holder .post .bottom > .actions > div:first-child {
+  position: unset;
+}
 .posts-holder .post .bottom > .actions > div > svg {
   width: 50px;
   padding: 7px;
@@ -1669,7 +1683,7 @@ body:has(.focusedMsg.active) .chats {
   max-height: unset;
 }
 .focusedMsg .post:has(.swiper) .hold {
-  max-height: 90%;
+  height: 90%;
 }
 
 .reacts {
@@ -2240,8 +2254,12 @@ body.ar .inputHolder .holder:has(textarea) > svg {
   text-transform: capitalize;
   margin-left: 5px;
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 3px;
   font-weight: 500 !important;
+}
+body.ar .inputHolder span {
+  font-size: 13px;
 }
 .inputHolder.tags .holder {
   width: 50%;

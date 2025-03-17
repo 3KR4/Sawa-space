@@ -1,10 +1,12 @@
+"use client";
+
 import React, { useContext } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 
 import { MenusContext } from "@/app/contexts/MenusContext";
 import { ScreenContext } from "@/app/contexts/ScreenContext";
@@ -112,7 +114,7 @@ export default function ProductsSection({ data, section }) {
                       />
                       <h4>{item?.page?.name || item?.user?.name}</h4>
                     </div>
-                    <span>{convertTime(item?.time, locale, "product")}</span>
+                    <span>{ConvertTime(item?.time, locale, "product")}</span>
                   </div>
                 </div>
               </div>

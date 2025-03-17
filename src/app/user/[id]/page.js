@@ -12,8 +12,6 @@ import SettingMenu from "@/components/SettingMenu";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
-
-
 import "../../Css/user.css";
 import { FaAngleRight } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
@@ -33,7 +31,7 @@ import { MdBlock } from "react-icons/md";
 import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function User({ params }) {
-    const { translations } = useLanguage();
+  const { translations } = useLanguage();
 
   const {
     setDataSwiperType,
@@ -115,16 +113,19 @@ export default function User({ params }) {
             <div className="right">
               <div className="left-data">
                 <h4>{curentChat?.name}</h4>
-                <h5>46 Friends - 10 mutual</h5>
+                <h5>
+                  46 {translations?.user_page?.friends} - 10{" "}
+                  {translations?.user_page?.mutual}
+                </h5>
               </div>
               <div className="right-btns">
                 <button className={`main-button`}>
                   <IoMdPersonAdd />
-                  Add Friend
+                  {translations?.actions?.add_friend}
                 </button>
                 <button className={`main-button`}>
                   <AiFillMessage />
-                  Message
+                  {translations?.user_page?.message}
                 </button>
                 <div className="search-holder">
                   <IoSearch
@@ -153,7 +154,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("posts")}
               >
                 <BsFillPostcardFill />
-                Posts
+                {translations?.user_page?.posts}
               </button>
               <button
                 className={`main-button ${
@@ -162,7 +163,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("friends")}
               >
                 <HiUsers />
-                Friends
+                {translations?.sidechats?.friends}
               </button>
               <button
                 className={`main-button ${
@@ -171,7 +172,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("photos")}
               >
                 <IoMdPhotos />
-                Photos
+                {translations?.user_page?.photos}
               </button>
               <button
                 className={`main-button ${
@@ -180,7 +181,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("about")}
               >
                 <IoInformationCircleSharp />
-                About
+                {translations?.user_page?.about}
               </button>
             </div>
             <button
@@ -197,29 +198,30 @@ export default function User({ params }) {
           {currentSelectedData !== "about" && (
             <ul className="about">
               <div className="top">
-                <h4>About</h4>
+                <h4>{translations?.user_page?.about}</h4>
               </div>
               <li>
-                BirthDate: <span>19-12-2003</span>
+                {translations?.user_page?.birthdate}: <span>19-12-2003</span>
               </li>
               <li>
-                Region: <span>Egypt</span>
+                {translations?.user_page?.region}: <span>Egypt</span>
               </li>
               <li>
-                Current Location: <span>Cairo</span>
+                {translations?.user_page?.current_location}:<span>Cairo</span>
               </li>
               <li>
-                Education: <span>FrontEnd Developer</span>
+                {translations?.user_page?.work}: <span>FrontEnd Developer</span>
               </li>
             </ul>
           )}
           {currentSelectedData !== "photos" && (
             <div className="images">
               <div className="top">
-                <h4>Photos</h4>
+                <h4> {translations?.user_page?.photos}</h4>
                 {mediaMsgs?.length > 6 && (
                   <button>
-                    See All Photos <FaAngleRight />
+                    {translations?.user_page?.see_all}{" "}
+                    {translations?.user_page?.photos} <FaAngleRight />
                   </button>
                 )}
               </div>
@@ -264,7 +266,8 @@ export default function User({ params }) {
                 <h4>Friends</h4>
                 {users?.length > 6 && (
                   <button>
-                    See All Friends <FaAngleRight />
+                    {translations?.user_page?.see_all}{" "}
+                    {translations?.sidechats?.friends} <FaAngleRight />
                   </button>
                 )}
               </div>
@@ -313,8 +316,12 @@ export default function User({ params }) {
         <div className="bigSection">
           <div className="actions">
             <h4>
-              {currentSelectedData !== "about" ? "All" : null}{" "}
-              {currentSelectedData}
+              {currentSelectedData !== "about"
+                ? translations?.user_page?.all
+                : null}{" "}
+              {currentSelectedData === "friends"
+                ? translations?.sidechats?.[currentSelectedData]
+                : translations?.user_page?.[currentSelectedData] || ""}
             </h4>
             {currentSelectedData !== "about" && <button>Sort by Time</button>}
           </div>

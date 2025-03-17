@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,7 +8,7 @@ import "swiper/css";
 import "../app/Css/chat.css";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -197,7 +199,7 @@ function ImagesSwiper() {
                   />
                   <div className="info">
                     <h5>{dataForSwiper?.user?.name}</h5>
-                    <span>{convertTime(dataForSwiper?.time, locale)}</span>
+                    <span>{ConvertTime(dataForSwiper?.time, locale)}</span>
                   </div>
                 </div>
                 <div className="icons-holder">
@@ -319,8 +321,10 @@ function ImagesSwiper() {
 
                 {dataForSwiper?.mentions?.length > 0 && (
                   <div className="mentions">
-                    <h5>{dataForSwiper?.user?.name} mention</h5>
-                    {dataForSwiper?.mentions?.map((x, index) => (
+                    <h5>
+                      {dataForSwiper.user.name} {translations?.post?.mention}
+                    </h5>
+                    {dataForSwiper.mentions?.map((x, index) => (
                       <button
                         key={index}
                         onClick={(e) => handleMenus(e, "userInfo", x.userId)}
@@ -339,7 +343,7 @@ function ImagesSwiper() {
                   <div className="topHolderComments">
                     <div className="top">
                       <h3>
-                        {translations?.post?.comments} (
+                        {translations?.comment?.comments} (
                         {dataForSwiper?.comments?.count})
                       </h3>
                     </div>

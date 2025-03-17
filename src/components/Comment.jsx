@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useState, useContext } from "react";
 import ReactsHolder from "@/components/ReactsHolder";
@@ -5,7 +7,7 @@ import Image from "next/image";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { MenusContext } from "@/app/contexts/MenusContext";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 
@@ -48,7 +50,7 @@ function Comment({ data }) {
           <div className="top">
             <div className="left">
               <h5>{data?.name}</h5>
-              <span>{convertTime(data?.time, locale)}</span>
+              <span>{ConvertTime(data?.time, locale)}</span>
             </div>
             {data?.reacts?.count !== 0 && (
               <div

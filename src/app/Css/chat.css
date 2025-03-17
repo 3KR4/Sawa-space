@@ -222,7 +222,8 @@ body.ar .personChat .overViewMenu {
 
 .personChat .overViewMenu .right {
   width: 330px;
-  min-height: 360px;
+    min-height: 345px;
+
   padding: 14px;
   padding-right: 0;
   display: flex;
@@ -633,6 +634,7 @@ body.ar .personChat .overViewMenu .right > div {
   max-height: 144px;
   overflow: auto;
 }
+
 .focusedMsg .hold {
   margin-top: auto;
 }

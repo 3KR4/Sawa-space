@@ -1,6 +1,7 @@
 {
   "actions": {
     "action": "قم بي",
+    "actions": "الإجراءات",
     "pintotop": "تثبيت في الأعلى",
     "addtofavorite": "إضافة إلى التفضيلات",
     "archivechat": "أرشفة المحادثة",
@@ -26,7 +27,8 @@
     "search_her": "ابحث هنا...",
     "search_anything": "ابحث عن اي شئ",
     "search_by_name": "ابحث بواسطة الاسم",
-    "type_a_message": "قم بكتابة رسالة"
+    "type_a_message": "قم بكتابة رسالة",
+    "search_in_posts": "ابحث في المنشورات"
   },
   "header": {
     "explore": "الرائج",
@@ -81,12 +83,16 @@
     "pickup_only_in": "الاستلام متاح فقط في"
   },
   "chats": {
-    "Explore_your_chats": "استكشف محادثاتك",
+    "Explore_your_chats": "قم بأختيار محادثة لبدأ الدردشة",
     "overview": "نظرة عامة",
     "media": "الوسائط",
     "files": "الملفات",
     "links": "الروابط",
     "groups": "المجموعات",
+    "mediaS": "وسائط",
+    "filesS": "ملفات",
+    "linksS": "روابط",
+    "groupsS": "مجموعات",
     "phonenumber": "رقم الهاتف",
     "acrchive_chat": "أرشفة الدردشة",
     "make_star": "تمييز بنجمة",
@@ -106,5 +112,31 @@
     "record": "تسجيل صوتي",
     "mentions": "الإشارات",
     "selected_users": "المستخدمون المحددون"
+  },
+  "user_page": {
+    "all": "جميع",
+    "message": "مراسلة",
+    "friends": "صديق",
+    "mutual": "اصدقاء مشتركين",
+    "about": "الملف الشخصي",
+    "birthdate": "تاريخ الميلاد",
+    "region": "البلد",
+    "current_location": "الموقع الحالي",
+    "education": "التعليم",
+    "college": "الجامعة",
+    "work": "العمل",
+    "see_all": "رؤية جميع",
+    "posts": "المنشورات",
+    "photos": "الصور"
+  },
+  "auth": {
+    "enter_your_username_or_email": "قم بأدخال اسمك او البريد الألكتروني",
+    "enter_your_username": "قم بأدخال اسمك",
+    "enter_your_phone": "قم بأدخال رقم جوالك",
+    "enter_your_email": "قم بأدخال بريدك الالكتروني",
+    "enter_your_password": "قم بأدخال كلمة المرور",
+    "did_you_forge_your_password": "هل قد نسيت كلمة المرور الخاصة بك",
+    "register": "انشاء حساب",
+    "login": "تسجيل الدخول"
   }
 }

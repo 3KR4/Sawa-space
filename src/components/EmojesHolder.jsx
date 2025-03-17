@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect } from "react";
 import { useState, useContext, useRfef } from "react";
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";

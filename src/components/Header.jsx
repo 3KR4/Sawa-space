@@ -151,7 +151,10 @@ export default function Header() {
         >
           <div className="theInput">
             <IoSearch />
-            <input type="text" placeholder={translations?.placeHolders?.search_anything} />
+            <input
+              type="text"
+              placeholder={translations?.placeHolders?.search_anything}
+            />
             <IoClose className="delete" />
           </div>
           <div className="result">
@@ -270,9 +273,11 @@ export default function Header() {
                   >
                     <IoLanguage /> {translations?.header?.swithlang}
                   </button>
-                  <button className="logOut">
-                    <TbLogout2 /> {translations?.header?.logout}
-                  </button>
+                  <Link to={`/auth`}>
+                    <button className="logOut">
+                      <TbLogout2 /> {translations?.header?.logout}
+                    </button>
+                  </Link>
                 </ul>
               </div>
             </li>

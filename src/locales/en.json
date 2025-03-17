@@ -1,6 +1,7 @@
 {
   "actions": {
     "action": "action",
+    "actions": "actions",
     "pintotop": "pin to top",
     "addtofavorite": "add to favorite",
     "archivechat": "archive chat",
@@ -26,7 +27,8 @@
     "search_her": "search her",
     "search_anything": "search anything...",
     "search_by_name": "search by name",
-    "type_a_message": "type a message"
+    "type_a_message": "type a message",
+    "search_in_posts": "ابحث في المنشورات"
   },
   "header": {
     "explore": "explore",
@@ -87,6 +89,10 @@
     "files": "files",
     "links": "links",
     "groups": "groups",
+    "mediaS": "وسائط",
+    "filesS": "ملفات",
+    "linksS": "روابط",
+    "groupsS": "مجموعات",
     "phonenumber": "phone number",
     "acrchive_chat": "acrchive chat",
     "make_star": "make star",
@@ -106,5 +112,32 @@
     "record": "record",
     "mentions": "mentions",
     "selected_users": "selected users"
+  },
+  "user_page": {
+    "all": "all",
+
+    "message": "message",
+    "friends": "friends",
+    "mutual": "mutual",
+    "about": "about",
+    "birthdate": "birthdate",
+    "region": "region",
+    "current_location": "current_location",
+    "education": "education",
+    "college": "college",
+    "work": "work",
+    "see_all": "see all",
+    "posts": "Posts",
+    "photos": "Photos"
+  },
+  "auth": {
+    "enter_your_username_or_email": "enter your username or email",
+    "enter_your_username": "enter your username",
+    "enter_your_phone": "enter your phone",
+    "enter_your_email": "enter your email",
+    "enter_your_password": "enter your password",
+    "did_you_forge_your_password": "did you forge your password",
+    "register": "register",
+    "login": "login"
   }
 }

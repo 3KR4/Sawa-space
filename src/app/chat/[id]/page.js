@@ -7,7 +7,7 @@ import { messages, users } from "@/Data";
 import EmojiPicker from "emoji-picker-react";
 import { use } from "react";
 import UsersSelection from "@/components/UsersSelection";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import PinHolder from "@/components/chat/PinHolder";
@@ -378,7 +378,7 @@ export default function Chat({ params }) {
                 </li>
               </ul>
               <div className="right">
-                <h1>{selectedOverView}</h1>
+                <h1>{translations?.chats[selectedOverView]}</h1>
 
                 {selectedOverView === `overview` ? (
                   <div className="overview">
@@ -398,7 +398,7 @@ export default function Chat({ params }) {
                     <p>{curentChat?.number}</p>
 
                     <div className="btn-holder">
-                      <button>archive chat</button>
+                      <button>{translations?.actions?.archivechat}</button>
                       <div className="row">
                         <button>{translations?.actions?.remove_friend}</button>
                         <button>{translations?.actions?.block}</button>
@@ -466,8 +466,12 @@ export default function Chat({ params }) {
                 ) : (
                   <div>
                     {locale === "en"
-                      ? `No ${selectedOverView} to display`
-                      : `ليس هناك ${selectedOverView} للعرض`}
+                      ? `No ${
+                          translations?.chats[selectedOverView + "S"]
+                        } to display yet`
+                      : `ليس هناك ${
+                          translations?.chats[selectedOverView + "S"]
+                        }  للعرض بعد`}
                   </div>
                 )}
               </div>
@@ -608,7 +612,7 @@ export default function Chat({ params }) {
                 >
                   {x.history ? (
                     <div>
-                      {convertTime(x?.time, locale, "singleChat")}
+                      {ConvertTime(x?.time, locale, "singleChat")}
                       <small>Tuseday, junary</small>
                     </div>
                   ) : x.deleted ? (
@@ -648,7 +652,7 @@ export default function Chat({ params }) {
                       <div className="top">
                         {x.user !== "Bob" && <h5>{x.user}</h5>}{" "}
                         <small>
-                          {convertTime(x?.time, locale, "singleChat")}
+                          {ConvertTime(x?.time, locale, "singleChat")}
                         </small>
                       </div>
                       {replyMsg && (

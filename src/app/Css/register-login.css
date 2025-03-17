@@ -70,7 +70,7 @@ body:has(.register-page) .chape {
   align-items: center;
   margin-bottom: 15px;
   margin-top: -6px;
-} 
+}
 .register-page .top h1 {
   font-size: 25px;
 }
@@ -118,6 +118,12 @@ form .inputHolder {
   padding-left: 40px;
   background: #e8e8e8;
 }
+body.ar .register-page form .inputHolder input {
+  padding-left: 12px;
+}
+body.ar:has(.register-page) .inputHolder input {
+  padding: 0 39px;
+}
 form .inputHolder .holder {
   position: relative;
   overflow: hidden;
@@ -135,6 +141,10 @@ form .inputHolder .holder > svg {
   transform: translateY(-50%);
   cursor: auto;
 }
+body.ar form .inputHolder .holder > svg {
+  left: unset;
+  right: 14px;
+}
 form .inputHolder .holder > svg.eye {
   left: unset;
   right: 9px;
@@ -143,8 +153,11 @@ form .inputHolder .holder > svg.eye {
   width: 32px;
   height: 32px;
 }
+body.ar .register-page form .inputHolder:has(svg.eye) input {
+  padding-left: 48px;
+}
 body.ar form .inputHolder .holder > svg.eye {
-  left: 14px;
+  left: 10px;
   right: unset;
 }
 
@@ -188,11 +201,11 @@ form .btns + span {
   background: var(--back-grident);
   color: white;
   font-weight: 700;
-  font-family: 'Cairo';
+  font-family: "Cairo";
 }
 .register-page .btns .main-button:last-child {
-background: #e8e8e8;
-color: var(--title-color);
+  background: #e8e8e8;
+  color: var(--title-color);
 }
 .register-page .btns .main-button:hover {
   color: white;
@@ -225,6 +238,12 @@ body.light .register-page .btns a {
 .register-page .forget {
   width: fit-content;
   margin-bottom: -10px;
+  background: transparent;
+  color: var(--title-color) !important;
+}
+.register-page .forget:hover {
+  background: var(--main-color);
+  color: var(--body-color) !important;
 }
 
 /*! ============= support-page .contactUs ============ */
@@ -282,13 +301,13 @@ body.light .register-page .btns a {
   border: none;
   border-radius: 3px;
   width: 100%;
-  outline: none ;
+  outline: none;
   padding-left: 42px;
   padding-right: 16px;
   padding-top: 19px;
   resize: none;
   color: var(--title-color);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 .support-page .contactUs .textHolder svg {
   color: var(--paragraph-color);
@@ -299,7 +318,7 @@ body.light .register-page .btns a {
   font-size: 17px;
 }
 .support-page .contactUs .textHolder::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   bottom: 3px;
@@ -324,9 +343,9 @@ body.light .register-page .btns a {
   --checkbox-border-style: solid;
   --checkmark-size: 1.2;
 }
-.ui-checkbox, 
-.ui-checkbox, 
-.ui-checkbox ::before, 
+.ui-checkbox,
+.ui-checkbox,
+.ui-checkbox ::before,
 .ui-checkbox::after {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -338,7 +357,8 @@ body.light .register-page .btns a {
   height: 15px;
   border-radius: var(--checkbox-border-radius);
   background: #d5d5d5;
-  border: var(--checkbox-border-width) var(--checkbox-border-style) var(--checkbox-border-color);
+  border: var(--checkbox-border-width) var(--checkbox-border-style)
+    var(--checkbox-border-color);
   transition: all 0.3s;
   cursor: pointer;
   position: relative;
@@ -370,7 +390,7 @@ body.light .ui-checkbox {
   border-bottom: 2px solid var(--secondary-color);
   transform: translate(-50%, -50%) rotate(45deg) scale(0);
   opacity: 0;
-  transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
+  transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
 }
 /* actions */
 .ui-checkbox:hover {

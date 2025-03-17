@@ -1,3 +1,4 @@
+"use client"
 const arabicDays = {
   Sunday: "الأحد",
   Monday: "الإثنين",
@@ -37,7 +38,6 @@ const timeUnits = {
   },
 };
 
-
 const formatTime = (date, locale) => {
   const options = { hour: "numeric", minute: "numeric", hour12: true };
   const formattedTime = date.toLocaleTimeString(
@@ -52,7 +52,7 @@ const formatTime = (date, locale) => {
   return formattedTime;
 };
 
-export function convertTime(timestamp, locale = "en", type = "general") {
+export function ConvertTime(timestamp, locale = "en", type = "general") {
   const now = new Date();
   const past = new Date(timestamp);
 

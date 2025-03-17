@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import "../Css/register-login.css";
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 import { useForm } from "react-hook-form";
 import Link from "next/link";
@@ -19,9 +20,11 @@ import {
   EyeOff,
   CircleAlert,
 } from "lucide-react";
-let lang = "en";
+let locale = "en";
 
 export default function Auth() {
+  const { translations, locale } = useLanguage();
+
   const [isLoginPage, setIsLoginPage] = useState(false);
 
   const {
@@ -70,10 +73,10 @@ export default function Auth() {
         <div className="top">
           <h1>
             {isLoginPage
-              ? lang === "en"
+              ? locale === "en"
                 ? "Login"
                 : "تسجيل الدخول"
-              : lang === "en"
+              : locale === "en"
               ? "Register"
               : "إنشاء حساب جديد"}
           </h1>
@@ -88,23 +91,23 @@ export default function Auth() {
                   type="text"
                   {...register("userName", {
                     required:
-                      lang === "en"
+                      locale === "en"
                         ? "Please enter your username"
                         : "اسم المستخدم",
                     minLength: {
                       value: 3,
                       message:
-                        lang === "en"
+                        locale === "en"
                           ? "Username must be at least 3 characters"
                           : "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
                     },
                   })}
                   placeholder={
                     isLoginPage
-                      ? lang === "en"
+                      ? locale === "en"
                         ? "Enter Your Username or Email"
                         : "أدخل اسم المستخدم أو البريد الإلكتروني"
-                      : lang === "en"
+                      : locale === "en"
                       ? "Please enter your username"
                       : "اسم المستخدم"
                   }
@@ -128,33 +131,33 @@ export default function Auth() {
                     type="tel"
                     {...register("phone", {
                       required:
-                        lang === "en"
+                        locale === "en"
                           ? "Please enter a phone number"
                           : "يرجى إدخال رقم الهاتف",
                       pattern: {
                         value: /^\d+$/,
                         message:
-                          lang === "en"
+                          locale === "en"
                             ? "Phone number must contain only digits"
                             : "يجب أن يحتوي رقم الهاتف على أرقام فقط",
                       },
                       minLength: {
                         value: 10,
                         message:
-                          lang === "en"
+                          locale === "en"
                             ? "Phone number must be at least 10 digits long"
                             : "يجب أن يكون رقم الهاتف 10 أرقام على الأقل",
                       },
                       maxLength: {
                         value: 15,
                         message:
-                          lang === "en"
+                          locale === "en"
                             ? "Phone number must be at most 15 digits long"
                             : "يجب ألا يزيد رقم الهاتف عن 15 رقمًا",
                       },
                     })}
                     placeholder={
-                      lang === "en" ? "Your Phone Number" : "رقم الهاتف"
+                      locale === "en" ? "Your Phone Number" : "رقم الهاتف"
                     }
                     style={{ borderColor: errors.phone ? "red" : "black" }}
                   />
@@ -178,19 +181,19 @@ export default function Auth() {
                   type="email"
                   {...register("email", {
                     required:
-                      lang === "en"
+                      locale === "en"
                         ? "Please enter your email address"
                         : "يرجى إدخال البريد الإلكتروني",
                     pattern: {
                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                       message:
-                        lang === "en"
+                        locale === "en"
                           ? "Please enter a valid email address"
                           : "يرجى إدخال بريد إلكتروني صحيح",
                     },
                   })}
                   placeholder={
-                    lang === "en" ? "Your Email" : "البريد الإلكتروني"
+                    locale === "en" ? "Your Email" : "البريد الإلكتروني"
                   }
                   style={{ borderColor: errors.email ? "red" : "black" }}
                 />
@@ -220,19 +223,19 @@ export default function Auth() {
                 type={passEye.password === true ? "text" : "password"}
                 {...register("password", {
                   required:
-                    lang === "en"
+                    locale === "en"
                       ? "Please enter a password"
                       : "يرجى إدخال كلمة مرور",
                   minLength: {
                     value: 8,
                     message:
-                      lang === "en"
+                      locale === "en"
                         ? "Password must be at least 8 characters long"
                         : "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
                   },
                 })}
                 placeholder={
-                  lang === "en" ? "Enter password" : "أدخل كلمة المرور"
+                  locale === "en" ? "Enter password" : "أدخل كلمة المرور"
                 }
                 style={{ borderColor: errors.password ? "red" : "black" }}
               />
@@ -265,17 +268,17 @@ export default function Auth() {
                   type={passEye.confirm === true ? "text" : "password"}
                   {...register("passwordConfirmation", {
                     required:
-                      lang === "en"
+                      locale === "en"
                         ? "Please confirm your password"
                         : "يرجى تأكيد كلمة المرور",
                     validate: (value) =>
                       value === password ||
-                      (lang === "en"
+                      (locale === "en"
                         ? "Passwords don't match"
                         : "كلمات المرور غير متطابقة"),
                   })}
                   placeholder={
-                    lang === "en" ? "Confirm password" : "تأكيد كلمة المرور"
+                    locale === "en" ? "Confirm password" : "تأكيد كلمة المرور"
                   }
                   style={{
                     borderColor: errors.passwordConfirmation ? "red" : "black",
@@ -292,7 +295,7 @@ export default function Auth() {
           )}
 
           <Link href="/forget-pass" className="main-button forget">
-            {lang === "en"
+            {locale === "en"
               ? "Did You Forget Your Password?"
               : "هل نسيت كلمة المرور؟"}
           </Link>
@@ -300,10 +303,10 @@ export default function Auth() {
           <div className="btns">
             <button className="main-button" type="submit">
               {isLoginPage
-                ? lang === "en"
+                ? locale === "en"
                   ? "Login"
                   : "تسجيل الدخول"
-                : lang === "en"
+                : locale === "en"
                 ? "Register"
                 : "إنشاء حساب جديد"}
             </button>
@@ -315,10 +318,10 @@ export default function Auth() {
               className="main-button"
             >
               {isLoginPage
-                ? lang === "en"
+                ? locale === "en"
                   ? "Register"
                   : "إنشاء حساب جديد"
-                : lang === "en"
+                : locale === "en"
                 ? "Login"
                 : "تسجيل الدخول"}
             </div>

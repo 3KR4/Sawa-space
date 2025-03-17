@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -7,7 +9,7 @@ import TypeComment from "@/components/TypeComment";
 import ReactsHolder from "@/components/ReactsHolder";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
 import { InputActionsContext } from "@/app/contexts/InputActionsContext";
@@ -36,8 +38,6 @@ function Post({ data }) {
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
   const { setMessageText } = useContext(InputActionsContext);
   const { screenSize } = useContext(ScreenContext);
-
-  const inputFileRef = useRef(null);
 
   const [seeComments, setSeeComments] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
@@ -73,7 +73,7 @@ function Post({ data }) {
               />
               <div className="info">
                 <h5>{data.user.name}</h5>
-                <span>{convertTime(data?.time, locale)}</span>
+                <span>{ConvertTime(data?.time, locale)}</span>
               </div>
             </div>
             <HiDotsVertical

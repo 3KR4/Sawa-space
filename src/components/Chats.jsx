@@ -6,7 +6,7 @@ import { maxLength } from "../Methods";
 import { users } from "@/Data";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-import { convertTime } from "@/utils/convertTime";
+import { ConvertTime } from "@/utils/ConvertTime";
 
 import {
   FaUnlink,
@@ -143,7 +143,7 @@ export default function Chats() {
           right: locale === "ar" ? `${menuPosition.left}px` : "unset",
         }}
       >
-        <div className="top">Actions</div>
+        <div className="top">{translations?.actions?.actions}</div>
         <ul>
           <li>
             <MdOutlinePushPin /> {translations?.actions?.pintotop}
@@ -213,7 +213,7 @@ export default function Chats() {
                   </p>
                 </div>
                 <div className="details">
-                  <span>{convertTime(x?.lastMsgTime, locale)}</span>
+                  <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
                   {x.unReadCounter > 0 && (
                     <span className="count">{x.unReadCounter}</span>
                   )}

@@ -18,6 +18,8 @@ export const users = [
     img: "/users/user2.png",
     lastMessage: { type: "img" },
     bio: "Photographer",
+    number: "+20 112 972 7995",
+
     lastMsgTime: "2025-03-14T09:40:00Z",
     isGroup: false,
     unReadCounter: 13,
@@ -28,6 +30,8 @@ export const users = [
     id: 3,
     name: "Football Fans",
     img: "/users/user3.png",
+    number: "+20 112 972 7995",
+
     lastMessage: { type: "sticker", content: "⚽" },
     bio: "Group of football lovers",
     lastMsgTime: "2025-03-08T09:40:00Z",
@@ -44,6 +48,8 @@ export const users = [
     bio: "Gamer",
     lastMsgTime: "2025-02-25T09:40:00Z",
     isGroup: false,
+    number: "+20 112 972 7995",
+
     unReadCounter: 1,
     groupMembers: [],
     newStatus: false,
@@ -57,6 +63,8 @@ export const users = [
     lastMsgTime: "2025-02-01T09:40:00Z",
     isGroup: true,
     unReadCounter: 0,
+    number: "+20 112 972 7995",
+
     groupMembers: ["Dad", "Mom", "Sister"],
     newStatus: false,
   },
@@ -68,6 +76,8 @@ export const users = [
     bio: "Musician",
     lastMsgTime: "2024-03-03T09:40:00Z",
     isGroup: false,
+    number: "+20 112 972 7995",
+
     unReadCounter: 8,
     groupMembers: [],
     newStatus: true,
@@ -79,6 +89,8 @@ export const users = [
     lastMessage: { type: "img" },
     bio: "Group for study discussions",
     lastMsgTime: "2023-03-03T09:40:00Z",
+    number: "+20 112 972 7995",
+
     isGroup: true,
     unReadCounter: 2,
     groupMembers: ["John", "Sara", "Mike"],
@@ -90,6 +102,8 @@ export const users = [
     img: "/users/user8.png",
     lastMessage: { type: "text", content: "Call me later." },
     bio: "Traveler",
+    number: "+20 112 972 7995",
+
     lastMsgTime: "2022-03-03T09:40:00Z",
     isGroup: false,
     unReadCounter: 0,
@@ -105,6 +119,8 @@ export const users = [
     lastMsgTime: "2025-03-01T09:40:00Z",
     isGroup: true,
     unReadCounter: 0,
+    number: "+20 112 972 7995",
+
     groupMembers: ["Ali", "Ahmed", "Sara"],
     newStatus: false,
   },
@@ -114,6 +130,8 @@ export const users = [
     img: "/users/user10.png",
     lastMessage: { type: "img" },
     bio: "Coder",
+    number: "+20 112 972 7995",
+
     lastMsgTime: "2025-03-15T09:39:00Z",
     isGroup: false,
     unReadCounter: 2,
@@ -128,6 +146,8 @@ export const users = [
     bio: "For music sharing",
     lastMsgTime: "2025-03-15T09:38:00Z",
     isGroup: true,
+    number: "+20 112 972 7995",
+
     unReadCounter: 0,
     groupMembers: ["Ahmed", "Omar", "Nour"],
     newStatus: false,
@@ -140,6 +160,8 @@ export const users = [
     bio: "Developer",
     lastMsgTime: "2025-03-15T08:40:00Z",
     isGroup: false,
+    number: "+20 112 972 7995",
+
     unReadCounter: 0,
     groupMembers: [],
     newStatus: false,
@@ -150,6 +172,8 @@ export const users = [
     img: "/users/user13.png",
     lastMessage: { type: "img" },
     bio: "Book enthusiasts",
+    number: "+20 112 972 7995",
+
     lastMsgTime: "2025-03-15T07:40:00Z",
     isGroup: true,
     unReadCounter: 0,
@@ -165,6 +189,8 @@ export const users = [
     lastMsgTime: "2025-03-15T00:40:00Z",
     isGroup: false,
     unReadCounter: 0,
+    number: "+20 112 972 7995",
+
     groupMembers: [],
     newStatus: false,
   },
@@ -175,6 +201,8 @@ export const users = [
     lastMessage: { type: "text", content: "New iPhone launched!" },
     bio: "Latest technology updates",
     lastMsgTime: "2025-03-14T23:59:00Z",
+    number: "+20 112 972 7995",
+
     isGroup: true,
     unReadCounter: 0,
     groupMembers: ["Ahmed", "Nour", "Sara"],
@@ -191,6 +219,7 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:00",
+
     pin: true,
   },
   {

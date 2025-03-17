@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useEffect, useContext, useRef } from "react";
 import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
@@ -7,9 +9,7 @@ import { FaPlus } from "react-icons/fa6";
 function ReactsHolder({ reactsHolder, setReactsHolder, id }) {
   const reactsRef = useRef(null);
 
-  const {
-    handleMenus,
-  } = useContext(DynamicMenusContext);
+  const { handleMenus } = useContext(DynamicMenusContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
