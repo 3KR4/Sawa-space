@@ -7,6 +7,7 @@
   scroll-behavior: smooth;
   list-style: none;
   text-decoration: none;
+  text-transform: capitalize;
 }
 body.ar,
 body.ar * {
@@ -16,7 +17,7 @@ body.ar .swiper-container,
 body.ar .swiper-container *,
 body.ar .navigations-icons {
   direction: ltr;
-} 
+}
 main {
   margin: 0;
   padding: 0;
@@ -363,7 +364,8 @@ body.ar .chats.hide:hover .open-close svg {
 }
 .chats .filters li.active,
 .chats .filters li:hover {
-  width: 97px;
+  width: 97px !important;
+  justify-content: center;
   border-radius: 5px;
   color: white;
   background: var(--back-grident);
@@ -376,20 +378,21 @@ body.ar .chats.hide:hover .open-close svg {
   color: white;
 }
 .chats .filters:has(li:not(.active):hover) li.active {
-  width: 35px;
+  width: 35px !important;
   background: transparent;
+  justify-content: unset;
 }
 .chats .filters:has(li:not(.active):hover) li.active svg {
   color: var(--title-color);
 }
 .chats .filters li:nth-child(3).active,
 .chats .filters li:nth-child(3):hover {
-  width: 108px;
+  width: 108px !important;
 }
 
 .chats .filters li:first-child.active,
 .chats .filters li:first-child:hover {
-  width: 105px;
+  width: 105px !important;
 }
 body.ar .chats .filters li,
 body.ar .chats .filters li {
@@ -397,19 +400,19 @@ body.ar .chats .filters li {
 }
 body.ar .chats .filters li.active,
 body.ar .chats .filters li:hover {
-  width: 114px;
+  width: 114px !important;
 }
 body.ar .chats .filters li.active,
 body.ar .chats .filters li:hover {
-  width: 114px;
+  width: 114px !important;
 }
 body.ar .chats .filters li:nth-child(2).active,
 body.ar .chats .filters li:nth-child(2):hover {
-  width: 123px;
+  width: 123px !important;
 }
 body.ar .chats .filters li:nth-child(4).active,
 body.ar .chats .filters li:nth-child(4):hover {
-  width: 121px;
+  width: 121px !important;
 }
 
 .chats .filters li svg {
@@ -431,7 +434,7 @@ body.ar .chats .filters li:nth-child(4):hover {
 .chats .chat {
   display: flex;
   align-items: center;
-  width: 320px;
+  width: -webkit-fill-available;
   transition: 0.3s;
   border-radius: 8px;
   padding: 7px 5px;
@@ -453,6 +456,7 @@ body.ar .chats.active .chat {
   flex-direction: column;
   gap: 2px;
   margin-left: 10px;
+  width: -webkit-fill-available;
   transition: 0.3s;
 }
 body.ar .chats .chat .name-lastmessage {
@@ -460,7 +464,7 @@ body.ar .chats .chat .name-lastmessage {
   margin-right: 10px;
 }
 .chats .chat .name-lastmessage p {
-  width: 194px;
+  width: -webkit-fill-available;
   display: flex;
   align-items: center;
   gap: 3px;
@@ -563,6 +567,9 @@ body.ar .chats .chat .name-lastmessage {
   padding: 7px 0;
   position: relative;
 }
+.chats.hide .chat {
+  max-height: 50px;
+}
 .chats.hide .chat .details span.count {
   font-size: 12px;
   position: absolute;
@@ -619,7 +626,7 @@ body.ar .chats.hide .holder {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 91%;
+  height: 100%;
   filter: grayscale(0.15);
 }
 .chat-page > img {
@@ -627,6 +634,7 @@ body.ar .chats.hide .holder {
 }
 .chat-page h1 {
   font-size: 30px;
+  max-width: 89%;
   text-align: center;
 }
 
@@ -1184,7 +1192,14 @@ body.ar .post .emojesCounter p:last-child {
   padding: 0;
   transform: translateX(-50%);
 }
-
+body.ar .comments .sideMenu.reactsHolder {
+  left: unset;
+  right: calc(100% - 250px);
+}
+body.ar .sideMenu.reactsHolder {
+  left: unset;
+  right: 50%;
+}
 .sideMenu.reactsHolder .reacts {
   margin: 0;
   padding: 5px;
@@ -1428,12 +1443,6 @@ body.ar .post .action-holder .top svg {
   padding: 11px 15px;
   border-radius: 6px;
   font-weight: 500;
-}
-
-.comments .sideMenu.reactsHolder {
-  left: calc(100% - 250px);
-  transform: unset;
-  box-shadow: unset;
 }
 
 .focusedMsg .hold {
@@ -1982,7 +1991,7 @@ body .sideSection + div {
   font-family: "Rubik";
   transition: 0.3s;
 }
-.pirsonChat .messages .search-chosen:has(.result) input {
+.personChat .messages .search-chosen:has(.result) input {
   padding: 7px 15px;
 }
 .usersSelection input:focus,
@@ -2303,10 +2312,6 @@ body.ar:has(.sideMenu.active) > main > .holder {
   padding-right: unset;
   padding-left: 6px;
 }
-body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
-  overflow: hidden;
-  padding-right: 0px !important;
-}
 
 .mentionsHolder h4 {
   margin: 10px;
@@ -2491,10 +2496,7 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     padding: 8px 9px;
   }
   .chats {
-    width: 300px;
-  }
-  .chats .chat .name-lastmessage p {
-    width: 162px;
+    width: 308px;
   }
   .post {
     max-width: 81%;
@@ -2505,6 +2507,7 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   body {
     padding: 10px;
     padding-right: 0;
+    padding-left: 0;
   }
 
   .skeleton-ImagesSwiper {
@@ -2516,10 +2519,7 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     margin-right: 0;
   }
   .chats {
-    width: 270px;
-  }
-  .chats .chat .name-lastmessage p {
-    width: 131px;
+    width: 278px;
   }
   header .logo img {
     width: 35px;
@@ -2536,6 +2536,11 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   }
   .chats .filters li {
     font-size: 13px;
+    width: 33px;
+  }
+  .chats .filters li:nth-child(5) svg {
+    min-width: 20px;
+    min-height: 16px;
   }
   .chats .filters li svg {
     min-width: 18px;
@@ -2598,10 +2603,12 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   header .logo .icons svg:first-child {
     padding: 8px;
   }
-  header .events > li {
+  header .events > li,
+  header .events > li img {
     width: 35px;
     height: 35px;
   }
+
   body:has(.chats.active) header nav {
     position: relative;
     transform: unset;
@@ -2609,6 +2616,13 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   }
   .chat-page > img {
     width: 100%;
+  }
+  .focusedMsg.forPosts {
+    padding: 0;
+  }
+  .focusedMsg .post {
+    width: 100.55%;
+    height: 101vh;
   }
   .posts-holder {
     margin-top: 0;
@@ -2643,8 +2657,14 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   }
 }
 
+/*! 786 */
+/*! 786 */
+/*! 786 */
+/*! 786 */
+
 @media (max-width: 786px) {
   body {
+    width: 101vw;
     padding: 0;
     overflow: unset;
   }
@@ -2652,6 +2672,8 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     overflow: unset;
     position: unset;
     max-height: unset;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
   }
   body:has(.chat-page) header {
     display: none;
@@ -2693,6 +2715,20 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     gap: 15px;
     background: var(--body-color);
   }
+  .chat-page {
+    height: 100%;
+  }
+  .holder:has(.chat-page) {
+    height: 101vh;
+  }
+
+  .holder:has(.chat-page) {
+    height: 100%;
+  }
+  body:has(.chat-page) > main {
+    overflow: hidden;
+  }
+
   body main header nav {
     width: 86%;
     height: 0;
@@ -2723,16 +2759,19 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
     padding: 8px;
   }
   header .events .menu {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    bottom: 45px;
-    top: unset;
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    bottom: 54px !important;
+    top: unset !important;
   }
   header .events .menu.active {
     bottom: 55px;
     top: unset;
+  }
+  body:has(.home) .posts-holder {
+    margin-top: 62px;
   }
 
   .chat-page {
@@ -2742,6 +2781,9 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   .chat-page .chats {
     margin: 0;
     padding: 13px 0 0;
+  }
+  .chats .holder {
+    max-height: 88vh;
   }
   .chat-page .chats .chat {
     width: unset;
@@ -2820,8 +2862,10 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   }
   .post .comments .action-holder .actions .right {
     gap: 8px;
+    width: fit-content;
   }
-  .post .comments .holder .comment {
+  .post .comments .holder .comment,
+  .post .bottom .right {
     gap: 8px;
   }
 
@@ -2890,15 +2934,16 @@ body:has(.sideMenu.active) .holder:has(.pirsonChat) .messages {
   .comments .sideMenu.reactsHolder {
     left: calc(100% - 200px);
   }
+  body.ar .comments .sideMenu.reactsHolder {
+    left: unset;
+    right: calc(100% - 200px);
+  }
   .focusedMsg .postForm {
     width: 100%;
   }
   .focusedMsg .postForm > div {
     max-height: unset;
     overflow: unset;
-  }
-  body > main > .holder {
-    padding-right: 0px !important;
   }
   .uploaded {
     position: relative;

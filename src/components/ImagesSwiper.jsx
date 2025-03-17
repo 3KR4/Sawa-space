@@ -317,10 +317,10 @@ function ImagesSwiper() {
                 )}
                 {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
 
-                {dataForSwiper.mentions.length > 0 && (
+                {dataForSwiper?.mentions?.length > 0 && (
                   <div className="mentions">
-                    <h5>{dataForSwiper.user.name} mention</h5>
-                    {dataForSwiper.mentions?.map((x, index) => (
+                    <h5>{dataForSwiper?.user?.name} mention</h5>
+                    {dataForSwiper?.mentions?.map((x, index) => (
                       <button
                         key={index}
                         onClick={(e) => handleMenus(e, "userInfo", x.userId)}

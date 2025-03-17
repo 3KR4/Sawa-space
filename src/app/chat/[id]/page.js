@@ -82,7 +82,7 @@ export default function Chat({ params }) {
   const [mentionHolder, setMentionHolder] = useState(false);
   const [isAddReact, setIsAddReact] = useState(false);
   const [overViewMenu, setOverViewMenu] = useState(false);
-  const [selectedOverView, setSelectedOverView] = useState("Overview");
+  const [selectedOverView, setSelectedOverView] = useState("overview");
   const [replyingOnMsg, setReplyingOnMsg] = useState();
   const [filteredMentinUser, setFilteredMentinUser] = useState([]);
   const [selectedMsgs, setSelectedMsgs] = useState([]);
@@ -280,7 +280,7 @@ export default function Chat({ params }) {
   }, [activeIndex]);
 
   return (
-    <div className={`pirsonChat ${selectMode && "selectMode"}`}>
+    <div className={`personChat ${selectMode && "selectMode"}`}>
       <>
         <Image
           src={"/Screenshot 2025-01-03 040444.png"}
@@ -327,7 +327,7 @@ export default function Chat({ params }) {
                     setSelectedMsgs([]);
                   }}
                 >
-                  Cancel
+                  {translations?.actions?.cancel}
                 </button>
               </>
             ) : (
@@ -346,41 +346,41 @@ export default function Chat({ params }) {
               <ul className="left">
                 <li
                   className={`${
-                    selectedOverView === `Overview` ? "active" : ""
+                    selectedOverView === `overview` ? "active" : ""
                   }`}
-                  onClick={() => setSelectedOverView("Overview")}
+                  onClick={() => setSelectedOverView("overview")}
                 >
-                  <FaRegUserCircle /> Overview
+                  <FaRegUserCircle /> {translations?.chats?.overview}
                 </li>
                 <li
-                  className={`${selectedOverView === `Media` ? "active" : ""}`}
-                  onClick={() => setSelectedOverView("Media")}
+                  className={`${selectedOverView === `media` ? "active" : ""}`}
+                  onClick={() => setSelectedOverView("media")}
                 >
-                  <MdOutlinePermMedia /> Media
+                  <MdOutlinePermMedia /> {translations?.chats?.media}
                 </li>
                 <li
-                  className={`${selectedOverView === `Files` ? "active" : ""}`}
-                  onClick={() => setSelectedOverView("Files")}
+                  className={`${selectedOverView === `files` ? "active" : ""}`}
+                  onClick={() => setSelectedOverView("files")}
                 >
-                  <LuFileSliders /> Files
+                  <LuFileSliders /> {translations?.chats?.files}
                 </li>
                 <li
-                  className={`${selectedOverView === `Links` ? "active" : ""}`}
-                  onClick={() => setSelectedOverView("Links")}
+                  className={`${selectedOverView === `links` ? "active" : ""}`}
+                  onClick={() => setSelectedOverView("links")}
                 >
-                  <RiLinksLine /> Links
+                  <RiLinksLine /> {translations?.chats?.links}
                 </li>
                 <li
-                  className={`${selectedOverView === `Groups` ? "active" : ""}`}
-                  onClick={() => setSelectedOverView("Groups")}
+                  className={`${selectedOverView === `groups` ? "active" : ""}`}
+                  onClick={() => setSelectedOverView("groups")}
                 >
-                  <FaUserGroup /> Groups
+                  <FaUserGroup /> {translations?.chats?.groups}
                 </li>
               </ul>
               <div className="right">
                 <h1>{selectedOverView}</h1>
 
-                {selectedOverView === `Overview` ? (
+                {selectedOverView === `overview` ? (
                   <div className="overview">
                     <div className="center">
                       <Image
@@ -394,18 +394,18 @@ export default function Chat({ params }) {
                       <p>{curentChat?.bio}</p>
                     </div>
 
-                    <label>Phone Number</label>
+                    <label>{translations?.chats?.phonenumber}</label>
                     <p>{curentChat?.number}</p>
 
                     <div className="btn-holder">
                       <button>archive chat</button>
                       <div className="row">
-                        <button>Remove Friend</button>
-                        <button>Block</button>
+                        <button>{translations?.actions?.remove_friend}</button>
+                        <button>{translations?.actions?.block}</button>
                       </div>
                     </div>
                   </div>
-                ) : selectedOverView === `Media` ? (
+                ) : selectedOverView === `media` ? (
                   <div className="media">
                     {dataForSwiper?.length > 1 ? (
                       dataForSwiper.map((x, index) => (
@@ -456,14 +456,20 @@ export default function Chat({ params }) {
                         </div>
                       ))
                     ) : (
-                      <div>No {selectedOverView} to display</div>
+                      <div>
+                        {locale === "en"
+                          ? `No ${selectedOverView} to display`
+                          : `ليس هناك ${selectedOverView} للعرض`}
+                      </div>
                     )}
                   </div>
                 ) : (
-                  <div></div>
+                  <div>
+                    {locale === "en"
+                      ? `No ${selectedOverView} to display`
+                      : `ليس هناك ${selectedOverView} للعرض`}
+                  </div>
                 )}
-
-                {/* No {selectedOverView} to display */}
               </div>
             </div>
           )}
@@ -493,16 +499,16 @@ export default function Chat({ params }) {
                 setSettingMenu(false);
               }}
             >
-              <HiReply /> Reply
+              <HiReply /> {translations?.actions?.reply}
             </button>
             {curentChat?.message && (
               <button>
-                <MdContentCopy /> Copy
+                <MdContentCopy /> {translations?.actions?.copy}
               </button>
             )}
             {curentChat?.img && (
               <button>
-                <LuSaveAll /> Save as..
+                <LuSaveAll /> {translations?.actions?.save_photo}
               </button>
             )}
             <hr />
@@ -512,13 +518,14 @@ export default function Chat({ params }) {
                 setSelectionMenuTitle("Forword To...");
               }}
             >
-              <HiReply style={{ transform: "rotateY(180deg)" }} /> Forward
+              <HiReply style={{ transform: "rotateY(180deg)" }} />
+              {translations?.actions?.forward}
             </button>
             <button>
-              <FaRegStar /> Star
+              <FaRegStar /> {translations?.chats?.make_star}
             </button>
             <button>
-              <GoPin /> Pin
+              <GoPin /> {translations?.chats?.pin_message}
             </button>
             <button
               onClick={() => {
@@ -527,11 +534,12 @@ export default function Chat({ params }) {
                 setSettingMenu(false);
               }}
             >
-              <FaRegSquareCheck /> Select
+              <FaRegSquareCheck /> {translations?.actions?.select}
             </button>
             <hr />
             <button className="danger">
-              <FaRegTrashCan /> Delete for me
+              <FaRegTrashCan />
+              {translations?.chats?.delete_for_me}
             </button>
           </SettingMenu>
         )}
@@ -604,29 +612,44 @@ export default function Chat({ params }) {
                       <small>Tuseday, junary</small>
                     </div>
                   ) : x.deleted ? (
-                    <div>This message has deleted</div>
+                    <div>{translations?.chats?.this_message_has_deleted}</div>
                   ) : x.action === "left" ||
                     x.action === "join the group using via link" ? (
-                    <div>
-                      {x.actor} {x.action}
-                    </div>
+                    (() => {
+                      const currentAction =
+                        x.action === "join the group using via link"
+                          ? "join_the_group_using_via_link"
+                          : "left";
+                      return (
+                        <div>
+                          {x.actor} {translations?.chats?.[currentAction]}
+                        </div>
+                      );
+                    })()
                   ) : x.action === "giveAadmin" ? (
                     <div>
-                      {x.actor} make {x.targetPerson} an admin
+                      {x.actor} {translations?.chats?.make} {x.targetPerson}{" "}
+                      {``}
+                      {translations?.chats?.an_admin}
                     </div>
                   ) : x.action === "removeAdmin" ? (
                     <div>
-                      {x.actor} dismiss {x.targetPerson} from admin
+                      {x.actor} {translations?.chats?.dismiss} {x.targetPerson}{" "}
+                      {``}
+                      {translations?.chats?.from_admin}
                     </div>
                   ) : x.action ? (
                     <div>
-                      {x.actor} {x.action} {x.targetPerson}
+                      {x.actor} {translations?.chats?.[x.action]}{" "}
+                      {x.targetPerson}
                     </div>
                   ) : (
                     <>
                       <div className="top">
                         {x.user !== "Bob" && <h5>{x.user}</h5>}{" "}
-                        <small>{convertTime(x?.time, locale, "singleChat")}</small>
+                        <small>
+                          {convertTime(x?.time, locale, "singleChat")}
+                        </small>
                       </div>
                       {replyMsg && (
                         <div
@@ -646,7 +669,8 @@ export default function Chat({ params }) {
                                     maxLength(replyMsg.message, 37)
                                   ) : (
                                     <>
-                                      <FaRegImages /> Image
+                                      <FaRegImages />{" "}
+                                      {translations?.chats?.image}
                                     </>
                                   )}
                                 </p>
@@ -704,7 +728,6 @@ export default function Chat({ params }) {
                                   <span key={index}>{emoji.emoji}</span>
                                 ))}
 
-                                {/* Only show the counter if there are hidden emojis */}
                                 {remainingCount > 0 && (
                                   <span className="counter">
                                     +{remainingCount}
@@ -775,7 +798,7 @@ export default function Chat({ params }) {
               >
                 {filteredUsers.length > 0 && (
                   <>
-                    <h1>Mentions</h1>
+                    <h1>{translations?.chats?.mentions}</h1>
                     <div className="holder">
                       {filteredUsers.map((x) => (
                         <div
@@ -804,7 +827,7 @@ export default function Chat({ params }) {
                 )}
                 {mentionsPeople.length > 0 && (
                   <>
-                    <h1>Selected Users</h1>
+                    <h1>{translations?.chats?.selected_users}</h1>
                     <div className="holder-wrap">
                       {mentionsPeople.map((x) => (
                         <div
@@ -839,7 +862,7 @@ export default function Chat({ params }) {
                           maxLength(currentReplyMsg.message, 37)
                         ) : (
                           <>
-                            <FaRegImages /> Image
+                            <FaRegImages /> {translations?.chats?.image}
                           </>
                         )}
                       </p>
@@ -862,7 +885,7 @@ export default function Chat({ params }) {
               ref={InputRef}
               value={messageText}
               onInput={handleInput}
-              placeholder="Type a message..."
+              placeholder={translations?.placeHolders?.type_a_message}
             />
           </div>
 

@@ -47,6 +47,9 @@ body:has(.register-page) .chape {
   width: 550px !important;
   box-shadow: 0 0 6px 0px var(--main-color);
 }
+.register-page * {
+  text-transform: unset;
+}
 .logo-holder.regist {
   position: absolute;
   left: 12px;

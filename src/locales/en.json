@@ -1,22 +1,32 @@
 {
   "actions": {
     "action": "action",
-    "pintotop": "pintotop",
-    "addtofavorite": "addtofavorite",
-    "archivechat": "archivechat",
+    "pintotop": "pin to top",
+    "addtofavorite": "add to favorite",
+    "archivechat": "archive chat",
     "block": "block",
-    "exitgroup": "exitgroup",
+    "exitgroup": "exit group",
     "add_friend": "add friend",
     "remove_friend": "remove friend",
     "hide": "hide",
     "report": "report",
     "save_post": "save post",
-    "edit": "edit"
+    "edit": "edit",
+    "unpin": "unpin",
+    "reply": "reply",
+    "forward": "forward",
+    "forward_to": "forward to",
+    "cancel": "cancel",
+    "save_photo": "save photo",
+    "select": "select",
+    "copy": "copy"
   },
   "placeHolders": {
     "search": "search",
     "search_her": "search her",
-    "search_anything": "search anything..."
+    "search_anything": "search anything...",
+    "search_by_name": "search by name",
+    "type_a_message": "type a message"
   },
   "header": {
     "explore": "explore",
@@ -71,6 +81,30 @@
     "pickup_only_in": "pickup only in"
   },
   "chats": {
-    "Explore_your_chats": "Explore your chats and choose one to start."
+    "Explore_your_chats": "Explore your chats",
+    "overview": "overview",
+    "media": "media",
+    "files": "files",
+    "links": "links",
+    "groups": "groups",
+    "phonenumber": "phone number",
+    "acrchive_chat": "acrchive chat",
+    "make_star": "make star",
+    "pin_message": "pin message",
+    "delete_for_me": "delete for me",
+    "delete_for_everyone": "delete for everyone",
+    "this_message_has_deleted": "this message has deleted",
+    "make": "make",
+    "dismiss": "dismiss",
+    "an_admin": "an admin",
+    "from_admin": "from admin",
+    "added": "added",
+    "left": "left",
+    "remove": "remove",
+    "join_the_group_using_via_link": "join the group using via link",
+    "image": "image",
+    "record": "record",
+    "mentions": "mentions",
+    "selected_users": "selected users"
   }
 }

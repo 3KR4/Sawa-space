@@ -11,12 +11,22 @@
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
     "save_post": "حفظ المنشور",
-    "edit": "تعديل"
+    "edit": "تعديل",
+    "unpin": "الغاء التثبيت",
+    "reply": "قم بالرد",
+    "forward": "إعادة توجيه",
+    "forward_to": "إعادة توجيه الي",
+    "cancel": "إلغاء",
+    "save_photo": "حفظ الصورة",
+    "select": "قم بالتحديد",
+    "copy": "نسخ النص"
   },
   "placeHolders": {
     "search": "ابحث",
     "search_her": "ابحث هنا...",
-    "search_anything": "ابحث عن اي شئ"
+    "search_anything": "ابحث عن اي شئ",
+    "search_by_name": "ابحث بواسطة الاسم",
+    "type_a_message": "قم بكتابة رسالة"
   },
   "header": {
     "explore": "الرائج",
@@ -71,6 +81,30 @@
     "pickup_only_in": "الاستلام متاح فقط في"
   },
   "chats": {
-    "Explore_your_chats": "استكشف الدردشات واختر واحدة للبدء."
+    "Explore_your_chats": "استكشف محادثاتك",
+    "overview": "نظرة عامة",
+    "media": "الوسائط",
+    "files": "الملفات",
+    "links": "الروابط",
+    "groups": "المجموعات",
+    "phonenumber": "رقم الهاتف",
+    "acrchive_chat": "أرشفة الدردشة",
+    "make_star": "تمييز بنجمة",
+    "pin_message": "تثبيت الرسالة",
+    "delete_for_me": "حذف بالنسبة لي",
+    "delete_for_everyone": "حذف للجميع",
+    "this_message_has_deleted": "تم حذف هذه الرسالة",
+    "make": "قام بجعل",
+    "dismiss": "قام بعزل",
+    "an_admin": "مشرفًا",
+    "from_admin": "من الإشراف",
+    "added": "قام بإضافة",
+    "left": "قام بالمغادرة",
+    "remove": "قام بطرد",
+    "join_the_group_using_via_link": "انضم إلى المجموعة عبر رابط الدعوة",
+    "image": "صورة",
+    "record": "تسجيل صوتي",
+    "mentions": "الإشارات",
+    "selected_users": "المستخدمون المحددون"
   }
 }
