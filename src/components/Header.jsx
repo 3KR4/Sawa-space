@@ -273,7 +273,7 @@ export default function Header() {
                   >
                     <IoLanguage /> {translations?.header?.swithlang}
                   </button>
-                  <Link to={`/auth`}>
+                  <Link href={`/auth`}>
                     <button className="logOut">
                       <TbLogout2 /> {translations?.header?.logout}
                     </button>
