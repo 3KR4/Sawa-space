@@ -2,12 +2,10 @@
 "use client";
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import Image from "next/image";
-import { users } from "@/Data";
-import SettingMenu from "@/components/SettingMenu";
-
-
+import { users } from "@/utils/Data";
+import SettingMenu from "@/components/providers/SettingMenu";
 
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";

@@ -6,11 +6,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { ConvertTime } from "@/utils/ConvertTime";
+import ConvertTime from "@/utils/ConvertTime";
 
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
-import { useLanguage } from "../app/contexts/LanguageContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { useLanguage } from "../../Contexts/LanguageContext";
 
 import { FaAngleRight } from "react-icons/fa";
 import { FaAngleLeft } from "react-icons/fa";

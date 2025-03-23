@@ -1,22 +1,21 @@
 "use client";
 
 import React from "react";
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Comment from "@/components/Comment";
-import TypeComment from "@/components/TypeComment";
-import ReactsHolder from "@/components/ReactsHolder";
+import Comment from "@/components/post/Comment";
+import TypeComment from "@/components/post/TypeComment";
+import ReactsHolder from "@/components/post/ReactsHolder";
 import ContentLoader from "react-content-loader";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { ConvertTime } from "@/utils/ConvertTime";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import ConvertTime from "@/utils/ConvertTime";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
 
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
 import { IoClose } from "react-icons/io5";
-
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComment } from "react-icons/fa";
@@ -42,14 +41,17 @@ function Post({ data }) {
   const [seeComments, setSeeComments] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
 
-  const handleImageClick = (id, index) => {
-    setDataSwiperType("post");
-    setImgFocus(id);
-    setDataForSwiper(data);
-    if (index !== "") {
-      setImgIndex(index);
-    }
-  };
+  const handleImageClick = useCallback(
+    (id, index) => {
+      setDataSwiperType("post");
+      setImgFocus(id);
+      setDataForSwiper(data);
+      if (index !== "") {
+        setImgIndex(index);
+      }
+    },
+    [data]
+  );
 
   const [loading, setLoading] = useState(true);
 
@@ -136,7 +138,7 @@ function Post({ data }) {
               )
             ) : null}
             {data.mentions.length > 0 && (
-              <div className="mentions">
+              <div className="mentions view">
                 <h5>
                   {data.user.name} {translations?.post?.mention}
                 </h5>

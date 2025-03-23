@@ -52,7 +52,7 @@ const formatTime = (date, locale) => {
   return formattedTime;
 };
 
-export function ConvertTime(timestamp, locale = "en", type = "general") {
+export default function ConvertTime(timestamp, locale = "en", type = "general") {
   const now = new Date();
   const past = new Date(timestamp);
 

@@ -15,12 +15,12 @@ export const LanguageProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    document.body.className = `${locale}`; 
+    document.body.className = `${locale}`;
   }, [locale]);
 
   const loadTranslations = async (lang) => {
     try {
-      const data = await import(`../../locales/${lang}.json`);
+      const data = await import(`@/locales/${lang}.json`);
       setTranslations(data.default);
     } catch (error) {
       console.error("Error loading translations:", error);

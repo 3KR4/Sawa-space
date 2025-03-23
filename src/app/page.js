@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Link from "next/link";
-import { posts } from "@/Data";
+import { posts } from "@/utils/Data";
 import ContentLoader from "react-content-loader";
 
-import Post from "@/components/Post";
+import Post from "@/components/post/Post";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);

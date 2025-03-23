@@ -1,21 +1,25 @@
-
 "use client";
+import "@/Styles/forms.css";
+
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
-import { MenusContext } from "@/app/contexts/MenusContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { GoMention } from "react-icons/go";
 import { IoMdImages } from "react-icons/io";
 import { MdOutlineAddReaction } from "react-icons/md";
-
 import { VscMention } from "react-icons/vsc";
+import { CircleAlert } from "lucide-react";
 
 function PostForm() {
+  const { locale, translations } = useLanguage();
+
   const {
     setSelectedUsers,
     selectedUsersNames,
@@ -33,9 +37,9 @@ function PostForm() {
   const {
     register,
     handleSubmit,
-    control,
-    setValue,
+    trigger,
     formState: { errors },
+    reset,
   } = useForm();
 
   // Images
@@ -48,7 +52,6 @@ function PostForm() {
 
   const [addHashtag, setAddHashtag] = useState(false);
   const [addLink, setAddLink] = useState(false);
-  const [addMentions, setAddMentions] = useState(false);
   const [addImages, setAddImages] = useState(false);
 
   const handleDrop = (e) => {
@@ -72,28 +75,65 @@ function PostForm() {
   // Tags & Links
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
+  const [tagError, setTagError] = useState("");
+
   const [links, setLinks] = useState([]);
   const [linkInput, setLinkInput] = useState("");
+  const [linkError, setLinkError] = useState("");
 
-  const addTag = (e, type) => {
+  const add_Tag_Link = async (e, type) => {
     e.preventDefault();
-    if (
-      type == "hashtags" &&
-      tagInput.trim() &&
-      !tags.includes(tagInput.trim())
-    ) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
+
+    if (type === "hashtags") {
+      const trimmedTag = tagInput.trim();
+
+      // Clear previous error messages
+      setTagError("");
+
+      // Validate the input field (required rule)
+      const isValid = await trigger("postTags");
+
+      if (!isValid) {
+        return; // Stop if the input is invalid (e.g., empty)
+      }
+
+      // Check for duplicate hashtags
+      if (tags.includes(trimmedTag)) {
+        console.log("a7a");
+        setTagError(translations?.errors?.this_tag_has_already_been_added);
+        return; // Stop if the hashtag already exists
+      }
+
+      // Add the hashtag
+      setTags([...tags, trimmedTag]);
+      setTagInput(""); // Clear the input field
     }
-    if (
-      type == "links" &&
-      linkInput.trim() &&
-      !links.includes(linkInput.trim())
-    ) {
-      setLinks([...links, linkInput.trim()]);
-      setLinkInput("");
+
+    if (type === "links") {
+      const trimmedLink = linkInput.trim();
+
+      // Clear previous error messages
+      setLinkError("");
+
+      // Validate the input field (required rule)
+      const isValid = await trigger("postLinks");
+
+      if (!isValid) {
+        return; // Stop if the input is invalid (e.g., empty)
+      }
+
+      // Check for duplicate links
+      if (links.includes(trimmedLink)) {
+        setLinkError(translations?.errors?.this_link_has_already_been_added);
+        return; // Stop if the link already exists
+      }
+
+      // Add the link
+      setLinks([...links, trimmedLink]);
+      setLinkInput(""); // Clear the input field
     }
   };
+
   const removeTag = (indexToRemove, type) => {
     type == "hashtags" &&
       setTags(tags.filter((_, index) => index !== indexToRemove));
@@ -177,44 +217,76 @@ function PostForm() {
       onSubmit={onSubmit}
       className={`focusedMsg FormMenu ${openPostForm ? "active" : ""}`}
     >
-      <div className="postForm" ref={formMenuRef}>
+      <div className="body postForm" ref={formMenuRef}>
         <div className="top">
-          <h4>Create Post</h4>
+          <h4>{translations?.forms?.create_post}</h4>
           <IoClose className="close" onClick={() => setOpenPostForm(false)} />
         </div>
         <div>
           <div className={`inputHolder`}>
             <div className="holder">
               <MdOutlineAddReaction
+                className="reactBtn"
                 onClick={(e) => handleMenus(e, "emojiHolder")}
               />
 
               <textarea
                 ref={InputRef}
-                placeholder="Whats on your mind mahmoud?"
+                placeholder={`mahmoud ${translations?.placeHolders?.whats_on_your_mind}`}
                 value={messageText}
                 onInput={(e) => setMessageText(e.target.value)}
               />
             </div>
           </div>
+
           {addLink && (
             <div className="inputHolder tags link">
               <h6
                 className="placeHolder"
                 onClick={() => document.getElementById("postLinks").focus()}
               >
-                Post Links
+                {translations?.forms?.add_links}
               </h6>
               <div className="holder">
                 <input
                   type="text"
                   id="postLinks"
                   value={linkInput}
+                  {...register("postLinks", {
+                    required: {
+                      value: true,
+                      message: translations?.errors?.please_enter_a_URL,
+                    },
+                    pattern: {
+                      value:
+                        /^(https?:\/\/)?(www\.)?([\da-z\.-]+)\.com(\/[\/\w \.-]*)*\/?$/,
+                      message: translations?.errors?.please_enter_a_valid_URL,
+                    },
+                  })}
                   onChange={(e) => setLinkInput(e.target.value)}
-                  placeholder=""
+                  placeholder={``}
                 />
-                <button onClick={(e) => addTag(e, "links")}>Add</button>
+
+                <button onClick={(e) => add_Tag_Link(e, "links")}>
+                  {translations?.actions?.add}
+                </button>
               </div>
+
+              {/* Display error message if the input is invalid */}
+              {errors.postLinks && (
+                <span className="error">
+                  <CircleAlert />
+                  {errors.postLinks.message}
+                </span>
+              )}
+
+              {linkError && (
+                <span className="error">
+                  <CircleAlert />
+                  {linkError}
+                </span>
+              )}
+
               <div className="tagsHolder">
                 {links.length === 0 && (
                   <pre className="placeHolder">https://www.google.com</pre>
@@ -234,9 +306,10 @@ function PostForm() {
               </div>
             </div>
           )}
+
           {selectedUsersNames.length > 0 && (
             <div className="inputHolder mentionsHolder">
-              <h4>Mentiond People</h4>
+              <h4>{translations?.forms?.Mentiond_People}</h4>
               <div className="tagsHolder">
                 {selectedUsersNames.map((name, index) => (
                   <div key={index} className="tag">
@@ -284,7 +357,7 @@ function PostForm() {
                       images.length === 0 && isSubmited ? "#df3a3a" : "#ff8e31",
                   }}
                 >
-                  Click Or Drop Images Here
+                  {translations?.forms?.click_or_drop_images_her}
                 </p>
                 <h1
                   style={{
@@ -292,7 +365,9 @@ function PostForm() {
                       images.length === 0 && isSubmited ? "#df3a3a" : "#ff8e31",
                   }}
                 >
-                  {isDrag ? "Drop Here!!" : "Click Here!!"}
+                  {isDrag
+                    ? translations?.forms?.drop_her
+                    : translations?.forms?.click_her}
                 </h1>
               </div>
               <input
@@ -334,23 +409,50 @@ function PostForm() {
             <div className="inputHolder tags">
               <h6
                 className="placeHolder"
-                onClick={() => document.getElementById("productTags").focus()}
+                onClick={() => document.getElementById("postTags").focus()}
               >
-                post hashtags
+                {translations?.forms?.add_hashtags}
               </h6>
               <div className="holder">
                 <input
                   type="text"
-                  id="productTags"
                   value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
                   placeholder=""
+                  id="postTags"
+                  {...register("postTags", {
+                    required: {
+                      value: true,
+                      message: translations?.errors?.please_enter_a_URL,
+                    },
+                  })}
+                  onChange={(e) => setTagInput(e.target.value)}
                 />
-                <button onClick={(e) => addTag(e, "hashtags")}>Add</button>
+                <button onClick={(e) => add_Tag_Link(e, "hashtags")}>
+                  {translations?.actions?.add}
+                </button>
               </div>
+
+              {/* Display validation errors */}
+              {errors.postTags && (
+                <span className="error">
+                  <CircleAlert />
+                  {errors.postTags.message}
+                </span>
+              )}
+
+              {/* Display duplicate hashtag error */}
+              {tagError && (
+                <span className="error">
+                  <CircleAlert />
+                  {tagError}
+                </span>
+              )}
+
               <div className="tagsHolder">
                 {tags.length === 0 && (
-                  <pre className="placeHolder">#gaming #sport #study</pre>
+                  <pre className="placeHolder">
+                    #gaming #sport #دراسة# كوميدي{" "}
+                  </pre>
                 )}
                 {tags.map((tag, index) => (
                   <div key={index} className="tag">
@@ -368,7 +470,7 @@ function PostForm() {
             </div>
           )}
           <div className="bottom">
-            <h4>add to your post</h4>
+            <h4>{translations?.forms?.add_to_your_post}</h4>
             <div className="right">
               <IoMdImages
                 onClick={() => setAddImages((prev) => !prev)}
@@ -376,7 +478,7 @@ function PostForm() {
               />
               <FaLink
                 onClick={() => setAddLink((prev) => !prev)}
-                className={`${addLink ? "active" : ""}`}
+                className={`${addLink ? "active" : ""} link`}
               />
               <VscMention
                 onClick={(e) => {
@@ -387,18 +489,20 @@ function PostForm() {
               />
               <FaHashtag
                 onClick={() => setAddHashtag((prev) => !prev)}
-                className={`${addHashtag ? "active" : ""}`}
+                className={`${addHashtag ? "active" : ""} hashtag`}
               />
             </div>
           </div>
           <button
             type="submit"
-            className="main-buttom"
+            className="main-button"
             onClick={() => {
               setisSubmited(true);
             }}
           >
-            {false ? "Update Post" : "Create Post"}
+            {false
+              ? translations?.forms?.edit_post
+              : translations?.forms?.create_post}
           </button>
         </div>
       </div>

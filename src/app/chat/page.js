@@ -2,11 +2,10 @@
 import React from "react";
 import { useContext } from "react";
 import dynamic from "next/dynamic";
-import Chats from "@/components/Chats";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-
-import { AllContext } from "@/app/contexts/InputActionsContext";
+import Chats from "@/components/chat/Chats";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import "@/Styles/chat.css"
 
 export default function ChatHomePage() {
   const { translations, locale } = useLanguage();

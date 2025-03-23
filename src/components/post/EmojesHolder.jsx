@@ -2,8 +2,8 @@
 
 import React, { useRef, useEffect } from "react";
 import { useState, useContext, useRfef } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import EmojiPicker from "emoji-picker-react";
 
 function EmojesHolder() {

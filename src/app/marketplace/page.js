@@ -1,18 +1,11 @@
 "use client";
 import React, { useState, useRef, useEffect, useContext } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { maxLength } from "@/Methods";
-import { messages, users, posts } from "@/Data";
-import { use } from "react";
-import Post from "@/components/Post";
-import SettingMenu from "@/components/SettingMenu";
-import { products } from "@/Data";
+import { products } from "@/utils/Data";
 
-import "../Css/marketplace.css";
-import SideSection from "@/components/SideSection";
-import MarketSideSection from "@/components/MarketSideSection";
-import ProductsSection from "@/components/ProductsSection";
+import "@/Styles/marketplace.css";
+import SideSection from "@/components/providers/SideSection";
+import MarketSideSection from "@/components/shop/MarketSideSection";
+import ProductsSection from "@/components/shop/ProductsSection";
 
 export default function MarketPlace() {
   const sections = [

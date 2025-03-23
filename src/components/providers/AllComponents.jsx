@@ -1,19 +1,18 @@
-
 "use client";
 import React from "react";
 import { useState, useContext } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
-
-import EmojesHolder from "@/components/EmojesHolder";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import EmojesHolder from "@/components/post/EmojesHolder";
 import UsersSelection from "@/components/UsersSelection";
 import PostForm from "@/components/forms/PostForm";
-import ImagesSwiper from "@/components/ImagesSwiper";
+import SingleDetails from "@/components/SingleDetails";
 import UserInfo from "@/components/UserInfo";
-import SettingMenu from "@/components/SettingMenu";
+import SettingMenu from "@/components/providers/SettingMenu";
 import UsersReact from "@/components/UsersReact";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import StoryForm from "@/components/forms/StoryForm";
 
 import { MdBlock } from "react-icons/md";
 import { IoPersonRemove } from "react-icons/io5";
@@ -25,7 +24,7 @@ import { HiUsers } from "react-icons/hi2";
 function AllComponents() {
   const { translations } = useLanguage();
 
-  const { imgFocus, openPostForm } = useContext(MenusContext);
+  const { imgFocus, openPostForm, openStoryForm } = useContext(MenusContext);
 
   const { openUsersSelection, userInfoData, settingMenu, openUsersReact } =
     useContext(DynamicMenusContext);
@@ -59,9 +58,10 @@ function AllComponents() {
             </button>
           </SettingMenu>
         )}
-      {imgFocus && !pathname.includes("chat") && <ImagesSwiper />}
+      {imgFocus && !pathname.includes("chat") && <SingleDetails />}
       {userInfoData && <UserInfo />}
       {openPostForm && <PostForm />}
+      {openStoryForm && <StoryForm />}
       {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}
       <EmojesHolder />

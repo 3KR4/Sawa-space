@@ -121,6 +121,15 @@ a {
   padding: 0;
   color: var(--title-color);
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  direction: ltr !important;
+}
 svg {
   transition: 0.3s;
   cursor: pointer;
@@ -175,6 +184,20 @@ svg.closeMenu {
   left: 20px;
   top: 20px;
   border-radius: 8px !important;
+}
+.goBackSvg {
+  background: var(--border-color);
+  padding: 6px 4px 6px 6px;
+  width: 35px;
+  height: 27px;
+  border-radius: 40px 16px 16px 40px;
+}
+.goBackSvg:hover {
+  color: white;
+  background: var(--main-color);
+}
+body.ar .goBackSvg {
+  transform: rotate(180deg);
 }
 
 .main-button {
@@ -258,7 +281,6 @@ body > main:has(.emoji-holder.active) > .holder {
 
 .chats {
   margin-right: 12px;
-
   background: var(--body-color);
   width: 334px;
   border-radius: 11px;
@@ -267,7 +289,8 @@ body > main:has(.emoji-holder.active) > .holder {
   position: sticky;
   top: 12px;
   margin-left: 12px;
-  transition: 0.3s;
+  transition: 0.4s;
+
   outline: 1px solid var(--border-color);
 }
 .chats .open-close {
@@ -315,16 +338,27 @@ body.ar .chats .open-close:hover svg,
 body.ar .chats.hide:hover .open-close svg {
   transform: translateX(1px) rotate(180deg);
 }
-.chats .top {
+.chats > .top {
   display: flex;
   gap: 19px;
   align-items: center;
   padding: 0px 19px;
 }
-.chats .top h4 {
+.chats > .top div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 21px;
   font-weight: 500;
+  color: var(--title-color);
 }
+body.ar .chats > .top div {
+  direction: rtl !important;
+}
+.chats > .top div a {
+  display: flex;
+}
+
 .search-holder .search-btn {
   display: none;
 }
@@ -434,15 +468,17 @@ body.ar .chats .filters li:nth-child(4):hover {
 .chats .chat {
   display: flex;
   align-items: center;
-  width: -webkit-fill-available;
-  transition: 0.3s;
+  width: 100%;
+  transition: 0.4s;
   border-radius: 8px;
   padding: 7px 5px;
+  gap: 9px;
   cursor: pointer;
+  min-width: 320px;
 }
-.chats .chat:hover,
-.chats .chat.active {
-  background: #e2e2e2;
+.chats.active .chat:hover,
+.chats.active .chat.active {
+  background: var(--border-color);
 }
 body.ar .chats.active .chat {
   padding: 7px 5px;
@@ -451,39 +487,45 @@ body.ar .chats.active .chat {
   outline: 2px solid var(--main-color);
   padding: 2px;
 }
-.chats .chat .name-lastmessage {
+.chats .chat:hover .content,
+.chats .chat.active .content {
+  padding-right: 5px;
+}
+.chats .chat .content {
   display: flex;
+  width: 100%;
   flex-direction: column;
-  gap: 2px;
-  margin-left: 10px;
-  width: -webkit-fill-available;
   transition: 0.3s;
 }
-body.ar .chats .chat .name-lastmessage {
-  margin-left: unset;
-  margin-right: 10px;
+.chats .chat .top {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  transition: 0.3s;
+  justify-content: space-between;
 }
-.chats .chat .name-lastmessage p {
-  width: -webkit-fill-available;
+.chats .chat .top span {
+  color: var(--paragraph-color);
+  font-weight: 500;
+  width: max-content;
+  font-size: 13px;
+}
+
+.chats .chat .bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.chats .chat .bottom p {
   display: flex;
   align-items: center;
   gap: 3px;
-}
-.chats .chat .details {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  align-items: flex-end;
-  font-size: 13px;
-  transition: 0.3s;
-  height: 38px;
-}
-.chats .chat .details span {
-  color: var(--title-color);
+  font-size: 14px;
   font-weight: 500;
-  width: max-content;
 }
-.chats .chat .details span.count {
+.chats .chat .bottom span.count {
   background: var(--back-grident);
   padding: 2px 5px;
   border-radius: 4px;
@@ -570,21 +612,16 @@ body.ar .chats .chat .name-lastmessage {
 .chats.hide .chat {
   max-height: 50px;
 }
-.chats.hide .chat .details span.count {
+.chats.hide .chat .bottom span.count {
   font-size: 12px;
   position: absolute;
   left: -4px;
   top: 0;
   padding: 1px 4px;
 }
-.chats.hide .name-lastmessage,
-.chats.hide .details span:first-child {
-  opacity: 0;
-  visibility: hidden;
-}
 .chats.hide .filters,
 .chats.hide .search-holder,
-.chats.hide .top h4 {
+.chats.hide > .top div {
   display: none;
 }
 .chats.hide {
@@ -614,42 +651,6 @@ body.ar .chats.hide .holder {
 }
 .chats.hide .open-close svg {
   rotate: 180deg;
-}
-
-.holder:has(.chat-page) {
-  height: 91vh;
-  overflow: unset;
-}
-
-.chat-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  filter: grayscale(0.15);
-}
-.chat-page > img {
-  width: 55%;
-}
-.chat-page h1 {
-  font-size: 30px;
-  max-width: 89%;
-  text-align: center;
-}
-
-.chat-page:has(.chats) {
-  padding: 0;
-}
-.chat-page .chats {
-  width: 100%;
-  height: 100%;
-}
-.chat-page .chats {
-}
-.chat-page .chats {
-}
-.chat-page .chats {
 }
 
 /*! HEADER */
@@ -900,6 +901,9 @@ header .events .menu > .title {
   gap: 7px;
   transition: 0.3s;
 }
+body.ar header .events .createMenu > .title {
+  justify-content: flex-end;
+}
 header .events .userMenu > .title:hover {
   background: var(--border-color);
   color: var(--title-color);
@@ -984,14 +988,16 @@ header .events .menu.createMenu svg {
 .post img {
   position: relative !important;
 }
-.post .top {
+.post .top,
+.top.forUser {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
   padding: 7px 12px;
 }
-.post .top .icons-holder {
+.post .top .icons-holder,
+.top.forUser .icons-holder {
   display: flex;
   gap: 5px;
 }
@@ -1000,7 +1006,8 @@ header .events .menu.createMenu svg {
   left: unset;
   top: unset;
 }
-.post .top .left {
+.post .top .left,
+.top.forUser .left {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1010,27 +1017,32 @@ header .events .menu.createMenu svg {
   align-items: flex-start;
   gap: 0;
 }
-.post .top img {
+.post .top img,
+.top.forUser img {
   width: 45px;
   height: 45px;
 }
-.post .top .info h5 {
+.post .top .info h5,
+.top.forUser .info h5 {
   font-size: 14px;
   font-weight: 500;
 }
-.post .top .info span {
+.post .top .info span,
+.top.forUser .info span {
   font-size: 12px;
   color: var(--paragraph-color);
   font-weight: 500;
   display: block;
 }
-.post .top svg {
+.post .top svg,
+.top.forUser svg {
   width: 33px;
   height: 33px;
   border-radius: 50%;
   padding: 7px;
 }
-.post .top svg:hover {
+.post .top svg:hover,
+.top.forUser svg:hover {
   color: white;
   background: var(--back-grident);
 }
@@ -1052,22 +1064,22 @@ header .events .menu.createMenu svg {
   align-items: center;
   font-size: 14px;
 }
-.post .mentions {
+.mentions.view {
   display: flex;
   gap: 5px;
   row-gap: 1px;
   align-items: center;
   flex-wrap: wrap;
 }
-.post .mentions h5 {
+.mentions.view h5 {
   font-size: 14px;
 }
-.post .mentions button {
+.mentions.view button {
   color: var(--title-color) !important;
   font-weight: 600 !important;
   text-decoration: unset !important;
 }
-.post .mentions button:hover {
+.mentions.view button:hover {
   color: #005dff !important;
   text-decoration: underline !important;
 }
@@ -1466,6 +1478,7 @@ body.ar .post .action-holder .top svg {
 }
 .focusedMsg .hold.OneImg {
   max-height: 100%;
+  height: 100%;
 }
 .focusedMsg > img {
   max-width: 80%;
@@ -1766,206 +1779,6 @@ body .sideSection + div {
   display: flex;
   position: relative;
 }
-.focusedMsg.FormMenu {
-  position: fixed;
-}
-.focusedMsg.active.FormMenu {
-  background: #0000003d !important;
-}
-.focusedMsg .postForm {
-  width: 550px;
-  height: fit-content;
-  max-width: 100%;
-  background: var(--body-color) !important;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  padding: 12px 20px;
-  padding-right: 0;
-  border-radius: 7px !important;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 80%;
-  overflow: auto;
-}
-.focusedMsg .postForm .top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  font-size: 20px;
-  padding-right: 20px;
-}
-.focusedMsg .postForm > div {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  max-height: 700px;
-  overflow: auto;
-  padding-right: 15px;
-}
-.focusedMsg .postForm > div > button {
-  color: white;
-  padding: 13px;
-  border-radius: 10px;
-  background: var(--main-color);
-  font-size: 15px;
-  font-weight: 500;
-}
-.focusedMsg .postForm p {
-  max-width: unset;
-  background: unset;
-  padding: 0;
-  margin: 0;
-}
-
-/* Images Holder */
-.productImages {
-  background-color: var(--section-color);
-  padding: 20px;
-  width: 100%;
-  height: fit-content;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-.uploadlabel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 160px;
-  border-radius: 6px;
-  align-items: center;
-  cursor: pointer;
-}
-.uploadlabel svg {
-  font-size: 95px;
-  transition: opacity 0.5s, font-size 0.3s;
-  color: var(--main-color);
-  margin-bottom: -7px;
-}
-.productImages:has(.uploaded) .uploadlabel svg {
-  font-size: 80px;
-}
-.productImages:has(.uploaded) .imgHolder {
-  margin: 14px 2px;
-}
-.uploadlabel p {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 5px;
-  transition: opacity 0.5s, font-size 0.3s;
-  color: var(--main-color);
-}
-.uploadlabel h1 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  opacity: 0;
-  font-size: 30px;
-  font-weight: 700;
-  font-size: 15px;
-  transition: opacity 0.5s, font-size 0.3s !important;
-  cursor: pointer;
-  color: var(--main-color);
-  transform: translate(-50%, -50%);
-  width: max-content;
-}
-.uploadlabel:hover h1,
-.uploadlabel.active h1 {
-  opacity: 1;
-  font-size: 40px;
-}
-.uploadlabel:hover svg,
-.uploadlabel:hover p,
-.uploadlabel.active svg,
-.uploadlabel.active p {
-  opacity: 0;
-  font-size: 10px;
-}
-.uploaded {
-  position: relative;
-  display: flex;
-  height: fit-content;
-}
-.uploaded div {
-  display: flex;
-  align-items: center;
-}
-.uploaded img {
-  max-width: unset !important;
-  height: 95px !important;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.uploaded svg {
-  background: var(--red-color) !important;
-  color: white;
-  border-radius: 50% !important;
-  cursor: pointer;
-  padding: 3px !important;
-  width: 20px !important;
-  height: 20px !important;
-  position: absolute !important;
-  right: 7px !important;
-  top: 7px !important;
-  left: unset !important;
-}
-.imgHolder {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-  gap: 10px;
-  margin: 0;
-}
-.focusedMsg .postForm .uploaded p {
-  position: absolute;
-  background: #00000099;
-  padding: 1px 10px;
-  border-radius: 5px;
-  color: white;
-  font-size: 14px;
-  bottom: 7px;
-  left: 7px;
-}
-
-.focusedMsg .postForm .bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px;
-  padding-left: 10px;
-  border-radius: 5px;
-  border: 2px dashed var(--border-color);
-}
-.focusedMsg .postForm .bottom h4 {
-  font-size: 14px;
-  text-transform: capitalize;
-}
-.focusedMsg .postForm .bottom .right {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.focusedMsg .postForm .bottom svg {
-  width: 30px;
-  height: 30px;
-  padding: 6px;
-  background: var(--section-color);
-  border-radius: 5px;
-}
-.focusedMsg .postForm .bottom svg:hover,
-.focusedMsg .postForm .bottom svg.active {
-  background: var(--main-color);
-  color: white;
-}
-
-.focusedMsg .postForm .bottom svg:nth-child(2),
-.focusedMsg .postForm .bottom svg:last-child {
-  padding: 8px;
-}
 
 .usersSelection {
   width: 340px !important;
@@ -2047,14 +1860,23 @@ body .sideSection + div {
 .usersSelection .holder .chat:hover {
   background: var(--border-color);
 }
-.usersSelection .holder .name-lastmessage {
+.usersSelection .holder .chat .name-lastmessage {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   flex: 1;
 }
-.usersSelection .holder .name-lastmessage h4 {
+.usersSelection .holder .chat .name-lastmessage h4 {
+  margin: 0;
+}
+.usersSelection .holder .top {
+  flex: 1;
+}
+.usersSelection .holder .top div {
   margin: 0;
   color: var(--title-color);
 }
-.usersSelection .holder .name-lastmessage p {
+.usersSelection .holder .top p {
   font-size: 15px;
 }
 .usersSelection .holder .chat label {
@@ -2063,279 +1885,6 @@ body .sideSection + div {
 }
 .usersSelection .holder .chat label > span {
   border-color: var(--paragraph-color);
-}
-
-.inputHolder {
-  position: relative;
-  width: 100%;
-}
-pre.placeHolder {
-  font-weight: 400;
-}
-.flash-sale pre.placeHolder {
-  margin-bottom: 10px;
-}
-
-.placeHolder {
-  position: absolute;
-  z-index: 1;
-  top: 16px;
-  left: 19px;
-  font-size: 13px;
-  font-weight: 400;
-  transition: 0.3s;
-  color: var(--paragraph-color);
-}
-.FormMenu .inputHolder input:focus {
-  padding: 14px 19px 0;
-}
-.inputHolder input {
-  padding-left: 40px;
-}
-.inputHolder .holder textarea {
-  height: 100%;
-  font-size: 15px;
-  padding: 15px 40px 15px 19px;
-  letter-spacing: 0.7px;
-  line-height: 1.3;
-}
-body.ar .inputHolder .holder textarea {
-  padding: 15px 19px 15px 40px;
-}
-textarea::placeholder {
-  font-weight: 400;
-  font-size: 15px !important;
-  font-family: "Rubik" !important;
-  color: var(--paragraph-color) !important;
-  letter-spacing: 0.7px !important;
-}
-.inputHolder input::placeholder,
-.inputHolder textarea::placeholder {
-  transition-delay: 0.3s;
-}
-.inputHolder input:focus::placeholder,
-.inputHolder textarea:focus::placeholder {
-  transition-delay: 0s !important;
-  color: transparent;
-}
-.inputHolder:has(input:focus) h6.placeHolder,
-.inputHolder:has(textarea:focus) h6.placeHolder {
-  top: 7px;
-  font-size: 12px;
-  color: var(--main-color) !important;
-}
-.FormMenu .inputHolder input:not(:placeholder-shown) {
-  padding: 14px 19px 0;
-}
-
-.inputHolder:has(input:not(:placeholder-shown)) h6.placeHolder,
-.inputHolder:has(textarea:not(:placeholder-shown)) h6.placeHolder {
-  top: 7px;
-  font-size: 12px;
-  color: var(--paragraph);
-}
-.inputHolder.notvalid:has(input:focus) h6.placeHolder,
-.inputHolder.notvalid:has(textarea:focus) h6.placeHolder {
-  color: #c81d1d !important;
-  letter-spacing: 0.7px;
-  font-weight: 600;
-}
-.inputHolder input::placeholder,
-.inputHolder textarea::placeholder {
-  color: var(--paragraph);
-}
-.inputHolder span svg,
-.selectHolder .error svg,
-.specificHolder .error svg {
-  color: #c81d1d;
-}
-form button.remove {
-  display: flex;
-}
-form button.remove svg {
-  font-size: 15px;
-}
-form button.remove svg:hover {
-  color: var(--red-color);
-}
-.inputHolder .holder {
-  position: relative;
-  overflow: hidden;
-}
-.inputHolder .holder:has(textarea) {
-  height: 120px;
-  overflow: unset;
-}
-.tags .holder {
-  border-radius: 7px 50px 50px 7px;
-}
-.inputHolder .holder > svg {
-  color: var(--paragraph);
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  left: 14px;
-  transform: translateY(-50%);
-  font-size: 17px;
-}
-.inputHolder .holder:has(textarea) > svg {
-  right: 7px;
-  left: unset;
-  background: #dddddd;
-  color: var(--title-color);
-  top: 26px;
-  width: 35px;
-  height: 35px;
-  padding: 7px;
-  border-radius: 6px;
-}
-body.ar .inputHolder .holder:has(textarea) > svg {
-  right: unset;
-  left: 7px;
-}
-.inputHolder .holder > svg.eye {
-  left: unset;
-  right: 14px;
-  top: 12px;
-  cursor: pointer;
-  padding: 6px;
-  width: 30px;
-  height: 30px;
-}
-.inputHolder input,
-.inputHolder textarea,
-.tagsHolder,
-.specificHolder {
-  width: 100%;
-  position: relative;
-  outline: none !important;
-  background: var(--section-color);
-  height: 46px;
-  padding: 0 19px;
-  resize: none;
-  border: none;
-  color: var(--title-color);
-  font-size: 15px;
-  transition: padding 0.3s;
-  border-radius: 7px !important;
-}
-
-.inputHolder.password input {
-  padding-right: 40px;
-}
-.inputHolder .holder::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 1px;
-  width: 0%;
-  height: 1px;
-  z-index: 1;
-  transition: 0.5s;
-  transform: translateX(-50%);
-  background: var(--main-color);
-}
-.inputHolder .holder:has(textarea)::before {
-  bottom: 3px;
-}
-.inputHolder.notvalid .holder::before {
-  background: #c81d1d;
-}
-.inputHolder .holder:focus-within::before {
-  width: 100%;
-}
-.inputHolder span,
-.selectHolder .error,
-.specificHolder .error {
-  color: #c81d1d;
-  font-size: 14px;
-  margin-top: 6px;
-  letter-spacing: 0.7px;
-  text-transform: capitalize;
-  margin-left: 5px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-weight: 500 !important;
-}
-body.ar .inputHolder span {
-  font-size: 13px;
-}
-.inputHolder.tags .holder {
-  width: 50%;
-}
-.inputHolder:has(.tagsHolder) {
-  display: flex;
-  gap: 7px;
-  flex-direction: column;
-}
-.tagsHolder {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-  min-height: 46px;
-  height: fit-content;
-  padding: 10px;
-}
-.tagsHolder::-webkit-scrollbar {
-  height: 6px;
-  border-radius: 10px;
-}
-.tagsHolder .tag {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: var(--second-section-color);
-  border-radius: 5px;
-  padding: 6px 10px;
-  padding-right: 6px;
-}
-.tagsHolder .tag span {
-  font-size: 13px;
-  margin: 0;
-  color: var(--title-color);
-  width: max-content;
-}
-.tagsHolder .placeHolder {
-  color: var(--paragraph-color);
-}
-.inputHolder.tags input {
-  padding-right: 70px;
-}
-.inputHolder.tags .holder > button {
-  position: absolute;
-  right: 0px;
-  height: 46px;
-  padding: 0 22px 0 18px;
-  background: var(--back-grident);
-  color: white;
-  font-weight: 500;
-  font-size: 14px;
-  text-transform: capitalize;
-}
-.inputHolder.tags.link .holder {
-  width: 100%;
-}
-.mentionsHolder {
-  background: var(--section-color);
-  gap: 0;
-}
-
-body:has(.sideMenu.active) > main > .holder {
-  overflow: hidden;
-  padding-right: 6px;
-}
-body.ar:has(.sideMenu.active) > main > .holder {
-  padding-right: unset;
-  padding-left: 6px;
-}
-
-.mentionsHolder h4 {
-  margin: 10px;
-  font-size: 15px;
-  margin-bottom: -10px;
-  font-weight: 500;
 }
 
 .userInfo.sideMenu {
@@ -2384,7 +1933,7 @@ body.ar:has(.sideMenu.active) > main > .holder {
   font-weight: 700;
   font-size: 15px;
 }
-.userInfo.sideMenu .info .top h4 {
+.userInfo.sideMenu .info .top div {
   font-size: 18px;
 }
 .userInfo.sideMenu ul {
@@ -2419,6 +1968,61 @@ body.ar:has(.sideMenu.active) > main > .holder {
   height: 27px;
 }
 
+.selectOptions {
+  width: 100%;
+  position: relative;
+}
+.selectOptions .selectedValue {
+  background: var(--section-color);
+  border-radius: 6px;
+  padding: 11px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+  color: var(--title-color);
+}
+.selectOptions .options {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--section-color);
+  padding: 10px;
+  width: 100%;
+  top: 45px;
+  top: 55px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  z-index: -1;
+  transition: 0.3s;
+}
+.selectOptions .selectedValue:focus svg {
+  transform: rotate(-180deg);
+}
+.selectOptions .selectedValue:focus + .options {
+  top: 45px;
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+.selectOptions .options li {
+  cursor: pointer;
+  background: var(--section-color2);
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+.selectOptions .options li:hover,
+.selectOptions .options li.active {
+  background: var(--main-color);
+  color: white;
+  font-weight: 600;
+}
 @media (max-width: 1700px) {
   .post {
     max-width: 52%;
@@ -2516,6 +2120,10 @@ body.ar:has(.sideMenu.active) > main > .holder {
   .chats {
     width: 308px;
   }
+  .chats .chat {
+    min-width: 290px;
+    gap: 6px;
+  }
   .post {
     max-width: 81%;
     min-width: 81%;
@@ -2527,7 +2135,9 @@ body.ar:has(.sideMenu.active) > main > .holder {
     padding-right: 0;
     padding-left: 0;
   }
-
+  .chats .chat {
+    min-width: 262px;
+  }
   .skeleton-ImagesSwiper {
     height: fit-content;
     width: 100%;
@@ -2670,9 +2280,6 @@ body.ar:has(.sideMenu.active) > main > .holder {
   .focusedMsg .post .swiper {
     padding: 3px 10px;
   }
-  .focusedMsg .postForm {
-    width: 85%;
-  }
 }
 
 /*! 786 */
@@ -2682,7 +2289,7 @@ body.ar:has(.sideMenu.active) > main > .holder {
 
 @media (max-width: 786px) {
   body {
-    width: 101vw;
+    width: 100vw;
     padding: 0;
     overflow: unset;
   }
@@ -2693,13 +2300,9 @@ body.ar:has(.sideMenu.active) > main > .holder {
     padding-right: 0px !important;
     padding-left: 0px !important;
   }
-  body:has(.chat-page) header {
-    display: none;
-  }
   body:has(header.active) > main {
     padding-top: 60px !important;
   }
-
   header {
     position: fixed;
     gap: 0;
@@ -2727,26 +2330,11 @@ body.ar:has(.sideMenu.active) > main > .holder {
     width: 100%;
     left: 0;
     padding: 9px;
-    gap: 18px;
+    gap: 10px;
     justify-content: center;
     outline: 2px solid var(--border-color);
-    gap: 15px;
     background: var(--body-color);
   }
-  .chat-page {
-    height: 100%;
-  }
-  .holder:has(.chat-page) {
-    height: 101vh;
-  }
-
-  .holder:has(.chat-page) {
-    height: 100%;
-  }
-  body:has(.chat-page) > main {
-    overflow: hidden;
-  }
-
   body main header nav {
     width: 86%;
     height: 0;
@@ -2791,39 +2379,9 @@ body.ar:has(.sideMenu.active) > main > .holder {
   body:has(.home) .posts-holder {
     margin-top: 62px;
   }
-
-  .chat-page {
-    height: 100%;
-    justify-content: unset;
-  }
-  .chat-page .chats {
-    margin: 0;
-    padding: 13px 0 0;
-  }
   .chats .holder {
     max-height: 88vh;
-  }
-  .chat-page .chats .chat {
-    width: unset;
-  }
-  .chat-page .chats .chat .name-lastmessage {
-    flex: 1;
-  }
-  .chat-page .chats .chat img {
-    width: 45px;
-    height: 45px;
-  }
-  .chat-page .chats .filters li {
-    width: 33px;
-  }
-  .chat-page .chats .filters li {
-    font-size: 16px;
-  }
-  .chat-page .chats .filters li svg {
-    min-width: 20px;
-  }
-  .chat-page .chats .chat .name-lastmessage p {
-    width: 100%;
+    padding-bottom: 20px;
   }
   .posts-holder {
     padding: 0 10px;
@@ -2956,13 +2514,7 @@ body.ar:has(.sideMenu.active) > main > .holder {
     left: unset;
     right: calc(100% - 200px);
   }
-  .focusedMsg .postForm {
-    width: 100%;
-  }
-  .focusedMsg .postForm > div {
-    max-height: unset;
-    overflow: unset;
-  }
+
   .uploaded {
     position: relative;
     display: flex;

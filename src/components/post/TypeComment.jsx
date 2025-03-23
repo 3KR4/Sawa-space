@@ -4,9 +4,9 @@ import React from "react";
 import { useState, useContext, useRef } from "react";
 import Image from "next/image";
 
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
 
 import { IoClose } from "react-icons/io5";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";

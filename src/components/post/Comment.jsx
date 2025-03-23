@@ -2,12 +2,12 @@
 
 import React from "react";
 import { useState, useContext } from "react";
-import ReactsHolder from "@/components/ReactsHolder";
+import ReactsHolder from "@/components/post/ReactsHolder";
 import Image from "next/image";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ConvertTime } from "@/utils/ConvertTime";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
+import ConvertTime from "@/utils/ConvertTime";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 

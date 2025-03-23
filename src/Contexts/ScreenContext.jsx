@@ -6,9 +6,11 @@ export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
+  const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
     function getScreenSize() {
       const width = window.innerWidth;
+      setScreenSizeWidth(width);
       if (width < 768) return "small";
       if (width < 992) return "med";
       return "large";
@@ -33,6 +35,7 @@ export const ScreenProvider = ({ children }) => {
       value={{
         pathname,
         screenSize,
+        screenSizeWidth,
       }}
     >
       {children}

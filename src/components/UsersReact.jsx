@@ -3,10 +3,10 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
-import { messages, posts } from "@/Data";
+import { messages, posts } from "@/utils/Data";
 
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { MenusContext } from "@/app/contexts/MenusContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
 
 function UsersReact() {
   const {

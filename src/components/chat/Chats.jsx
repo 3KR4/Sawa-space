@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { maxLength } from "../Methods";
-import { users } from "@/Data";
+import CutText from "@/utils/CutText";
+import { users } from "@/utils/Data";
 import ContentLoader from "react-content-loader";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { ConvertTime } from "@/utils/ConvertTime";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import ConvertTime from "@/utils/ConvertTime";
 
 import {
   FaUnlink,
@@ -23,11 +24,12 @@ import {
   MdOutlinePushPin,
 } from "react-icons/md";
 import { IoSearch, IoClose, IoImageOutline } from "react-icons/io5";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight, FaArrowLeft } from "react-icons/fa6";
 import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
+  const { screenSize, screenSizeWidth } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
 
   const [chatsCurrentFilter, setChatsCurrentFilter] = useState("allchats");
@@ -90,7 +92,15 @@ export default function Chats() {
         <FaAngleLeft />
       </div>
       <div className="top">
-        <h4>{translations?.sidechats?.friends}</h4>
+        <div>
+          {screenSize === "small" && (
+            <Link href={"/"}>
+              <FaArrowLeft className="goBackSvg" />
+            </Link>
+          )}
+
+          {translations?.sidechats?.friends}
+        </div>
         <FaUserFriends className="chatico" />
         <div className="search-holder">
           <IoSearch />
@@ -196,27 +206,49 @@ export default function Chats() {
                   height={45}
                   alt={`user Image`}
                 />
-                <div className="name-lastmessage">
-                  <h4>{x.name}</h4>
-                  <p>
-                    {x.lastMessage.type == "img" ? (
-                      <>
-                        <IoImageOutline /> Image
-                      </>
-                    ) : x.lastMessage.type == "sticker" ? (
-                      <>
-                        <PiStickerDuotone /> sticker
-                      </>
-                    ) : (
-                      maxLength(x.lastMessage.content, 25)
+                <div className="content">
+                  <div className="top">
+                    <h4>
+                      {CutText(
+                        x.name,
+                        screenSizeWidth < 786
+                          ? 20
+                          : screenSizeWidth < 992
+                          ? 9
+                          : screenSizeWidth < 1100
+                          ? 12
+                          : 14
+                      )}
+                    </h4>
+                    <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
+                  </div>
+                  <div className="bottom">
+                    <p>
+                      {x.lastMessage.type == "img" ? (
+                        <>
+                          <IoImageOutline /> {translations?.chats?.image}
+                        </>
+                      ) : x.lastMessage.type == "sticker" ? (
+                        <>
+                          <PiStickerDuotone /> {translations?.chats?.sticker}
+                        </>
+                      ) : (
+                        CutText(
+                          x.lastMessage.content,
+                          screenSizeWidth < 786
+                            ? 36
+                            : screenSizeWidth < 992
+                            ? 21
+                            : screenSizeWidth < 1100
+                            ? 26
+                            : 28
+                        )
+                      )}
+                    </p>
+                    {x.unReadCounter > 0 && (
+                      <span className="count">{x.unReadCounter}</span>
                     )}
-                  </p>
-                </div>
-                <div className="details">
-                  <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
-                  {x.unReadCounter > 0 && (
-                    <span className="count">{x.unReadCounter}</span>
-                  )}
+                  </div>
                 </div>
               </Link>
             ))}

@@ -20,7 +20,8 @@
     "cancel": "إلغاء",
     "save_photo": "حفظ الصورة",
     "select": "قم بالتحديد",
-    "copy": "نسخ النص"
+    "copy": "نسخ النص",
+    "add": "اضف"
   },
   "placeHolders": {
     "search": "ابحث",
@@ -28,7 +29,8 @@
     "search_anything": "ابحث عن اي شئ",
     "search_by_name": "ابحث بواسطة الاسم",
     "type_a_message": "قم بكتابة رسالة",
-    "search_in_posts": "ابحث في المنشورات"
+    "search_in_posts": "ابحث في المنشورات",
+    "whats_on_your_mind": "ما الذي تفكر فيه"
   },
   "header": {
     "explore": "الرائج",
@@ -60,6 +62,21 @@
     "mention": "قام بذكر",
     "thereis_nothing_here_yet": "ليس هناك تعليقات حتي الان",
     "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق"
+  },
+  "story": {
+    "create_story": "إنشاء قصة قصيرة",
+    "add_to_your_story": "أضف عناصر إلى قصتك",
+    "choose_a_background": "اختر خلفية",
+    "story_body": "محتوى القصة",
+    "story_link": "إضافة رابط",
+    "x_position": "الموضع الأفقي",
+    "y_position": "الموضع العمودي",
+    "font_size": "حجم الخط",
+    "width": "حجم الصورة",
+    "font_color": "لون النص",
+    "background_color": "لون الخلفية",
+    "font_family": "نوع الخط",
+    "Preview_the_final_look": "معاينة للشكل النهائي"
   },
   "comment": {
     "comments": "التعليقات",
@@ -109,6 +126,7 @@
     "remove": "قام بطرد",
     "join_the_group_using_via_link": "انضم إلى المجموعة عبر رابط الدعوة",
     "image": "صورة",
+    "sticker": "ملصق",
     "record": "تسجيل صوتي",
     "mentions": "الإشارات",
     "selected_users": "المستخدمون المحددون"
@@ -125,6 +143,7 @@
     "education": "التعليم",
     "college": "الجامعة",
     "work": "العمل",
+    "speaking_languages": "اللغات المتحدث بها",
     "see_all": "رؤية جميع",
     "posts": "المنشورات",
     "photos": "الصور"
@@ -138,5 +157,23 @@
     "did_you_forge_your_password": "هل قد نسيت كلمة المرور الخاصة بك",
     "register": "انشاء حساب",
     "login": "تسجيل الدخول"
+  },
+  "forms": {
+    "create_post": "انشاء منشور",
+    "edit_post": "تعديل المنشور",
+    "add_to_your_post": "قم بالاضافة علي منشورك",
+    "click_or_drop_images_her": "انقر او القي الصور هنا",
+    "click_her": "انقر هنا",
+    "drop_her": "القي الصور هنا",
+    "Mentiond_People": "الأشخاص المذكورين",
+    "add_links": "قم بأضافة روابط",
+    "add_hashtags": "قم بأضافة علامات التصنيف"
+  },
+  "errors": {
+    "please_enter_a_valid_URL": "يرجى إدخال رابط صحيح",
+    "please_enter_a_URL": "يرجى إدخال الرابط",
+    "please_enter_a_hashtag": "يرجى إدخال علامة التصنيف",
+    "this_link_has_already_been_added": "هذا الرابط قد تم اضافته سابقا",
+    "this_tag_has_already_been_added": "علامة التصنيف هذه قد تم اضافتها سابقا"
   }
 }

@@ -1,9 +1,13 @@
 export const users = [
   {
     id: 1,
-    name: "Ahmed",
+    name: "Ahmed mouhamed adel hussam nour",
     img: "/users/user1.png",
-    lastMessage: { type: "text", content: "Hey there!" },
+    lastMessage: {
+      type: "text",
+      content:
+        "Hey there iam her papy ooohh yaaaa! shadow fight no way stop fk",
+    },
     bio: "Tech enthusiast",
     number: "+20 112 972 7995",
     lastMsgTime: "2025-03-03T09:40:00Z",
@@ -2074,3 +2078,29 @@ export const products = [
     page: { name: "LuxuryTime", img: "/users/user14.png" },
   },
 ];
+
+let story = {
+  id: 1,
+  body: "", // could be null
+  image: "", // it will be only one and it will be the final vertion after crop by react easy crop library and it could be null too
+  link: "", // could be null
+  mentions: [], // if i select mentiend peaple
+  settings: {
+    title: {
+      x: "", // x position
+      y: "", // y position
+      center: false, // could be true of false
+    },
+    link: {
+      x: "", // x position
+      y: "", // y position
+      center: false, // could be true of false
+    },
+    image: {
+      x: "", // x position
+      y: "", // y position
+      center: false, // could be true of false
+    },
+    backGround: "",
+  },
+};

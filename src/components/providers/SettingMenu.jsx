@@ -1,7 +1,6 @@
 "use client";
-
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 
 function SettingMenu({ children, type }) {
   const { menuPosition, settingMenu, setSettingMenu } =

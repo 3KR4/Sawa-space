@@ -96,6 +96,9 @@ body:has(.userPage) > main {
   margin: 0px 0px 0px 12px;
   flex: 1;
 }
+body.ar .userPage nav .top .right {
+  margin: 0px 12px 0px 0px;
+}
 .userPage nav .top .right .left-data {
   display: flex;
   align-items: center;
@@ -192,6 +195,10 @@ body:has(.chats.hide) .userPage .post .middle .image img {
 .userPage .bottom-holder .side-menu .top button svg {
   font-size: 15px;
 }
+body.ar .userPage .bottom-holder .side-menu .top button svg {
+  transform: rotate(180deg);
+}
+
 .userPage .bottom-holder .side-menu .top button:hover,
 .userPage .bottom-holder .side-menu .top button:hover svg {
   color: var(--main-color);
@@ -468,7 +475,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     margin-left: 9px;
   }
   .userPage nav .top .right {
-    margin: 40px 0px 0px 12px;
+    margin: 40px 0px 0px 0;
     flex-direction: column;
   }
   .userPage .leftHolder {
@@ -494,7 +501,7 @@ body:has(.chats.hide) .userPage .post .middle .image img {
     height: 125px;
   }
   .userPage nav .top .right {
-    margin: 30px 0px 0px 12px;
+    margin: 30px 0px 0px 0;
   }
   .userPage .bottom-holder .side-menu .images img {
     height: 210px !important;

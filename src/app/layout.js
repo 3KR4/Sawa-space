@@ -1,14 +1,14 @@
 "use client";
 import { useContext } from "react";
 import Header from "@/components/Header";
-import AllComponents from "@/components/AllComponents";
-import Chats from "@/components/Chats";
-import { ScreenProvider, ScreenContext } from "./contexts/ScreenContext";
-import { MenuProvider } from "./contexts/DynamicMenus";
-import { MenusProvider } from "./contexts/MenusContext";
-import { InputActionsProvider } from "./contexts/InputActionsContext";
-import { LanguageProvider } from "./contexts/LanguageContext";
-import "./globals.css";
+import AllComponents from "@/components/providers/AllComponents";
+import Chats from "@/components/chat/Chats";
+import { ScreenProvider, ScreenContext } from "@/Contexts/ScreenContext";
+import { MenuProvider } from "@/Contexts/DynamicMenus";
+import { MenusProvider } from "@/Contexts/MenusContext";
+import { InputActionsProvider } from "@/Contexts/InputActionsContext";
+import { LanguageProvider } from "@/Contexts/LanguageContext";
+import "@/Styles/globals.css";
 
 export default function RootLayout({ children }) {
   return (

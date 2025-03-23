@@ -1,12 +1,12 @@
 "use client"
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
-import { users } from "@/Data";
-import { maxLength } from "@/Methods";
+import { users } from "@/utils/Data";
+import CutText from "@/utils/CutText";
 import Image from "next/image";
 
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { MenusContext } from "@/app/contexts/MenusContext";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
 
 function UsersSelection() {
   const {
@@ -113,7 +113,7 @@ function UsersSelection() {
             <div className="name-lastmessage">
               <h4>{x.name}</h4>
               <p>
-                {maxLength(x.isGroup ? x.groupMembers.slice(0, 5) : x.bio, 25)}
+                {CutText(x.isGroup ? x.groupMembers.slice(0, 5) : x.bio, 25)}
               </p>
             </div>
             <label>

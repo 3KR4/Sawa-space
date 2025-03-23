@@ -20,7 +20,8 @@
     "cancel": "cancel",
     "save_photo": "save photo",
     "select": "select",
-    "copy": "copy"
+    "copy": "copy",
+    "add": "add"
   },
   "placeHolders": {
     "search": "search",
@@ -28,7 +29,8 @@
     "search_anything": "search anything...",
     "search_by_name": "search by name",
     "type_a_message": "type a message",
-    "search_in_posts": "ابحث في المنشورات"
+    "search_in_posts": "search in posts",
+    "whats_on_your_mind": "Whats on your mind"
   },
   "header": {
     "explore": "explore",
@@ -60,6 +62,21 @@
     "mention": "mention",
     "thereis_nothing_here_yet": "There's nothing here yet",
     "be_the_first_to_post_a_comment": "Be the first to post a comment."
+  },
+  "story": {
+    "create_story": "create story",
+    "add_to_your_story": "add to your story",
+    "choose_a_background": "choose a background",
+    "story_body": "story body",
+    "story_link": "story link",
+    "x_position": "x position",
+    "y_position": "y position",
+    "font_size": "font size",
+    "width": "width",
+    "font_color": "font color",
+    "background_color": "background",
+    "font_family": "font family",
+    "Preview_the_final_look": "Preview the final look"
   },
   "comment": {
     "comments": "comments",
@@ -109,23 +126,24 @@
     "remove": "remove",
     "join_the_group_using_via_link": "join the group using via link",
     "image": "image",
+    "sticker": "sticker",
     "record": "record",
     "mentions": "mentions",
     "selected_users": "selected users"
   },
   "user_page": {
     "all": "all",
-
     "message": "message",
     "friends": "friends",
     "mutual": "mutual",
     "about": "about",
     "birthdate": "birthdate",
     "region": "region",
-    "current_location": "current_location",
+    "current_location": "current location",
     "education": "education",
     "college": "college",
     "work": "work",
+    "speaking_languages": "speaking languages",
     "see_all": "see all",
     "posts": "Posts",
     "photos": "Photos"
@@ -139,5 +157,23 @@
     "did_you_forge_your_password": "did you forge your password",
     "register": "register",
     "login": "login"
+  },
+  "forms": {
+    "create_post": "create post",
+    "edit_post": "edit post",
+    "add_to_your_post": "add to your post",
+    "click_or_drop_images_her": "click or drop images her",
+    "click_her": "click her!!",
+    "drop_her": "drop her!!",
+    "Mentiond_People": "Mentiond People",
+    "add_links": "add links",
+    "add_hashtags": "add hashtags"
+  },
+  "errors": {
+    "please_enter_a_valid_URL": "please enter a valid URL",
+    "please_enter_a_URL": "please enter a URL",
+    "please_enter_a_hashtag": "please enter a hashtag",
+    "this_link_has_already_been_added": "this link has already been added.",
+    "this_tag_has_already_been_added": "this hastag has already been added."
   }
 }

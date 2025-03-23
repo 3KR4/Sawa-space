@@ -25,14 +25,14 @@ import { RiColorFilterAiFill, RiUserCommunityLine } from "react-icons/ri";
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
-import { useLanguage } from "../app/contexts/LanguageContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { useLanguage } from "../Contexts/LanguageContext";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 
 export default function Header() {
-  const { setOpenPostForm } = useContext(MenusContext);
+  const { setOpenPostForm, setOpenStoryForm } = useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
 
@@ -273,7 +273,7 @@ export default function Header() {
                   >
                     <IoLanguage /> {translations?.header?.swithlang}
                   </button>
-                  <Link to={`/auth`}>
+                  <Link href={`/auth`}>
                     <button className="logOut">
                       <TbLogout2 /> {translations?.header?.logout}
                     </button>
@@ -300,7 +300,7 @@ export default function Header() {
                   <button onClick={() => setOpenPostForm(true)}>
                     <BsFillPostcardFill /> {translations?.header?.createpost}
                   </button>
-                  <button>
+                  <button onClick={() => setOpenStoryForm(true)}>
                     <FaHistory /> {translations?.header?.createstory}
                   </button>
                   <button>

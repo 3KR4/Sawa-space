@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import ReactsHolder from "@/components/ReactsHolder";
+import ReactsHolder from "@/components/post/ReactsHolder";
 
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";

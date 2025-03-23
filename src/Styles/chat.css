@@ -1,3 +1,43 @@
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  filter: grayscale(0.15);
+}
+.holder:has(.chat-page) {
+  height: 91vh;
+  overflow: unset;
+}
+
+.chat-page > img {
+  width: 55%;
+}
+.chat-page h1 {
+  font-size: 30px;
+  max-width: 89%;
+  text-align: center;
+}
+
+.chat-page:has(.chats) {
+  padding: 0;
+}
+.chat-page .chats {
+  width: 100%;
+  height: 100%;
+}
+
+.chats:has(.userMenu.active) .holder {
+  overflow: hidden;
+  padding-right: 14px;
+}
+
+body.ar .chats:has(.userMenu.active) .holder {
+  padding-left: 14px;
+  padding-right: unset;
+}
+
 body:has(.personChat) > main {
   padding-right: 10px;
   padding-bottom: 10px;
@@ -222,7 +262,7 @@ body.ar .personChat .overViewMenu {
 
 .personChat .overViewMenu .right {
   width: 330px;
-    min-height: 345px;
+  min-height: 345px;
 
   padding: 14px;
   padding-right: 0;
@@ -1030,8 +1070,54 @@ body:has(.personChat) .MenuOfUsers .topFilter {
   }
 }
 @media (max-width: 786px) {
+  body:has(.chat-page) header {
+    display: none;
+  }
+  .chats > .top {
+    padding: 0px 12px;
+  }
+  .chat-page {
+    align-items: unset;
+    height: 100%;
+    height: 100%;
+    justify-content: unset;
+  }
+  .holder:has(.chat-page) {
+    height: 101vh;
+  }
+  .holder:has(.chat-page) {
+    height: 100%;
+  }
+  body:has(.chat-page) > main {
+    overflow: hidden;
+  }
   body:has(.personChat) {
     height: -webkit-fill-available;
+  }
+  body:has(.chat-page) main {
+    height: 101%;
+  }
+  .chat-page .chats {
+    margin: 0;
+    padding: 13px 0 0;
+  }
+  .chat-page .chats .chat {
+    width: unset;
+    gap: 10px;
+    min-height: 52px;
+  }
+  .chat-page .chats .chat img {
+    width: 45px;
+    height: 45px;
+  }
+  .chat-page .chats .filters li {
+    width: 33px;
+  }
+  .chat-page .chats .filters li {
+    font-size: 16px;
+  }
+  .chat-page .chats .filters li svg {
+    min-width: 20px;
   }
   .personChat {
     border-radius: 0;

@@ -2,21 +2,21 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { maxLength } from "@/Methods";
-import { messages, users } from "@/Data";
+import CutText from "@/utils/CutText";
+import { messages, users } from "@/utils/Data";
 import EmojiPicker from "emoji-picker-react";
 import { use } from "react";
 import UsersSelection from "@/components/UsersSelection";
-import { ConvertTime } from "@/utils/ConvertTime";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import ConvertTime from "@/utils/ConvertTime";
+import { useLanguage } from "@/Contexts/LanguageContext";
 
 import PinHolder from "@/components/chat/PinHolder";
-import ImagesSwiper from "@/components/ImagesSwiper";
-import SettingMenu from "@/components/SettingMenu";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
+import SingleDetails from "@/components/SingleDetails";
+import SettingMenu from "@/components/providers/SettingMenu";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
 //Icons
 import { GoPin } from "react-icons/go";
 import { HiReply } from "react-icons/hi";
@@ -481,7 +481,7 @@ export default function Chat({ params }) {
           {pinedMsgs.length > 0 && <PinHolder data={pinedMsgs} />}
         </div>
 
-        <ImagesSwiper />
+        <SingleDetails />
 
         {settingMenu && (
           <SettingMenu type={"message-settingMenu"}>
@@ -670,7 +670,7 @@ export default function Chat({ params }) {
                                 </h5>
                                 <p>
                                   {replyMsg.message ? (
-                                    maxLength(replyMsg.message, 37)
+                                    CutText(replyMsg.message, 37)
                                   ) : (
                                     <>
                                       <FaRegImages />{" "}
@@ -688,7 +688,7 @@ export default function Chat({ params }) {
                                   ? "You"
                                   : replyMsg.user}
                               </h5>
-                              <p>{maxLength(replyMsg.message, 40)}</p>
+                              <p>{CutText(replyMsg.message, 40)}</p>
                             </>
                           )}
                         </div>
@@ -863,7 +863,7 @@ export default function Chat({ params }) {
                       </h5>
                       <p>
                         {currentReplyMsg.message ? (
-                          maxLength(currentReplyMsg.message, 37)
+                          CutText(currentReplyMsg.message, 37)
                         ) : (
                           <>
                             <FaRegImages /> {translations?.chats?.image}
@@ -880,7 +880,7 @@ export default function Chat({ params }) {
                         ? "You"
                         : currentReplyMsg.user}
                     </h5>
-                    <p>{maxLength(currentReplyMsg.message, 40)}</p>
+                    <p>{CutText(currentReplyMsg.message, 40)}</p>
                   </div>
                 )}
               </div>

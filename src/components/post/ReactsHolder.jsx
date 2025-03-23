@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useEffect, useContext, useRef } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 
 import { FaPlus } from "react-icons/fa6";
 

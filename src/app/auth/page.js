@@ -1,17 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import "../Css/register-login.css";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-
+import "@/Styles/forms.css";
+import { useLanguage } from "@/Contexts/LanguageContext";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-// import AllApi from "@/app/_Utils/AllApi";
-// import { AuthContext } from "../../AuthProvider";
-// import { AllContext } from "../../Context";
 
 // Icons
-import { FaDiscord, FaGoogle, FaRegUser } from "react-icons/fa";
-import { FaFacebookF } from "react-icons/fa6";
+import { FaRegUser } from "react-icons/fa";
 import {
   LockKeyhole,
   Mail,
@@ -20,7 +15,6 @@ import {
   EyeOff,
   CircleAlert,
 } from "lucide-react";
-let locale = "en";
 
 export default function Auth() {
   const { translations, locale } = useLanguage();
@@ -43,28 +37,28 @@ export default function Auth() {
     setPassEye((prevState) => ({ ...prevState, [input]: !prevState[input] }));
   }
 
-  const onSubmit = (data) => {
-    if (isLoginPage) {
-      AllApi.login(data.userName, data.password)
-        .then((response) => {
-          console.log("Login successful:", response.data);
-          login(response.data.jwt, response.data.user);
-          // Handle login success (e.g., store JWT, redirect)
-        })
-        .catch((error) => {
-          setErrorMessage(error.response.data.error.message);
-        });
-    } else {
-      AllApi.registration(data.userName, data.email, data.phone, data.password)
-        .then((response) => {
-          console.log("Registration successful:", response.data);
-          login(response.data.jwt, response.data.user);
-        })
-        .catch((error) => {
-          setErrorMessage(error.response.data.error.message);
-        });
-    }
-  };
+  // const onSubmit = (data) => {
+  //   if (isLoginPage) {
+  //     AllApi.login(data.userName, data.password)
+  //       .then((response) => {
+  //         console.log("Login successful:", response.data);
+  //         login(response.data.jwt, response.data.user);
+  //         // Handle login success (e.g., store JWT, redirect)
+  //       })
+  //       .catch((error) => {
+  //         setErrorMessage(error.response.data.error.message);
+  //       });
+  //   } else {
+  //     AllApi.registration(data.userName, data.email, data.phone, data.password)
+  //       .then((response) => {
+  //         console.log("Registration successful:", response.data);
+  //         login(response.data.jwt, response.data.user);
+  //       })
+  //       .catch((error) => {
+  //         setErrorMessage(error.response.data.error.message);
+  //       });
+  //   }
+  // };
 
   return (
     <>

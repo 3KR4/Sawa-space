@@ -10,6 +10,7 @@ export const MenusProvider = ({ children }) => {
   const [imgFocus, setImgFocus] = useState(false);
   const [imgIndex, setImgIndex] = useState(false);
   const [openPostForm, setOpenPostForm] = useState(false);
+  const [openStoryForm, setOpenStoryForm] = useState(false);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [dataSwiperType, setDataSwiperType] = useState();
@@ -39,6 +40,8 @@ export const MenusProvider = ({ children }) => {
         usersSelectionSearch,
         openPostForm,
         setOpenPostForm,
+        openStoryForm,
+        setOpenStoryForm,
         setUsersSelectionSearch,
         usersSelectionRef,
         usersreactMenuRef,

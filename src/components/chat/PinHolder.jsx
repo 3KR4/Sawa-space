@@ -2,11 +2,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-// Icons
 import { FaRegImages } from "react-icons/fa6";
 import { GoPin } from "react-icons/go";
 import { TiMicrophoneOutline } from "react-icons/ti";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
 
 function PinHolder({ data }) {
   const { translations } = useLanguage();

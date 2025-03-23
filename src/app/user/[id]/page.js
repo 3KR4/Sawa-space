@@ -2,26 +2,24 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { maxLength } from "@/Methods";
-import { messages, users, posts } from "@/Data";
+import CutText from "@/utils/CutText";
+import { messages, users, posts } from "@/utils/Data";
 import { use } from "react";
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import Post from "@/components/Post";
-import SettingMenu from "@/components/SettingMenu";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
+import Post from "@/components/post/Post";
+import SettingMenu from "@/components/providers/SettingMenu";
 import ContentLoader from "react-content-loader";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import "@/Styles/user.css";
 
-import "../../Css/user.css";
 import { FaAngleRight } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
-
 import { IoSearch, IoClose } from "react-icons/io5";
 import { IoMdPersonAdd } from "react-icons/io";
 import { AiFillMessage } from "react-icons/ai";
 import { BsFillPostcardFill } from "react-icons/bs";
-
 import { HiUsers } from "react-icons/hi2";
 import { IoMdPhotos } from "react-icons/io";
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -263,7 +261,7 @@ export default function User({ params }) {
           {currentSelectedData !== "friends" && (
             <div className="holder friends">
               <div className="top">
-                <h4>Friends</h4>
+                <h4>{translations?.sidechats?.friends}</h4>
                 {users?.length > 6 && (
                   <button>
                     {translations?.user_page?.see_all}{" "}
@@ -514,25 +512,24 @@ export default function User({ params }) {
                 <span>في ناس حطناهم فوق راسنا بس طلع المكان عالي عليهم</span>
               </li>
               <li>
-                BirthDate: <span>19-12-2003</span>
+                {translations?.user_page?.birthdate}: <span>19-12-2003</span>
               </li>
               <li>
-                Region: <span>Egypt</span>
+                {translations?.user_page?.region}: <span>Egypt</span>
               </li>
               <li>
-                Current Location: <span>Cairo</span>
+                {translations?.user_page?.current_location}: <span>Cairo</span>
               </li>
               <li>
-                Education: <span>FrontEnd Developer</span>
+                {translations?.user_page?.work}: <span>FrontEnd Developer</span>
               </li>
               <li>
-                College: <span>Cairo University</span>
+                {translations?.user_page?.college}:{" "}
+                <span>Cairo University</span>
               </li>
               <li>
-                Work: <span>Freelance Web Developer</span>
-              </li>
-              <li>
-                Main Languages: <span>Arabic, English</span>
+                {translations?.user_page?.speaking_languages}:{" "}
+                <span>Arabic, English</span>
               </li>
             </ul>
           )}

@@ -3,31 +3,30 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { messages, posts } from "@/Data";
-import "swiper/css";
-import "../app/Css/chat.css";
-import ContentLoader from "react-content-loader";
-import { useLanguage } from "@/app/contexts/LanguageContext";
-import { ConvertTime } from "@/utils/ConvertTime";
-
-import { DynamicMenusContext } from "@/app/contexts/DynamicMenus";
-import { InputActionsContext } from "@/app/contexts/InputActionsContext";
-import { MenusContext } from "@/app/contexts/MenusContext";
-import { ScreenContext } from "@/app/contexts/ScreenContext";
-import Image from "next/image";
+import { messages, posts } from "@/utils/Data";
 import Link from "next/link";
-import Comment from "@/components/Comment";
-import ActionsBtns from "@/components/ActionsBtns";
-import TypeComment from "@/components/TypeComment";
+import Image from "next/image";
+import "swiper/css";
+import "@/Styles/chat.css";
+
+import ContentLoader from "react-content-loader";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import ConvertTime from "@/utils/ConvertTime";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import Comment from "@/components/post/Comment";
+import ActionsBtns from "@/components/post/ActionsBtns";
+import TypeComment from "@/components/post/TypeComment";
 
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComments } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
-
 import { IoClose } from "react-icons/io5";
 
-function ImagesSwiper() {
+function SingleDetails() {
   const { translations, locale } = useLanguage();
   const direction = locale === "ar" ? "rtl" : "ltr";
 
@@ -71,6 +70,22 @@ function ImagesSwiper() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 0); // Adjust as needed
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        closeImgHolderRef.current &&
+        !closeImgHolderRef.current.contains(event.target)
+      ) {
+        setImgFocus(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -137,7 +152,7 @@ function ImagesSwiper() {
           )}
           {loading ? (
             <ContentLoader
-              className="skeleton skeleton-ImagesSwiper"
+              className="skeleton skeleton-SingleDetails"
               width={600}
               height={600}
               viewBox="0 0 600 600"
@@ -320,7 +335,7 @@ function ImagesSwiper() {
                 {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
 
                 {dataForSwiper?.mentions?.length > 0 && (
-                  <div className="mentions">
+                  <div className="mentions view">
                     <h5>
                       {dataForSwiper.user.name} {translations?.post?.mention}
                     </h5>
@@ -447,4 +462,4 @@ function ImagesSwiper() {
   );
 }
 
-export default ImagesSwiper;
+export default SingleDetails;

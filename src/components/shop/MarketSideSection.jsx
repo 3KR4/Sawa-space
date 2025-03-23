@@ -3,8 +3,7 @@
 import React from "react";
 import { useState } from "react";
 import Slider from "@mui/material/Slider";
-import { Categories } from "emoji-picker-react";
-import { useLanguage } from "@/app/contexts/LanguageContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
 
 import {
   IoPhonePortrait,
