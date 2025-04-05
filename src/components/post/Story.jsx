@@ -17,7 +17,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { HiDotsVertical } from "react-icons/hi";
 
-function Story({ data, smallView, index }) {
+function Story({ data, smallView, index, storyCount, currentStoryIndex }) {
   const { screenSize } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -142,32 +142,58 @@ function Story({ data, smallView, index }) {
             <img src={image} width={`100%`} />
           </div>
         ))}
+      {smallView && data?.totalStories > 1 && (
+        <span className="counter-for-story">{data?.totalStories}</span>
+      )}
 
       <div className="top forUser">
-        <div className="left">
-          <Image
-            className="rounded"
-            src={data?.avatar}
-            alt={data?.username}
-            width={smallView ? 48 : 40}
-            height={smallView ? 48 : 40}
-            onClick={(e) => !smallView && handleMenus(e, "userInfo", data?.id)}
-          />
-          <div className="info">
-            <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
-              {data?.username}
-            </h5>
-            <span>{ConvertTime(data?.timestamp, locale)}</span>
+        {!smallView && storyCount > 1 && (
+          <div className="story-progress">
+            {Array.from({ length: storyCount }).map((_, i) => (
+              <div
+                key={i}
+                className={`progress-bar ${
+                  i <= currentStoryIndex ? "active" : ""
+                }`}
+              />
+            ))}
           </div>
-        </div>
-        {!smallView && (
-          <HiDotsVertical
-            onClick={(e) => {
-              console.log("xxxx");
-              handleMenus(e, "settingMenu-story", data?.id);
-            }}
-          />
         )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: "6px 11px",
+          }}
+        >
+          <div className="left">
+            <Image
+              className="rounded"
+              src={data?.avatar}
+              alt={data?.username}
+              width={smallView ? 48 : 40}
+              height={smallView ? 48 : 40}
+              onClick={(e) =>
+                !smallView && handleMenus(e, "userInfo", data?.id)
+              }
+            />
+            <div className="info">
+              <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
+                {data?.username}
+              </h5>
+              <span>{ConvertTime(data?.timestamp, locale)}</span>
+            </div>
+          </div>
+          {!smallView && (
+            <HiDotsVertical
+              onClick={(e) => {
+                console.log("xxxx");
+                handleMenus(e, "settingMenu-story", data?.id);
+              }}
+            />
+          )}
+        </div>
       </div>
 
       {!smallView && data.mentions && data?.mentions.length > 0 && (

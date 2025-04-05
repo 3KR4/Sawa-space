@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Link from "next/link";
-import { posts, stories } from "@/utils/Data";
+import { posts, stories, processStories } from "@/utils/Data";
 import Story from "@/components/post/Story";
 import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
@@ -41,6 +41,24 @@ export default function Home() {
 
   const { addNotification } = useNotification();
 
+  // Usage
+  const latestStories = processStories(stories);
+
+  console.log(latestStories);
+
+  // Then in your render:
+  {
+    latestStories.map((story) => (
+      <SwiperSlide key={story.id}>
+        <Story
+          data={story}
+          smallView={true}
+          storyCount={story.totalStories > 1 ? story.totalStories : null}
+        />
+      </SwiperSlide>
+    ));
+  }
+
   return (
     <div className="home">
       <div style={{ display: "flex", gap: "10px" }}>
@@ -76,6 +94,7 @@ export default function Home() {
           error Message
         </div>
       </div>
+
       <div className="stories-holder">
         {!loading && screenSize !== "large" ? (
           <div className="storiesTop">
@@ -135,13 +154,18 @@ export default function Home() {
                 1700: { slidesPerView: 6 },
               }}
             >
-              {stories.map((x, index) => {
-                return (
-                  <SwiperSlide key={index}>
-                    <Story data={x} smallView={true} index={index} />
-                  </SwiperSlide>
-                );
-              })}
+              {latestStories.map((story, index) => (
+                <SwiperSlide key={story.id}>
+                  <Story
+                    data={story}
+                    smallView={true}
+                    index={index}
+                    storyCount={
+                      story.totalStories > 1 ? story.totalStories : null
+                    }
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         )}

@@ -2081,6 +2081,7 @@ export const products = [
 export const stories = [
   {
     id: 1,
+    userId: 1,
     username: "Alex Johnson",
     avatar: "/users/user1.png",
     body: "Just visited the new coffee shop downtown! ☕️",
@@ -2128,6 +2129,7 @@ export const stories = [
   },
   {
     id: 2,
+    userId: 2,
     username: "Sarah Williams",
     avatar: "/users/user2.png",
     body: "Weekend hiking adventures! 🏔️ #nature",
@@ -2157,6 +2159,7 @@ export const stories = [
   },
   {
     id: 3,
+    userId: 3,
     username: "Michael Chen",
     avatar: "/users/user3.png",
     body: "كورس مجاني الحقوه بسرعة يا شباب",
@@ -2189,6 +2192,7 @@ export const stories = [
   {
     id: 4,
     username: "Emma Davis",
+    userId: 4,
     avatar: "/users/user4.png",
     body: "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 🎨",
     images: ["/chat6.png", "/chat8.png"],
@@ -2214,6 +2218,7 @@ export const stories = [
   },
   {
     id: 5,
+    userId: 4,
     username: "Emma Davis",
     avatar: "/users/user4.png",
     body: "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy 🎨",
@@ -2240,6 +2245,7 @@ export const stories = [
   },
   {
     id: 6,
+    userId: 4,
     username: "Emma Davis",
     avatar: "/users/user4.png",
     body: "xxxxxxxxxxxxxxxxxxxxxxxxxxx 🎨",
@@ -2266,6 +2272,7 @@ export const stories = [
   },
   {
     id: 7,
+    userId: 5,
     username: "David Kim",
     avatar: "/users/user5.png",
     body: "New recipe experiment! 🍳",
@@ -2291,6 +2298,7 @@ export const stories = [
   },
   {
     id: 8,
+    userId: 6,
     username: "Olivia Martinez",
     avatar: "/users/user6.png",
     images: ["/chat12.png"],
@@ -2336,3 +2344,35 @@ export const stories = [
     },
   },
 ];
+
+
+  // Function to process stories and get latest per user with counts
+  export const processStories = (stories) => {
+    // First sort all stories by timestamp (newest first)
+    const sortedStories = [...stories].sort(
+      (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    );
+
+    const userStoriesMap = new Map();
+
+    // Iterate through sorted stories
+    sortedStories.forEach((story) => {
+      if (!userStoriesMap.has(story.userId)) {
+        // If user not in map, add with count 1
+        userStoriesMap.set(story.userId, {
+          ...story,
+          totalStories: 1,
+        });
+      } else {
+        // If user already in map, just increment count
+        const existing = userStoriesMap.get(story.userId);
+        userStoriesMap.set(story.userId, {
+          ...existing,
+          totalStories: existing.totalStories + 1,
+        });
+      }
+    });
+
+    // Convert map values to array
+    return Array.from(userStoriesMap.values());
+  };

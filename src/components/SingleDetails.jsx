@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { messages, stories } from "@/utils/Data";
+import { messages, stories, processStories } from "@/utils/Data";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css";
@@ -113,6 +113,105 @@ function SingleDetails() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const storySwiperRef = useRef(null);
+  const userOrder = useRef([]);
+
+  const [currentUserIndex, setCurrentUserIndex] = useState(0);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [processedStories, setProcessedStories] = useState({});
+  const [activeUserId, setActiveUserId] = useState(null);
+
+  let latestStories = processStories(stories);
+
+  // Process and group stories
+  useEffect(() => {
+    const grouped = stories.reduce((acc, story) => {
+      if (!acc[story.userId]) {
+        acc[story.userId] = [];
+      }
+      acc[story.userId].push(story);
+      return acc;
+    }, {});
+
+    // Sort stories by timestamp (newest first)
+    Object.keys(grouped).forEach((userId) => {
+      grouped[userId].sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+    });
+
+    setProcessedStories(grouped);
+    userOrder.current = Object.keys(grouped);
+    setActiveUserId(userOrder.current[0] || null);
+
+    // Create latest stories array for sidebar
+    const latest = Object.values(grouped).map((userStories) => ({
+      ...userStories[0],
+      totalStories: userStories.length,
+    }));
+    latestStories = latest;
+  }, []);
+
+  console.log("latestStories", latestStories);
+
+  // Get current user's stories
+  const currentUserId = userOrder.current[currentUserIndex] || null;
+  const currentUserStories = currentUserId
+    ? processedStories[currentUserId]
+    : [];
+
+  // Handle slide change
+  const handleSlideChange = () => {
+    if (!userOrder.current.length || !currentUserStories.length) return;
+
+    if (currentStoryIndex < currentUserStories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
+    } else {
+      const nextUserIndex = (currentUserIndex + 1) % userOrder.current.length;
+      setCurrentUserIndex(nextUserIndex);
+      setCurrentStoryIndex(0);
+      setActiveUserId(userOrder.current[nextUserIndex]);
+
+      if (storySwiperRef.current) {
+        storySwiperRef.current.slideTo(0);
+      }
+    }
+  };
+
+  // Get slides to display in Swiper
+  const getCurrentSlides = () => {
+    if (!currentUserId || !currentUserStories.length) return [];
+
+    const slides = [currentUserStories[currentStoryIndex]];
+
+    if (currentStoryIndex < currentUserStories.length - 1) {
+      slides.push(currentUserStories[currentStoryIndex + 1]);
+    } else {
+      const nextUserIndex = (currentUserIndex + 1) % userOrder.current.length;
+      const nextUserId = userOrder.current[nextUserIndex];
+      if (nextUserId && processedStories[nextUserId]?.[0]) {
+        slides.push(processedStories[nextUserId][0]);
+      }
+    }
+
+    return slides;
+  };
+
+  // Handle story selection from sidebar
+  const handleStorySelect = (userId) => {
+    console.log(userId);
+
+    const userIdx = userOrder.current.indexOf(userId);
+    if (userIdx !== -1) {
+      setCurrentUserIndex(userIdx);
+      setCurrentStoryIndex(0);
+      setActiveUserId(userId);
+      if (storySwiperRef.current) {
+        storySwiperRef.current.slideTo(0);
+      }
+    }
+  };
 
   return (
     <div
@@ -487,7 +586,7 @@ function SingleDetails() {
           {imgFocus?.paragraph && <p>{imgFocus?.paragraph}</p>}
         </div>
       ) : (
-        <div className={`stories`}>
+        <div className="stories">
           {screenSize !== "small" && (
             <div className="sideStoriesSection">
               <div className="top">
@@ -502,7 +601,6 @@ function SingleDetails() {
               </div>
               <div className="hold">
                 <h4>{translations?.story?.your_story}</h4>
-
                 <div
                   className="createStory"
                   onClick={() => {
@@ -523,10 +621,13 @@ function SingleDetails() {
               <div className="hold">
                 <h4>{translations?.story?.friends_stories}</h4>
                 <div className="usersStories">
-                  {stories.map((data, index) => (
+                  {latestStories.map((data, index) => (
                     <div
-                      className={`singleStory ${index == 0 ? "active" : ""}`}
+                      className={`singleStory ${
+                        data.userId == activeUserId ? "active" : ""
+                      }`}
                       key={index}
+                      onClick={() => handleStorySelect(data.userId)}
                     >
                       <Image
                         className="rounded"
@@ -540,6 +641,11 @@ function SingleDetails() {
                         <h5>{data?.username}</h5>
                         <span>{ConvertTime(data?.timestamp, locale)}</span>
                       </div>
+                      {data?.totalStories > 1 && (
+                        <span className="counter-for-story">
+                          {data?.totalStories}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -567,21 +673,20 @@ function SingleDetails() {
               {loading ? (
                 <ContentLoader
                   speed={2}
-                  width={`100%`}
+                  width="100%"
                   height={200}
                   viewBox="0 0 80 100"
                   backgroundColor="#E8E8E8"
                   foregroundColor="#D5D5D5"
                 >
-                  {/* Avatar placeholder (circle) */}
                   <circle cx="40" cy="40" r="20" />
-                  {/* Name placeholder (single line) */}
                   <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
                 </ContentLoader>
               ) : (
                 <Swiper
                   onSwiper={setSwiperRef}
-                  key={loading ? "loading" : "loaded"}
+                  onSlideChange={handleSlideChange}
+                  key={`${currentUserIndex}-${currentStoryIndex}`}
                   modules={[Navigation]}
                   speed={1000}
                   spaceBetween={10}
@@ -591,17 +696,19 @@ function SingleDetails() {
                   }}
                   slidesPerView={1}
                 >
-                  {stories.map((x, index) => {
-                    return (
-                      <SwiperSlide key={index}>
-                        <Story data={x} index={index} />
-                      </SwiperSlide>
-                    );
-                  })}
+                  {getCurrentSlides().map((story, index) => (
+                    <SwiperSlide key={`${story.userId}-${story.id}-${index}`}>
+                      <Story
+                        data={story}
+                        storyCount={processedStories[story.userId]?.length || 0}
+                        currentStoryIndex={currentStoryIndex}
+                      />
+                    </SwiperSlide>
+                  ))}
                 </Swiper>
               )}
             </div>
-            <TypeComment id={dataForSwiper.id} />
+            <TypeComment id={currentUserStories[currentStoryIndex]?.id} />
           </div>
         </div>
       )}
