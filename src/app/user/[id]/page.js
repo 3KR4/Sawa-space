@@ -8,7 +8,6 @@ import { use } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import Post from "@/components/post/Post";
-import SettingMenu from "@/components/providers/SettingMenu";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import "@/Styles/user.css";
@@ -73,18 +72,6 @@ export default function User({ params }) {
 
   return (
     <div className={`userPage`}>
-      {settingMenu && (
-        <SettingMenu type={"settingMenu-user"}>
-          <h4>{translations?.actions?.action}</h4>
-          <button className="danger">
-            <IoPersonRemoveSharp /> {translations?.actions?.remove_friend}
-          </button>
-          <button className="danger">
-            <MdBlock /> {translations?.actions?.block}
-          </button>
-        </SettingMenu>
-      )}
-
       <div className="top">
         <div className="cover">
           <Image src={"/chat4.png"} alt="User Cover" fill />
@@ -134,7 +121,7 @@ export default function User({ params }) {
                   <input
                     id="serchpostInput"
                     type="text"
-                    placeholder="Search in posts..."
+                    placeholder={translations?.placeHolders?.search_in_posts}
                     value={postSearch}
                     onChange={(e) => setPostSearch(e.target.value)}
                   />

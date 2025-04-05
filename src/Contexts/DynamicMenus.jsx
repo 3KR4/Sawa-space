@@ -11,6 +11,7 @@ export const MenuProvider = ({ children }) => {
   const [openUsersReact, setOpenUsersReact] = useState(false);
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [selectedDev, setSelectedDev] = useState(false);
+  const [settingMenuType, setSettingMenuType] = useState("");
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [menuPosition2, setMenuPosition2] = useState({ top: 0, left: 0 });
 
@@ -33,9 +34,9 @@ export const MenuProvider = ({ children }) => {
         ? 340
         : type == "settingMenu-msg"
         ? 255
-        : type == "settingMenu-user"
+        : type == "settingMenu-user" || type == "settingMenu-story"
         ? 255
-        : type == "postSettings"
+        : type == "settingMenu-post"
         ? 255
         : type == "usersReact"
         ? 255
@@ -52,7 +53,9 @@ export const MenuProvider = ({ children }) => {
         ? 340
         : type == "settingMenu-user"
         ? 130
-        : type == "postSettings"
+        : type == "settingMenu-story"
+        ? 98
+        : type == "settingMenu-post"
         ? 286
         : type == "usersReact"
         ? 220
@@ -79,9 +82,11 @@ export const MenuProvider = ({ children }) => {
     if (
       type == "settingMenu-msg" ||
       type == "settingMenu-user" ||
-      type == "postSettings"
+      type == "settingMenu-post" ||
+      type == "settingMenu-story"
     ) {
       setSettingMenu(true);
+      setSettingMenuType(type);
     }
 
     id && setSelectedDev(id);
@@ -140,6 +145,7 @@ export const MenuProvider = ({ children }) => {
         setOpenUsersReact,
         menuPosition2,
         setMenuPosition2,
+        settingMenuType,
       }}
     >
       {children}

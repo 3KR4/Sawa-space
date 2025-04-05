@@ -45,7 +45,6 @@ const fontFamilies = [
 
 const backgroundColors = [
   {
-    id: 1,
     type: "gradient",
     first: "#FF9A9E",
     second: "#FAD0C4",
@@ -54,12 +53,10 @@ const backgroundColors = [
     second_Acquisition: 50,
   },
   {
-    id: 2,
     type: "static",
     color: "#A1C4FD",
   },
   {
-    id: 3,
     type: "gradient",
     first: "#84FAB0",
     second: "#8FD3F4",
@@ -68,12 +65,10 @@ const backgroundColors = [
     second_Acquisition: 60,
   },
   {
-    id: 4,
     type: "static",
     color: "#FFD1FF",
   },
   {
-    id: 5,
     type: "gradient",
     first: "#FFECD2",
     second: "#FCB69F",
@@ -82,12 +77,10 @@ const backgroundColors = [
     second_Acquisition: 70,
   },
   {
-    id: 6,
     type: "static",
     color: "#D4FC79",
   },
   {
-    id: 7,
     type: "gradient",
     first: "#A18CD1",
     second: "#FBC2EB",
@@ -96,12 +89,10 @@ const backgroundColors = [
     second_Acquisition: 75,
   },
   {
-    id: 8,
     type: "static",
     color: "#96E6A1",
   },
   {
-    id: 9,
     type: "gradient",
     first: "#F6D365",
     second: "#FDA085",
@@ -110,12 +101,10 @@ const backgroundColors = [
     second_Acquisition: 80,
   },
   {
-    id: 10,
     type: "static",
     color: "#FBC2EB",
   },
   {
-    id: 11,
     type: "gradient",
     first: "#E0C3FC",
     second: "#8EC5FC",
@@ -124,12 +113,10 @@ const backgroundColors = [
     second_Acquisition: 85,
   },
   {
-    id: 12,
     type: "static",
     color: "#FEE140",
   },
   {
-    id: 13,
     type: "gradient",
     first: "#FF9A9E",
     second: "#FECFEF",
@@ -138,12 +125,10 @@ const backgroundColors = [
     second_Acquisition: 90,
   },
   {
-    id: 14,
     type: "static",
     color: "#6A11CB",
   },
   {
-    id: 15,
     type: "gradient",
     first: "#F6D365",
     second: "#FF9A9E",
@@ -157,6 +142,7 @@ function StoryForm() {
   const { locale, translations } = useLanguage();
 
   const {
+    selectedUsers,
     setSelectedUsers,
     selectedUsersNames,
     setSelectedUsersNames,
@@ -184,15 +170,13 @@ function StoryForm() {
   const [addLink, setAddLink] = useState(false);
   const [linkValue, setLinkValue] = useState("");
   const [isSubmited, setisSubmited] = useState(false);
-  const [selectOption, setSelectOption] = useState(false);
+  const [enableTextBackground, setEnableTextBackground] = useState(true);
 
   const [selectedBackground, setSelectedBackground] = useState(
     backgroundColors[0]
   );
   const [showCustomBackgroundForm, setShowCustomBackgroundForm] =
     useState(false);
-
-  console.log(selectedBackground);
 
   const [postData, setPostData] = useState({
     id: 1,
@@ -218,11 +202,24 @@ function StoryForm() {
       backGround: "",
     },
   });
+  useEffect(() => {
+    setPostData((prev) => ({
+      ...prev,
+      body: messageText,
+      link: linkValue,
+      mentions: selectedUsers,
+      settings: {
+        ...prev.settings,
+        backGround: selectedBackground,
+      },
+    }));
+  }, [messageText, linkValue, selectedUsers, selectedBackground]);
+
+  console.log(postData);
 
   const formMenuRef = useRef(null);
 
   const inputFileRef = useRef(null);
-  console.log(postData);
 
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -371,7 +368,11 @@ function StoryForm() {
             [type]: {
               ...prev.settings[type], // Preserve existing properties
               [key]:
-                key === "color" || key === "background" ? value : Number(value), // Handle color values as strings
+                key === "color" || key === "background"
+                  ? value
+                  : key === "family"
+                  ? value
+                  : Number(value), // Handle color values as strings
             },
           },
         };
@@ -383,8 +384,6 @@ function StoryForm() {
   const DraggableElement = ({ id, settings, children }) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } =
       useDraggable({ id });
-
-    console.log(settings);
 
     return (
       <div
@@ -400,7 +399,10 @@ function StoryForm() {
           fontFamily: settings.family,
           color: `#${settings.color}`,
           textDecoration: id === "link" ? "underline" : "",
-          background: `#${settings.background}`,
+          background:
+            settings.background === "transparent"
+              ? "transparent"
+              : `#${settings.background}`,
           left: `50%`,
           top: `50%`,
           transform: `translate(calc(-50% + ${settings.x}px), calc(-50% + ${
@@ -477,11 +479,11 @@ function StoryForm() {
                   </div>
 
                   {/* Background Color Options */}
-                  {backgroundColors.map((bg) => (
+                  {backgroundColors.map((bg, index) => (
                     <div
-                      key={bg.id}
+                      key={index}
                       className={`color-circle ${
-                        selectedBackground?.id === bg.id ? "active" : ""
+                        selectedBackground?.id === index ? "active" : ""
                       }`}
                       style={{
                         background:
@@ -519,9 +521,9 @@ function StoryForm() {
                 </div>
                 {showCustomBackgroundForm && (
                   <div className="custom-background-form">
-                    <h5>Add Custom Background</h5>
+                    <h5>{translations?.story?.add_custom_background}</h5>
                     <div className="form-group">
-                      <label>Type</label>
+                      <label>{translations?.story?.type}</label>
                       <select
                         value={selectedBackground.type}
                         onChange={(e) =>
@@ -531,14 +533,18 @@ function StoryForm() {
                           }))
                         }
                       >
-                        <option value="static">Static</option>
-                        <option value="gradient">Gradient</option>
+                        <option value="static">
+                          {translations?.story?.static_color}
+                        </option>
+                        <option value="gradient">
+                          {translations?.story?.gradient_color}
+                        </option>
                       </select>
                     </div>
 
                     {selectedBackground.type === "static" ? (
                       <div className="form-group">
-                        <label>Color</label>
+                        <label>{translations?.story?.color}</label>
                         <input
                           type="color"
                           value={selectedBackground.color}
@@ -554,7 +560,7 @@ function StoryForm() {
                       <>
                         <div className="grids one">
                           <div className="form-group">
-                            <label>First Color</label>
+                            <label>{translations?.story?.first_color}</label>
                             <input
                               type="color"
                               value={selectedBackground.first}
@@ -567,7 +573,7 @@ function StoryForm() {
                             />
                           </div>
                           <div className="form-group">
-                            <label>Second Color</label>
+                            <label>{translations?.story?.second_color}</label>
                             <input
                               type="color"
                               value={selectedBackground.second}
@@ -581,7 +587,7 @@ function StoryForm() {
                           </div>
                         </div>
                         <div className="form-group">
-                          <label>Gradient Angle</label>
+                          <label>{translations?.story?.gradient_angle}</label>
                           <Slider
                             min={0}
                             max={360}
@@ -596,7 +602,9 @@ function StoryForm() {
                         </div>
                         <div className="grids two">
                           <div className="form-group">
-                            <label>first Acquisition</label>
+                            <label>
+                              {translations?.story?.first_acquisition}
+                            </label>
                             <Slider
                               min={-100}
                               max={200}
@@ -610,7 +618,9 @@ function StoryForm() {
                             />
                           </div>
                           <div className="form-group">
-                            <label>second Acquisition</label>
+                            <label>
+                              {translations?.story?.second_acquisition}
+                            </label>
                             <Slider
                               min={-100}
                               max={200}
@@ -759,6 +769,16 @@ function StoryForm() {
                         <label htmlFor="">
                           {translations?.story?.background_color}
                         </label>
+                        <IoClose
+                          className="close"
+                          onClick={() =>
+                            handleSettingsChange(
+                              "body",
+                              "background",
+                              "transparent"
+                            )
+                          }
+                        />
                         <input
                           type="color"
                           id="bodyBackgroundColor"
@@ -928,7 +948,7 @@ function StoryForm() {
                       />
                     </div>
                     <div className="hold">
-                      <label>Width</label>
+                      <label>{translations?.story?.width}</label>
                       <Slider
                         min={0}
                         max={260}
@@ -1011,7 +1031,7 @@ function StoryForm() {
                   <div className="left">
                     <Image
                       className="rounded"
-                      src={"/users/default.png"}
+                      src={"/avatar.png"}
                       alt={"/users/default.png"}
                       width={40}
                       height={40}
@@ -1029,9 +1049,6 @@ function StoryForm() {
                     </div>
                   </div>
                   <HiDotsVertical
-                    onClick={(e) => {
-                      handleMenus(e, "postSettings", 1);
-                    }}
                   />
                 </div>
 

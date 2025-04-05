@@ -5,6 +5,8 @@ import Link from "next/link";
 import CutText from "@/utils/CutText";
 import { users } from "@/utils/Data";
 import ContentLoader from "react-content-loader";
+import { MenusContext } from "@/Contexts/MenusContext";
+
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import ConvertTime from "@/utils/ConvertTime";
@@ -29,11 +31,11 @@ import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
+  const { hideChats, setHideChats } = useContext(MenusContext);
   const { screenSize, screenSizeWidth } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
 
   const [chatsCurrentFilter, setChatsCurrentFilter] = useState("allchats");
-  const [hideChats, setHideChats] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const [curentUserId, setCurentUserId] = useState();
 

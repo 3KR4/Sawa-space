@@ -11,11 +11,11 @@
 }
 body.ar,
 body.ar * {
-  direction: rtl;
+  direction: rtl !important;
 }
 body.ar .swiper-container,
 body.ar .swiper-container *,
-body.ar .navigations-icons {
+body.ar .navigations-icons.forStories {
   direction: ltr;
 }
 main {
@@ -200,9 +200,135 @@ body.ar .goBackSvg {
   transform: rotate(180deg);
 }
 
-.main-button {
-  padding: 9px 16px;
+.notfication-holder {
+  position: fixed;
+  width: fit-content;
+  z-index: 200;
+  right: 12px;
+  top: 75px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  transition: 0.4s;
+}
+body.ar .notfication-holder {
+  right: unset;
+  left: 12px;
+}
+.notification {
+  gap: 14px;
+  display: flex;
+  overflow: hidden;
+  width: fit-content;
+  align-items: center;
+  padding: 18px;
+  border-radius: 10px;
+  transform: translateX(100%) scale(0.8);
+  opacity: 0;
+  transition: 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.notification span.before {
+  position: absolute;
+  width: 8px;
+  height: 0;
+  bottom: 0;
+  right: 0;
   border-radius: 6px;
+  background-color: var(--title-color);
+}
+body.ar .notification span.before {
+  right: unset;
+  left: 0;
+}
+.notification.active span.before {
+  animation: whenNotficationIsAction 10s forwards;
+}
+@keyframes whenNotficationIsAction {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+.notification.closing span.before {
+  animation: whenNotficationIsHide 10s forwards;
+}
+@keyframes whenNotficationIsHide {
+  0% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
+}
+
+.notification.closing {
+  transform: translateX(100%) scale(0.8);
+  opacity: 0;
+}
+.notification.active {
+  transform: translateX(0%) scale(1);
+  opacity: 1;
+}
+.notification .icon-holder {
+  position: relative;
+  display: flex;
+  height: 43px;
+  min-width: 43px;
+  scale: 1.25;
+}
+.notification .icon-holder .backSvg {
+  height: 100%;
+  width: 100%;
+  transform: translateY(3px);
+  color: #c81912;
+}
+.notification .icon-holder .backSvg {
+  height: 100%;
+  width: 100%;
+  transform: translateY(3px);
+  color: #c81912;
+}
+.notification .icon-holder svg:not(.backSvg) {
+  position: absolute;
+  color: white;
+  width: 60%;
+  height: 60%;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+}
+.notification .content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.notification .content h4 {
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+}
+.notification p {
+  color: white;
+  font-size: 15px;
+  max-width: 354px;
+}
+.notification .close {
+  width: 25px;
+  height: 25px;
+  background: transparent;
+  color: white;
+  padding: 3px;
+  align-self: flex-start;
+}
+.notification .close:hover {
+  color: white;
+}
+.main-button {
+  padding: 6px 18px !important;
+  border-radius: 5px !important;
   font-weight: 500;
   transition: 0.3s;
   cursor: pointer;
@@ -231,6 +357,35 @@ body.ar .goBackSvg {
 body > main > .holder:has(.register-page) {
   min-height: 100vh;
 }
+
+.lds-dual-ring {
+  /* change color here */
+  color: white;
+}
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: flex;
+  width: 28px;
+  height: 28px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 4px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .container {
   padding-left: 15px;
   padding-right: 15px;
@@ -262,7 +417,7 @@ body > main > .holder:has(.register-page) {
 }
 
 body > main {
-  flex: 1;
+  width: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -687,6 +842,12 @@ header .logo img {
 .search-holder {
   position: relative;
 }
+header .search-holder input {
+  padding: 7px 28px 7px 30px;
+}
+body.ar header .search-holder svg.delete {
+  left: 2px;
+}
 .search-holder input {
   font-size: 14px;
   padding: 7px 33px 7px 34px;
@@ -955,14 +1116,16 @@ header .events .menu.createMenu svg {
   gap: 7px;
   margin-top: 15px;
 }
+.home .posts-holder {
+  width: 100%;
+}
 .post {
   display: flex;
   flex-direction: column;
   gap: 8px;
   border: 0.5px solid var(--border-color);
   border-radius: 9px;
-  max-width: 43%;
-  min-width: 43%;
+  width: 100%;
   overflow: hidden;
   background: var(--body-color);
 }
@@ -1379,50 +1542,56 @@ body.ar .comments .sideMenu.reactsHolder {
   flex: 1;
 }
 
-.post .comments .action-holder {
+.action-holder.forComments {
   border-radius: 7px;
   border: 1.5px solid var(--border-color);
   display: flex;
   flex-direction: column;
   margin-right: 14px;
 }
-.focusedMsg.forPosts .action-holder {
+.focusedMsg.forPosts .action-holder.forComments {
   margin-right: 0 !important;
 }
-.post .comments .action-holder .top {
+.action-holder.forComments .top {
   align-items: unset;
+  display: flex;
 }
 
-.post .comments .action-holder .top textarea {
+.action-holder.forComments .top textarea {
   resize: none;
   padding: 12px;
   flex: 1;
   min-height: 100px;
 }
-.post .comments .action-holder .top:has(img) textarea {
+.action-holder.forComments .top:has(img) textarea {
   padding-right: 0px;
 }
-body.ar .post .comments .action-holder .top:has(img) textarea {
+body.ar .action-holder.forComments .top:has(img) textarea {
   padding-right: 12px;
   padding-left: 0px;
 }
-.post .action-holder .top img {
-  width: 224px;
+.action-holder.forComments .top img {
+  width: 173px;
   border-radius: 8px;
-  height: 150px !important;
+  height: 120px !important;
   margin: 7px;
   object-fit: cover;
 }
-.post .action-holder .top svg {
+.focusedMsg .action-holder.forComments .top img {
+  width: 120px;
+  border-radius: 8px;
+  height: 101px !important;
+}
+.action-holder.forComments .top svg {
   width: 20px;
   height: 20px;
   right: 0;
 }
-body.ar .post .action-holder .top svg {
+body.ar .action-holder.forComments .top svg {
   left: 0 !important;
   right: unset !important;
 }
-.post .comments .action-holder .actions {
+.action-holder.forComments .actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1430,7 +1599,7 @@ body.ar .post .action-holder .top svg {
   padding-left: 10px;
   border-top: 1px solid var(--border-color);
 }
-.post .comments .action-holder .actions .left {
+.action-holder.forComments .actions .left {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -1438,15 +1607,15 @@ body.ar .post .action-holder .top svg {
   font-weight: 500;
   color: var(--title-color);
 }
-.post .comments .action-holder .actions .right {
+.action-holder.forComments .actions .right {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.post .comments .action-holder .actions .right svg:first-child {
+.action-holder.forComments .actions .right svg:first-child {
   font-size: 16px;
 }
-.post .comments .action-holder .actions .right svg {
+.action-holder.forComments .actions .right svg {
   font-size: 18px;
 }
 .actions.forImageSwiper > div {
@@ -1457,7 +1626,7 @@ body.ar .post .action-holder .top svg {
   left: 50%;
   transform: translateX(-50%);
 }
-.post .comments .action-holder .actions .right button {
+.action-holder.forComments .actions .right button {
   background: var(--back-grident);
   color: white;
   padding: 11px 15px;
@@ -1607,12 +1776,13 @@ body:has(.focusedMsg.active) .chats {
   height: 34px;
   color: var(--paragraph-color);
 }
-.post .middle .action-holder .actions svg {
+.action-holder.forComments .actions svg {
   padding: 2px;
   width: 21px;
   height: 21px;
   background: transparent;
 }
+
 .posts-holder .post .bottom > .actions {
   gap: 4px;
 }
@@ -2023,23 +2193,307 @@ body .sideSection + div {
   color: white;
   font-weight: 600;
 }
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48%;
+  margin: 0 auto;
+}
+.home .stories-holder {
+  width: 100%;
+  max-width: 880px;
+  position: relative;
+  margin-top: 12px;
+}
+
+.home .stories-holder .top.forUser .info span {
+  display: none;
+}
+.navigations-icons.forStories {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navigations-icons.forStories svg {
+  background: var(--body-color);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  padding: 5px;
+}
+body.ar .navigations-icons.forStories svg {
+  transform: rotate(180deg);
+}
+.navigations-icons.forStories svg:hover {
+  background: var(--main-color);
+  color: white;
+}
+.home .stories-holder .swiper-container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.home .stories-holder .swiper-slide {
+}
+.home .stories-holder .story {
+  width: 100%;
+  height: 200px;
+}
+.home .stories-holder .story.smallView .top.forUser img {
+  width: unset;
+  height: unset;
+}
+
+.story {
+  width: 480px;
+  height: 770px;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.story .hiddenContent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff47;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+.story .top.forUser {
+  width: 100%;
+  padding: 5px 12px;
+  background: #ffffffab;
+  backdrop-filter: blur(6px);
+  z-index: 1;
+}
+.story.smallView {
+  cursor: pointer;
+}
+.story.smallView .top.forUser {
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff8c;
+  border: none;
+}
+.story.smallView .top.forUser .left {
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+.top.forUser .left {
+  gap: 5px;
+}
+.top.forUser img {
+  width: 40px;
+  height: 40px;
+}
+.top.forUser .info span {
+  margin: 0;
+}
+.top.forUser svg {
+  transform: translateY(1px);
+}
+
+.story .mentions {
+  margin-top: auto;
+  padding: 8px 12px;
+  background: #ffffffa3;
+  backdrop-filter: blur(5px);
+  width: 100%;
+}
+.storyImg {
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+.storyImg img {
+  width: 100%;
+  height: 100%;
+}
+
+.storyBody {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 1;
+  width: max-content;
+  max-width: 95%;
+  overflow-wrap: anywhere;
+}
+.storyBody.link {
+  color: #005dff;
+}
+
+.focusedMsg:has(.stories) {
+}
+.focusedMsg .stories {
+  display: flex;
+  gap: 30px;
+  height: 100%;
+}
+.focusedMsg .stories .sideStoriesSection {
+  border-right: 1px solid var(--border-color);
+  min-width: 350px;
+}
+.focusedMsg .stories .sideStoriesSection > * {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+.focusedMsg .stories .sideStoriesSection > *:last-child {
+  border: none;
+}
+.focusedMsg .stories .sideStoriesSection .top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-bottom: 14px;
+}
+.focusedMsg .stories .sideStoriesSection .top svg {
+  background: var(--section-color);
+  padding: 4px;
+  font-size: 27px;
+  border-radius: 6px;
+  width: 29px;
+  height: 29px;
+}
+.focusedMsg .stories .sideStoriesSection .hold {
+  align-items: flex-start;
+  gap: 4px;
+}
+.focusedMsg .stories .sideStoriesSection .hold .createStory {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.focusedMsg .stories .sideStoriesSection .hold .createStory svg {
+  color: white;
+  width: 48px;
+  height: 48px;
+  background: var(--third-color);
+  padding: 13px;
+  border-radius: 50%;
+}
+.focusedMsg .stories .sideStoriesSection .hold .createStory:hover svg {
+  background: var(--main-color);
+}
+.focusedMsg .stories .sideStoriesSection .hold .createStory h5 {
+  font-size: 14px;
+}
+.focusedMsg .stories .sideStoriesSection .hold .createStory p {
+  max-width: unset;
+  background: url();
+  color: var(--paragraph-color);
+  font-size: 15px;
+  padding: 0;
+}
+.focusedMsg .stories .sideStoriesSection .hold:has(.usersStories) {
+  overflow: auto;
+  max-height: 89%;
+  justify-content: unset;
+}
+.focusedMsg .stories .usersStories {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1px;
+}
+.focusedMsg .stories .usersStories .singleStory {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.focusedMsg .stories .usersStories .singleStory:hover,
+.focusedMsg .stories .usersStories .singleStory.active {
+  background: var(--section-color);
+}
+.focusedMsg .stories .usersStories .singleStory img {
+}
+.focusedMsg .stories .usersStories .singleStory .info {
+}
+.focusedMsg .stories .usersStories .singleStory .info h5 {
+  font-size: 15px;
+}
+.focusedMsg .stories .usersStories .singleStory .info span {
+  font-size: 14px;
+  color: var(--paragraph-color);
+}
+
+.focusedMsg .stories .storySection {
+  width: 32%;
+  max-width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 12px;
+  align-items: center;
+}
+.focusedMsg .stories .navigations-icons.forStories {
+  width: 120%;
+}
+.focusedMsg .stories .navigations-icons.forStories svg {
+  background: var(--section-color);
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  padding: 8px;
+  color: var(--title-color);
+}
+body.ar .focusedMsg .stories .navigations-icons.forStories svg {
+  transform: rotate(180deg);
+}
+.focusedMsg .stories .navigations-icons.forStories svg:hover {
+  color: white;
+  background: var(--main-color);
+}
+.focusedMsg .stories .storySection .holder {
+  position: relative;
+  width: 482px;
+}
+.focusedMsg .stories .storySection .action-holder.forComments {
+  width: 100%;
+}
+.focusedMsg .stories .storySection .story {
+  width: 480px;
+  margin: 0 auto;
+}
+.focusedMsg .stories .swiper {
+  margin: unset;
+}
+
 @media (max-width: 1700px) {
-  .post {
-    max-width: 52%;
-    min-width: 52%;
-  }
   .focusedMsg .post .right-info {
     min-width: 35%;
     max-width: 35%;
+  }
+  .focusedMsg .stories .storySection {
+    width: 36%;
   }
 }
 @media (max-width: 1600px) {
   body:has(.chats.active) main header nav svg {
     display: none;
-  }
-  .post {
-    max-width: 56%;
-    min-width: 56%;
   }
   .focusedMsg .post .left-img .hold img {
     max-width: 98%;
@@ -2050,20 +2504,18 @@ body .sideSection + div {
   header nav a {
     padding: 14px 11px;
   }
-  .post {
-    max-width: 61%;
-    min-width: 61%;
-  }
   .focusedMsg .post .right-info {
     min-width: 37%;
     max-width: 37%;
   }
+  .home {
+    width: 55%;
+  }
+  .focusedMsg .stories .storySection {
+    width: 40%;
+  }
 }
 @media (max-width: 1400px) {
-  .post {
-    max-width: 66%;
-    min-width: 66%;
-  }
   .focusedMsg .post .right-info {
     min-width: 39%;
     max-width: 39%;
@@ -2072,6 +2524,9 @@ body .sideSection + div {
     min-width: 50%;
     padding: 0;
     padding-left: 10px;
+  }
+  .home {
+    width: 60%;
   }
 }
 @media (max-width: 1300px) {
@@ -2092,6 +2547,12 @@ body .sideSection + div {
     min-width: 40%;
     max-width: 40%;
   }
+  .home {
+    width: 65%;
+  }
+  .focusedMsg .stories .storySection {
+    width: 45%;
+  }
 }
 @media (max-width: 1200px) {
   body:has(.chats.active) main header nav svg {
@@ -2104,13 +2565,21 @@ body .sideSection + div {
   body:has(.chats.active) main header nav span {
     display: none;
   }
-  .post {
-    max-width: 75%;
-    min-width: 75%;
-  }
   .focusedMsg .post .right-info {
     min-width: 43%;
     max-width: 43%;
+  }
+  .home .stories-holder {
+    max-width: 640px;
+  }
+  body:has(.chats.hide) .home .stories-holder {
+    max-width: 734px;
+  }
+  body:has(.chats.active) .home {
+    width: 75%;
+  }
+  .focusedMsg .stories .storySection {
+    width: 50%;
   }
 }
 @media (max-width: 1100px) {
@@ -2123,10 +2592,6 @@ body .sideSection + div {
   .chats .chat {
     min-width: 290px;
     gap: 6px;
-  }
-  .post {
-    max-width: 81%;
-    min-width: 81%;
   }
 }
 @media (max-width: 992px) {
@@ -2236,7 +2701,9 @@ body .sideSection + div {
     width: 35px;
     height: 35px;
   }
-
+  .home {
+    width: 100%;
+  }
   body:has(.chats.active) header nav {
     position: relative;
     transform: unset;
@@ -2252,14 +2719,6 @@ body .sideSection + div {
     width: 100.55%;
     height: 101vh;
   }
-  .posts-holder {
-    margin-top: 0;
-  }
-  .post {
-    max-width: 100%;
-    min-width: 100%;
-  }
-
   .post .middle {
     padding: 2px 10px;
   }
@@ -2279,6 +2738,56 @@ body .sideSection + div {
   }
   .focusedMsg .post .swiper {
     padding: 3px 10px;
+  }
+  body:has(.chats.active) .home {
+    width: 100%;
+  }
+  body:has(.chats.hide) .home .stories-holder {
+    max-width: 700px;
+  }
+  .home .stories-holder {
+    max-width: 495px;
+    margin: 0;
+  }
+  .story {
+    max-width: 100%;
+  }
+
+  .home .stories-holder .story {
+    height: 225px;
+  }
+  .home .stories-holder .storiesTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+  .home .stories-holder .storiesTop h5 {
+    font-size: 15px;
+  }
+  .navigations-icons.forStories {
+    position: relative;
+    transform: unset;
+    width: fit-content;
+    top: unset;
+    left: unset;
+  }
+  .focusedMsg .stories {
+    gap: 10px;
+  }
+
+  .focusedMsg .stories .sideStoriesSection {
+    min-width: 320px;
+  }
+  .focusedMsg .stories .storySection {
+    width: -webkit-fill-available;
+  }
+  .focusedMsg .stories .navigations-icons.forStories {
+    margin-bottom: 8px;
+    width: 100%;
+    justify-content: end;
+    padding: 0 10px;
+    gap: 6px;
   }
 }
 
@@ -2300,7 +2809,11 @@ body .sideSection + div {
     padding-right: 0px !important;
     padding-left: 0px !important;
   }
-  body:has(header.active) > main {
+  .home {
+    gap: 15px;
+    transition: 0.3s;
+  }
+  body:has(header.active) .home {
     padding-top: 60px !important;
   }
   header {
@@ -2376,9 +2889,7 @@ body .sideSection + div {
     bottom: 55px;
     top: unset;
   }
-  body:has(.home) .posts-holder {
-    margin-top: 62px;
-  }
+
   .chats .holder {
     max-height: 88vh;
     padding-bottom: 20px;
@@ -2424,19 +2935,19 @@ body .sideSection + div {
     padding: 10px;
     padding-right: 0;
   }
-  .post .comments .action-holder .actions {
+  .action-holder.forComments .actions {
     padding: 6px;
   }
-  .post .comments .action-holder .actions .left {
-    font-size: 11px;
+  .action-holder.forComments .actions .left {
+    font-size: 13px;
     line-height: 1;
   }
-  .post .comments .action-holder .actions .right button {
+  .action-holder.forComments .actions .right button {
     padding: 11px 11px;
     width: max-content;
     font-size: 12px;
   }
-  .post .comments .action-holder .actions .right {
+  .action-holder.forComments .actions .right {
     gap: 8px;
     width: fit-content;
   }
@@ -2515,13 +3026,33 @@ body .sideSection + div {
     right: calc(100% - 200px);
   }
 
+  .notification {
+    padding: 15px 12px;
+    gap: 8px;
+    right: 5px;
+    top: 60px;
+  }
+  .notification .icon-holder {
+    min-height: 37px;
+    max-height: 38px;
+    min-width: 37px;
+    max-width: 38px;
+    scale: unset;
+  }
+  .notification .text h4 {
+    font-size: 19px;
+  }
+  .notification p {
+    font-size: 14px;
+  }
+
   .uploaded {
     position: relative;
     display: flex;
     height: -moz-fit-content;
     margin: 8px;
   }
-  .post .action-holder .top img {
+  .action-holder.forComments .top img {
     width: 135px;
     border-radius: 8px;
     height: 100% !important;
@@ -2532,6 +3063,54 @@ body .sideSection + div {
   }
   .skeleton-post {
     height: 218px;
+  }
+  .story {
+    height: 100%;
+  }
+  .home .stories-holder .story.smallView {
+    height: 198px;
+  }
+  .home .stories-holder .story.smallView .top.forUser {
+    padding: 5px;
+  }
+  .home .stories-holder {
+    padding: 0 10px;
+  }
+  .focusedMsg .stories .storySection {
+    width: -webkit-fill-available;
+    margin: unset;
+    padding: 10px 5px !important;
+  }
+  .focusedMsg .stories .storySection .holder {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .notfication-holder {
+    left: 50% !important;
+    right: unset;
+    transform: translateX(-50%);
+    width: 96%;
+  }
+  .stories .navigations-icons.forStories svg {
+    width: 27px !important;
+    height: 27px !important;
+    padding: 6px !important;
+  }
+  .stories .action-holder.forComments .top img {
+    width: 75px;
+    height: 60px !important;
+  }
+  .stories .action-holder.forComments .top textarea {
+    min-height: 70px;
+  }
+  .focusedMsg .stories .swiper {
+    flex: 1;
+  }
+  .action-holder.forComments .top svg {
+    right: 3px !important;
+    top: 3px !important;
   }
 }
 @media (max-width: 500px) {

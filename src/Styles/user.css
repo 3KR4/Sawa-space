@@ -102,7 +102,7 @@ body.ar .userPage nav .top .right {
 .userPage nav .top .right .left-data {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   font-size: 18px;
 }
 .userPage nav .bottom {
@@ -126,7 +126,7 @@ body.ar .userPage nav .top .right {
 }
 
 .userPage .search-holder input {
-  width: 95px;
+  width: 107px;
   padding: 7px 15px 7px 34px;
   transition: 0.3s;
   background: #ebebeb;
@@ -137,7 +137,29 @@ body.ar .userPage nav .top .right {
 }
 .userPage .search-holder input:focus,
 .userPage .search-holder input:not(:placeholder-shown) {
-  width: 150px;
+  width: 167px;
+}
+.userPage .search-holder input:not(:placeholder-shown) {
+  padding-right: 28px;
+}
+body.ar .userPage .search-holder input {
+  width: 85px;
+  padding: 7px 31px 7px 15px;
+}
+body.ar .userPage .search-holder input:focus,
+body.ar .userPage .search-holder input:not(:placeholder-shown) {
+  width: 182px;
+  padding-right: 30px;
+}
+body.ar .userPage .search-holder input:not(:placeholder-shown) {
+  padding-left: 22px;
+}
+.userPage .search-holder svg.delete {
+  right: 0;
+}
+body.ar .userPage .search-holder svg.delete {
+  right: unset;
+  left: 0;
 }
 .userPage
   .search-holder

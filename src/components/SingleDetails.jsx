@@ -3,11 +3,13 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { messages, posts } from "@/utils/Data";
+import { messages, stories } from "@/utils/Data";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css";
 import "@/Styles/chat.css";
+import { Navigation } from "swiper/modules";
+import "swiper/css/navigation";
 
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
@@ -17,12 +19,13 @@ import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import Comment from "@/components/post/Comment";
+import Story from "@/components/post/Story";
 import ActionsBtns from "@/components/post/ActionsBtns";
 import TypeComment from "@/components/post/TypeComment";
 
 import { PiShareFat } from "react-icons/pi";
-import { FaRegComments } from "react-icons/fa6";
-import { FaRegComment } from "react-icons/fa";
+import { FaRegComments, FaPlus } from "react-icons/fa6";
+import { FaRegComment, FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
@@ -37,11 +40,15 @@ function SingleDetails() {
     setImgFocus,
     imgIndex,
     setImgIndex,
+    usersreactMenuRef,
+    usersSelectionRef,
+    setOpenStoryForm,
+    settingsMenuRef,
     closeImgHolderRef,
   } = useContext(MenusContext);
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
-  const { setMessageText } = useContext(InputActionsContext);
+  const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
   const { pathname, screenSize } = useContext(ScreenContext);
 
   const [swiperRef, setSwiperRef] = useState(null);
@@ -74,9 +81,28 @@ function SingleDetails() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      const allowedRefs = [
+        settingsMenuRef,
+        usersreactMenuRef,
+        usersSelectionRef,
+        emojiHolderRef,
+      ];
+
+      // Check if the click was inside an element with class .reactsHolder.sideMenu
+      const reactsHolderElement = document.querySelector(
+        ".reactsHolder.sideMenu"
+      );
+      const isInsideReactsHolder = reactsHolderElement?.contains(event.target);
+
+      const isInsideAllowedRef = allowedRefs.some(
+        (ref) => ref.current && ref.current.contains(event.target)
+      );
+
       if (
         closeImgHolderRef.current &&
-        !closeImgHolderRef.current.contains(event.target)
+        !closeImgHolderRef.current.contains(event.target) &&
+        !isInsideAllowedRef &&
+        !isInsideReactsHolder
       ) {
         setImgFocus(false);
       }
@@ -117,6 +143,7 @@ function SingleDetails() {
               </div>
               {dataForSwiper?.img?.length > 1 && (
                 <Swiper
+                  className={`previewSmallImages`}
                   dir={direction}
                   onSwiper={setSwiperRef}
                   spaceBetween={5}
@@ -220,7 +247,7 @@ function SingleDetails() {
                 <div className="icons-holder">
                   <HiDotsVertical
                     onClick={(e) => {
-                      handleMenus(e, "postSettings", dataForSwiper.id);
+                      handleMenus(e, "settingMenu-post", dataForSwiper.id);
                     }}
                   />
                   <IoClose
@@ -283,6 +310,7 @@ function SingleDetails() {
                   </div>
                   {dataForSwiper?.img?.length > 1 && (
                     <Swiper
+                      className={`previewSmallImages`}
                       dir={direction}
                       onSwiper={setSwiperRef}
                       spaceBetween={5}
@@ -411,6 +439,7 @@ function SingleDetails() {
           </div>
           {dataForSwiper?.length > 1 && (
             <Swiper
+              className={`previewSmallImages`}
               dir={direction}
               onSwiper={setSwiperRef}
               spaceBetween={5}
@@ -440,7 +469,7 @@ function SingleDetails() {
             </Swiper>
           )}
         </>
-      ) : (
+      ) : dataSwiperType === "comment" ? (
         <div className="hold OneImg">
           {imgFocus && (
             <IoClose
@@ -457,9 +486,126 @@ function SingleDetails() {
           )}
           {imgFocus?.paragraph && <p>{imgFocus?.paragraph}</p>}
         </div>
+      ) : (
+        <div className={`stories`}>
+          {screenSize !== "small" && (
+            <div className="sideStoriesSection">
+              <div className="top">
+                <IoClose
+                  className="close"
+                  onClick={() => {
+                    setImgFocus(null);
+                    setImgIndex(null);
+                  }}
+                />
+                <h3>{translations?.story?.stories}</h3>
+              </div>
+              <div className="hold">
+                <h4>{translations?.story?.your_story}</h4>
+
+                <div
+                  className="createStory"
+                  onClick={() => {
+                    setOpenStoryForm(true);
+                    setImgFocus(null);
+                    setImgIndex(null);
+                  }}
+                >
+                  <FaPlus />
+                  <div className="right">
+                    <h5>{translations?.story?.create_story}</h5>
+                    <p>
+                      {translations?.story?.share_a_photo_or_write_something}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="hold">
+                <h4>{translations?.story?.friends_stories}</h4>
+                <div className="usersStories">
+                  {stories.map((data, index) => (
+                    <div
+                      className={`singleStory ${index == 0 ? "active" : ""}`}
+                      key={index}
+                    >
+                      <Image
+                        className="rounded"
+                        src={data?.avatar}
+                        alt={data?.username}
+                        width={50}
+                        height={50}
+                        onClick={(e) => handleMenus(e, "userInfo", data?.id)}
+                      />
+                      <div className="info">
+                        <h5>{data?.username}</h5>
+                        <span>{ConvertTime(data?.timestamp, locale)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="storySection swiper-container">
+            <div className="holder">
+              <div className="navigations-icons forStories">
+                {screenSize !== "small" ? (
+                  <>
+                    <FaAngleLeft className="custom-prev" />
+                    <FaAngleRight className="custom-next" />
+                  </>
+                ) : (
+                  <>
+                    <h4>{translations?.story?.stories}</h4>
+                    <div className="svg-holder">
+                      <FaAngleLeft className="custom-prev" />
+                      <FaAngleRight className="custom-next" />
+                    </div>
+                  </>
+                )}
+              </div>
+              {loading ? (
+                <ContentLoader
+                  speed={2}
+                  width={`100%`}
+                  height={200}
+                  viewBox="0 0 80 100"
+                  backgroundColor="#E8E8E8"
+                  foregroundColor="#D5D5D5"
+                >
+                  {/* Avatar placeholder (circle) */}
+                  <circle cx="40" cy="40" r="20" />
+                  {/* Name placeholder (single line) */}
+                  <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
+                </ContentLoader>
+              ) : (
+                <Swiper
+                  onSwiper={setSwiperRef}
+                  key={loading ? "loading" : "loaded"}
+                  modules={[Navigation]}
+                  speed={1000}
+                  spaceBetween={10}
+                  navigation={{
+                    nextEl: ".custom-next",
+                    prevEl: ".custom-prev",
+                  }}
+                  slidesPerView={1}
+                >
+                  {stories.map((x, index) => {
+                    return (
+                      <SwiperSlide key={index}>
+                        <Story data={x} index={index} />
+                      </SwiperSlide>
+                    );
+                  })}
+                </Swiper>
+              )}
+            </div>
+            <TypeComment id={dataForSwiper.id} />
+          </div>
+        </div>
       )}
     </div>
   );
 }
-
 export default SingleDetails;

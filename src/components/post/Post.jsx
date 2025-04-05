@@ -31,8 +31,13 @@ import { BsEmojiSmile } from "react-icons/bs";
 function Post({ data }) {
   const { translations, locale } = useLanguage();
 
-  const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
-    useContext(MenusContext);
+  const {
+    setDataSwiperType,
+    setDataForSwiper,
+    setImgFocus,
+    setImgIndex,
+    setNotification,
+  } = useContext(MenusContext);
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
   const { setMessageText } = useContext(InputActionsContext);
@@ -63,7 +68,7 @@ function Post({ data }) {
     <div className={`post`}>
       {!seeComments ? (
         <>
-          <div className="top">
+          <div className="top" onClick={() => setNotification((prev) => !prev)}>
             <div className="left">
               <Image
                 className="rounded"
@@ -80,7 +85,7 @@ function Post({ data }) {
             </div>
             <HiDotsVertical
               onClick={(e) => {
-                handleMenus(e, "postSettings", data.id);
+                handleMenus(e, "settingMenu-post", data.id);
               }}
             />
           </div>
@@ -253,7 +258,7 @@ function Post({ data }) {
                   className="skeleton skeleton-comment"
                   width="100%"
                   height={120}
-                  viewBox="0 0 600 120"
+                  viewBox="0 0 740 120"
                   backgroundColor="#f3f3f3"
                   foregroundColor="#e0e0e0"
                 >

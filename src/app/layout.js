@@ -7,6 +7,7 @@ import { ScreenProvider, ScreenContext } from "@/Contexts/ScreenContext";
 import { MenuProvider } from "@/Contexts/DynamicMenus";
 import { MenusProvider } from "@/Contexts/MenusContext";
 import { InputActionsProvider } from "@/Contexts/InputActionsContext";
+import { NotificationProvider } from "@/Contexts/NotificationContext";
 import { LanguageProvider } from "@/Contexts/LanguageContext";
 import "@/Styles/globals.css";
 
@@ -17,7 +18,9 @@ export default function RootLayout({ children }) {
         <MenuProvider>
           <MenusProvider>
             <InputActionsProvider>
-              <LayoutContent>{children}</LayoutContent>
+              <NotificationProvider>
+                <LayoutContent>{children}</LayoutContent>
+              </NotificationProvider>
             </InputActionsProvider>
           </MenusProvider>
         </MenuProvider>

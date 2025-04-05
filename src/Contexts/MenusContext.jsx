@@ -4,9 +4,13 @@ import { createContext, useContext, useRef, useState, useEffect } from "react";
 export const MenusContext = createContext();
 
 export const MenusProvider = ({ children }) => {
+  const settingsMenuRef = useRef(null);
+  const userInfoMenu = useRef(null);
   const closeImgHolderRef = useRef(null);
   const usersreactMenuRef = useRef(null);
   const usersSelectionRef = useRef(null);
+  const [hideChats, setHideChats] = useState(false);
+
   const [imgFocus, setImgFocus] = useState(false);
   const [imgIndex, setImgIndex] = useState(false);
   const [openPostForm, setOpenPostForm] = useState(false);
@@ -22,6 +26,7 @@ export const MenusProvider = ({ children }) => {
   return (
     <MenusContext.Provider
       value={{
+        settingsMenuRef,
         dataSwiperType,
         setDataSwiperType,
         dataForSwiper,
@@ -33,6 +38,8 @@ export const MenusProvider = ({ children }) => {
         closeImgHolderRef,
         selectedUsers,
         setSelectedUsers,
+        hideChats,
+        setHideChats,
         selectedUsersNames,
         setSelectedUsersNames,
         selectionMenuTitle,
@@ -45,6 +52,7 @@ export const MenusProvider = ({ children }) => {
         setUsersSelectionSearch,
         usersSelectionRef,
         usersreactMenuRef,
+        userInfoMenu,
       }}
     >
       {children}

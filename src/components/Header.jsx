@@ -82,7 +82,7 @@ export default function Header() {
         return;
       }
 
-      setPhoneSearch(false); // Close search when clicking outside
+      setPhoneSearch(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -355,9 +355,11 @@ export default function Header() {
                   >
                     <IoLanguage /> {translations?.header?.swithlang}
                   </button>
-                  <button className="logOut">
-                    <TbLogout2 /> {translations?.header?.logout}
-                  </button>
+                  <Link href={`/auth`}>
+                    <button className="logOut">
+                      <TbLogout2 /> {translations?.header?.logout}
+                    </button>
+                  </Link>
                 </ul>
               </div>
             </li>

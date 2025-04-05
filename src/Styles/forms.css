@@ -338,7 +338,9 @@ body:has(.register-page) .chape {
 .register-page {
   border-radius: 8px;
   padding: 35px !important;
-  width: 550px !important;
+  width: 34% !important;
+  min-width: 400px;
+  max-width: 92%;
   box-shadow: 0 0 6px 0px var(--main-color);
 }
 .register-page * {
@@ -364,6 +366,9 @@ body:has(.register-page) .chape {
   align-items: center;
   margin-bottom: 15px;
   margin-top: -6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
 }
 .register-page .top h1 {
   font-size: 25px;
@@ -403,7 +408,7 @@ form {
 }
 form .rowHolder {
   display: flex;
-  gap: 10px;
+  gap: 9px;
 }
 form .inputHolder {
   width: 100%;
@@ -412,11 +417,15 @@ form .inputHolder {
   padding-left: 40px;
   background: #e8e8e8;
 }
+
 body.ar .register-page form .inputHolder input {
   padding-left: 12px;
 }
 body.ar:has(.register-page) .inputHolder input {
   padding: 0 39px;
+}
+.react-datepicker-popper {
+  z-index: 2 !important;
 }
 form .inputHolder .holder {
   position: relative;
@@ -482,11 +491,11 @@ form .btns + span {
 }
 .register-page .btns {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 3px;
+  gap: 10px;
 }
 .register-page .btns .main-button {
-  width: 48.5% !important;
+  flex: 1;
+  height: 45px;
 }
 .register-page .btns .main-button:hover {
   background: var(--main-color) !important;
@@ -500,6 +509,14 @@ form .btns + span {
 .register-page .btns .main-button:last-child {
   background: #e8e8e8;
   color: var(--title-color);
+}
+.register-page .addingDetails .main-button:first-child {
+  background: #e8e8e8;
+  color: var(--title-color);
+}
+.register-page .addingDetails .main-button:last-child {
+  background: var(--back-grident);
+  color: white;
 }
 .register-page .btns .main-button:hover {
   color: white;
@@ -780,6 +797,9 @@ body.ar .focusedMsg .body > div {
   padding-right: unset;
   padding-left: 15px;
 }
+body.ar .focusedMsg .body > div > h4 {
+  text-align: right;
+}
 .focusedMsg .body .main-button {
   color: white;
   padding: 13px;
@@ -787,6 +807,7 @@ body.ar .focusedMsg .body > div {
   background: var(--main-color);
   font-size: 15px;
   font-weight: 500;
+  padding: 11px 18px !important;
 }
 .focusedMsg .body p {
   max-width: unset;
@@ -978,6 +999,9 @@ body.ar .focusedMsg .body > div {
   overflow: auto;
   padding: 0 !important;
 }
+.focusedMsg .storyForm .formCenter .top {
+  padding: 8px 12px !important;
+}
 .focusedMsg .storyForm .formCenter:has(.forImage) {
   padding-bottom: 10px;
 }
@@ -1002,12 +1026,27 @@ body.ar .focusedMsg .body > div {
   gap: 2px;
   align-items: baseline;
 }
+.focusedMsg .storyForm .settings .hold:has(svg.close) {
+  position: relative;
+}
 .focusedMsg .storyForm .settings .hold label {
   font-size: 12px;
 }
 body.ar .focusedMsg .storyForm .settings .hold label {
   text-align: right;
   width: 100%;
+}
+.focusedMsg .storyForm .settings .hold svg.close {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  padding: 0px;
+  right: 0;
+  top: -1px;
+}
+body.ar .focusedMsg .storyForm .settings .hold svg.close {
+  left: 0;
+  right: unset;
 }
 .focusedMsg .storyForm .settings input {
   background: var(--body-color);
@@ -1031,7 +1070,7 @@ body.ar .focusedMsg .storyForm .settings .hold label {
   width: unset;
 }
 .focusedMsg .storyForm .top {
-  padding: 10px 12px !important;
+  padding: 6px 12px !important;
 }
 body.ar .focusedMsg .storyForm .body .top {
   padding-left: 12px;
@@ -1062,7 +1101,7 @@ body.ar .focusedMsg .storyForm {
 .storyForm .color-circle svg {
   width: 100%;
   height: 100%;
-  padding: 5px;
+  padding: 6px;
 }
 
 .storyForm .settings {
@@ -1086,13 +1125,19 @@ body.ar .focusedMsg .storyForm {
   width: 250px;
   overflow: auto;
   width: 50%;
-  right: 0;
+  left: 0;
   top: -235px;
   padding-right: 0;
   padding-right: 5px;
 }
+body.ar .storyForm .selectOptions .options {
+  left: unset;
+  right: 0;
+  padding: 10px;
+  padding-left: 5px;
+}
 .storyForm .selectedValue:focus + .options {
-  top: -222px;
+  top: -185px;
 }
 .storyForm .setting-holder {
   padding: 14px;
@@ -1124,82 +1169,6 @@ body.ar .storyForm .setting-holder .main-title {
 
 .storyForm .preview.forStory div:has(.story) {
   height: 100%;
-}
-
-.storyForm .preview.forStory .story {
-  width: 480px;
-  height: 770px;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 15px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.storyForm .preview.forStory .story .top.forUser {
-  width: 100%;
-  padding: 5px 12px;
-  background: #ffffffab;
-  backdrop-filter: blur(6px);
-  z-index: 1;
-}
-.top.forUser .left {
-  gap: 5px;
-}
-.top.forUser img {
-  width: 40px;
-  height: 40px;
-}
-.top.forUser .info span {
-  margin: 0;
-}
-.top.forUser svg {
-  transform: translateY(1px);
-}
-
-.storyForm .preview.forStory .story .mentions {
-  margin-top: auto;
-  padding: 8px 12px;
-  background: #ffffffa3;
-  backdrop-filter: blur(5px);
-  width: 100%;
-}
-.storyForm .preview.forStory .storyImg {
-  transform: translate(-50%, -50%);
-  position: absolute;
-}
-.storyForm .preview.forStory .storyImg img {
-  width: 100%;
-  height: 100%;
-}
-.storyForm .productImages svg {
-  border-radius: 50%;
-  background: var(--red-color);
-  color: white;
-  font-size: 17px;
-  padding: 2px;
-  min-width: 17px;
-}
-.storyForm .productImages {
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.storyForm .storyBody {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  padding: 5px 10px;
-  border-radius: 5px;
-  z-index: 1;
-  width: max-content;
-  max-width: 95%;
-  overflow-wrap: anywhere;
-}
-.storyForm .storyBody.link {
-  color: #005dff;
 }
 .storyForm .inputHolder .holder:has(textarea) {
   height: 85px;
@@ -1266,14 +1235,54 @@ body.ar .storyForm .setting-holder .main-title {
   gap: 10px;
   grid-template-columns: repeat(2, 1fr);
 }
+.focusedMsg .storyForm .formCenter:has(.settings.forImage) {
+  padding-bottom: 6px !important;
+}
+
+.storyForm .productImages svg {
+  border-radius: 50%;
+  background: var(--red-color);
+  color: white;
+  font-size: 17px;
+  padding: 2px;
+  min-width: 17px;
+}
+.storyForm .productImages {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.Date-Picker {
+  height: 49px;
+  border-radius: 7px;
+  background: var(--border-color);
+}
+
+@media (max-width: 1600px) {
+  .register-page {
+    width: 45% !important;
+  }
+}
 @media (max-width: 1300px) {
   body:has(.register-page) .chape {
     display: none;
+  }
+  .register-page {
+    width: 55% !important;
+  }
+}
+@media (max-width: 1100px) {
+  .register-page {
+    width: 65% !important;
   }
 }
 @media (max-width: 992px) {
   .App:has(.register-page) {
     background-position: right;
+  }
+  .register-page {
+    width: 90% !important;
   }
   .focusedMsg .body {
     width: 85%;
@@ -1281,15 +1290,15 @@ body.ar .storyForm .setting-holder .main-title {
   .focusedMsg .storyForm {
     width: 100%;
   }
-  .storyForm .preview.forStory .story {
-    max-width: 100%;
-  }
 }
 @media (max-width: 768px) {
   .register-page {
     width: 100% !important;
-    padding: 25px !important;
+    padding: 20px 17px !important;
+    min-width: unset;
+    max-width: 95%;
   }
+
   .register-page .rowHolder {
     flex-direction: column;
   }
@@ -1301,6 +1310,9 @@ body.ar .storyForm .setting-holder .main-title {
   }
   form .rowHolder {
     flex-direction: column;
+  }
+  .register-page .btns .main-button {
+    height: 40px;
   }
   .checkBox {
     flex-direction: column;
@@ -1339,8 +1351,5 @@ body.ar .storyForm .setting-holder .main-title {
     padding-bottom: 6px !important;
     border-bottom: 2px solid var(--border-color);
     border-radius: 0;
-  }
-  .storyForm .preview.forStory .story {
-    height: 630px;
   }
 }

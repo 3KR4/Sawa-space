@@ -29,7 +29,7 @@
     "search_anything": "ابحث عن اي شئ",
     "search_by_name": "ابحث بواسطة الاسم",
     "type_a_message": "قم بكتابة رسالة",
-    "search_in_posts": "ابحث في المنشورات",
+    "search_in_posts": "البحث في المنشورات",
     "whats_on_your_mind": "ما الذي تفكر فيه"
   },
   "header": {
@@ -64,7 +64,11 @@
     "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق"
   },
   "story": {
+    "stories": "القصص",
+    "friends_stories": "قصص الاصدقاء",
     "create_story": "إنشاء قصة قصيرة",
+    "your_story": "قصتك الشخصية",
+    "your_stories": "قصصك الشخصية",
     "add_to_your_story": "أضف عناصر إلى قصتك",
     "choose_a_background": "اختر خلفية",
     "story_body": "محتوى القصة",
@@ -76,7 +80,20 @@
     "font_color": "لون النص",
     "background_color": "لون الخلفية",
     "font_family": "نوع الخط",
-    "Preview_the_final_look": "معاينة للشكل النهائي"
+    "Preview_the_final_look": "معاينة للشكل النهائي",
+    "add_custom_background": "إضافة خلفية مخصصة",
+    "type": "النوع",
+    "static_color": "لون ثابت",
+    "gradient_color": "لون متدرج",
+    "color": "اللون",
+    "first_color": "اللون الأول",
+    "second_color": "اللون الثاني",
+    "gradient_angle": "زاوية التدرج",
+    "first_acquisition": "الاستحواذ الاول",
+    "second_acquisition": "الاستحواذ الثاني",
+    "copy_link_to_share_this_story": "قم بنسخ الرابط للمشاركة",
+    "mute_stories_from": "قم بكتم القصص من",
+    "share_a_photo_or_write_something": "قم بنشر صورة او كتابة شئ ما"
   },
   "comment": {
     "comments": "التعليقات",
@@ -148,16 +165,7 @@
     "posts": "المنشورات",
     "photos": "الصور"
   },
-  "auth": {
-    "enter_your_username_or_email": "قم بأدخال اسمك او البريد الألكتروني",
-    "enter_your_username": "قم بأدخال اسمك",
-    "enter_your_phone": "قم بأدخال رقم جوالك",
-    "enter_your_email": "قم بأدخال بريدك الالكتروني",
-    "enter_your_password": "قم بأدخال كلمة المرور",
-    "did_you_forge_your_password": "هل قد نسيت كلمة المرور الخاصة بك",
-    "register": "انشاء حساب",
-    "login": "تسجيل الدخول"
-  },
+
   "forms": {
     "create_post": "انشاء منشور",
     "edit_post": "تعديل المنشور",
@@ -175,5 +183,37 @@
     "please_enter_a_hashtag": "يرجى إدخال علامة التصنيف",
     "this_link_has_already_been_added": "هذا الرابط قد تم اضافته سابقا",
     "this_tag_has_already_been_added": "علامة التصنيف هذه قد تم اضافتها سابقا"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "please_enter_your_username": "يرجى إدخال اسم المستخدم",
+    "username_must_be_at_least_3_characters": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
+    "enter_your_username_or_email": "أدخل اسم المستخدم أو البريد الإلكتروني",
+    "please_enter_a_phone_number": "يرجى إدخال رقم الهاتف",
+    "phone_number_must_contain_only_digits": "يجب أن يحتوي رقم الهاتف على أرقام فقط",
+    "phone_number_must_be_at_least_10_digits_long": "يجب أن يكون رقم الهاتف 10 أرقام على الأقل",
+    "phone_number_must_be_at_most_15_digits_long": "يجب أن يكون رقم الهاتف 15 رقمًا على الأكثر",
+    "your_phone_number": "رقم هاتفك",
+    "please_enter_your_email_address": "يرجى إدخال عنوان البريد الإلكتروني",
+    "please_enter_a_valid_email_address": "يرجى إدخال بريد إلكتروني صالح",
+    "your_email": "بريدك الإلكتروني",
+    "please_enter_a_password": "يرجى إدخال كلمة المرور",
+    "password_must_be_at_least_8_characters_long": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "please_confirm_your_password": "يرجى تأكيد كلمة المرور",
+    "passwords_dont_match": "كلمات المرور غير متطابقة",
+    "confirm_password": "تأكيد كلمة المرور",
+    "did_you_forget_your_password": "هل نسيت كلمة المرور؟",
+    "complete_profile": "أكمل ملفك الشخصي",
+    "tell_us_more_about_yourself": "أخبرنا المزيد عن نفسك (اختياري)",
+    "birth_date": "تاريخ الميلاد",
+    "select_your_birth_date": "اختر تاريخ ميلادك",
+    "region": "المنطقة",
+    "current_location": "موقعك الحالي",
+    "work": "العمل",
+    "college": "الكلية",
+    "speaking_languages": "اللغات المتحدثة",
+    "go_back": "العودة",
+    "finish": "إنهاء"
   }
 }

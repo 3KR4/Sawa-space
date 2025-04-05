@@ -3,10 +3,14 @@
 import React from "react";
 import { useEffect, useContext, useRef } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+
 
 import { FaPlus } from "react-icons/fa6";
 
 function ReactsHolder({ reactsHolder, setReactsHolder, id }) {
+    const {screenSize } = useContext(ScreenContext);
+
   const reactsRef = useRef(null);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -40,7 +44,7 @@ function ReactsHolder({ reactsHolder, setReactsHolder, id }) {
         <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png" />
         <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png" />
         <img src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png" />
-        <FaPlus onClick={(e) => handleMenus(e, "emojiHolder", id)} />
+          <FaPlus onClick={(e) => handleMenus(e, "emojiHolder", id)} />
       </div>
     </div>
   );

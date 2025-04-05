@@ -223,7 +223,6 @@ export let messages = [
     replyId: null,
     date: "2024-10-12",
     time: "16:00",
-
     pin: true,
   },
   {
@@ -2079,28 +2078,261 @@ export const products = [
   },
 ];
 
-let story = {
-  id: 1,
-  body: "", // could be null
-  image: "", // it will be only one and it will be the final vertion after crop by react easy crop library and it could be null too
-  link: "", // could be null
-  mentions: [], // if i select mentiend peaple
-  settings: {
-    title: {
-      x: "", // x position
-      y: "", // y position
-      center: false, // could be true of false
+export const stories = [
+  {
+    id: 1,
+    username: "Alex Johnson",
+    avatar: "/users/user1.png",
+    body: "Just visited the new coffee shop downtown! ☕️",
+    timestamp: "2023-05-15T09:30:00Z",
+    mentions: [
+      {
+        id: 1,
+        name: "ahmed",
+      },
+      {
+        id: 2,
+        name: "mouhamed",
+      },
+      {
+        id: 3,
+        name: "osama",
+      },
+      {
+        id: 4,
+        name: "lolooo",
+      },
+      {
+        id: 5,
+        name: "salwaaa",
+      },
+    ],
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 18,
+        family: "Roboto",
+        color: "333333",
+        background: "f8f8f8",
+      },
+      background: {
+        type: "gradient",
+        first_Acquisition: "30",
+        second_Acquisition: "80",
+        first: "#84fab0",
+        second: "#8fd3f4",
+        deg: "120",
+      },
     },
-    link: {
-      x: "", // x position
-      y: "", // y position
-      center: false, // could be true of false
-    },
-    image: {
-      x: "", // x position
-      y: "", // y position
-      center: false, // could be true of false
-    },
-    backGround: "",
   },
-};
+  {
+    id: 2,
+    username: "Sarah Williams",
+    avatar: "/users/user2.png",
+    body: "Weekend hiking adventures! 🏔️ #nature",
+    images: ["/chat4.png"],
+    timestamp: "2023-05-14T16:45:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 220,
+        size: 20,
+        family: "Montserrat",
+        color: "ffffff",
+        background: "000000",
+      },
+      images: [
+        {
+          x: 0,
+          y: 0,
+          width: 150,
+        },
+      ],
+      background: {
+        type: "static",
+        color: "#6a11cb",
+      },
+    },
+  },
+  {
+    id: 3,
+    username: "Michael Chen",
+    avatar: "/users/user3.png",
+    body: "كورس مجاني الحقوه بسرعة يا شباب",
+    link: "https://example.com/my-project",
+    timestamp: "2023-05-13T11:20:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 25,
+        family: "Roboto",
+        color: "333333",
+        background: "f8f8f8",
+      },
+      link: {
+        x: 0,
+        y: 60,
+        size: 20,
+      },
+      background: {
+        type: "gradient",
+        first_Acquisition: "30",
+        second_Acquisition: "80",
+        first: "#ff9a9e",
+        second: "#fad0c4",
+        deg: "180",
+      },
+    },
+  },
+  {
+    id: 4,
+    username: "Emma Davis",
+    avatar: "/users/user4.png",
+    body: "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 🎨",
+    images: ["/chat6.png", "/chat8.png"],
+    timestamp: "2023-05-12T19:15:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 22,
+        family: "Playfair Display",
+        color: "ff0000",
+        background: "ffff00",
+      },
+      images: [
+        { x: 0, y: -180, width: 120 },
+        { x: 0, y: 200, width: 160 },
+      ],
+      background: {
+        type: "static",
+        color: "#ffffff",
+      },
+    },
+  },
+  {
+    id: 5,
+    username: "Emma Davis",
+    avatar: "/users/user4.png",
+    body: "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy 🎨",
+    images: ["/chat6.png", "/chat8.png"],
+    timestamp: "2023-05-12T19:15:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 22,
+        family: "Playfair Display",
+        color: "ff0000",
+        background: "ffff00",
+      },
+      images: [
+        { x: 0, y: -180, width: 120 },
+        { x: 0, y: 200, width: 160 },
+      ],
+      background: {
+        type: "static",
+        color: "#ffffff",
+      },
+    },
+  },
+  {
+    id: 6,
+    username: "Emma Davis",
+    avatar: "/users/user4.png",
+    body: "xxxxxxxxxxxxxxxxxxxxxxxxxxx 🎨",
+    images: ["/chat6.png", "/chat8.png"],
+    timestamp: "2023-05-12T19:15:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 22,
+        family: "Playfair Display",
+        color: "ff0000",
+        background: "ffff00",
+      },
+      images: [
+        { x: 0, y: -180, width: 120 },
+        { x: 0, y: 200, width: 160 },
+      ],
+      background: {
+        type: "static",
+        color: "#ffffff",
+      },
+    },
+  },
+  {
+    id: 7,
+    username: "David Kim",
+    avatar: "/users/user5.png",
+    body: "New recipe experiment! 🍳",
+    timestamp: "2023-05-11T13:10:00Z",
+    settings: {
+      body: {
+        x: 0,
+        y: 0,
+        size: 30,
+        family: "Lato",
+        color: "ffffff",
+        background: "ff6347",
+      },
+      background: {
+        type: "gradient",
+        first_Acquisition: "30",
+        second_Acquisition: "80",
+        first: "#fbc2eb",
+        second: "#a18cd1",
+        deg: "45",
+      },
+    },
+  },
+  {
+    id: 8,
+    username: "Olivia Martinez",
+    avatar: "/users/user6.png",
+    images: ["/chat12.png"],
+    timestamp: "2023-05-10T18:30:00Z",
+    mentions: [
+      {
+        id: 1,
+        name: "ahmed",
+      },
+      {
+        id: 2,
+        name: "mouhamed",
+      },
+      {
+        id: 3,
+        name: "osama",
+      },
+      {
+        id: 4,
+        name: "lolooo",
+      },
+      {
+        id: 5,
+        name: "salwaaa",
+      },
+    ],
+    settings: {
+      images: [
+        {
+          x: 0,
+          y: 0,
+          width: 125,
+        },
+      ],
+      background: {
+        type: "gradient",
+        first: "#a1c4fd",
+        second: "#c2e9fb",
+        deg: "135",
+        first_Acquisition: "30",
+        second_Acquisition: "80",
+      },
+    },
+  },
+];

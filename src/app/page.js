@@ -1,20 +1,151 @@
 "use client";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Link from "next/link";
-import { posts } from "@/utils/Data";
-import ContentLoader from "react-content-loader";
-
+import { posts, stories } from "@/utils/Data";
+import Story from "@/components/post/Story";
 import Post from "@/components/post/Post";
+import ContentLoader from "react-content-loader";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { MenusContext } from "@/Contexts/MenusContext";
+import { useLanguage } from "@/Contexts/LanguageContext";
+import { useNotification } from "@/Contexts/NotificationContext";
+
+import { FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft } from "react-icons/fa";
 
 export default function Home() {
+  const { hideChats } = useContext(MenusContext);
+
+  const { screenSize } = useContext(ScreenContext);
+
+  const { translations, locale } = useLanguage();
+
   const [loading, setLoading] = useState(true);
+  const swiperRef = useRef(null);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 0); // Adjust as needed
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (swiperRef.current) {
+        swiperRef.current.destroy();
+      }
+    };
+  }, []);
+
+  const { addNotification } = useNotification();
+
   return (
     <div className="home">
+      <div style={{ display: "flex", gap: "10px" }}>
+        <div
+          onClick={() =>
+            addNotification({
+              type: "success",
+              message:
+                "this is a this is a good message this is a good message this is a good message good message",
+            })
+          }
+        >
+          success Message
+        </div>
+        <div
+          onClick={() =>
+            addNotification({
+              type: "warning",
+              message: "this is a warning message",
+            })
+          }
+        >
+          warning Message
+        </div>
+        <div
+          onClick={() =>
+            addNotification({
+              type: "error",
+              message: "this is a very pad message",
+            })
+          }
+        >
+          error Message
+        </div>
+      </div>
+      <div className="stories-holder">
+        {!loading && screenSize !== "large" ? (
+          <div className="storiesTop">
+            <h5>{translations?.story?.stories}</h5>
+            {stories.length > 6 && (
+              <div className="navigations-icons forStories">
+                <FaAngleLeft className="custom-prev" />
+                <FaAngleRight className="custom-next" />
+              </div>
+            )}
+          </div>
+        ) : stories.length > 6 ? (
+          <div className="navigations-icons forStories">
+            <FaAngleLeft className="custom-prev" />
+            <FaAngleRight className="custom-next" />
+          </div>
+        ) : null}
+        {loading ? (
+          <div style={{ display: "flex", gap: "5px" }}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                style={{ backgroundColor: "white", borderRadius: "10px" }}
+              >
+                <ContentLoader
+                  speed={2}
+                  width={`100%`}
+                  height={200}
+                  viewBox="0 0 80 100"
+                  backgroundColor="#E8E8E8"
+                  foregroundColor="#D5D5D5"
+                >
+                  {/* Avatar placeholder (circle) */}
+                  <circle cx="40" cy="40" r="20" />
+                  {/* Name placeholder (single line) */}
+                  <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
+                </ContentLoader>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="swiper-container">
+            <Swiper
+              onSwiper={(swiper) => (swiperRef.current = swiper)}
+              key={loading ? "loading" : "loaded"}
+              modules={[Navigation]}
+              spaceBetween={6}
+              speed={1000}
+              navigation={{
+                nextEl: ".custom-next",
+                prevEl: ".custom-prev",
+              }}
+              slidesPerView={6}
+              breakpoints={{
+                320: { slidesPerView: 3 },
+                500: { slidesPerView: 4 }, // Use hideChats directly
+                1700: { slidesPerView: 6 },
+              }}
+            >
+              {stories.map((x, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <Story data={x} smallView={true} index={index} />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          </div>
+        )}
+      </div>
       <div className="posts-holder">
         {loading
           ? Array.from({ length: 3 }).map((_, index) => (

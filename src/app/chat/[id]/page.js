@@ -765,35 +765,41 @@ export default function Chat({ params }) {
           })}
         </div>
         <div className="actions">
-          <div
-            ref={emojiRef}
-            className={`emoji-holder ${isAddReact ? "active" : ""}`}
-            style={{
-              position: "absolute",
-              top: "unset",
-              left: "15px",
-              bottom: "calc(100% + -4px)",
-            }}
-          >
-            <EmojiPicker
-              onEmojiClick={handleEmojiClick}
-              theme="light"
-              emojiStyle="facebook"
-              previewConfig={{ showPreview: false }}
-              width={350}
-            />
-          </div>
+          {screenSize === "large" && (
+            <div
+              ref={emojiRef}
+              className={`emoji-holder ${isAddReact ? "active" : ""}`}
+              style={{
+                position: "absolute",
+                top: "unset",
+                left: "15px",
+                bottom: "calc(100% + -4px)",
+              }}
+            >
+              <EmojiPicker
+                onEmojiClick={handleEmojiClick}
+                theme="light"
+                emojiStyle="facebook"
+                previewConfig={{ showPreview: false }}
+                width={350}
+              />
+            </div>
+          )}
+
           <button>
             <MdOutlinePermMedia />
           </button>
-          <button
-            onClick={() => {
-              setIsAddReact(true);
-              InputRef.current.focus();
-            }}
-          >
-            <BsEmojiSmile />
-          </button>
+          {screenSize === "large" && (
+            <button
+              onClick={() => {
+                setIsAddReact(true);
+                InputRef.current.focus();
+              }}
+            >
+              <BsEmojiSmile />
+            </button>
+          )}
+
           <div className="big-holder">
             {mentionHolder && (
               <div

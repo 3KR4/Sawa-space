@@ -3,6 +3,7 @@
 import React from "react";
 import { useState, useContext, useRef } from "react";
 import Image from "next/image";
+import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
@@ -15,6 +16,8 @@ import { FaRegComments } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function TypeComment({ id }) {
+  const { screenSize } = useContext(ScreenContext);
+
   const { handleMenus } = useContext(DynamicMenusContext);
   const { locale, translations } = useLanguage();
   const { messageText, setMessageText, InputRef } =
@@ -32,7 +35,7 @@ function TypeComment({ id }) {
   };
 
   return (
-    <div className="action-holder">
+    <div className="action-holder forComments">
       <div className="top">
         <textarea
           placeholder={translations?.comment?.wright_a_comment}
@@ -71,7 +74,9 @@ function TypeComment({ id }) {
           Mahmoud Elshazly
         </div>
         <div className="right">
-          <BsEmojiSmile onClick={(e) => handleMenus(e, "emojiHolder")} />
+          {screenSize === "large" && (
+            <BsEmojiSmile onClick={(e) => handleMenus(e, "emojiHolder")} />
+          )}
           <MdOutlinePhotoSizeSelectActual
             onClick={() => inputFileRef.current.click()}
           />

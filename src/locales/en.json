@@ -64,7 +64,12 @@
     "be_the_first_to_post_a_comment": "Be the first to post a comment."
   },
   "story": {
+    "stories": "stories",
+    "friends_stories": "friends stories",
+
     "create_story": "create story",
+    "your_story": "your story",
+    "your_stories": "your stories",
     "add_to_your_story": "add to your story",
     "choose_a_background": "choose a background",
     "story_body": "story body",
@@ -76,7 +81,20 @@
     "font_color": "font color",
     "background_color": "background",
     "font_family": "font family",
-    "Preview_the_final_look": "Preview the final look"
+    "Preview_the_final_look": "Preview the final look",
+    "add_custom_background": "add custom background",
+    "type": "type",
+    "static_color": "static color",
+    "gradient_color": "gradient color",
+    "color": "color",
+    "first_color": "first color",
+    "second_color": "second color",
+    "gradient_angle": "gradient angle",
+    "first_acquisition": "first acquisition",
+    "second_acquisition": "second acquisition",
+    "copy_link_to_share_this_story": "copy link to share this story",
+    "mute_stories_from": "mute stories from",
+    "share_a_photo_or_write_something": "share a photo or write something"
   },
   "comment": {
     "comments": "comments",
@@ -148,16 +166,6 @@
     "posts": "Posts",
     "photos": "Photos"
   },
-  "auth": {
-    "enter_your_username_or_email": "enter your username or email",
-    "enter_your_username": "enter your username",
-    "enter_your_phone": "enter your phone",
-    "enter_your_email": "enter your email",
-    "enter_your_password": "enter your password",
-    "did_you_forge_your_password": "did you forge your password",
-    "register": "register",
-    "login": "login"
-  },
   "forms": {
     "create_post": "create post",
     "edit_post": "edit post",
@@ -175,5 +183,37 @@
     "please_enter_a_hashtag": "please enter a hashtag",
     "this_link_has_already_been_added": "this link has already been added.",
     "this_tag_has_already_been_added": "this hastag has already been added."
+  },
+  "auth": {
+    "login": "login",
+    "register": "register",
+    "please_enter_your_username": "please enter your username",
+    "username_must_be_at_least_3_characters": "username must be at least 3 characters",
+    "enter_your_username_or_email": "enter your username or email",
+    "please_enter_a_phone_number": "please enter a phone number",
+    "phone_number_must_contain_only_digits": "phone number must contain only digits",
+    "phone_number_must_be_at_least_10_digits_long": "phone number must be at least 10 digits long",
+    "phone_number_must_be_at_most_15_digits_long": "phone number must be at most 15 digits long",
+    "your_phone_number": "your phone number",
+    "please_enter_your_email_address": "please enter your email address",
+    "please_enter_a_valid_email_address": "please enter a valid email address",
+    "your_email": "your email",
+    "please_enter_a_password": "please enter a password",
+    "password_must_be_at_least_8_characters_long": "password must be at least 8 characters long",
+    "please_confirm_your_password": "please confirm your password",
+    "passwords_dont_match": "passwords don't match",
+    "confirm_password": "confirm password",
+    "did_you_forget_your_password": "did you forget your password?",
+    "complete_profile": "Complete Your Profile",
+    "tell_us_more_about_yourself": "Tell us more about yourself (optional)",
+    "birth_date": "Birth Date",
+    "select_your_birth_date": "Select your birth date",
+    "region": "Region",
+    "current_location": "Current Location",
+    "work": "Work",
+    "college": "College",
+    "speaking_languages": "Speaking Languages",
+    "go_back": "Go Back",
+    "finish": "Finish"
   }
 }

@@ -3,6 +3,7 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
+import { MenusContext } from "@/Contexts/MenusContext";
 import Image from "next/image";
 import { users } from "@/utils/Data";
 import SettingMenu from "@/components/providers/SettingMenu";
@@ -22,13 +23,13 @@ function UserInfo() {
     menuPosition2,
     setMenuPosition2,
   } = useContext(DynamicMenusContext);
+    const { userInfoMenu } = useContext(MenusContext);
 
 
   const [nistedSettingMenu, setNistedSettingMenu] = useState(false);
 
   let top = menuPosition2.top !== 0 ? menuPosition2.top : menuPosition.top;
   let left = menuPosition2.left !== 0 ? menuPosition2.left : menuPosition.left;
-  const userInfoMenu = useRef(null);
   const nistedSettingMenuRef = useRef(null);
 
   let currentUserData = users.find((x) => x.id == selectedDev);
