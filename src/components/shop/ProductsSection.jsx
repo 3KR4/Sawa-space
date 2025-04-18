@@ -11,7 +11,7 @@ import ConvertTime from "@/utils/ConvertTime";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useLanguage } from "../../Contexts/LanguageContext";
-import Product from "@/Components/shop/Product";
+import Product from "@/components/shop/Product";
 
 import { FaAngleRight } from "react-icons/fa";
 import { FaAngleLeft } from "react-icons/fa";
