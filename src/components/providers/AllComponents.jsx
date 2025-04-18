@@ -6,6 +6,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import EmojesHolder from "@/components/post/EmojesHolder";
 import UsersSelection from "@/components/UsersSelection";
 import PostForm from "@/components/forms/PostForm";
+import DangerEvent from "@/components/forms/DangerEvent";
 import SingleDetails from "@/components/SingleDetails";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/providers/SettingMenu";
@@ -16,12 +17,18 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
 
 function AllComponents() {
-  const { imgFocus, openPostForm, openStoryForm } = useContext(MenusContext);
+  const { imgFocus, openPostForm, openStoryForm, dangerEvent } =
+    useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
 
-  const { openUsersSelection, userInfoData, settingMenu, openUsersReact } =
-    useContext(DynamicMenusContext);
+  const {
+    openUsersSelection,
+    infoMenu,
+    settingMenu,
+    openUsersReact,
+    emojiHolder,
+  } = useContext(DynamicMenusContext);
   const { pathname, screenSize } = useContext(ScreenContext);
 
   return (
@@ -43,12 +50,13 @@ function AllComponents() {
 
       {settingMenu && <SettingMenu />}
       {imgFocus && !pathname.includes("chat") && <SingleDetails />}
-      {userInfoData && <UserInfo />}
+      {infoMenu && <UserInfo />}
       {openPostForm && <PostForm />}
       {openStoryForm && <StoryForm />}
+      {dangerEvent && <DangerEvent />}
       {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}
-      <EmojesHolder />
+      {emojiHolder && <EmojesHolder />}
     </>
   );
 }

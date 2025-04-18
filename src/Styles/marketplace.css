@@ -10,7 +10,7 @@ body:has(.marketplace) header {
   padding: 15px;
   padding-right: 0;
 }
-.marketplace .sideSection {
+.sideSection {
   border-radius: 8px;
   background: var(--body-color);
   border: 1px solid var(--border-color);
@@ -25,49 +25,49 @@ body:has(.marketplace) header {
   position: sticky;
   top: 10px;
 }
-.marketplace .sideSection hr {
+.sideSection hr {
   background: #e0e0e0;
   height: 2px;
 }
-.marketplace .sideSection .main-title {
+.sideSection .main-title {
   margin-bottom: 5px;
 }
-.marketplace .sideSection .main-btns li {
+.sideSection .main-btns li {
   font-size: 15px !important;
   padding: 12px 10px !important;
   color: var(--title-color) !important;
   font-size: 15px !important;
 }
-.marketplace .sideSection .main-btns li svg {
+.sideSection .main-btns li svg {
   font-size: 18px !important;
 }
-.marketplace .sideSection .Filter-Holder {
+.sideSection .Filter-Holder {
   padding: 0 14px;
 }
-.marketplace .sideSection .Filter-Holder.forPrice {
+.sideSection .Filter-Holder.forPrice {
   padding-top: 9px;
   padding-bottom: 3px;
 }
-.marketplace .sideSection .Filter-Holder.forCat {
+.sideSection .Filter-Holder.forCat {
   padding: 8px;
 }
-.marketplace .sideSection .Filter-Holder .filter-title {
+.sideSection .Filter-Holder .filter-title {
 }
-.marketplace .sideSection .Filter-Holder.forCat .filter-title {
+.sideSection .Filter-Holder.forCat .filter-title {
   padding-left: 7px;
   margin-bottom: 5px;
 }
-.marketplace .sideSection .Filter-Holder.forCat .filter-paragraph {
+.sideSection .Filter-Holder.forCat .filter-paragraph {
   margin-bottom: 10px;
   text-transform: capitalize;
   font-size: 15px;
 }
-.marketplace .sideSection .Filter-Holder ul {
+.sideSection .Filter-Holder ul {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.marketplace .sideSection .Filter-Holder li {
+.sideSection .Filter-Holder li {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -79,12 +79,25 @@ body:has(.marketplace) header {
   color: var(--paragraph-color);
   transition: 0.3s;
 }
-.marketplace .sideSection .Filter-Holder li svg {
+.sideSection .Filter-Holder li svg {
   font-size: 17px;
 }
-.marketplace .sideSection .Filter-Holder li:hover,
-.marketplace .sideSection .Filter-Holder li.active {
+.sideSection .Filter-Holder li:hover,
+.sideSection .Filter-Holder li.active {
   background: var(--section-color);
+}
+
+.sideSection .Filter-Holder li label.checkbox {
+  width: 0px !important;
+  opacity: 0 !important;
+  margin-left: -3px !important;
+  transition: 0.3s !important;
+}
+.sideSection .Filter-Holder li:hover label.checkbox,
+.sideSection .Filter-Holder li.active label.checkbox {
+  width: 17px !important;
+  opacity: 1 !important;
+  margin-left: 0 !important;
 }
 .Filter-Holder .range-place {
   margin: 25px 0;
@@ -188,81 +201,96 @@ body:has(.marketplace) header {
   text-transform: capitalize;
   font-size: 18px;
 }
-.Product {
+.sorts-holder {
+  gap: 7px;
+}
+.select-holder {
+  position: relative;
+  cursor: pointer;
+  border-radius: 6px;
+  min-width: 175px;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  height: 34px;
   border: 1px solid var(--border-color);
-  background: var(--body-color);
-  border-radius: 15px 15px 10px 10px;
+  padding: 11px;
 }
-.Product .mainImg {
-  object-fit: cover;
-  position: relative !important;
-  height: 220px !important;
-  border-radius: 20px 20px 0 0;
-}
-.Product .content {
-  padding-top: 4px;
-}
-.Product .content > div {
-  padding: 2px 10px;
-}
-.Product .content > div:last-child {
-  padding: 6px 10px;
-}
-.Product .row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--title-color);
-  gap: 5px;
-}
-.Product .row.last {
-  font-size: 13px;
-  font-weight: 600;
-}
-.Product .row img {
-  position: relative !important;
-  width: 38px !important;
-  height: 38px !important;
-}
-
-.Product .row.loc-serv {
-  margin-bottom: 5px;
-  justify-content: start;
-}
-.Product .row.loc-serv > * {
-  font-size: 13px;
-  font-weight: 500;
-}
-.Product .row h4 {
-}
-.Product .title {
-  font-weight: 500;
-}
-.Product .category {
-}
-.Product .price {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 6px 0;
-}
-.Product .price .originalPrice {
-  font-weight: 500;
-  color: var(--paragraph-color);
+.select-holder h4 {
   font-size: 15px;
-  text-decoration: line-through;
-}
-.Product .price .currentPrice {
-  font-weight: 700;
   color: var(--title-color);
-}
-.Product .salePercentage {
-  text-transform: uppercase;
   font-weight: 500;
+}
+.select-holder span {
+  position: relative;
+  color: var(--title-color);
+  text-transform: capitalize;
+  flex: 1 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px;
+  font-size: 15px;
+}
+.select-holder span svg.open {
+  transform: rotate(180deg);
+}
+.select-holder span::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -7px;
+  width: 2px;
+  height: 18px;
+  background-color: var(--main-color);
+}
+.select-holder .list {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 0 0 4px 4px;
+  z-index: -1;
+  opacity: 0;
+  transition: 0.3s;
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+}
+.select-holder .list.active {
+  top: 32px;
+  opacity: 1;
+  z-index: 4;
+}
+.select-holder .list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0%;
+  height: 2px;
+  transition: 0.5s;
+  background: var(--main-color);
+  transform: translateX(-50%);
+}
+.select-holder .list.active::before {
+  width: 100%;
+}
+.select-holder .list li {
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: margin 0.3s;
+  padding: 4px 0;
+  letter-spacing: 0.4px;
+  text-transform: capitalize;
+}
+.select-holder .list li:hover,
+.select-holder .list li.active {
   color: var(--main-color);
-  font-size: 14px;
 }
-.Product .location {
-}
-.Product .deliveryService {
+.select-holder .list li:hover {
+  margin-left: 5px;
 }

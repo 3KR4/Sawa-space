@@ -17,8 +17,8 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { HiDotsVertical } from "react-icons/hi";
 
-function Story({ data, smallView, index, storyCount, currentStoryIndex }) {
-  const { screenSize } = useContext(ScreenContext);
+function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
+  const { screenSize, userData } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
 
@@ -63,91 +63,92 @@ function Story({ data, smallView, index, storyCount, currentStoryIndex }) {
       className={`story ${smallView ? "smallView" : ""}`}
       style={{
         background:
-          data?.settings?.background === undefined
+          data?.info?.settings?.backGround === undefined
             ? "transparent"
-            : data?.settings?.background.type === "gradient"
-            ? `linear-gradient(${data?.settings?.background.deg}deg, ${data?.settings?.background.first} ${data?.settings?.background.first_Acquisition}%, ${data?.settings?.background.second} ${data?.settings?.background.second_Acquisition}%)`
-            : data?.settings?.background?.color,
+            : data?.info?.settings?.backGround.type === "gradient"
+            ? `linear-gradient(${data?.info?.settings?.backGround.deg}deg, ${data?.info?.settings?.backGround.first} ${data?.info?.settings?.backGround.first_Acquisition}%, ${data?.info?.settings?.backGround.second} ${data?.info?.settings?.backGround.second_Acquisition}%)`
+            : data?.info?.settings?.backGround?.color,
       }}
       onClick={() => {
         setDataSwiperType("stories");
-        setImgFocus(data.id);
+        setImgFocus(data?.id);
         setDataForSwiper(data);
-        setImgIndex(index);
       }}
     >
-      {data?.body && (
+      {data?.info?.body && (
         <div
           id="body"
           className={`storyBody`}
           style={{
             position: "absolute",
-            fontSize: `${adjustSize(data?.settings?.body?.size)}px`,
-            fontFamily: data?.settings?.body?.family,
-            color: `#${data?.settings?.body?.color}`,
+            fontSize: `${adjustSize(data?.info?.settings?.body?.size)}px`,
+            fontFamily: data?.info?.settings?.body?.family,
+            color: `#${data?.info?.settings?.body?.color}`,
             background:
-              data?.settings?.body?.background === "transparent"
+              data?.info?.settings?.body?.background === "transparent"
                 ? "transparent"
-                : `#${data?.settings?.body?.background}`,
+                : `#${data?.info?.settings?.body?.background}`,
             left: `50%`,
             top: `50%`,
             transform: `translate(calc(-50% + ${adjustSize(
-              data?.settings?.body?.x
-            )}px), calc(-50% + ${adjustSize(data?.settings?.body?.y)}px))`,
+              data?.info?.settings?.body?.x
+            )}px), calc(-50% + ${adjustSize(
+              data?.info?.settings?.body?.y
+            )}px))`,
           }}
         >
-          {data?.body}
+          {data?.info?.body}
         </div>
       )}
       {smallView && <span className="hiddenContent"></span>}
 
-      {data?.link && (
+      {data?.info?.link && (
         <Link
-          href={data?.link}
+          href={data?.info?.link}
           target="_blank"
           id="link"
           className={`storyBody link`}
           style={{
             position: "absolute",
-            fontSize: `${adjustSize(data?.settings.link.size)}px`,
+            fontSize: `${adjustSize(data?.info?.settings.link.size)}px`,
             textDecoration: "underline",
             left: `50%`,
             top: `50%`,
             transform: `translate(calc(-50% + ${adjustSize(
-              data?.settings.link.x
-            )}px), calc(-50% + ${adjustSize(data?.settings.link.y)}px))`,
+              data?.info?.settings.link.x
+            )}px), calc(-50% + ${adjustSize(data?.info?.settings.link.y)}px))`,
           }}
         >
-          {data?.link}
+          {data?.info?.link}
         </Link>
       )}
 
-      {data.images &&
-        data?.images.map((image, index) => (
+      {data?.img &&
+        data?.img.map((image, index) => (
           <div
             key={index}
-            id={`image-${index}`}
+            id={image.newpath.publicid}
             style={{
               position: "absolute",
               left: `50%`,
               top: `50%`,
               transform: `translate(calc(-50% + ${adjustSize(
-                data?.settings.images[index].x
+                data?.info?.settings.images[index].x
               )}px), calc(-50% + ${adjustSize(
-                data?.settings.images[index].y
+                data?.info?.settings.images[index].y
               )}px))`,
-              width: `${data?.settings.images[index].width}%`,
+              width: `${data?.info?.settings.images[index].width}%`,
             }}
           >
-            <img src={image} width={`100%`} />
+            <img src={image.newpath.url} width={`100%`} />
           </div>
         ))}
-      {smallView && data?.totalStories > 1 && (
-        <span className="counter-for-story">{data?.totalStories}</span>
-      )}
+      {/* {smallView && data?.info?.totalStories > 1 && (
+        <span className="counter-for-story">{data?.info?.totalStories}</span>
+      )} */}
 
       <div className="top forUser">
-        {!smallView && storyCount > 1 && (
+        {/* {!smallView && storyCount > 1 && (
           <div className="story-progress">
             {Array.from({ length: storyCount }).map((_, i) => (
               <div
@@ -158,7 +159,7 @@ function Story({ data, smallView, index, storyCount, currentStoryIndex }) {
               />
             ))}
           </div>
-        )}
+        )} */}
         <div
           style={{
             display: "flex",
@@ -170,41 +171,50 @@ function Story({ data, smallView, index, storyCount, currentStoryIndex }) {
           <div className="left">
             <Image
               className="rounded"
-              src={data?.avatar}
-              alt={data?.username}
+              src={data?.author[0]?.img.url}
+              alt={`${data?.author[0]?.fristname} img`}
               width={smallView ? 48 : 40}
               height={smallView ? 48 : 40}
               onClick={(e) =>
-                !smallView && handleMenus(e, "userInfo", data?.id)
+                !smallView && handleMenus(e, "user-Info", data?.author[0]?._id)
               }
             />
             <div className="info">
               <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
-                {data?.username}
+                {data?.author[0]?._id === userData._id ? (
+                  <>
+                    {translations?.story?.your_story}
+                  </>
+                ) : (
+                  <>
+                    {data?.author[0]?.fristname} {``}
+                    {data?.author[0]?.lastname}
+                  </>
+                )}
               </h5>
-              <span>{ConvertTime(data?.timestamp, locale)}</span>
+              <span>{ConvertTime(data?.date, locale)}</span>
             </div>
           </div>
           {!smallView && (
             <HiDotsVertical
+              className="settingDotsIco"
               onClick={(e) => {
-                console.log("xxxx");
-                handleMenus(e, "settingMenu-story", data?.id);
+                handleMenus(e, "settingMenu-story", data?._id);
               }}
             />
           )}
         </div>
       </div>
 
-      {!smallView && data.mentions && data?.mentions.length > 0 && (
+      {!smallView && data?.mentions && data?.mentions.length > 0 && (
         <div className="mentions view">
           <h5>
-            {data?.username} {translations?.post?.mention}
+            {data?.author[0]?.fristname} {translations?.post?.mention}
           </h5>
           {data?.mentions?.map((x, index) => (
             <button
               key={index}
-              onClick={(e) => handleMenus(e, "userInfo", x.id)}
+              onClick={(e) => handleMenus(e, "user-Info", x.id)}
             >
               @{x.name}
             </button>

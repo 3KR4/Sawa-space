@@ -153,7 +153,6 @@ function SingleDetails() {
     latestStories = latest;
   }, []);
 
-  console.log("latestStories", latestStories);
 
   // Get current user's stories
   const currentUserId = userOrder.current[currentUserIndex] || null;
@@ -200,7 +199,6 @@ function SingleDetails() {
 
   // Handle story selection from sidebar
   const handleStorySelect = (userId) => {
-    console.log(userId);
 
     const userIdx = userOrder.current.indexOf(userId);
     if (userIdx !== -1) {
@@ -336,7 +334,7 @@ function SingleDetails() {
                     width={40}
                     height={40}
                     className={`rounded`}
-                    onClick={(e) => handleMenus(e, "userInfo", data?.id)}
+                    onClick={(e) => handleMenus(e, "user-Info", data?.id)}
                   />
                   <div className="info">
                     <h5>{dataForSwiper?.user?.name}</h5>
@@ -345,6 +343,7 @@ function SingleDetails() {
                 </div>
                 <div className="icons-holder">
                   <HiDotsVertical
+                    className="settingDotsIco"
                     onClick={(e) => {
                       handleMenus(e, "settingMenu-post", dataForSwiper.id);
                     }}
@@ -422,7 +421,6 @@ function SingleDetails() {
                           key={index}
                           onClick={() => {
                             handleImageClick(dataForSwiper.id, index);
-                            console.log(index);
                           }}
                           style={{ display: "flex", justifyContent: "center" }}
                         >
@@ -469,7 +467,7 @@ function SingleDetails() {
                     {dataForSwiper.mentions?.map((x, index) => (
                       <button
                         key={index}
-                        onClick={(e) => handleMenus(e, "userInfo", x.userId)}
+                        onClick={(e) => handleMenus(e, "user-Info", x.userId)}
                       >
                         @{x.userName}
                       </button>
@@ -635,7 +633,7 @@ function SingleDetails() {
                         alt={data?.username}
                         width={50}
                         height={50}
-                        onClick={(e) => handleMenus(e, "userInfo", data?.id)}
+                        onClick={(e) => handleMenus(e, "user-Info", data?.id)}
                       />
                       <div className="info">
                         <h5>{data?.username}</h5>

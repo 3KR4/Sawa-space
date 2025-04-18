@@ -1,7 +1,7 @@
 export const users = [
   {
     id: 1,
-    name: "Ahmed mouhamed adel hussam nour",
+    name: "Ahmed mouhamed",
     img: "/users/user1.png",
     lastMessage: {
       type: "text",
@@ -1207,12 +1207,13 @@ export let posts = [
     paragraph:
       "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
     shareCount: 3,
-    date: "2024-10-12",
-    time: "16:00",
+    date: "2025-03-10T12:30:00Z",
+    time: "2025-03-10T12:30:00Z",
     user: {
       name: "Ahmed",
       img: "/users/user1.png",
     },
+    creator: "page",
     reacts: {
       count: 5,
       topUseage: ["❤️", "😂"],
@@ -1450,6 +1451,7 @@ export let posts = [
     comments: {
       count: 0,
     },
+    creator: "community",
   },
   {
     id: 3,
@@ -1547,6 +1549,2319 @@ export let posts = [
         },
       ],
     },
+    creator: "user",
+  },
+  {
+    id: 4,
+    link: [],
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    hashtags: ["citylife", "exploration", "travel"],
+    mentions: [],
+    paragraph:
+      "Exploring the city this weekend – so many hidden gems to discover!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nour",
+      img: "/users/user8.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 0,
+    },
+  },
+  {
+    id: 5,
+    link: [],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nagi",
+      img: "/users/user7.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 6,
+    img: ["/chat19.png"],
+    link: ["www.google.com"],
+
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "John",
+      img: "/users/user14.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 1,
+    img: ["/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/", "www.google.com"],
+    hashtags: ["gaming", "studying", "kids"],
+    mentions: [
+      { userId: 1, userName: "nagi" },
+      { userId: 2, userName: "3kr4" },
+      { userId: 3, userName: "osama" },
+    ],
+    paragraph:
+      "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    shareCount: 3,
+    date: "2025-03-10T12:30:00Z",
+    time: "2025-03-10T12:30:00Z",
+    user: {
+      name: "Ahmed",
+      img: "/users/user1.png",
+    },
+    creator: "page",
+    reacts: {
+      count: 5,
+      topUseage: ["❤️", "😂"],
+      users: [
+        {
+          id: 1,
+          emoji: "❤️",
+          name: "gendy",
+        },
+        {
+          id: 2,
+          emoji: "❤️",
+          name: "marawan",
+        },
+        {
+          id: 3,
+          emoji: "❤️",
+          name: "mouhamed",
+        },
+        {
+          id: 4,
+          emoji: "😂",
+          name: "isaa3",
+        },
+        {
+          id: 5,
+          emoji: "😂",
+          name: "gogo",
+        },
+      ],
+    },
+    comments: {
+      count: 5,
+      allComments: [
+        {
+          id: 1,
+          name: "John Doe",
+          img: "/chat8.png",
+          time: "3 hours ago",
+          paragraph:
+            "The food looks incredible! You guys always have the best team events.",
+          likesCount: 6,
+          image: "/users/user10.png",
+          replays: [
+            {
+              id: 1,
+              name: "Emma Stone",
+              time: "2 hours ago",
+              paragraph: "Totally agree! I wish I could join next time!",
+              likesCount: 2,
+              img: "/chat3.png",
+              image: "/users/user14.png",
+              reacts: {
+                count: 2,
+                topUseage: ["👍", "😊"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      emoji: "👍",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [
+                {
+                  id: 1,
+                  name: "Emma Stone",
+                  time: "2 hours ago",
+                  paragraph:
+                    "It’s always fun when we get together. Looking forward to the next one!",
+                  likesCount: 2,
+                  img: "/chat1.png",
+                  image: "/users/user4.png",
+                  reacts: {
+                    count: 2,
+                    topUseage: ["😘", "😎"],
+                    users: [
+                      [
+                        {
+                          id: 1,
+                          name: "gendy",
+                        },
+                      ],
+                      [
+                        {
+                          id: 1,
+                          name: "sozaan",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              id: 2,
+              name: "Ahmed Ashraf",
+              time: "5 hours ago",
+              paragraph:
+                "I completely agree! These gatherings are always memorable.",
+              likesCount: 5,
+              image: "/users/user6.png",
+              reacts: {
+                count: 1,
+                topUseage: ["😂"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [],
+            },
+          ],
+          reacts: {
+            count: 4,
+            topUseage: ["❤️", "😂", "😮"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+                {
+                  id: 2,
+                  name: "assmaa",
+                },
+              ],
+            ],
+          },
+        },
+        {
+          id: 2,
+          name: "Sophia Miller",
+          time: "1 hour ago",
+          paragraph:
+            "Looks like you all had a blast! Can’t wait for the next one.",
+          likesCount: 3,
+          image: "/users/user12.png",
+          replays: [],
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    img: ["/chat17.png", "/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/"],
+    hashtags: ["nature", "friends", "outdoor"],
+    mentions: [],
+    paragraph:
+      "Just spent the afternoon at the park with friends. Such a beautiful day!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Ali",
+      img: "/users/user4.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 0,
+    },
+    creator: "community",
+  },
+  {
+    id: 3,
+    link: [],
+    img: [
+      "/chat17.png",
+      "/chat6.png",
+      "/chat16.png",
+      "/chat7.png",
+      "/chat13.png",
+    ],
+
+    hashtags: ["hiking", "adventure", "nature"],
+    mentions: [],
+    paragraph:
+      "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Hassan",
+      img: "/users/user10.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 1,
+      allComments: [
+        {
+          id: 1,
+          name: "Lisa Brown",
+          time: "5 minutes ago",
+          paragraph: "Your photos look stunning! I need to plan a hike soon.",
+          likesCount: 1,
+          image: "/users/user13.png",
+          replays: [],
+          reacts: {
+            count: 1,
+            topUseage: ["❤️"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+            ],
+          },
+        },
+      ],
+    },
+    creator: "user",
+  },
+  {
+    id: 4,
+    link: [],
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    hashtags: ["citylife", "exploration", "travel"],
+    mentions: [],
+    paragraph:
+      "Exploring the city this weekend – so many hidden gems to discover!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nour",
+      img: "/users/user8.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 0,
+    },
+  },
+  {
+    id: 5,
+    link: [],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nagi",
+      img: "/users/user7.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 6,
+    img: ["/chat19.png"],
+    link: ["www.google.com"],
+
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "John",
+      img: "/users/user14.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 1,
+    img: ["/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/", "www.google.com"],
+    hashtags: ["gaming", "studying", "kids"],
+    mentions: [
+      { userId: 1, userName: "nagi" },
+      { userId: 2, userName: "3kr4" },
+      { userId: 3, userName: "osama" },
+    ],
+    paragraph:
+      "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    shareCount: 3,
+    date: "2025-03-10T12:30:00Z",
+    time: "2025-03-10T12:30:00Z",
+    user: {
+      name: "Ahmed",
+      img: "/users/user1.png",
+    },
+    creator: "page",
+    reacts: {
+      count: 5,
+      topUseage: ["❤️", "😂"],
+      users: [
+        {
+          id: 1,
+          emoji: "❤️",
+          name: "gendy",
+        },
+        {
+          id: 2,
+          emoji: "❤️",
+          name: "marawan",
+        },
+        {
+          id: 3,
+          emoji: "❤️",
+          name: "mouhamed",
+        },
+        {
+          id: 4,
+          emoji: "😂",
+          name: "isaa3",
+        },
+        {
+          id: 5,
+          emoji: "😂",
+          name: "gogo",
+        },
+      ],
+    },
+    comments: {
+      count: 5,
+      allComments: [
+        {
+          id: 1,
+          name: "John Doe",
+          img: "/chat8.png",
+          time: "3 hours ago",
+          paragraph:
+            "The food looks incredible! You guys always have the best team events.",
+          likesCount: 6,
+          image: "/users/user10.png",
+          replays: [
+            {
+              id: 1,
+              name: "Emma Stone",
+              time: "2 hours ago",
+              paragraph: "Totally agree! I wish I could join next time!",
+              likesCount: 2,
+              img: "/chat3.png",
+              image: "/users/user14.png",
+              reacts: {
+                count: 2,
+                topUseage: ["👍", "😊"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      emoji: "👍",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [
+                {
+                  id: 1,
+                  name: "Emma Stone",
+                  time: "2 hours ago",
+                  paragraph:
+                    "It’s always fun when we get together. Looking forward to the next one!",
+                  likesCount: 2,
+                  img: "/chat1.png",
+                  image: "/users/user4.png",
+                  reacts: {
+                    count: 2,
+                    topUseage: ["😘", "😎"],
+                    users: [
+                      [
+                        {
+                          id: 1,
+                          name: "gendy",
+                        },
+                      ],
+                      [
+                        {
+                          id: 1,
+                          name: "sozaan",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              id: 2,
+              name: "Ahmed Ashraf",
+              time: "5 hours ago",
+              paragraph:
+                "I completely agree! These gatherings are always memorable.",
+              likesCount: 5,
+              image: "/users/user6.png",
+              reacts: {
+                count: 1,
+                topUseage: ["😂"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [],
+            },
+          ],
+          reacts: {
+            count: 4,
+            topUseage: ["❤️", "😂", "😮"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+                {
+                  id: 2,
+                  name: "assmaa",
+                },
+              ],
+            ],
+          },
+        },
+        {
+          id: 2,
+          name: "Sophia Miller",
+          time: "1 hour ago",
+          paragraph:
+            "Looks like you all had a blast! Can’t wait for the next one.",
+          likesCount: 3,
+          image: "/users/user12.png",
+          replays: [],
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    img: ["/chat17.png", "/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/"],
+    hashtags: ["nature", "friends", "outdoor"],
+    mentions: [],
+    paragraph:
+      "Just spent the afternoon at the park with friends. Such a beautiful day!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Ali",
+      img: "/users/user4.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 0,
+    },
+    creator: "community",
+  },
+  {
+    id: 3,
+    link: [],
+    img: [
+      "/chat17.png",
+      "/chat6.png",
+      "/chat16.png",
+      "/chat7.png",
+      "/chat13.png",
+    ],
+
+    hashtags: ["hiking", "adventure", "nature"],
+    mentions: [],
+    paragraph:
+      "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Hassan",
+      img: "/users/user10.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 1,
+      allComments: [
+        {
+          id: 1,
+          name: "Lisa Brown",
+          time: "5 minutes ago",
+          paragraph: "Your photos look stunning! I need to plan a hike soon.",
+          likesCount: 1,
+          image: "/users/user13.png",
+          replays: [],
+          reacts: {
+            count: 1,
+            topUseage: ["❤️"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+            ],
+          },
+        },
+      ],
+    },
+    creator: "user",
+  },
+  {
+    id: 4,
+    link: [],
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    hashtags: ["citylife", "exploration", "travel"],
+    mentions: [],
+    paragraph:
+      "Exploring the city this weekend – so many hidden gems to discover!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nour",
+      img: "/users/user8.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 0,
+    },
+  },
+  {
+    id: 5,
+    link: [],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nagi",
+      img: "/users/user7.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 6,
+    img: ["/chat19.png"],
+    link: ["www.google.com"],
+
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "John",
+      img: "/users/user14.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 1,
+    img: ["/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/", "www.google.com"],
+    hashtags: ["gaming", "studying", "kids"],
+    mentions: [
+      { userId: 1, userName: "nagi" },
+      { userId: 2, userName: "3kr4" },
+      { userId: 3, userName: "osama" },
+    ],
+    paragraph:
+      "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    shareCount: 3,
+    date: "2025-03-10T12:30:00Z",
+    time: "2025-03-10T12:30:00Z",
+    user: {
+      name: "Ahmed",
+      img: "/users/user1.png",
+    },
+    creator: "page",
+    reacts: {
+      count: 5,
+      topUseage: ["❤️", "😂"],
+      users: [
+        {
+          id: 1,
+          emoji: "❤️",
+          name: "gendy",
+        },
+        {
+          id: 2,
+          emoji: "❤️",
+          name: "marawan",
+        },
+        {
+          id: 3,
+          emoji: "❤️",
+          name: "mouhamed",
+        },
+        {
+          id: 4,
+          emoji: "😂",
+          name: "isaa3",
+        },
+        {
+          id: 5,
+          emoji: "😂",
+          name: "gogo",
+        },
+      ],
+    },
+    comments: {
+      count: 5,
+      allComments: [
+        {
+          id: 1,
+          name: "John Doe",
+          img: "/chat8.png",
+          time: "3 hours ago",
+          paragraph:
+            "The food looks incredible! You guys always have the best team events.",
+          likesCount: 6,
+          image: "/users/user10.png",
+          replays: [
+            {
+              id: 1,
+              name: "Emma Stone",
+              time: "2 hours ago",
+              paragraph: "Totally agree! I wish I could join next time!",
+              likesCount: 2,
+              img: "/chat3.png",
+              image: "/users/user14.png",
+              reacts: {
+                count: 2,
+                topUseage: ["👍", "😊"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      emoji: "👍",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [
+                {
+                  id: 1,
+                  name: "Emma Stone",
+                  time: "2 hours ago",
+                  paragraph:
+                    "It’s always fun when we get together. Looking forward to the next one!",
+                  likesCount: 2,
+                  img: "/chat1.png",
+                  image: "/users/user4.png",
+                  reacts: {
+                    count: 2,
+                    topUseage: ["😘", "😎"],
+                    users: [
+                      [
+                        {
+                          id: 1,
+                          name: "gendy",
+                        },
+                      ],
+                      [
+                        {
+                          id: 1,
+                          name: "sozaan",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              id: 2,
+              name: "Ahmed Ashraf",
+              time: "5 hours ago",
+              paragraph:
+                "I completely agree! These gatherings are always memorable.",
+              likesCount: 5,
+              image: "/users/user6.png",
+              reacts: {
+                count: 1,
+                topUseage: ["😂"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [],
+            },
+          ],
+          reacts: {
+            count: 4,
+            topUseage: ["❤️", "😂", "😮"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+                {
+                  id: 2,
+                  name: "assmaa",
+                },
+              ],
+            ],
+          },
+        },
+        {
+          id: 2,
+          name: "Sophia Miller",
+          time: "1 hour ago",
+          paragraph:
+            "Looks like you all had a blast! Can’t wait for the next one.",
+          likesCount: 3,
+          image: "/users/user12.png",
+          replays: [],
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    img: ["/chat17.png", "/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/"],
+    hashtags: ["nature", "friends", "outdoor"],
+    mentions: [],
+    paragraph:
+      "Just spent the afternoon at the park with friends. Such a beautiful day!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Ali",
+      img: "/users/user4.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 0,
+    },
+    creator: "community",
+  },
+  {
+    id: 3,
+    link: [],
+    img: [
+      "/chat17.png",
+      "/chat6.png",
+      "/chat16.png",
+      "/chat7.png",
+      "/chat13.png",
+    ],
+
+    hashtags: ["hiking", "adventure", "nature"],
+    mentions: [],
+    paragraph:
+      "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Hassan",
+      img: "/users/user10.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 1,
+      allComments: [
+        {
+          id: 1,
+          name: "Lisa Brown",
+          time: "5 minutes ago",
+          paragraph: "Your photos look stunning! I need to plan a hike soon.",
+          likesCount: 1,
+          image: "/users/user13.png",
+          replays: [],
+          reacts: {
+            count: 1,
+            topUseage: ["❤️"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+            ],
+          },
+        },
+      ],
+    },
+    creator: "user",
+  },
+  {
+    id: 4,
+    link: [],
+    img: ["/chat17.png", "/chat6.png", "/chat16.png"],
+    hashtags: ["citylife", "exploration", "travel"],
+    mentions: [],
+    paragraph:
+      "Exploring the city this weekend – so many hidden gems to discover!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nour",
+      img: "/users/user8.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 0,
+    },
+  },
+  {
+    id: 5,
+    link: [],
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Nagi",
+      img: "/users/user7.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 6,
+    img: ["/chat19.png"],
+    link: ["www.google.com"],
+
+    hashtags: ["books", "reading", "adventure"],
+    mentions: [],
+    paragraph:
+      "Finished reading an incredible book this week – highly recommend it to anyone who loves adventure stories!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "John",
+      img: "/users/user14.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+    },
+    comments: {
+      count: 6,
+      allComments: [
+        {
+          id: 1,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "What was the book? I’m always on the lookout for new reads.",
+          likesCount: 3,
+          replays: [
+            {
+              id: 2,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "It was “The Alchemist” by Paulo Coelho. Truly life-changing.",
+              likesCount: 1,
+              replays: [
+                {
+                  id: 3,
+                  name: "Lana Henrikseen",
+                  time: "1 days ago",
+                  paragraph: "Perfect, adding it to my list!",
+                  likesCount: 1,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "I’ve been meaning to read more this year. Any other recommendations?",
+          likesCount: 3,
+          replays: [
+            {
+              id: 3,
+              name: "David Kim",
+              time: "2 days ago",
+              paragraph:
+                "Try “Sapiens” by Yuval Noah Harari. It’s fascinating!",
+              likesCount: 1,
+            },
+          ],
+          comments: {
+            count: 1,
+            allComments: [
+              {
+                id: 1,
+                name: "Lisa Brown",
+                time: "5 minutes ago",
+                paragraph: "Thanks for the tips! I’ll check them out.",
+                likesCount: 1,
+                image: "/users/user13.png",
+                replays: [],
+                reacts: {
+                  count: 1,
+                  topUseage: ["❤️"],
+                },
+              },
+            ],
+          },
+        },
+        {
+          id: 3,
+          name: "Lana Henrikseen",
+          time: "2 days ago",
+          paragraph:
+            "Reading really opens up new worlds. Love these discussions!",
+          likesCount: 3,
+        },
+      ],
+    },
+  },
+  {
+    id: 1,
+    img: ["/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/", "www.google.com"],
+    hashtags: ["gaming", "studying", "kids"],
+    mentions: [
+      { userId: 1, userName: "nagi" },
+      { userId: 2, userName: "3kr4" },
+      { userId: 3, userName: "osama" },
+    ],
+    paragraph:
+      "Had an amazing team lunch today with @Gaelle and @Rolf. The food was fantastic, and it was great catching up with everyone. Grateful for such a talented and supportive team!",
+    shareCount: 3,
+    date: "2025-03-10T12:30:00Z",
+    time: "2025-03-10T12:30:00Z",
+    user: {
+      name: "Ahmed",
+      img: "/users/user1.png",
+    },
+    creator: "page",
+    reacts: {
+      count: 5,
+      topUseage: ["❤️", "😂"],
+      users: [
+        {
+          id: 1,
+          emoji: "❤️",
+          name: "gendy",
+        },
+        {
+          id: 2,
+          emoji: "❤️",
+          name: "marawan",
+        },
+        {
+          id: 3,
+          emoji: "❤️",
+          name: "mouhamed",
+        },
+        {
+          id: 4,
+          emoji: "😂",
+          name: "isaa3",
+        },
+        {
+          id: 5,
+          emoji: "😂",
+          name: "gogo",
+        },
+      ],
+    },
+    comments: {
+      count: 5,
+      allComments: [
+        {
+          id: 1,
+          name: "John Doe",
+          img: "/chat8.png",
+          time: "3 hours ago",
+          paragraph:
+            "The food looks incredible! You guys always have the best team events.",
+          likesCount: 6,
+          image: "/users/user10.png",
+          replays: [
+            {
+              id: 1,
+              name: "Emma Stone",
+              time: "2 hours ago",
+              paragraph: "Totally agree! I wish I could join next time!",
+              likesCount: 2,
+              img: "/chat3.png",
+              image: "/users/user14.png",
+              reacts: {
+                count: 2,
+                topUseage: ["👍", "😊"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      emoji: "👍",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                    {
+                      id: 1,
+                      emoji: "😊",
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [
+                {
+                  id: 1,
+                  name: "Emma Stone",
+                  time: "2 hours ago",
+                  paragraph:
+                    "It’s always fun when we get together. Looking forward to the next one!",
+                  likesCount: 2,
+                  img: "/chat1.png",
+                  image: "/users/user4.png",
+                  reacts: {
+                    count: 2,
+                    topUseage: ["😘", "😎"],
+                    users: [
+                      [
+                        {
+                          id: 1,
+                          name: "gendy",
+                        },
+                      ],
+                      [
+                        {
+                          id: 1,
+                          name: "sozaan",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              id: 2,
+              name: "Ahmed Ashraf",
+              time: "5 hours ago",
+              paragraph:
+                "I completely agree! These gatherings are always memorable.",
+              likesCount: 5,
+              image: "/users/user6.png",
+              reacts: {
+                count: 1,
+                topUseage: ["😂"],
+                users: [
+                  [
+                    {
+                      id: 1,
+                      name: "gendy",
+                    },
+                  ],
+                ],
+              },
+              replays: [],
+            },
+          ],
+          reacts: {
+            count: 4,
+            topUseage: ["❤️", "😂", "😮"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+              ],
+              [
+                {
+                  id: 1,
+                  name: "sozaan",
+                },
+                {
+                  id: 2,
+                  name: "assmaa",
+                },
+              ],
+            ],
+          },
+        },
+        {
+          id: 2,
+          name: "Sophia Miller",
+          time: "1 hour ago",
+          paragraph:
+            "Looks like you all had a blast! Can’t wait for the next one.",
+          likesCount: 3,
+          image: "/users/user12.png",
+          replays: [],
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    img: ["/chat17.png", "/chat7.png"],
+    link: ["https://fb.watch/xVFJl_Q7i0/"],
+    hashtags: ["nature", "friends", "outdoor"],
+    mentions: [],
+    paragraph:
+      "Just spent the afternoon at the park with friends. Such a beautiful day!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Ali",
+      img: "/users/user4.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 0,
+    },
+    creator: "community",
+  },
+  {
+    id: 3,
+    link: [],
+    img: [
+      "/chat17.png",
+      "/chat6.png",
+      "/chat16.png",
+      "/chat7.png",
+      "/chat13.png",
+    ],
+
+    hashtags: ["hiking", "adventure", "nature"],
+    mentions: [],
+    paragraph:
+      "This weekend’s hiking trip was absolutely breathtaking. Nature at its finest!",
+    shareCount: 3,
+    date: "2024-10-12",
+    time: "16:00",
+    user: {
+      name: "Hassan",
+      img: "/users/user10.png",
+      bio: "",
+      mutualFriends: 2,
+    },
+    reacts: {
+      count: 9,
+      topUseage: ["👍", "😘"],
+      users: [
+        [
+          {
+            id: 1,
+            name: "gendy",
+          },
+          {
+            id: 2,
+            name: "marawan",
+          },
+          {
+            id: 3,
+            name: "mouhamed",
+          },
+          {
+            id: 4,
+            name: "isaa3",
+          },
+          {
+            id: 5,
+            name: "gogo",
+          },
+        ],
+        [
+          {
+            id: 1,
+            name: "sozaan",
+          },
+          {
+            id: 2,
+            name: "assmaa",
+          },
+          {
+            id: 3,
+            name: "ibrahim",
+          },
+          {
+            id: 4,
+            name: "osama",
+          },
+        ],
+      ],
+    },
+    comments: {
+      count: 1,
+      allComments: [
+        {
+          id: 1,
+          name: "Lisa Brown",
+          time: "5 minutes ago",
+          paragraph: "Your photos look stunning! I need to plan a hike soon.",
+          likesCount: 1,
+          image: "/users/user13.png",
+          replays: [],
+          reacts: {
+            count: 1,
+            topUseage: ["❤️"],
+            users: [
+              [
+                {
+                  id: 1,
+                  name: "gendy",
+                },
+              ],
+            ],
+          },
+        },
+      ],
+    },
+    creator: "user",
   },
   {
     id: 4,
@@ -1775,18 +4090,24 @@ export const products = [
   {
     id: 1,
     title: "Remote Control Car",
-    images: ["/products/Remote Control Car.png"],
+    images: [
+      "/products/Remote Control Car.png",
+      "/products/Remote Control Car.png",
+    ],
     details: "High-speed RC car with rechargeable battery.",
     time: "2025-03-10T12:30:00Z",
     section: "toys & games",
-    category: null,
+    category: "مفروشات",
     location: "New York, USA",
     deliveryService: true,
     price: 350,
-    sellerType: "user",
-    sale: null,
-    user: { name: "John Doe", img: "/users/user1.png" },
-    page: null,
+    sale: 5,
+    creator: {
+      id: 1,
+      type: "page",
+      name: "John Doe",
+      img: "/users/user1.png",
+    },
   },
   {
     id: 2,
@@ -2345,34 +4666,41 @@ export const stories = [
   },
 ];
 
+// Function to process stories and get latest per user with counts
+export const processStories = (stories) => {
+  // First sort all stories by timestamp (newest first)
+  const sortedStories = [...stories].sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
 
-  // Function to process stories and get latest per user with counts
-  export const processStories = (stories) => {
-    // First sort all stories by timestamp (newest first)
-    const sortedStories = [...stories].sort(
-      (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-    );
+  const userStoriesMap = new Map();
 
-    const userStoriesMap = new Map();
+  // Iterate through sorted stories
+  sortedStories.forEach((story) => {
+    if (!userStoriesMap.has(story.userId)) {
+      // If user not in map, add with count 1
+      userStoriesMap.set(story.userId, {
+        ...story,
+        totalStories: 1,
+      });
+    } else {
+      // If user already in map, just increment count
+      const existing = userStoriesMap.get(story.userId);
+      userStoriesMap.set(story.userId, {
+        ...existing,
+        totalStories: existing.totalStories + 1,
+      });
+    }
+  });
 
-    // Iterate through sorted stories
-    sortedStories.forEach((story) => {
-      if (!userStoriesMap.has(story.userId)) {
-        // If user not in map, add with count 1
-        userStoriesMap.set(story.userId, {
-          ...story,
-          totalStories: 1,
-        });
-      } else {
-        // If user already in map, just increment count
-        const existing = userStoriesMap.get(story.userId);
-        userStoriesMap.set(story.userId, {
-          ...existing,
-          totalStories: existing.totalStories + 1,
-        });
-      }
-    });
+  // Convert map values to array
+  return Array.from(userStoriesMap.values());
+};
 
-    // Convert map values to array
-    return Array.from(userStoriesMap.values());
-  };
+export const emojiMap = {
+  love: "❤️",
+  sad: "😢",
+  angry: "😠",
+  prayer: "🙏",
+  haha: "😂",
+};

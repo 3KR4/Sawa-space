@@ -18,6 +18,7 @@ import {
   FaUsers,
   FaPager,
   FaHistory,
+  FaStar,
 } from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
@@ -30,11 +31,14 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useLanguage } from "../Contexts/LanguageContext";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
+import { useDefaultReduceAnimations } from "@mui/x-date-pickers/internals";
 
 export default function Header() {
   const { setOpenPostForm, setOpenStoryForm } = useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
-  const { pathname, screenSize } = useContext(ScreenContext);
+  const { pathname, screenSize, userData, setUserData } =
+    useContext(ScreenContext);
+
 
   const [userMenu, setUserMenu] = useState(false);
   const [createMenu, setCreateMenu] = useState(false);
@@ -176,196 +180,228 @@ export default function Header() {
         </div>
       </div>
       <nav ref={phoneMenuRef} className={phoneMenu ? "active" : ""}>
-        <Link href="/" className={pathname === "/" ? "active" : ""}>
-          <MdOutlineExplore /> <span>{translations?.header?.explore}</span>
-        </Link>
-        <Link
-          href="/chat"
-          className={pathname.includes("/chat") ? "active" : ""}
-        >
-          <IoChatbubbleEllipsesOutline />{" "}
-          <span>{translations?.header?.chats}</span>
-        </Link>
-        <Link
-          href="/pages"
-          className={pathname.includes("/pages") ? "active" : ""}
-        >
-          <LiaPagerSolid /> <span>{translations?.header?.pages}</span>
-        </Link>
-        <Link
-          href="/communities"
-          className={pathname.includes("/communities") ? "active" : ""}
-        >
-          <RiUserCommunityLine />{" "}
-          <span>{translations?.header?.communities}</span>
-        </Link>
-        <Link
-          href="/marketplace"
-          className={pathname.includes("/marketplace") ? "active" : ""}
-        >
-          <IoCartOutline /> <span>{translations?.header?.marketplace}</span>
-        </Link>
+        <div className="hold">
+          <Link href="/" className={pathname === "/" ? "active" : ""}>
+            <MdOutlineExplore /> <span>{translations?.header?.explore}</span>
+          </Link>
+          <Link
+            href="/chat"
+            className={pathname.includes("/chat") ? "active" : ""}
+          >
+            <IoChatbubbleEllipsesOutline />{" "}
+            <span>{translations?.header?.chats}</span>
+          </Link>
+          <Link
+            href="/pages"
+            className={pathname.includes("/pages") ? "active" : ""}
+          >
+            <LiaPagerSolid /> <span>{translations?.header?.pages}</span>
+          </Link>
+          <Link
+            href="/communities"
+            className={pathname.includes("/communities") ? "active" : ""}
+          >
+            <RiUserCommunityLine />{" "}
+            <span>{translations?.header?.communities}</span>
+          </Link>
+          <Link
+            href="/marketplace"
+            className={pathname.includes("/marketplace") ? "active" : ""}
+          >
+            <IoCartOutline /> <span>{translations?.header?.marketplace}</span>
+          </Link>
+        </div>
+        {screenSize === "small" && (
+          <Link className="letsPegin" href="/auth">
+            {translations?.header?.lets_begin}
+            <FaStar />
+          </Link>
+        )}
       </nav>
 
-      <div className="events">
-        {screenSize === "small" ? (
-          <>
-            <li
-              ref={createMenuRef}
-              className="use-case"
-              onClick={() => setCreateMenu((prev) => !prev)}
-            >
-              <IoGrid />
-              <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
-                <h4 className="title">Creation Menu</h4>
-                <ul>
-                  <button onClick={() => setOpenPostForm(true)}>
-                    <BsFillPostcardFill /> Create Post
-                  </button>
-                  <button>
-                    <FaHistory /> Create Story
-                  </button>
-                  <button>
-                    <HiUsers /> Create Group
-                  </button>
-                  <button>
-                    <FaPager /> Create Page
-                  </button>
-                  <button>
-                    <FaUsers /> Create Community
-                  </button>
-                </ul>
-              </div>
-            </li>
-            <li
-              ref={userMenuRef}
-              className="user"
-              onClick={() => setUserMenu((prev) => !prev)}
-            >
-              <Image
-                className="rounded"
-                src={"/avatar.png"}
-                width={45}
-                height={45}
-                alt={`user Image`}
-              />
-              <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
-                <Link href={`/user/4`} className="title">
-                  <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
-                </Link>
-                <ul>
-                  <button>
-                    <IoMdSettings />{" "}
-                    {translations?.header?.settings_and_privacy}
-                  </button>
-                  <button>
-                    <BiSupport /> {translations?.header?.help_and_support}
-                  </button>
-                  <button>
-                    <RiColorFilterAiFill />
-                    {translations?.header?.display_and_accessibility}
-                  </button>
-                  <button
-                    onClick={() =>
-                      changeLanguage(locale === "en" ? "ar" : "en")
-                    }
-                  >
-                    <IoLanguage /> {translations?.header?.swithlang}
-                  </button>
-                  <Link href={`/auth`}>
-                    <button className="logOut">
+      {userData ? (
+        <div className="events">
+          {screenSize === "small" ? (
+            <>
+              <li
+                ref={createMenuRef}
+                className="use-case"
+                onClick={() => setCreateMenu((prev) => !prev)}
+              >
+                <IoGrid />
+                <div
+                  className={`menu createMenu ${createMenu ? "active" : ""}`}
+                >
+                  <h4 className="title">Creation Menu</h4>
+                  <ul>
+                    <button onClick={() => setOpenPostForm(true)}>
+                      <BsFillPostcardFill /> Create Post
+                    </button>
+                    <button>
+                      <FaHistory /> Create Story
+                    </button>
+                    <button>
+                      <HiUsers /> Create Group
+                    </button>
+                    <button>
+                      <FaPager /> Create Page
+                    </button>
+                    <button>
+                      <FaUsers /> Create Community
+                    </button>
+                  </ul>
+                </div>
+              </li>
+              <li
+                ref={userMenuRef}
+                className="user"
+                onClick={() => setUserMenu((prev) => !prev)}
+              >
+                <Image
+                  className="rounded"
+                  src={userData?.img?.url || "/users/default.png"}
+                  width={45}
+                  height={45}
+                  alt={`user Image`}
+                />
+                <FaUser className="x" /> <FaCaretDown className="angle" />
+                <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
+                  <Link href={`/user/4`} className="title">
+                    <FaUser style={{ fontSize: "22px" }} />{" "}
+                    {userData?.fristname} {userData?.lastname}
+                  </Link>
+                  <ul>
+                    <button>
+                      <IoMdSettings />{" "}
+                      {translations?.header?.settings_and_privacy}
+                    </button>
+                    <button>
+                      <BiSupport /> {translations?.header?.help_and_support}
+                    </button>
+                    <button>
+                      <RiColorFilterAiFill />
+                      {translations?.header?.display_and_accessibility}
+                    </button>
+                    <button
+                      onClick={() =>
+                        changeLanguage(locale === "en" ? "ar" : "en")
+                      }
+                    >
+                      <IoLanguage /> {translations?.header?.swithlang}
+                    </button>
+                    <button
+                      className="logOut"
+                      onClick={() => {
+                        setUserData(null);
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("authToken");
+                      }}
+                    >
                       <TbLogout2 /> {translations?.header?.logout}
                     </button>
+                  </ul>
+                </div>
+              </li>
+              <li className="notifications">
+                <MdNotificationsActive />
+                <span className="length">20</span>
+              </li>
+            </>
+          ) : (
+            <>
+              <li
+                ref={createMenuRef}
+                className="use-case"
+                onClick={() => setCreateMenu((prev) => !prev)}
+              >
+                <IoGrid />
+                <div
+                  className={`menu createMenu ${createMenu ? "active" : ""}`}
+                >
+                  <h4 className="title">{translations?.header?.create}</h4>
+                  <ul>
+                    <button onClick={() => setOpenPostForm(true)}>
+                      <BsFillPostcardFill /> {translations?.header?.createpost}
+                    </button>
+                    <button onClick={() => setOpenStoryForm(true)}>
+                      <FaHistory /> {translations?.header?.createstory}
+                    </button>
+                    <button>
+                      <HiUsers /> {translations?.header?.creategroup}
+                    </button>
+                    <button>
+                      <FaPager /> {translations?.header?.createpage}
+                    </button>
+                    <button>
+                      <FaUsers /> {translations?.header?.createcommunity}
+                    </button>
+                  </ul>
+                </div>
+              </li>
+              <li className="notifications">
+                <MdNotificationsActive />
+                <span className="length">20</span>
+              </li>
+              <li
+                ref={userMenuRef}
+                className="user"
+                onClick={() => setUserMenu((prev) => !prev)}
+              >
+                <Image
+                  className="rounded"
+                  src={userData?.img?.url || "/users/default.png"}
+                  width={45}
+                  height={45}
+                  alt={`user Image`}
+                />
+                <FaUser className="x" /> <FaCaretDown className="angle" />
+                <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
+                  <Link href={`/user/4`} className="title">
+                    <FaUser style={{ fontSize: "22px" }} />{" "}
+                    {userData?.fristname} {userData?.lastname}
                   </Link>
-                </ul>
-              </div>
-            </li>
-            <li className="notifications">
-              <MdNotificationsActive />
-              <span className="length">20</span>
-            </li>
-          </>
-        ) : (
-          <>
-            <li
-              ref={createMenuRef}
-              className="use-case"
-              onClick={() => setCreateMenu((prev) => !prev)}
-            >
-              <IoGrid />
-              <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
-                <h4 className="title">{translations?.header?.create}</h4>
-                <ul>
-                  <button onClick={() => setOpenPostForm(true)}>
-                    <BsFillPostcardFill /> {translations?.header?.createpost}
-                  </button>
-                  <button onClick={() => setOpenStoryForm(true)}>
-                    <FaHistory /> {translations?.header?.createstory}
-                  </button>
-                  <button>
-                    <HiUsers /> {translations?.header?.creategroup}
-                  </button>
-                  <button>
-                    <FaPager /> {translations?.header?.createpage}
-                  </button>
-                  <button>
-                    <FaUsers /> {translations?.header?.createcommunity}
-                  </button>
-                </ul>
-              </div>
-            </li>
-            <li className="notifications">
-              <MdNotificationsActive />
-              <span className="length">20</span>
-            </li>
-            <li
-              ref={userMenuRef}
-              className="user"
-              onClick={() => setUserMenu((prev) => !prev)}
-            >
-              <Image
-                className="rounded"
-                src={"/avatar.png"}
-                width={45}
-                height={45}
-                alt={`user Image`}
-              />
-              <FaUser className="x" /> <FaCaretDown className="angle" />
-              <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
-                <Link href={`/user/4`} className="title">
-                  <FaUser style={{ fontSize: "22px" }} /> Mahmoud Elshazly
-                </Link>
-                <ul>
-                  <button>
-                    <IoMdSettings />{" "}
-                    {translations?.header?.settings_and_privacy}
-                  </button>
-                  <button>
-                    <BiSupport /> {translations?.header?.help_and_support}
-                  </button>
-                  <button>
-                    <RiColorFilterAiFill />{" "}
-                    {translations?.header?.display_and_accessibility}
-                  </button>
-                  <button
-                    onClick={() =>
-                      changeLanguage(locale === "en" ? "ar" : "en")
-                    }
-                  >
-                    <IoLanguage /> {translations?.header?.swithlang}
-                  </button>
-                  <Link href={`/auth`}>
-                    <button className="logOut">
+                  <ul>
+                    <button>
+                      <IoMdSettings />{" "}
+                      {translations?.header?.settings_and_privacy}
+                    </button>
+                    <button>
+                      <BiSupport /> {translations?.header?.help_and_support}
+                    </button>
+                    <button>
+                      <RiColorFilterAiFill />{" "}
+                      {translations?.header?.display_and_accessibility}
+                    </button>
+                    <button
+                      onClick={() =>
+                        changeLanguage(locale === "en" ? "ar" : "en")
+                      }
+                    >
+                      <IoLanguage /> {translations?.header?.swithlang}
+                    </button>
+                    <button
+                      className="logOut"
+                      onClick={() => {
+                        setUserData(null);
+                        localStorage.removeItem("user");
+
+                        localStorage.removeItem("authToken");
+                      }}
+                    >
                       <TbLogout2 /> {translations?.header?.logout}
                     </button>
-                  </Link>
-                </ul>
-              </div>
-            </li>
-          </>
-        )}
-      </div>
+                  </ul>
+                </div>
+              </li>
+            </>
+          )}
+        </div>
+      ) : screenSize !== "small" ? (
+        <Link className="letsPegin" href="/auth">
+          {translations?.header?.lets_begin}
+          <FaStar />
+        </Link>
+      ) : null}
     </header>
   );
 }

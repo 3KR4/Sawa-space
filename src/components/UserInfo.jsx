@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
@@ -11,44 +10,22 @@ import SettingMenu from "@/components/providers/SettingMenu";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
-import { IoMdPersonAdd } from "react-icons/io";
+import { IoMdPersonAdd, IoMdCloseCircle } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import { FaEye } from "react-icons/fa";
 
 function UserInfo() {
-  const {
-    menuPosition,
-    selectedDev,
-    userInfoData,
-    setUserInfoData,
-    menuPosition2,
-    setMenuPosition2,
-  } = useContext(DynamicMenusContext);
-    const { userInfoMenu } = useContext(MenusContext);
-
-
-  const [nistedSettingMenu, setNistedSettingMenu] = useState(false);
-
-  let top = menuPosition2.top !== 0 ? menuPosition2.top : menuPosition.top;
-  let left = menuPosition2.left !== 0 ? menuPosition2.left : menuPosition.left;
-  const nistedSettingMenuRef = useRef(null);
+  const { selectedDev, infoMenu, setInfoMenu, menuPosition, setMenuPosition2 } =
+    useContext(DynamicMenusContext);
+  const { infoMenuRef } = useContext(MenusContext);
 
   let currentUserData = users.find((x) => x.id == selectedDev);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        userInfoMenu.current &&
-        !userInfoMenu.current.contains(event.target)
-      ) {
-        setUserInfoData(null);
+      if (infoMenuRef.current && !infoMenuRef.current.contains(event.target)) {
+        setInfoMenu(null);
       }
-      if (
-        nistedSettingMenuRef.current &&
-        !nistedSettingMenuRef.current.contains(event.target)
-      ) {
-        setNistedSettingMenu(null);
-      }
-      setMenuPosition2({ top: 0, left: 0 });
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -59,29 +36,13 @@ function UserInfo() {
 
   return (
     <div
-      ref={userInfoMenu}
-      className={`userInfo sideMenu ${userInfoData ? "active" : ""}`}
+      ref={infoMenuRef}
+      className={`info-menu sideMenu ${infoMenu ? "active" : ""}`}
       style={{
-        top: `${top}px`,
-        left: `${left}px`,
+        top: `${menuPosition.top}px`,
+        left: `${menuPosition.left}px`,
       }}
     >
-      {nistedSettingMenu && (
-        <div
-          ref={nistedSettingMenuRef}
-          className={`sideMenu nistedUserSetting ${
-            nistedSettingMenu ? "active" : ""
-          }`}
-        >
-          <h4>Actions</h4>
-          <button className="danger">
-            <IoPersonRemoveSharp /> Remove Friend
-          </button>
-          <button className="danger">
-            <MdBlock /> Block
-          </button>
-        </div>
-      )}
       <div className="holder">
         <Image
           className={`rounded`}
@@ -94,13 +55,13 @@ function UserInfo() {
             <h4>{currentUserData?.name}</h4>
             <IoClose
               onClick={() => {
-                setUserInfoData(null);
+                setInfoMenu(null);
                 setMenuPosition2({ top: 0, left: 0 });
               }}
               className="close"
             />
           </div>
-          <p>5 mutual Friends</p>
+          <p>150 Friends - 5 mutual</p>
           <h5>About</h5>
           <ul>
             <li>
@@ -116,17 +77,39 @@ function UserInfo() {
         </div>
       </div>
       <div className="actions">
-        <button className="main-button">
-          <IoMdPersonAdd />
-          Add Friend
-        </button>
-        <button className="main-button">See Profile</button>
-        <button
-          className="main-button"
-          onClick={() => setNistedSettingMenu(true)}
-        >
-          <BsThreeDots />
-        </button>
+        {true ? (
+          <button className="main-button">
+            <IoMdPersonAdd />
+            Add Friend
+          </button>
+        ) : (
+          <button className="main-button">
+            <IoMdPersonAdd />
+            remove Friend
+          </button>
+        )}
+
+        {/* {true ? (
+          <button className="main-button">
+            <IoMdPersonAdd />
+            follow
+          </button>
+        ) : (
+          <button className="main-button">
+            <IoMdCloseCircle />
+            unfollow
+          </button>
+        )} */}
+
+        {true ? (
+          <button className="main-button">
+            <FaEye /> See Profile
+          </button>
+        ) : (
+          <button className="main-button">
+            <FaEye /> visit Page
+          </button>
+        )}
       </div>
     </div>
   );

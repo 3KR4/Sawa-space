@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
@@ -9,9 +8,7 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 
 function UsersReact() {
-  const {
-    usersreactMenuRef,
-  } = useContext(MenusContext);
+  const { usersreactMenuRef } = useContext(MenusContext);
 
   const {
     menuPosition,
@@ -112,7 +109,7 @@ function UsersReact() {
               <div
                 key={x.id}
                 className="user"
-                onClick={(e) => handleMenus2(e, "userInfo", x.id)}
+                onClick={(e) => handleMenus2(e, "user-Info", x.id)}
               >
                 <div className="info">
                   <h4>{x?.name}</h4>

@@ -1,34 +1,34 @@
-body:has(.userPage) {
+body:has(.portfolio) {
   padding-top: 0;
 }
-body:has(.userPage) header {
+body:has(.portfolio) header {
   margin-bottom: 0;
   margin-left: 12px;
 }
 
-body:has(.userPage) > main {
+body:has(.portfolio) > main {
   padding-top: 0;
 }
-.userPage {
+.portfolio {
   width: 80%;
   margin: auto;
 }
-.userPage > .top {
+.portfolio > .top {
   gap: 8px;
   display: flex;
   flex-direction: column;
 }
-.userPage .top .cover {
+.portfolio .top .cover {
   height: 470px;
   position: relative;
   border-radius: 0 0 25px 25px;
   overflow: hidden;
 }
-.userPage .top .cover img {
+.portfolio .top .cover img {
   max-height: 500px;
   object-fit: cover;
 }
-.userPage .editICo {
+.portfolio .editICo {
   position: absolute;
   right: 15px;
   bottom: 15px;
@@ -42,23 +42,24 @@ body:has(.userPage) > main {
   transition: 0.3s;
 }
 
-.userPage .editICo svg {
+.portfolio .editICo svg {
   color: white;
 }
-.userPage .right-btns {
+.portfolio .right-btns {
   display: flex;
   justify-content: end;
   align-items: center;
   gap: 7px;
 }
-.userPage .right-btns .search-holder {
+
+.portfolio .right-btns .search-holder {
   flex: unset;
 }
-.userPage .right-btns .search-holder svg,
-.userPage .right-btns .search-holder input::placeholder {
+.portfolio .right-btns .search-holder svg,
+.portfolio .right-btns .search-holder input::placeholder {
   color: var(--title-color);
 }
-.userPage nav {
+.portfolio nav {
   gap: 10px;
   position: relative;
   border-radius: 12px;
@@ -68,10 +69,10 @@ body:has(.userPage) > main {
   background: var(--body-color);
   flex-direction: column;
 }
-.userPage nav .top {
+.portfolio nav .top {
   display: flex;
 }
-.userPage nav .userImg {
+.portfolio nav .userImg {
   position: relative;
   width: 140px;
   height: 140px;
@@ -80,36 +81,42 @@ body:has(.userPage) > main {
   background-color: var(--body-color);
 }
 
-.userPage .userImg .editICo {
+.portfolio .userImg .editICo {
   padding: 6px;
   font-size: 16px;
   right: 2px;
 }
-.userPage .editICo:hover {
+.portfolio .editICo:hover {
   cursor: pointer;
   background: var(--main-color);
 }
-.userPage nav .top .right {
+.portfolio nav .top .right {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0px 0px 0px 12px;
   flex: 1;
 }
-body.ar .userPage nav .top .right {
+body.ar .portfolio nav .top .right {
   margin: 0px 12px 0px 0px;
 }
-.userPage nav .top .right .left-data {
+.portfolio nav .top .right .left-data {
   display: flex;
   align-items: center;
   gap: 20px;
   font-size: 18px;
 }
-.userPage nav .bottom {
+.portfolio.marketPage nav .top .right .left-data {
+  gap: 7px;
+}
+.portfolio nav .top .right .left-data h5 {
+  font-size: 16px;
+}
+.portfolio nav .bottom {
   display: flex;
   justify-content: space-between;
 }
-.userPage nav .leftHolder {
+.portfolio nav .leftHolder {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -117,60 +124,20 @@ body.ar .userPage nav .top .right {
   width: fit-content;
   height: fit-content;
 }
-.userPage nav .top h4 {
+.portfolio nav .top h4 {
   font-size: 30px;
 }
-.userPage nav .bottom div {
+.portfolio nav .bottom div {
   display: flex;
   gap: 5px;
 }
 
-.userPage .search-holder input {
-  width: 107px;
-  padding: 7px 15px 7px 34px;
-  transition: 0.3s;
-  background: #ebebeb;
-  border: unset;
+.portfolio .small-followers img {
+  margin-left: -4px;
+  border: 1px solid #bababa;
+  cursor: pointer;
 }
-.userPage .search-holder svg {
-  color: var(--title-color) !important;
-}
-.userPage .search-holder input:focus,
-.userPage .search-holder input:not(:placeholder-shown) {
-  width: 167px;
-}
-.userPage .search-holder input:not(:placeholder-shown) {
-  padding-right: 28px;
-}
-body.ar .userPage .search-holder input {
-  width: 85px;
-  padding: 7px 31px 7px 15px;
-}
-body.ar .userPage .search-holder input:focus,
-body.ar .userPage .search-holder input:not(:placeholder-shown) {
-  width: 182px;
-  padding-right: 30px;
-}
-body.ar .userPage .search-holder input:not(:placeholder-shown) {
-  padding-left: 22px;
-}
-.userPage .search-holder svg.delete {
-  right: 0;
-}
-body.ar .userPage .search-holder svg.delete {
-  right: unset;
-  left: 0;
-}
-.userPage
-  .search-holder
-  input:not(:placeholder-shown)
-  .userPage
-  .search-holder
-  input:not(:placeholder-shown) {
-  padding: 7px 31px 7px 34px;
-}
-
-.userPage .bottom-holder {
+.portfolio .bottom-holder {
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
@@ -178,176 +145,258 @@ body.ar .userPage .search-holder svg.delete {
   margin-top: 7px;
   gap: 7px;
 }
-.userPage .bottom-holder .side-menu {
+.portfolio .bottom-holder .side-menu {
   height: fit-content;
   position: sticky;
   top: 10px;
-  min-width: 35%;
+  max-width: 32%;
+  min-width: 32%;
+  padding: 0;
+  border: unset;
+  background: unset;
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
 }
-body:has(.chats.hide) .userPage .bottom-holder .side-menu {
-  min-width: 30%;
+.portfolio .bottom-holder .side-menu:has(.Filter-Holder) {
+  max-width: 23%;
+  min-width: 23%;
+  max-height: 91vh;
+  overflow: auto;
+  border: 0.5px solid #e8e8e8;
 }
-body:has(.chats.hide) .userPage .post .middle .image img {
-  max-height: 100%;
+.portfolio
+  .bottom-holder
+  .side-menu:has(.Filter-Holder)::-webkit-scrollbar-track {
+  background: var(--body-color);
 }
-.userPage .bottom-holder .side-menu > * {
+.portfolio .sideSection .Filter-Holder.forCat {
+  padding: 15px 8px !important;
+}
+.portfolio .sideSection .Filter-Holder.forCat .filter-title {
+  padding-left: 8px;
+}
+.portfolio .bottom-holder .side-menu > * {
   background: var(--body-color);
   border-radius: 10px;
   padding: 15px 17px;
-  overflow: auto;
   border: 0.5px solid #e8e8e8;
-  margin-bottom: 7px;
 }
-.userPage .bottom-holder .side-menu .top {
+.portfolio .bottom-holder .side-menu:has(.Filter-Holder) > * {
+  border: unset;
+}
+.portfolio .bottom-holder .side-menu .top {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 6px;
 }
-.userPage .bottom-holder .side-menu .about .top {
+.portfolio .bottom-holder .side-menu .about .top {
   margin-bottom: -2px;
 }
-.userPage .bottom-holder .side-menu .top button {
+.portfolio .bottom-holder .side-menu .about .seeMore {
+  cursor: pointer;
+  font-weight: 400;
+  margin: 0 3px;
+  transition: 0.3s;
+}
+.portfolio .bottom-holder .side-menu .about .seeMore:hover {
+  color: var(--main-color);
+}
+.portfolio .bottom-holder .side-menu .top button {
   font-weight: 500;
   display: flex;
   align-items: center;
   font-size: 13px;
   transition: 0.3s;
 }
-.userPage .bottom-holder .side-menu .top button svg {
+.portfolio .bottom-holder .side-menu .top button svg {
   font-size: 15px;
 }
-body.ar .userPage .bottom-holder .side-menu .top button svg {
+body.ar .portfolio .bottom-holder .side-menu .top button svg {
   transform: rotate(180deg);
 }
 
-.userPage .bottom-holder .side-menu .top button:hover,
-.userPage .bottom-holder .side-menu .top button:hover svg {
+.portfolio .bottom-holder .side-menu .top button:hover,
+.portfolio .bottom-holder .side-menu .top button:hover svg {
   color: var(--main-color);
 }
 
-.userPage .bottom-holder .side-menu .about {
+.portfolio .bottom-holder .side-menu .about {
   display: flex;
   flex-direction: column;
   gap: 8px;
   font-weight: 600;
 }
-.userPage .bottom-holder .side-menu .about li {
+.portfolio .bottom-holder .side-menu .about li {
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 7px;
 }
-.userPage .bottom-holder .side-menu .about li span {
+.portfolio .bottom-holder .side-menu .about li span {
   font-weight: 500;
   font-size: 15px;
   color: var(--paragraph-color);
 }
-.userPage .bottom-holder .side-menu .images .hold {
+.portfolio .bottom-holder .side-menu .images .hold {
   position: relative;
   display: grid;
   gap: 5px;
   grid-template-columns: repeat(3, 1fr);
 }
-.userPage .bottom-holder .side-menu .images img {
+.portfolio .bottom-holder .side-menu .images img {
   position: relative !important;
   max-width: 100%;
-  height: 132px !important;
   width: 100% !important;
   object-fit: cover;
   border-radius: 8px;
   cursor: pointer;
+  aspect-ratio: 1.2 / 1;
 }
-.userPage .bottom-holder .side-menu .friends .hold {
+.portfolio .bottom-holder .bigSection .about .friends {
+  display: flex;
+  flex-direction: column;
+}
+.portfolio .bottom-holder .friends .hold {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(3, 1fr);
 }
-.userPage .bottom-holder .side-menu .hold,
-.userPage .bottom-holder .side-menu .hold {
-  gap: 8px !important;
+.portfolio .bottom-holder .bigSection .about .friends .hold {
+  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
 }
-.userPage .bottom-holder .side-menu .friends .hold > svg,
-.userPage .bottom-holder .side-menu .images .hold > svg,
-.userPage .bigSection .friends > svg,
-.userPage .bigSection .photos > svg {
+.portfolio .bottom-holder .bigSection .about .friends .hold .chat {
+  flex-direction: row;
+  gap: 7px;
+  padding: 6px 8px;
+}
+.portfolio .bottom-holder .bigSection .about .friends .hold img {
+  width: 60px !important;
+  height: 60px !important;
+}
+.portfolio .bigSection .about .friends > div {
+  padding: 0;
+}
+.portfolio .bottom-holder .side-menu .hold {
+  gap: 6px !important;
+}
+.portfolio .bottom-holder .friends .hold > svg,
+.portfolio .bottom-holder .side-menu .images .hold > svg,
+.portfolio .bigSection .friends > svg,
+.portfolio .bigSection .photos > svg {
   background: var(--section-color);
   border-radius: 8px;
   width: 100%;
 }
-.userPage .bigSection .photos > svg {
+.portfolio .bigSection .photos > svg {
   background: var(--body-color);
   height: 260px;
 }
-.userPage .bigSection .friends > svg {
+.portfolio .bigSection .friends > svg {
   background: var(--body-color);
   height: 65px;
 }
-.userPage .bottom-holder .side-menu .friends .chat {
+.portfolio .bottom-holder .friends .chat {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
+  border-radius: 11px;
+  padding: 5px 6px;
+  transition: 0.3s;
+  background: var(--border-color);
 }
-.userPage .bottom-holder .side-menu .friends img {
+.portfolio .bottom-holder .friends .chat.owner {
+  position: relative;
+}
+.portfolio .bottom-holder .friends .chat.owner svg {
+  font-size: 16px;
+  margin: 0 3px;
+}
+.portfolio .bottom-holder .friends .chat.owner,
+.portfolio .bottom-holder .friends .chat:hover {
+  background: #ffa55b;
+}
+.portfolio .bottom-holder .friends .chat.owner:hover {
+  background: #ffa55b !important;
+}
+.portfolio .bottom-holder .friends:has(.chat:hover) .owner {
+  background: var(--border-color);
+}
+.portfolio .bottom-holder .friends:has(.chat:hover) .owner h4 {
+  color: var(--title-color);
+}
+.portfolio .bottom-holder .friends .chat:hover .name-lastmessage h4,
+.portfolio .bottom-holder .friends .chat.owner h4 {
+  color: white;
+}
+.portfolio .bottom-holder .friends img {
   width: 100%;
-  height: 100%;
-  max-height: 160px;
   border-radius: 10px;
   object-fit: cover;
   cursor: pointer;
   position: relative !important;
+  aspect-ratio: 1 / 1;
 }
-.userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
-  font-size: 14px;
+.portfolio .bottom-holder .friends .name-lastmessage h4 {
+  font-size: 13px;
   text-align: center;
+  transition: 0.3s;
 }
-.userPage .bottom-holder .side-menu .friends .name-lastmessage p {
-  font-size: 14px;
+.portfolio .bottom-holder .friends .name-lastmessage p {
+  font-size: 13px;
   margin-top: -2px;
+  transition: 0.3s;
 }
 
-.userPage .bottom-holder .bigSection {
+.portfolio .bottom-holder .bigSection {
   width: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   gap: 7px;
-  padding-bottom: 15px;
+  padding-bottom: 25px;
 }
-.userPage .bottom-holder .bigSection > .actions {
+.portfolio .bottom-holder .bigSection > .actions {
   background: var(--body-color);
-  padding: 19px 14px;
+  padding: 19px;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.userPage .bottom-holder .bigSection > .actions h4 {
+.portfolio .bottom-holder .bigSection:has(.grid-products) > .actions {
+  padding: 14px;
+}
+.portfolio .bottom-holder .bigSection > .actions h4 {
   text-transform: capitalize;
 }
-.userPage .bottom-holder .bigSection .posts-holder {
+.portfolio .bottom-holder .bigSection .posts-holder {
   margin-top: 0;
   gap: 7px;
+  width: 90%;
+  margin: auto;
 }
-.userPage .bottom-holder .bigSection .posts-holder .post {
+.portfolio .bottom-holder .bigSection .posts-holder .post {
   max-width: 100%;
   min-width: 100% !important;
 }
 
-.userPage .bottom-holder .bigSection .posts-holder .post .top {
+.portfolio .bottom-holder .bigSection .posts-holder .post .top {
   flex-direction: row !important;
 }
-.userPage .posts-holder .post .middle .image img {
+.portfolio .posts-holder .post .middle .image img {
   max-height: 100%;
 }
 
-.userPage .bigSection .friends {
+.portfolio .bigSection .friends {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 7px;
 }
-.userPage .bigSection .friends > div {
+.portfolio .bigSection .friends > div {
   background: var(--body-color);
   border-radius: 6px;
   display: flex;
@@ -356,25 +405,38 @@ body.ar .userPage .bottom-holder .side-menu .top button svg {
   padding: 7px;
   cursor: pointer;
 }
-.userPage .bigSection .friends > div img {
+.portfolio .bigSection .friends > div img {
   position: relative !important;
   width: 50px !important;
   height: 50px !important;
 }
-.userPage .bigSection .friends > div div {
+.portfolio .bigSection .friends > div div {
   display: flex;
   flex-direction: column;
 }
-.userPage .bigSection .friends > div p {
+.portfolio .bigSection .about .friends > div div {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: -webkit-fill-available;
+}
+.portfolio .bigSection .about .friends h4 {
+  text-align: unset;
+}
+.portfolio .bigSection .friends > div p {
   font-size: 14px;
 }
-.userPage .bigSection .photos {
+.portfolio .bigSection .photos {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 7px;
   padding: 0 3px;
 }
-.userPage .bigSection .photos img {
+.portfolio .bigSection .grid-products {
+  padding: 0;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+}
+.portfolio .bigSection:not(:has(.grid-products)) .photos img {
   position: relative !important;
   max-width: 100%;
   height: 260px !important;
@@ -382,210 +444,226 @@ body.ar .userPage .bottom-holder .side-menu .top button svg {
   border-radius: 9px;
   cursor: pointer;
 }
-.userPage .bigSection .about {
+.portfolio .bigSection .about {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
   font-weight: 600;
   background: var(--body-color);
   padding: 15px;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;
 }
-.userPage .bigSection .about li {
+.portfolio .bigSection .about .holder ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.portfolio .bigSection .about li {
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 7px;
 }
-.userPage .bigSection .about li span {
+.portfolio .bigSection .about li span {
   font-weight: 500;
   font-size: 15px;
   color: var(--paragraph-color);
 }
 
 @media (min-width: 1700px) {
-  .userPage .posts-holder .post .images.small img {
+  .portfolio .posts-holder .post .images.small img {
     max-height: 450px;
   }
-  .userPage .posts-holder .post .images.mid img {
+  .portfolio .posts-holder .post .images.mid img {
     max-height: 372px;
   }
-  .userPage .posts-holder .post .images.big img {
+  .portfolio .posts-holder .post .images.big img {
     max-height: 362px;
   }
 }
 
 @media (max-width: 1700px) {
-  .userPage .bottom-holder .side-menu {
+  .portfolio .bottom-holder .side-menu {
     min-width: 38%;
   }
-  body:has(.chats.hide) .userPage .bottom-holder .side-menu {
-    min-width: 37% !important;
-  }
-  .userPage .bottom-holder .side-menu .friends img {
-    max-height: 150px;
+  .portfolio .bottom-holder .bigSection .posts-holder {
+    width: 100%;
   }
 }
 
 @media (max-width: 1600px) {
-  .userPage .bottom-holder .side-menu {
+  .portfolio .bottom-holder .side-menu {
     min-width: 42%;
   }
-  body:has(.chats.active) .userPage {
+  body:has(.chats.active) .portfolio {
     width: 95%;
   }
 }
 
-@media (max-width: 1500px) {
-  .userPage .bottom-holder .side-menu .friends img {
-    max-height: 149px;
-  }
-}
-
 @media (max-width: 1400px) {
-  .userPage .bottom-holder .side-menu .images img {
-    height: 124px !important;
-  }
-  .userPage .bottom-holder .side-menu .friends img {
-    max-height: 137px;
-  }
-  .userPage .bottom-holder .side-menu .friends .name-lastmessage p {
+  .portfolio .bottom-holder .friends .name-lastmessage p {
     font-size: 12px;
   }
-  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
+  .portfolio .bottom-holder .friends .name-lastmessage h4 {
     font-size: 12px;
   }
 }
 
 @media (max-width: 1300px) {
-  .userPage {
+  .portfolio {
     width: 95%;
   }
   .posts-holder {
     gap: 7px;
   }
-  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4 {
+  .portfolio .bottom-holder .friends .name-lastmessage h4 {
     font-size: 13px;
-  }
-  .userPage .bottom-holder .side-menu .friends img {
-    max-height: 132px;
   }
 }
 
 @media (max-width: 1200px) {
-  .userPage {
+  .portfolio {
     width: 100%;
     padding: 0 10px;
   }
-  .userPage .bottom-holder .side-menu img {
-    max-height: 131px;
-    min-height: 130px;
-  }
-  .userPage .bottom-holder .side-menu .images img {
-    height: 160px !important;
-  }
-}
-
-@media (max-width: 1100px) {
 }
 
 @media (max-width: 1000px) {
-  body:has(.userPage) header {
-    top: 6px;
-    margin-right: 9px;
-    margin-left: 9px;
+  body:has(.portfolio) header {
+    margin: 0;
   }
-  .userPage nav .top .right {
+  .portfolio nav .top .right {
     margin: 40px 0px 0px 0;
     flex-direction: column;
   }
-  .userPage .leftHolder {
+  .portfolio .leftHolder {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
-  .userPage nav .bottom {
+  .portfolio nav .bottom {
     display: flex;
     justify-content: center;
     gap: 7px;
   }
-  .userPage nav .top .right .left-data {
+  .portfolio .top .cover {
+    height: 160px;
+  }
+  .portfolio nav .userImg {
+    width: 125px;
+    height: 125px;
+  }
+  .portfolio nav .top .right {
+    margin: 30px 0px 0px 0;
+  }
+  .portfolio .bottom-holder .side-menu .images .hold {
+    gap: 10px;
+  }
+  .portfolio .bottom-holder .friends .hold {
+    gap: 25px;
+    row-gap: 17px;
+  }
+  .portfolio .bottom-holder .friends .name-lastmessage h4,
+  .portfolio .bottom-holder .friends .name-lastmessage p {
+    font-size: 16px;
+  }
+  .portfolio .bottom-holder .side-menu .hold {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .portfolio .bottom-holder {
+    flex-direction: column-reverse !important;
+    padding-bottom: 60px;
+  }
+  .portfolio nav .main-button {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .portfolio .search-holder input {
+    font-size: 17px;
+  }
+  .portfolio .search-holder input:focus,
+  .portfolio .search-holder input:not(:placeholder-shown) {
+    width: 170px;
+  }
+  .portfolio .search-holder input:not(:placeholder-shown) {
+    padding: 11px 33px 11px 34px;
+  }
+  .portfolio nav .top .right .left-data h5 {
+    font-size: 19px;
+  }
+  body:has(.portfolio) {
+    padding-left: 0;
+  }
+  .portfolio .small-followers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portfolio .bottom-holder .side-menu {
+    width: 100%;
+    max-width: unset;
+  }
+  .portfolio .bigSection .grid-products {
+    grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  body > main > .holder:has(.portfolio) {
+    margin-top: 52px;
+  }
+  body:has(.portfolio) {
+    height: unset;
+  }
+
+  .portfolio .bigSection .photos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .portfolio .bottom-holder .bigSection .posts-holder {
+    padding: 0;
+  }
+  .portfolio .bottom-holder {
+    padding-bottom: 60px;
+  }
+  .portfolio nav .bottom div {
+    flex-wrap: wrap;
+  }
+  .portfolio nav .bottom {
+    flex-direction: column;
+  }
+  .portfolio nav .bottom .main-button {
+    font-size: 15px;
+    flex: 1;
+    height: 34px;
+    min-width: 49%;
+  }
+  .portfolio nav .top .right .left-data {
     flex-direction: column;
     gap: 1px;
     margin-bottom: 8px;
   }
-  .userPage .top .cover {
-    height: 380px;
+  .portfolio .editICo {
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 6px 7px;
+    gap: 4px;
   }
-  .userPage nav .userImg {
-    width: 125px;
-    height: 125px;
+  .portfolio .right-btns {
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .userPage nav .top .right {
-    margin: 30px 0px 0px 0;
+  .portfolio .right-btns .main-button {
+    flex: 1;
+    height: 34px;
   }
-  .userPage .bottom-holder .side-menu .images img {
-    height: 210px !important;
-    max-height: unset;
+  .portfolio.marketPage .search-holder input {
+    width: 100% !important;
+    height: 34px;
+    max-width: unset;
+    color: var(--title-color);
   }
-  .userPage .bottom-holder .side-menu .images .hold {
-    gap: 10px;
-  }
-  .userPage .bottom-holder .side-menu .friends img {
-    max-height: 250px;
-  }
-  .userPage .bottom-holder .side-menu .friends .hold {
-    gap: 25px;
-    row-gap: 17px;
-  }
-  .userPage .bottom-holder .side-menu .friends .name-lastmessage h4,
-  .userPage .bottom-holder .side-menu .friends .name-lastmessage p {
-    font-size: 16px;
-  }
-  .userPage .bottom-holder .side-menu .hold {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-  .userPage .bottom-holder {
-    flex-direction: column-reverse !important;
-    padding-bottom: 60px;
-  }
-  .userPage nav .main-button {
-    font-size: 19px;
-  }
-  .userPage .search-holder input {
-    font-size: 17px;
-    width: 105px;
-    padding: 11px 12px 11px 34px;
-  }
-  .userPage .search-holder input:focus,
-  .userPage .search-holder input:not(:placeholder-shown) {
-    width: 170px;
-  }
-  .userPage .search-holder input:not(:placeholder-shown) {
-    padding: 11px 33px 11px 34px;
-  }
-  .userPage nav .top .right .left-data h5 {
-    font-size: 17px;
-  }
-  body:has(.userPage) {
-    padding-left: 0;
-  }
-}
-@media (max-width: 768px) {
-  body:has(.userPage) {
-    height: unset;
-  }
-  .userPage .bottom-holder .bigSection {
-    padding: 12px;
-  }
-  .userPage .bigSection .photos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .userPage .bottom-holder .bigSection .posts-holder {
-    padding: 0;
-  }
-  .userPage .bottom-holder {
-    padding-bottom: 60px;
+  .portfolio.marketPage .search-holder input::placeholder {
+    color: var(--title-color) !important;
+    font-weight: 500;
   }
 }

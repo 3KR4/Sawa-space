@@ -6,6 +6,7 @@ export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
+
   const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
     function getScreenSize() {
@@ -28,7 +29,21 @@ export const ScreenProvider = ({ children }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const pathname = usePathname(); // Get the current URL path
+  const pathname = usePathname();
+
+  const [userData, setUserData] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (userData) {
+      localStorage.setItem("user", JSON.stringify(userData));
+    }
+  }, [userData]);
 
   return (
     <ScreenContext.Provider
@@ -36,6 +51,8 @@ export const ScreenProvider = ({ children }) => {
         pathname,
         screenSize,
         screenSizeWidth,
+        userData,
+        setUserData,
       }}
     >
       {children}

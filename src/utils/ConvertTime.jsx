@@ -1,4 +1,4 @@
-"use client"
+"use client";
 const arabicDays = {
   Sunday: "الأحد",
   Monday: "الإثنين",
@@ -7,6 +7,21 @@ const arabicDays = {
   Thursday: "الخميس",
   Friday: "الجمعة",
   Saturday: "السبت",
+};
+
+const arabicMonths = {
+  January: "يناير",
+  February: "فبراير",
+  March: "مارس",
+  April: "أبريل",
+  May: "مايو",
+  June: "يونيو",
+  July: "يوليو",
+  August: "أغسطس",
+  September: "سبتمبر",
+  October: "أكتوبر",
+  November: "نوفمبر",
+  December: "ديسمبر",
 };
 
 const englishDays = {
@@ -25,16 +40,32 @@ const timeUnits = {
     yesterday: "Yesterday",
     today: "Today",
     since: "since",
+    second: ["second", "seconds"],
+    minute: ["minute", "minutes"],
     hour: ["hour", "hours"],
     day: ["day", "days"],
+    week: ["week", "weeks"],
+    month: ["month", "months"],
+    year: ["year", "years"],
+    at: "at",
+    on: "on",
+    in: "in",
   },
   ar: {
     ago: "مضت",
     yesterday: "ليلة أمس",
     today: "اليوم",
     since: "منذ",
-    hour: ["ساعة", "ساعات"],
-    day: ["يوم", "أيام"],
+    second: ["ثانية", "ثانيتين", "ثوان"],
+    minute: ["دقيقة", "دقيقتين", "دقائق"],
+    hour: ["ساعة", "ساعتين", "ساعات"],
+    day: ["يوم", "يومين", "أيام"],
+    week: ["أسبوع", "أسبوعين", "أسابيع"],
+    month: ["شهر", "شهرين", "أشهر"],
+    year: ["سنة", "سنتين", "سنوات"],
+    at: "الساعة",
+    on: "في",
+    in: "في",
   },
 };
 
@@ -52,46 +83,112 @@ const formatTime = (date, locale) => {
   return formattedTime;
 };
 
-export default function ConvertTime(timestamp, locale = "en", type = "general") {
+const formatDate = (date, locale, withYear = false) => {
+  const day = date.getDate();
+  const month = date.toLocaleString(locale === "ar" ? "ar-EG" : "en-US", {
+    month: "long",
+  });
+  const year = date.getFullYear();
+
+  if (locale === "ar") {
+    const arabicMonth = arabicMonths[month];
+    return withYear ? `${day} ${arabicMonth} ${year}` : `${day} ${arabicMonth}`;
+  }
+
+  return withYear ? `${month} ${day}, ${year}` : `${month} ${day}`;
+};
+
+const timeAgo = (value, unit, lang) => {
+  const t = timeUnits[lang];
+
+  if (lang === "ar") {
+    if (value === 1) {
+      return `${t.since} ${unit[0]}`;
+    } else if (value === 2) {
+      return `${t.since} ${unit[1]}`;
+    } else if (value > 2 && value <= 10) {
+      return `${t.since} ${value} ${unit[2]}`;
+    } else {
+      return `${t.since} ${value} ${unit[2]}`;
+    }
+  } else {
+    // الإنجليزية (ابق كما هي)
+    return `${t.since} ${value} ${value === 1 ? unit[0] : unit[1]}`;
+  }
+};
+
+export default function ConvertTime(
+  timestamp,
+  locale = "en",
+  type = "general"
+) {
   const now = new Date();
   const past = new Date(timestamp);
+  const lang = locale === "ar" ? "ar" : "en";
+  const t = timeUnits[lang];
 
   const diffInMs = now - past;
   const diffInSeconds = Math.floor(diffInMs / 1000);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   const diffInHours = Math.floor(diffInMinutes / 60);
   const diffInDays = Math.floor(diffInHours / 24);
+  const diffInWeeks = Math.floor(diffInDays / 7);
+  const diffInMonths = Math.floor(diffInDays / 30);
+  const diffInYears = Math.floor(diffInDays / 365);
 
-  const lang = locale === "ar" ? "ar" : "en";
+  // Common time ago formatter
 
-  // 🟢 **حالة `singleChat`** → دائمًا يعرض الوقت بصيغة `hh:mm am/pm`
-  if (type === "singleChat") {
-    return formatTime(past, lang);
+  switch (type) {
+    case "product":
+      if (diffInSeconds < 60) return timeAgo(diffInSeconds, t.second, lang);
+      if (diffInMinutes < 60) return timeAgo(diffInMinutes, t.minute, lang);
+      if (diffInHours < 24) return timeAgo(diffInHours, t.hour, lang);
+      if (diffInDays < 7) return timeAgo(diffInDays, t.day, lang);
+      if (diffInWeeks < 4) return timeAgo(diffInWeeks, t.week, lang);
+      if (diffInMonths < 12) return timeAgo(diffInMonths, t.month, lang);
+      return timeAgo(diffInYears, t.year, lang);
+
+    case "post":
+      if (diffInHours < 24) {
+        if (diffInMinutes < 60) {
+          return timeAgo(diffInMinutes, t.minute, lang);
+        }
+        return timeAgo(diffInHours, t.hour, lang);
+      }
+      if (diffInDays === 1) {
+        return `${t.yesterday} ${t.at} ${formatTime(past, lang)}`;
+      }
+      if (diffInDays < 7) {
+        const dayName = past.toLocaleDateString("en-US", { weekday: "long" });
+        const day = lang === "ar" ? arabicDays[dayName] : englishDays[dayName];
+        return `${day} ${t.at} ${formatTime(past, lang)}`;
+      }
+      if (diffInYears < 1) {
+        return `${formatDate(past, lang)} ${t.at} ${formatTime(past, lang)}`;
+      }
+      return `${formatDate(past, lang, true)} ${t.at} ${formatTime(
+        past,
+        lang
+      )}`;
+
+    case "general":
+      const dayName = past.toLocaleDateString("en-US", { weekday: "long" });
+      const day = lang === "ar" ? arabicDays[dayName] : englishDays[dayName];
+      return `${day} ${formatDate(past, lang, true)} ${t.in} ${formatTime(
+        past,
+        lang
+      )}`;
+
+    case "chat":
+      if (diffInDays === 0) return formatTime(past, lang);
+      if (diffInDays === 1) return t.yesterday;
+      return past.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-US", {
+        year: diffInYears >= 1 ? "numeric" : undefined,
+        month: "numeric",
+        day: "numeric",
+      });
+
+    default:
+      return past.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-GB");
   }
-
-  // 🟡 **حالة `product`** (نفس نظام الشات لكن مع تعديلات الوقت)
-  if (type === "product") {
-    if (diffInHours < 24) {
-      const unit =
-        diffInHours === 1 ? timeUnits[lang].hour[0] : timeUnits[lang].hour[1];
-      return `${timeUnits[lang].since} ${diffInHours} ${unit}`;
-    }
-    if (diffInDays === 1) return timeUnits[lang].yesterday;
-    if (diffInDays < 7) {
-      const unit =
-        diffInDays === 1 ? timeUnits[lang].day[0] : timeUnits[lang].day[1];
-      return `${timeUnits[lang].since} ${diffInDays} ${unit}`;
-    }
-
-    return past.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-GB");
-  }
-
-  // 🔵 **حالة `general`** (الطريقة القديمة `ago`)
-  if (diffInDays === 0) return formatTime(past, lang);
-  if (diffInDays === 1) return timeUnits[lang].yesterday;
-  if (diffInDays < 7) {
-    const dayName = past.toLocaleDateString("en-US", { weekday: "long" });
-    return lang === "ar" ? arabicDays[dayName] : englishDays[dayName];
-  }
-  return past.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-GB");
 }

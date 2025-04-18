@@ -71,7 +71,7 @@ export default function User({ params }) {
   }, []);
 
   return (
-    <div className={`userPage`}>
+    <div className={`portfolio userPage`}>
       <div className="top">
         <div className="cover">
           <Image src={"/chat4.png"} alt="User Cover" fill />
@@ -99,8 +99,8 @@ export default function User({ params }) {
               <div className="left-data">
                 <h4>{curentChat?.name}</h4>
                 <h5>
-                  46 {translations?.user_page?.friends} - 10{" "}
-                  {translations?.user_page?.mutual}
+                  46 {translations?.portfolio?.friends} - 10{" "}
+                  {translations?.portfolio?.mutual}
                 </h5>
               </div>
               <div className="right-btns">
@@ -110,23 +110,8 @@ export default function User({ params }) {
                 </button>
                 <button className={`main-button`}>
                   <AiFillMessage />
-                  {translations?.user_page?.message}
+                  {translations?.portfolio?.message}
                 </button>
-                <div className="search-holder">
-                  <IoSearch
-                    onClick={() =>
-                      document.getElementById("serchpostInput").focus()
-                    }
-                  />
-                  <input
-                    id="serchpostInput"
-                    type="text"
-                    placeholder={translations?.placeHolders?.search_in_posts}
-                    value={postSearch}
-                    onChange={(e) => setPostSearch(e.target.value)}
-                  />
-                  {postSearch !== "" && <IoClose className="delete" />}
-                </div>
               </div>
             </div>
           </div>
@@ -139,7 +124,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("posts")}
               >
                 <BsFillPostcardFill />
-                {translations?.user_page?.posts}
+                {translations?.portfolio?.posts}
               </button>
               <button
                 className={`main-button ${
@@ -157,7 +142,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("photos")}
               >
                 <IoMdPhotos />
-                {translations?.user_page?.photos}
+                {translations?.portfolio?.photos}
               </button>
               <button
                 className={`main-button ${
@@ -166,7 +151,7 @@ export default function User({ params }) {
                 onClick={() => setCurrentSelectedData("about")}
               >
                 <IoInformationCircleSharp />
-                {translations?.user_page?.about}
+                {translations?.portfolio?.about}
               </button>
             </div>
             <button
@@ -183,30 +168,30 @@ export default function User({ params }) {
           {currentSelectedData !== "about" && (
             <ul className="about">
               <div className="top">
-                <h4>{translations?.user_page?.about}</h4>
+                <h4>{translations?.portfolio?.about}</h4>
               </div>
               <li>
-                {translations?.user_page?.birthdate}: <span>19-12-2003</span>
+                {translations?.portfolio?.birthdate}: <span>19-12-2003</span>
               </li>
               <li>
-                {translations?.user_page?.region}: <span>Egypt</span>
+                {translations?.portfolio?.region}: <span>Egypt</span>
               </li>
               <li>
-                {translations?.user_page?.current_location}:<span>Cairo</span>
+                {translations?.portfolio?.current_location}:<span>Cairo</span>
               </li>
               <li>
-                {translations?.user_page?.work}: <span>FrontEnd Developer</span>
+                {translations?.portfolio?.work}: <span>FrontEnd Developer</span>
               </li>
             </ul>
           )}
           {currentSelectedData !== "photos" && (
             <div className="images">
               <div className="top">
-                <h4> {translations?.user_page?.photos}</h4>
+                <h4> {translations?.portfolio?.photos}</h4>
                 {mediaMsgs?.length > 6 && (
-                  <button>
-                    {translations?.user_page?.see_all}{" "}
-                    {translations?.user_page?.photos} <FaAngleRight />
+                  <button onClick={() => setCurrentSelectedData("photos")}>
+                    {translations?.portfolio?.see_all}{" "}
+                    {translations?.portfolio?.photos} <FaAngleRight />
                   </button>
                 )}
               </div>
@@ -250,8 +235,8 @@ export default function User({ params }) {
               <div className="top">
                 <h4>{translations?.sidechats?.friends}</h4>
                 {users?.length > 6 && (
-                  <button>
-                    {translations?.user_page?.see_all}{" "}
+                  <button onClick={() => setCurrentSelectedData("friends")}>
+                    {translations?.portfolio?.see_all}{" "}
                     {translations?.sidechats?.friends} <FaAngleRight />
                   </button>
                 )}
@@ -281,7 +266,7 @@ export default function User({ params }) {
                       <div
                         key={x.id}
                         className="chat"
-                        onClick={(e) => handleMenus(e, "userInfo", x.id)}
+                        onClick={(e) => handleMenus(e, "user-Info", x.id)}
                       >
                         <Image
                           className="rounded"
@@ -299,17 +284,17 @@ export default function User({ params }) {
           )}
         </div>
         <div className="bigSection">
-          <div className="actions">
-            <h4>
-              {currentSelectedData !== "about"
-                ? translations?.user_page?.all
-                : null}{" "}
-              {currentSelectedData === "friends"
-                ? translations?.sidechats?.[currentSelectedData]
-                : translations?.user_page?.[currentSelectedData] || ""}
-            </h4>
-            {currentSelectedData !== "about" && <button>Sort by Time</button>}
-          </div>
+          {currentSelectedData !== "about" && (
+            <div className="actions">
+              <h4>
+                {translations?.portfolio?.all}{" "}
+                {currentSelectedData === "friends"
+                  ? translations?.sidechats?.[currentSelectedData]
+                  : translations?.portfolio?.[currentSelectedData] || ""}
+              </h4>
+              <button>Sort by Time</button>
+            </div>
+          )}
 
           {currentSelectedData === "posts" ? (
             <div className="posts-holder">
@@ -445,7 +430,7 @@ export default function User({ params }) {
                 : users?.map((x) => (
                     <div
                       key={x.id}
-                      onClick={(e) => handleMenus(e, "userInfo", x.id)}
+                      onClick={(e) => handleMenus(e, "user-Info", x.id)}
                     >
                       <Image
                         className="rounded"
@@ -494,28 +479,30 @@ export default function User({ params }) {
             </div>
           ) : (
             <ul className="about">
+              <h4>{translations?.portfolio?.about}</h4>
+
               <li>
                 Bio:
                 <span>في ناس حطناهم فوق راسنا بس طلع المكان عالي عليهم</span>
               </li>
               <li>
-                {translations?.user_page?.birthdate}: <span>19-12-2003</span>
+                {translations?.portfolio?.birthdate}: <span>19-12-2003</span>
               </li>
               <li>
-                {translations?.user_page?.region}: <span>Egypt</span>
+                {translations?.portfolio?.region}: <span>Egypt</span>
               </li>
               <li>
-                {translations?.user_page?.current_location}: <span>Cairo</span>
+                {translations?.portfolio?.current_location}: <span>Cairo</span>
               </li>
               <li>
-                {translations?.user_page?.work}: <span>FrontEnd Developer</span>
+                {translations?.portfolio?.work}: <span>FrontEnd Developer</span>
               </li>
               <li>
-                {translations?.user_page?.college}:{" "}
+                {translations?.portfolio?.college}:{" "}
                 <span>Cairo University</span>
               </li>
               <li>
-                {translations?.user_page?.speaking_languages}:{" "}
+                {translations?.portfolio?.speaking_languages}:{" "}
                 <span>Arabic, English</span>
               </li>
             </ul>

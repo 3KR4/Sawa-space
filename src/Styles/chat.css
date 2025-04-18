@@ -380,19 +380,6 @@ body.ar .personChat .overViewMenu .right > div {
 .personChat .overViewMenu .right .media label.active {
   right: 7px;
 }
-.custom-checkbox {
-  display: flex;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--title-color);
-  border-radius: 4px;
-  position: relative;
-  cursor: pointer;
-  background: var(--section-color);
-}
-.custom-checkbox::after {
-  background-color: var(--title-color);
-}
 
 .personChat .actions .big-holder {
   position: relative;
@@ -676,11 +663,11 @@ body.ar .personChat .overViewMenu .right > div {
 }
 
 .focusedMsg .hold {
-  margin-top: auto;
+  margin: auto;
 }
 .focusedMsg .swiper {
   width: 100%;
-  margin-top: auto;
+  margin: auto;
 }
 .focusedMsg .swiper .swiper-slide {
   width: fit-content;
@@ -899,86 +886,7 @@ body.ar .personChat .messages .msg.me .body:hover .interact {
   display: none;
 }
 
-/* Style for the custom checkbox */
-.custom-checkbox {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--title-color);
-  border-radius: 4px;
-  position: relative;
-  cursor: pointer;
-}
-
 /* Style for the custom checkmark */
-.custom-checkbox::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-  background-color: var(--title-color);
-  border-radius: 2px;
-  opacity: 0;
-}
-
-/* Show the checkmark when checkbox is checked */
-.input[type="checkbox"]:checked + .custom-checkbox::after {
-  opacity: 1;
-}
-
-.sideMenu {
-  position: fixed;
-  z-index: 101;
-  background: var(--section-color);
-  border-radius: 8px;
-  box-shadow: 0px 0px 15px 0px #b8b8b8;
-  display: flex;
-  flex-direction: column;
-  scale: 0.5;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, scale 0.3s;
-  width: 255px;
-  gap: 0px;
-  padding: 8px 0;
-}
-.sideMenu.active {
-  scale: 1;
-  opacity: 1;
-  visibility: visible;
-}
-.sideMenu > h4 {
-  margin: 10px 15px;
-  margin-bottom: 4px;
-}
-.sideMenu hr {
-  margin: 5px 0;
-}
-.sideMenu > button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 6px;
-  margin: 0 10px;
-  transition: 0.3s;
-}
-.sideMenu > button:hover {
-  background: var(--border-color);
-}
-.sideMenu button.danger:hover {
-  color: white;
-  background: var(--red-color);
-}
-.sideMenu button svg {
-  font-size: 17px;
-}
-.sideMenu button.danger:hover svg {
-  color: white;
-}
 
 .sideMenu.nistedUserSetting {
   position: absolute;
@@ -1135,10 +1043,6 @@ body:has(.personChat) .MenuOfUsers .topFilter {
   }
   .focusedMsg > img {
     max-width: 96%;
-  }
-  .personChat .custom-checkbox {
-    width: 18px;
-    height: 18px;
   }
   .personChat .overViewMenu .right .overview .btn-holder .row {
     flex-direction: column;

@@ -9,9 +9,14 @@
     "exitgroup": "مغادرة المجموعة",
     "add_friend": "طلب صداقة",
     "remove_friend": "إلغاء الصداقة",
+    "remove_post": "ازالة المنشور",
+
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
     "save_post": "حفظ المنشور",
+    "un_save_post": "الغاء حفظ المنشور",
+    "edit_comment": "تعديل التعليق",
+    "delete_comment": "حذف التعليق",
     "edit": "تعديل",
     "unpin": "الغاء التثبيت",
     "reply": "قم بالرد",
@@ -21,7 +26,9 @@
     "save_photo": "حفظ الصورة",
     "select": "قم بالتحديد",
     "copy": "نسخ النص",
-    "add": "اضف"
+    "add": "اضف",
+    "block_page": "حظر الصفحة",
+    "report_page": "ارسال تقرير عن الصفحة"
   },
   "placeHolders": {
     "search": "ابحث",
@@ -30,7 +37,8 @@
     "search_by_name": "ابحث بواسطة الاسم",
     "type_a_message": "قم بكتابة رسالة",
     "search_in_posts": "البحث في المنشورات",
-    "whats_on_your_mind": "ما الذي تفكر فيه"
+    "whats_on_your_mind": "ما الذي تفكر فيه",
+    "search_in_products": "البحث في المنتجات"
   },
   "header": {
     "explore": "الرائج",
@@ -38,6 +46,7 @@
     "pages": "الصفحات",
     "communities": "المجتمعات",
     "marketplace": "المتجر",
+    "lets_begin": "ادخل حسابك",
     "swithlang": "تحويل اللغة للانجليزية",
     "settings_and_privacy": "الإعدادات والخصوصية",
     "help_and_support": "الدعم والمساعدة",
@@ -61,7 +70,8 @@
   "post": {
     "mention": "قام بذكر",
     "thereis_nothing_here_yet": "ليس هناك تعليقات حتي الان",
-    "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق"
+    "be_the_first_to_post_a_comment": "كن اول من يقم بأضافة تعليق",
+    "You_have_reached_the_end_of_the_feed": "لقد وصلت إلى نهاية المنشورات"
   },
   "story": {
     "stories": "القصص",
@@ -98,11 +108,17 @@
   "comment": {
     "comments": "التعليقات",
     "reply": "قم بالرد",
+    "cancel_reply": "الغاء الرد",
+
     "see": "تفقد",
     "replys": "من الردود",
     "hide_replays": "اخفاء الردود",
     "post_a_comment": "انشر تعليق",
-    "wright_a_comment": "قم بكتابة تعليق..."
+    "wright_a_comment": "قم بكتابة تعليق...",
+    "view_more": "انظر المزيد",
+    "Thats_all_the_comments_or_now": "هذه هي كل التعليقات حتي الان",
+    "reply_to": "قم بالرد علي",
+    "replying_to_yourself": "رد علي نفسك"
   },
   "market_place": {
     "market_place": "المتجر",
@@ -114,7 +130,25 @@
     "min": "الحد الأدنى",
     "max": "الحد الأقصى",
     "shipping_is_available": "التوصيل متاح",
-    "pickup_only_in": "الاستلام متاح فقط في"
+    "pickup_only_in": "الاستلام متاح فقط في",
+    "availability": "التوفر",
+    "in_stock": "متوفر في المخزون",
+    "out_of_stock": "غير متوفر في المخزون",
+
+    "home_related": "منزلي",
+    "phones": "الهواتف",
+    "hardware": "الأجهزة",
+    "accessories": "الإكسسوارات",
+    "computers": "أجهزة الكمبيوتر",
+    "consoles": "اجهزة الكونسول",
+    "toys_and_games": "ألعاب",
+    "sports_equipment": "الادوات الرياضية",
+    "fashion": "الموضة",
+    "health": "الصحة",
+    "beauty": "الجمال",
+    "vehicles": "المركبات",
+    "pet_supplies": "ادوات الحيوانات الأليفة",
+    "grocery": "البقالة"
   },
   "chats": {
     "Explore_your_chats": "قم بأختيار محادثة لبدأ الدردشة",
@@ -146,9 +180,11 @@
     "sticker": "ملصق",
     "record": "تسجيل صوتي",
     "mentions": "الإشارات",
-    "selected_users": "المستخدمون المحددون"
+    "selected_users": "المستخدمون المحددون",
+    "find_friends_and_start_chatting": "ابحث عن أصدقاء وابدأ الدردشة معهم الان!",
+    "discover_people": "تصفح الأشخاص"
   },
-  "user_page": {
+  "portfolio": {
     "all": "جميع",
     "message": "مراسلة",
     "friends": "صديق",
@@ -163,9 +199,18 @@
     "speaking_languages": "اللغات المتحدث بها",
     "see_all": "رؤية جميع",
     "posts": "المنشورات",
-    "photos": "الصور"
+    "photos": "الصور",
+    "follow": "متابعة",
+    "followers": "المتابعين",
+    "products": "المنتجات",
+    "share_page": "مشاركة الصفحة",
+    "unfollowing_page": "الغاء متابعة الصفحة",
+    "creator_and_admins": "المنشئ للصفخة والمشرفون",
+    "page_created_at": "تاريخ انشاء الصفحة",
+    "status": "حالة الصفحة",
+    "public_page": "صفحة عامة",
+    "private_page": "صفحة خاصة"
   },
-
   "forms": {
     "create_post": "انشاء منشور",
     "edit_post": "تعديل المنشور",
@@ -187,33 +232,38 @@
   "auth": {
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
-    "please_enter_your_username": "يرجى إدخال اسم المستخدم",
-    "username_must_be_at_least_3_characters": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
-    "enter_your_username_or_email": "أدخل اسم المستخدم أو البريد الإلكتروني",
-    "please_enter_a_phone_number": "يرجى إدخال رقم الهاتف",
+    "login_into_your_account": "قم بتسجيل الدخول",
+    "create_your_account": "قم بأنشاء حسابك",
+    "enter_your_firstname": "يرجى إدخال الاسم الأول",
+    "firstname_is_required": "الاسم الأول مطلوب",
+    "enter_your_lastname": "يرجى إدخال الاسم الأخير",
+    "lastname_is_required": "الاسم الأخير مطلوب",
+    "username_must_be_at_least_3_characters": "يجب أن لا يقل اسم المستخدم عن 3 أحرف",
+    "enter_your_phone_number": "يرجى إدخال رقم الهاتف",
     "phone_number_must_contain_only_digits": "يجب أن يحتوي رقم الهاتف على أرقام فقط",
-    "phone_number_must_be_at_least_10_digits_long": "يجب أن يكون رقم الهاتف 10 أرقام على الأقل",
-    "phone_number_must_be_at_most_15_digits_long": "يجب أن يكون رقم الهاتف 15 رقمًا على الأكثر",
-    "your_phone_number": "رقم هاتفك",
-    "please_enter_your_email_address": "يرجى إدخال عنوان البريد الإلكتروني",
-    "please_enter_a_valid_email_address": "يرجى إدخال بريد إلكتروني صالح",
-    "your_email": "بريدك الإلكتروني",
-    "please_enter_a_password": "يرجى إدخال كلمة المرور",
-    "password_must_be_at_least_8_characters_long": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
-    "please_confirm_your_password": "يرجى تأكيد كلمة المرور",
-    "passwords_dont_match": "كلمات المرور غير متطابقة",
+    "phone_number_must_be_at_least_10_digits_long": "يجب ألا يقل رقم الهاتف عن 10 أرقام",
+    "phone_number_must_be_at_most_15_digits_long": "يجب ألا يزيد رقم الهاتف عن 15 رقماً",
+    "enter_your_email_address": "يرجى إدخال البريد الإلكتروني",
+    "your_email_address_is_required": "البريد الإلكتروني مطلوب",
+    "enter_a_valid_email_address": "يرجى إدخال بريد إلكتروني صالح",
+    "enter_your_password": "يرجى إدخال كلمة المرور",
+    "make_password_is_required": "كلمة المرور مطلوبة",
+    "password_must_be_at_least_8_characters_long": "يجب ألا تقل كلمة المرور عن 8 أحرف",
+    "confirm_your_password": "يرجى تأكيد كلمة المرور",
+    "confirmation_your_password_is_required": "تأكيد كلمة المرور مطلوب",
+    "passwords_dont_match": "كلمتا المرور غير متطابقتين",
     "confirm_password": "تأكيد كلمة المرور",
     "did_you_forget_your_password": "هل نسيت كلمة المرور؟",
-    "complete_profile": "أكمل ملفك الشخصي",
-    "tell_us_more_about_yourself": "أخبرنا المزيد عن نفسك (اختياري)",
+    "complete_profile": "إكمال الملف الشخصي",
+    "tell_us_more_about_yourself": "حدثنا عن نفسك (اختياري)",
     "birth_date": "تاريخ الميلاد",
-    "select_your_birth_date": "اختر تاريخ ميلادك",
+    "select_your_birth_date": "ادخل تاريخ ميلادك",
     "region": "المنطقة",
-    "current_location": "موقعك الحالي",
-    "work": "العمل",
+    "current_location": "الموقع الحالي",
+    "work": "الوظيفة",
     "college": "الكلية",
-    "speaking_languages": "اللغات المتحدثة",
-    "go_back": "العودة",
+    "speaking_languages": "اللغات المتحدث بها",
+    "go_back": "رجوع للخلف",
     "finish": "إنهاء"
   }
 }

@@ -5,16 +5,16 @@ export const MenusContext = createContext();
 
 export const MenusProvider = ({ children }) => {
   const settingsMenuRef = useRef(null);
-  const userInfoMenu = useRef(null);
+  const infoMenuRef = useRef(null);
   const closeImgHolderRef = useRef(null);
   const usersreactMenuRef = useRef(null);
   const usersSelectionRef = useRef(null);
-  const [hideChats, setHideChats] = useState(false);
 
   const [imgFocus, setImgFocus] = useState(false);
   const [imgIndex, setImgIndex] = useState(false);
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openStoryForm, setOpenStoryForm] = useState(false);
+  const [dangerEvent, setDangerEvent] = useState();
 
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [dataSwiperType, setDataSwiperType] = useState();
@@ -22,6 +22,8 @@ export const MenusProvider = ({ children }) => {
   const [selectedUsersNames, setSelectedUsersNames] = useState([]);
   const [selectionMenuTitle, setSelectionMenuTitle] = useState("");
   const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
+
+  const [someThingHappen, setSomeThingHappen] = useState("");
 
   return (
     <MenusContext.Provider
@@ -38,8 +40,6 @@ export const MenusProvider = ({ children }) => {
         closeImgHolderRef,
         selectedUsers,
         setSelectedUsers,
-        hideChats,
-        setHideChats,
         selectedUsersNames,
         setSelectedUsersNames,
         selectionMenuTitle,
@@ -52,7 +52,11 @@ export const MenusProvider = ({ children }) => {
         setUsersSelectionSearch,
         usersSelectionRef,
         usersreactMenuRef,
-        userInfoMenu,
+        infoMenuRef,
+        dangerEvent,
+        setDangerEvent,
+        someThingHappen,
+        setSomeThingHappen,
       }}
     >
       {children}

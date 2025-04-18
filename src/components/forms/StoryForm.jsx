@@ -12,6 +12,10 @@ import { useLanguage } from "@/Contexts/LanguageContext";
 import ConvertTime from "@/utils/ConvertTime";
 import { DndContext, useDraggable } from "@dnd-kit/core";
 import Slider from "rc-slider";
+import { storyService } from "@/services/api/storyService";
+import { useNotification } from "@/Contexts/NotificationContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+
 import "rc-slider/assets/index.css"; // Default styles
 
 import { FaCloudUploadAlt, FaLink, FaAngleDown } from "react-icons/fa";
@@ -139,7 +143,9 @@ const backgroundColors = [
 ];
 
 function StoryForm() {
+  const { userData } = useContext(ScreenContext);
   const { locale, translations } = useLanguage();
+  const { addNotification } = useNotification();
 
   const {
     selectedUsers,
@@ -150,6 +156,7 @@ function StoryForm() {
     openStoryForm,
     setOpenStoryForm,
     usersSelectionRef,
+    setSomeThingHappen,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -157,20 +164,20 @@ function StoryForm() {
     useContext(InputActionsContext);
 
   const {
-    register,
     handleSubmit,
-    trigger,
     formState: { errors },
-    reset,
   } = useForm();
 
   // States
+
   const [addText, setAddText] = useState(true);
   const [images, setImages] = useState([]);
+  const [removedImages, setRemovedImages] = useState([]);
   const [addLink, setAddLink] = useState(false);
   const [linkValue, setLinkValue] = useState("");
-  const [isSubmited, setisSubmited] = useState(false);
-  const [enableTextBackground, setEnableTextBackground] = useState(true);
+
+  const [loadingContent, setLoadingContent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [selectedBackground, setSelectedBackground] = useState(
     backgroundColors[0]
@@ -178,8 +185,7 @@ function StoryForm() {
   const [showCustomBackgroundForm, setShowCustomBackgroundForm] =
     useState(false);
 
-  const [postData, setPostData] = useState({
-    id: 1,
+  const [storyData, setStoryData] = useState({
     body: "",
     images: [],
     link: "",
@@ -202,8 +208,12 @@ function StoryForm() {
       backGround: "",
     },
   });
+
+  const isDisabled =
+    !images.length && !storyData.link && messageText.length < 3;
+
   useEffect(() => {
-    setPostData((prev) => ({
+    setStoryData((prev) => ({
       ...prev,
       body: messageText,
       link: linkValue,
@@ -215,15 +225,12 @@ function StoryForm() {
     }));
   }, [messageText, linkValue, selectedUsers, selectedBackground]);
 
-  console.log(postData);
-
   const formMenuRef = useRef(null);
-
   const inputFileRef = useRef(null);
 
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setPostData((prev) => ({
+    setStoryData((prev) => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index), // Correctly update the images array
       settings: {
@@ -231,9 +238,6 @@ function StoryForm() {
         images: prev.settings.images.filter((_, i) => i !== index), // Correctly update the image settings
       },
     }));
-  };
-  const onSubmit = (data) => {
-    console.log(postData);
   };
 
   useEffect(() => {
@@ -279,7 +283,7 @@ function StoryForm() {
 
     const newImages = imageFiles.slice(0, 3); // Limit to 3 images
 
-    setPostData((prev) => {
+    setStoryData((prev) => {
       const updatedImages = [...prev.images, ...newImages].slice(0, 3);
       const existingImagesCount = prev.settings.images.length;
 
@@ -304,7 +308,7 @@ function StoryForm() {
     const type = active.id.split("-")[0]; // e.g., "body", "link", "image"
     const index = Number(active.id.split("-")[1]); // Convert to number (only for images)
 
-    setPostData((prev) => {
+    setStoryData((prev) => {
       if (type === "image") {
         // Handle image drag
         const updatedImages = [...prev.settings.images];
@@ -343,7 +347,7 @@ function StoryForm() {
   };
   // Handle Settings Input Change
   const handleSettingsChange = (type, key, value, index) => {
-    setPostData((prev) => {
+    setStoryData((prev) => {
       if (type === "images") {
         // Handle image settings
         const updatedImages = [...prev.settings.images];
@@ -419,13 +423,173 @@ function StoryForm() {
     );
   };
 
+  useEffect(() => {
+    if (openStoryForm.type === "edit") {
+      setLoadingContent(false);
+      const story = openStoryForm?.story;
+      if (story) {
+        setMessageText(story.paragraph);
+        setLinks(story.link || "");
+        setSelectedUsers(story.mentions || []);
+
+        setAddLink(story.link ? true : false);
+
+        const formattedImages = (story.img || []).map((imgObj) => ({
+          url: imgObj.newpath.url,
+          publicid: imgObj.newpath.publicid,
+          originalname: imgObj.originalname,
+        }));
+
+        setImages(formattedImages);
+        setLoadingContent(true);
+      }
+    } else {
+      setStoryData({
+        body: "",
+        images: [],
+        link: "",
+        mentions: [],
+        settings: {
+          body: {
+            x: 0,
+            y: 0,
+            size: 16,
+            family: `Rubik`,
+            color: "454545",
+            background: "ffffff",
+          },
+          link: {
+            x: 0,
+            y: 0,
+            size: 16,
+          },
+          images: [], // Image settings
+          backGround: "",
+        },
+      });
+    }
+  }, [openStoryForm]);
+
+  const onSubmit = async () => {
+    setLoading(true);
+
+    const fallbackMentions = [
+      "67f6387225982aee32da9c68",
+      "67cfd61617bff9683742fdd9",
+      "67cfa8b8e0b8a8ebeff2f875",
+    ];
+
+    const storyContent = {
+      info: {
+        ...storyData,
+      },
+    };
+
+    try {
+      let storyId;
+
+      if (openStoryForm.type === "edit") {
+        storyId = openStoryForm.storyId;
+        await storyService.editStory(storyId, storyContent);
+      } else {
+        const storyResponse = await storyService.createStory(storyContent);
+        storyId = storyResponse?.data.storyId;
+        if (!storyId) throw new Error("Post ID not returned from backend");
+      }
+
+      const newImages = storyData.images.filter((img) => !img.url);
+
+      console.log("imgs", storyData.images);
+
+      if (newImages.length > 0) {
+        const formData = new FormData();
+        newImages.forEach((img) => formData.append("imgs", img));
+        const imgRes = await storyService.uploadStoryImages(storyId, formData);
+        console.log(imgRes);
+      }
+
+      if (removedImages.length > 0 && openStoryForm.type === "edit") {
+        for (const publicid of removedImages) {
+          try {
+            await storyService.deleteImg(storyId, publicid);
+          } catch (err) {
+            console.warn(`Failed to delete image ${publicid}:`, err);
+          }
+        }
+      }
+
+      const finalStory = {
+        ...storyContent,
+        img: storyData.images,
+        date: Date.now(),
+        paragraph: null,
+        user: userData._id,
+        author: [userData],
+      };
+
+      setSomeThingHappen({
+        event: openStoryForm.type === "edit" ? "edit" : "create",
+        type: "story",
+        story: finalStory,
+      });
+      addNotification({
+        type: "success",
+        message:
+          openStoryForm.type === "edit"
+            ? "your story has updated successfully."
+            : "Your story has been created successfully.",
+      });
+
+      setOpenStoryForm(false);
+      setMessageText("");
+      setStoryData({
+        body: "",
+        images: [],
+        link: "",
+        mentions: [],
+        settings: {
+          body: {
+            x: 0,
+            y: 0,
+            size: 16,
+            family: `Rubik`,
+            color: "454545",
+            background: "ffffff",
+          },
+          link: {
+            x: 0,
+            y: 0,
+            size: 16,
+          },
+          images: [], // Image settings
+          backGround: "",
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      addNotification({
+        type: "error",
+        message: err?.response?.data?.messege || "Something went wrong.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`focusedMsg FormMenu ${openStoryForm ? "active" : ""}`}
       >
-        <div className="body storyForm" ref={formMenuRef}>
+        <div
+          className={`body storyForm ${
+            loadingContent || openStoryForm.type !== "edit"
+              ? "contentLoaded"
+              : ""
+          }`}
+          ref={formMenuRef}
+        >
           <div className="formCenter">
             <div className="top">
               <h4>{translations?.story?.create_story}</h4>
@@ -458,7 +622,165 @@ function StoryForm() {
                 />
               </div>
             </div>
+
             <div>
+              {addText && (
+                <div className="setting-holder">
+                  <h5 className="main-title">
+                    {translations?.story?.story_body}
+                  </h5>
+                  <div className={`inputHolder`}>
+                    <div className="holder">
+                      <MdOutlineAddReaction
+                        className="reactBtn"
+                        onClick={(e) => handleMenus(e, "emojiHolder")}
+                      />
+                      <textarea
+                        ref={InputRef}
+                        placeholder={`${translations?.placeHolders?.whats_on_your_mind}`}
+                        value={messageText}
+                        onInput={(e) => setMessageText(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  {messageText && (
+                    <div className="settings forBody">
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.x_position}
+                        </label>
+
+                        <Slider
+                          min={-300} // Minimum value // Maximum value (adjust as needed)'
+                          max={600}
+                          value={storyData.settings.body.x} // Current value
+                          onChange={(value) =>
+                            handleSettingsChange("body", "x", value)
+                          }
+                          trackStyle={{ backgroundColor: "#007bff" }} // Customize track color
+                          handleStyle={{
+                            borderColor: "#007bff",
+                            backgroundColor: "#007bff",
+                          }} // Customize handle color
+                          railStyle={{ backgroundColor: "#e9ecef" }} // Customize rail color
+                        />
+                      </div>
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.y_position}
+                        </label>
+
+                        <Slider
+                          min={-100} // Minimum value // Maximum value (adjust as needed)'
+                          max={600}
+                          value={storyData.settings.body.y} // Current value
+                          onChange={(value) =>
+                            handleSettingsChange("body", "y", value)
+                          }
+                          trackStyle={{ backgroundColor: "#007bff" }}
+                          handleStyle={{
+                            borderColor: "#007bff",
+                            backgroundColor: "#007bff",
+                          }}
+                          railStyle={{ backgroundColor: "#e9ecef" }}
+                        />
+                      </div>
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.font_size}
+                        </label>
+                        <Slider
+                          min={10}
+                          max={100}
+                          value={storyData.settings.body.size}
+                          onChange={(value) =>
+                            handleSettingsChange("body", "size", value)
+                          }
+                          trackStyle={{ backgroundColor: "#007bff" }}
+                          handleStyle={{
+                            borderColor: "#007bff",
+                            backgroundColor: "#007bff",
+                          }} // Customize handle color
+                          railStyle={{ backgroundColor: "#e9ecef" }}
+                        />
+                      </div>
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.font_family}
+                        </label>
+
+                        <div className="selectOptions Holder">
+                          <button className="selectedValue">
+                            <h5>{storyData.settings.body.family}</h5>
+                            <FaAngleDown />
+                          </button>
+                          <ul className={`options`}>
+                            {fontFamilies.map((x, index) => (
+                              <li
+                                className={`${
+                                  storyData.settings.body.family == x
+                                    ? "active"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  handleSettingsChange("body", "family", x)
+                                }
+                              >
+                                {x}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.font_color}
+                        </label>
+                        <input
+                          type="color"
+                          id="bodyColor"
+                          value={`#${storyData.settings.body.color}`}
+                          onChange={(e) =>
+                            handleSettingsChange(
+                              "body",
+                              "color",
+                              e.target.value.replace("#", "")
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="hold">
+                        <label htmlFor="">
+                          {translations?.story?.background_color}
+                        </label>
+                        <IoClose
+                          className="close"
+                          onClick={() =>
+                            handleSettingsChange(
+                              "body",
+                              "background",
+                              "transparent"
+                            )
+                          }
+                        />
+                        <input
+                          type="color"
+                          id="bodyBackgroundColor"
+                          value={`#${storyData.settings.body.background}`}
+                          onChange={(e) =>
+                            handleSettingsChange(
+                              "body",
+                              "background",
+                              e.target.value.replace("#", "")
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              <hr />
               <div className="setting-holder background-colors">
                 <h5 className="main-title">
                   {translations?.story?.choose_a_background}
@@ -639,163 +961,7 @@ function StoryForm() {
                   </div>
                 )}
               </div>
-              <hr />
-              {addText && (
-                <div className="setting-holder">
-                  <h5 className="main-title">
-                    {translations?.story?.story_body}
-                  </h5>
-                  <div className={`inputHolder`}>
-                    <div className="holder">
-                      <MdOutlineAddReaction
-                        className="reactBtn"
-                        onClick={(e) => handleMenus(e, "emojiHolder")}
-                      />
-                      <textarea
-                        ref={InputRef}
-                        placeholder={`${translations?.placeHolders?.whats_on_your_mind}`}
-                        value={messageText}
-                        onInput={(e) => setMessageText(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  {messageText && (
-                    <div className="settings forBody">
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.x_position}
-                        </label>
 
-                        <Slider
-                          min={-300} // Minimum value // Maximum value (adjust as needed)'
-                          max={600}
-                          value={postData.settings.body.x} // Current value
-                          onChange={(value) =>
-                            handleSettingsChange("body", "x", value)
-                          }
-                          trackStyle={{ backgroundColor: "#007bff" }} // Customize track color
-                          handleStyle={{
-                            borderColor: "#007bff",
-                            backgroundColor: "#007bff",
-                          }} // Customize handle color
-                          railStyle={{ backgroundColor: "#e9ecef" }} // Customize rail color
-                        />
-                      </div>
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.y_position}
-                        </label>
-
-                        <Slider
-                          min={-100} // Minimum value // Maximum value (adjust as needed)'
-                          max={600}
-                          value={postData.settings.body.y} // Current value
-                          onChange={(value) =>
-                            handleSettingsChange("body", "y", value)
-                          }
-                          trackStyle={{ backgroundColor: "#007bff" }}
-                          handleStyle={{
-                            borderColor: "#007bff",
-                            backgroundColor: "#007bff",
-                          }}
-                          railStyle={{ backgroundColor: "#e9ecef" }}
-                        />
-                      </div>
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.font_size}
-                        </label>
-                        <Slider
-                          min={10}
-                          max={100}
-                          value={postData.settings.body.size}
-                          onChange={(value) =>
-                            handleSettingsChange("body", "size", value)
-                          }
-                          trackStyle={{ backgroundColor: "#007bff" }}
-                          handleStyle={{
-                            borderColor: "#007bff",
-                            backgroundColor: "#007bff",
-                          }} // Customize handle color
-                          railStyle={{ backgroundColor: "#e9ecef" }}
-                        />
-                      </div>
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.font_family}
-                        </label>
-
-                        <div className="selectOptions Holder">
-                          <button className="selectedValue">
-                            <h5>{postData.settings.body.family}</h5>
-                            <FaAngleDown />
-                          </button>
-                          <ul className={`options`}>
-                            {fontFamilies.map((x, index) => (
-                              <li
-                                className={`${
-                                  postData.settings.body.family == x
-                                    ? "active"
-                                    : ""
-                                }`}
-                                onClick={() =>
-                                  handleSettingsChange("body", "family", x)
-                                }
-                              >
-                                {x}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.font_color}
-                        </label>
-                        <input
-                          type="color"
-                          id="bodyColor"
-                          value={`#${postData.settings.body.color}`}
-                          onChange={(e) =>
-                            handleSettingsChange(
-                              "body",
-                              "color",
-                              e.target.value.replace("#", "")
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="hold">
-                        <label htmlFor="">
-                          {translations?.story?.background_color}
-                        </label>
-                        <IoClose
-                          className="close"
-                          onClick={() =>
-                            handleSettingsChange(
-                              "body",
-                              "background",
-                              "transparent"
-                            )
-                          }
-                        />
-                        <input
-                          type="color"
-                          id="bodyBackgroundColor"
-                          value={`#${postData.settings.body.background}`}
-                          onChange={(e) =>
-                            handleSettingsChange(
-                              "body",
-                              "background",
-                              e.target.value.replace("#", "")
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
               {addLink && <hr />}
               {addLink && (
                 <div className="setting-holder">
@@ -822,7 +988,7 @@ function StoryForm() {
                         <Slider
                           min={-300} // Minimum value // Maximum value (adjust as needed)'
                           max={600}
-                          value={postData.settings.link.x} // Current value
+                          value={storyData.settings.link.x} // Current value
                           onChange={(value) =>
                             handleSettingsChange("link", "x", value)
                           }
@@ -841,7 +1007,7 @@ function StoryForm() {
                         <Slider
                           min={-100} // Minimum value // Maximum value (adjust as needed)'
                           max={600}
-                          value={postData.settings.link.y} // Current value
+                          value={storyData.settings.link.y} // Current value
                           onChange={(value) =>
                             handleSettingsChange("link", "y", value)
                           }
@@ -860,7 +1026,7 @@ function StoryForm() {
                         <Slider
                           min={10}
                           max={100}
-                          value={postData.settings.link.size}
+                          value={storyData.settings.link.size}
                           onChange={(value) =>
                             handleSettingsChange("link", "size", value)
                           }
@@ -901,7 +1067,7 @@ function StoryForm() {
                 </div>
               )}
               {images.length > 0 && <hr className="beforeImages" />}
-              {postData.images.map((image, index) => (
+              {storyData.images.map((image, index) => (
                 <div className="setting-holder" key={index}>
                   <h5 className="main-title">
                     {locale === "ar"
@@ -918,7 +1084,7 @@ function StoryForm() {
                       <Slider
                         min={-500}
                         max={500}
-                        value={postData.settings.images[index]?.x || 0}
+                        value={storyData.settings.images[index]?.x || 0}
                         onChange={(value) =>
                           handleSettingsChange("images", "x", value, index)
                         }
@@ -935,7 +1101,7 @@ function StoryForm() {
                       <Slider
                         min={-500}
                         max={800}
-                        value={postData.settings.images[index]?.y || 0}
+                        value={storyData.settings.images[index]?.y || 0}
                         onChange={(value) =>
                           handleSettingsChange("images", "y", value, index)
                         }
@@ -952,7 +1118,7 @@ function StoryForm() {
                       <Slider
                         min={0}
                         max={260}
-                        value={postData.settings.images[index]?.width}
+                        value={storyData.settings.images[index]?.width}
                         onChange={(value) =>
                           handleSettingsChange("images", "width", value, index)
                         }
@@ -980,7 +1146,6 @@ function StoryForm() {
 
           <div className="preview forStory">
             <h4>{translations?.story?.Preview_the_final_look}</h4>
-
             <div
               style={{
                 border: "3px dashed #e8e8e8",
@@ -1000,23 +1165,29 @@ function StoryForm() {
                 }}
               >
                 {messageText && (
-                  <DraggableElement id="body" settings={postData.settings.body}>
+                  <DraggableElement
+                    id="body"
+                    settings={storyData.settings.body}
+                  >
                     {messageText}
                   </DraggableElement>
                 )}
 
                 {linkValue && (
-                  <DraggableElement id="link" settings={postData.settings.link}>
+                  <DraggableElement
+                    id="link"
+                    settings={storyData.settings.link}
+                  >
                     {linkValue}
                   </DraggableElement>
                 )}
 
-                {postData.images.map((image, index) => (
+                {storyData.images.map((image, index) => (
                   <DraggableElement
                     key={index}
                     id={`image-${index}`}
                     settings={
-                      postData.settings.images[index] || {
+                      storyData.settings.images[index] || {
                         x: 0,
                         y: 0,
                         width: 100,
@@ -1035,7 +1206,7 @@ function StoryForm() {
                       alt={"/users/default.png"}
                       width={40}
                       height={40}
-                      onClick={(e) => handleMenus(e, "userInfo", data.user.id)}
+                      onClick={(e) => handleMenus(e, "user-Info", data.user.id)}
                     />
                     <div className="info">
                       <h5>Mahmoud Elshazly</h5>
@@ -1048,8 +1219,7 @@ function StoryForm() {
                       </span>
                     </div>
                   </div>
-                  <HiDotsVertical
-                  />
+                  <HiDotsVertical className="settingDotsIco" />
                 </div>
 
                 {selectedUsersNames.length > 0 && (
@@ -1058,7 +1228,7 @@ function StoryForm() {
                     {selectedUsersNames?.map((x, index) => (
                       <button
                         key={index}
-                        onClick={(e) => handleMenus(e, "userInfo", x.userId)}
+                        onClick={(e) => handleMenus(e, "user-Info", x.userId)}
                       >
                         @{x}
                       </button>
@@ -1070,12 +1240,15 @@ function StoryForm() {
 
             <button
               type="submit"
-              className="main-button"
-              onClick={() => {
-                setisSubmited(true);
-              }}
+              className={`main-button ${loading ? "loading" : ""}`}
+              disabled={isDisabled || loading}
             >
-              {translations?.story?.create_story}
+              <span>
+                {openStoryForm.type === "edit"
+                  ? translations?.forms?.edit_post
+                  : translations?.forms?.create_post}
+              </span>
+              <div className="lds-dual-ring"></div>
             </button>
           </div>
         </div>

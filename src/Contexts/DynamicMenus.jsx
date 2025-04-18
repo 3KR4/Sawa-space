@@ -5,7 +5,7 @@ export const DynamicMenusContext = createContext();
 
 export const MenuProvider = ({ children }) => {
   // Dynamic Menus
-  const [userInfoData, setUserInfoData] = useState(false);
+  const [infoMenu, setInfoMenu] = useState(false);
   const [settingMenu, setSettingMenu] = useState(false);
   const [openUsersSelection, setOpenUsersSelection] = useState(false);
   const [openUsersReact, setOpenUsersReact] = useState(false);
@@ -15,7 +15,7 @@ export const MenuProvider = ({ children }) => {
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [menuPosition2, setMenuPosition2] = useState({ top: 0, left: 0 });
 
-  const handleMenus = (event, type, id) => {
+  const handleMenus = (event, type, id, info) => {
     if (event && typeof event.preventDefault === "function") {
       event.preventDefault();
     }
@@ -26,28 +26,14 @@ export const MenuProvider = ({ children }) => {
     const cursorX = event.clientX;
 
     const menuWidth =
-      type == "emojiHolder"
-        ? 350
-        : type == "usersSelection"
+      type.includes("Info") || type == "usersSelection" || type == "emojiHolder"
         ? 340
-        : type == "userInfo"
-        ? 340
-        : type == "settingMenu-msg"
-        ? 255
-        : type == "settingMenu-user" || type == "settingMenu-story"
-        ? 255
-        : type == "settingMenu-post"
-        ? 255
-        : type == "usersReact"
-        ? 255
-        : null;
+        : 255;
 
     const menuHeight =
-      type == "emojiHolder"
+      type == "emojiHolder" || type === "usersSelection"
         ? 450
-        : type === "usersSelection"
-        ? 450
-        : type == "userInfo"
+        : type.includes("Info")
         ? 198
         : type == "settingMenu-msg"
         ? 340
@@ -56,14 +42,18 @@ export const MenuProvider = ({ children }) => {
         : type == "settingMenu-story"
         ? 98
         : type == "settingMenu-post"
-        ? 286
+        ? info.isMyPost
+          ? 152
+          : 286
+        : type == "settingMenu-page" || type == "settingMenu-page-posts"
+        ? 140
         : type == "usersReact"
         ? 220
         : null;
 
     const top =
       cursorY + menuHeight > windowHeight
-        ? Math.max(cursorY - menuHeight + 15, 50)
+        ? Math.max(cursorY - menuHeight - 5, 50)
         : cursorY + 15;
     const left =
       cursorX + menuWidth > windowWidth
@@ -76,20 +66,15 @@ export const MenuProvider = ({ children }) => {
     if (type == "usersSelection") {
       setOpenUsersSelection(true);
     }
-    if (type == "userInfo") {
-      setUserInfoData(true);
+    if (type.includes("Info")) {
+      setInfoMenu(true);
     }
-    if (
-      type == "settingMenu-msg" ||
-      type == "settingMenu-user" ||
-      type == "settingMenu-post" ||
-      type == "settingMenu-story"
-    ) {
+    if (type.includes("settingMenu")) {
       setSettingMenu(true);
       setSettingMenuType(type);
+      info && setSelectedDev({ id, ...info });
     }
-
-    id && setSelectedDev(id);
+    id && !info && setSelectedDev(id);
     setMenuPosition({ top, left });
   };
 
@@ -103,9 +88,9 @@ export const MenuProvider = ({ children }) => {
     const cursorY = event.clientY;
     const cursorX = event.clientX;
 
-    const menuWidth = type == "userInfo" ? 340 : null;
+    const menuWidth = type.includes("Info") ? 340 : null;
 
-    const menuHeight = type == "userInfo" ? 198 : null;
+    const menuHeight = type.includes("Info") ? 198 : null;
 
     const top =
       cursorY + menuHeight > windowHeight
@@ -116,8 +101,8 @@ export const MenuProvider = ({ children }) => {
         ? Math.max(cursorX - menuWidth + 15, 10)
         : cursorX + 15;
 
-    if (type == "userInfo") {
-      setUserInfoData(true);
+    if (type.includes("Info")) {
+      setInfoMenu(true);
     }
 
     id && setSelectedDev(id);
@@ -137,8 +122,8 @@ export const MenuProvider = ({ children }) => {
         setEmojiHolder,
         openUsersSelection,
         setOpenUsersSelection,
-        userInfoData,
-        setUserInfoData,
+        infoMenu,
+        setInfoMenu,
         settingMenu,
         setSettingMenu,
         openUsersReact,

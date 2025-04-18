@@ -29,47 +29,22 @@ function MarketSideSection() {
   const { locale, translations } = useLanguage();
 
   const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
-
-  const Sections = [
-    { id: 5, name: { en: "home related", ar: "منزلي" }, icon: IoHome },
-    { id: 3, name: { en: "phones", ar: "الهواتف" }, icon: IoPhonePortrait },
-    { id: 2, name: { en: "hardware", ar: "الأجهزة" }, icon: IoHardwareChip },
-    { id: 7, name: { en: "accessories", ar: "الإكسسوارات" }, icon: TbTools },
-    {
-      id: 6,
-      name: { en: "computers", ar: "أجهزة الكمبيوتر" },
-      icon: FaLaptopCode,
-    },
-    {
-      id: 4,
-      name: { en: "consoles", ar: "اجهزة الكونسول" },
-      icon: TbDeviceGamepad3Filled,
-    },
-    {
-      id: 1,
-      name: { en: "toys & games", ar: "ألعاب" },
-      icon: IoGameController,
-    },
-    {
-      id: 8,
-      name: { en: "sports equipment", ar: "الادوات الرياضية" },
-      icon: FaBasketballBall,
-    },
-    { id: 9, name: { en: "fashion", ar: "الموضة" }, icon: GiRolledCloth },
-    { id: 10, name: { en: "health", ar: "الصحة" }, icon: FaHeart },
-    { id: 11, name: { en: "beauty", ar: "الجمال" }, icon: CgGirl },
-    { id: 12, name: { en: "vehicles", ar: "المركبات" }, icon: FaCar },
-    {
-      id: 13,
-      name: { en: "pet supplies", ar: "ادوات الحيوانات الأليفة" },
-      icon: MdOutlinePets,
-    },
-    {
-      id: 14,
-      name: { en: "grocery", ar: "البقالة" },
-      icon: MdLocalGroceryStore,
-    },
-  ];
+const Sections = [
+  { id: 5, name: "home_related", icon: IoHome },
+  { id: 3, name: "phones", icon: IoPhonePortrait },
+  { id: 2, name: "hardware", icon: IoHardwareChip },
+  { id: 7, name: "accessories", icon: TbTools },
+  { id: 6, name: "computers", icon: FaLaptopCode },
+  { id: 4, name: "consoles", icon: TbDeviceGamepad3Filled },
+  { id: 1, name: "toys_and_games", icon: IoGameController },
+  { id: 8, name: "sports_equipment", icon: FaBasketballBall },
+  { id: 9, name: "fashion", icon: GiRolledCloth },
+  { id: 10, name: "health", icon: FaHeart },
+  { id: 11, name: "beauty", icon: CgGirl },
+  { id: 12, name: "vehicles", icon: FaCar },
+  { id: 13, name: "pet_supplies", icon: MdOutlinePets },
+  { id: 14, name: "grocery", icon: MdLocalGroceryStore },
+];
 
   return (
     <>
@@ -151,7 +126,7 @@ function MarketSideSection() {
                 }}
               >
                 <IconComponent key={x.id} />
-                {locale === "ar" ? x.name.ar : x.name.en}
+                {translations?.market_place?.[x.name]}
               </li>
             );
           })}

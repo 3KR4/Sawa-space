@@ -9,9 +9,13 @@
     "exitgroup": "exit group",
     "add_friend": "add friend",
     "remove_friend": "remove friend",
+    "remove_post": "remove post",
     "hide": "hide",
     "report": "report",
     "save_post": "save post",
+    "un_save_post": "unsave post",
+    "edit_comment": "edit comment",
+    "delete_comment": "delete comment",
     "edit": "edit",
     "unpin": "unpin",
     "reply": "reply",
@@ -21,7 +25,9 @@
     "save_photo": "save photo",
     "select": "select",
     "copy": "copy",
-    "add": "add"
+    "add": "add",
+    "block_page": "block page",
+    "report_page": "report page"
   },
   "placeHolders": {
     "search": "search",
@@ -30,7 +36,8 @@
     "search_by_name": "search by name",
     "type_a_message": "type a message",
     "search_in_posts": "search in posts",
-    "whats_on_your_mind": "Whats on your mind"
+    "whats_on_your_mind": "Whats on your mind",
+    "search_in_products": "search in products"
   },
   "header": {
     "explore": "explore",
@@ -39,6 +46,7 @@
     "communities": "communities",
     "marketplace": "marketplace",
     "swithlang": "switch language to ar",
+    "lets_begin": "let’s begin",
     "settings_and_privacy": "settings & privacy",
     "help_and_support": "help & support",
     "display_and_accessibility": "display & accessibility",
@@ -61,12 +69,12 @@
   "post": {
     "mention": "mention",
     "thereis_nothing_here_yet": "There's nothing here yet",
-    "be_the_first_to_post_a_comment": "Be the first to post a comment."
+    "be_the_first_to_post_a_comment": "Be the first to post a comment.",
+    "You_have_reached_the_end_of_the_feed": "You've reached the end of the feed"
   },
   "story": {
     "stories": "stories",
     "friends_stories": "friends stories",
-
     "create_story": "create story",
     "your_story": "your story",
     "your_stories": "your stories",
@@ -98,12 +106,17 @@
   },
   "comment": {
     "comments": "comments",
-    "reply": "Reply",
+    "reply": "reply",
+    "cancel_reply": "cancel reply",
     "see": "see",
     "replys": "replys",
     "hide_replays": "hide replays",
     "post_a_comment": "post a comment",
-    "wright_a_comment": "wright a comment..."
+    "wright_a_comment": "wright a comment...",
+    "view_more": "view more",
+    "Thats_all_the_comments_or_now": "that's all the comments for now..",
+    "reply_to": "reply to",
+    "replying_to_yourself": "replying to yourself"
   },
   "market_place": {
     "market_place": "market place",
@@ -115,7 +128,25 @@
     "min": "min",
     "max": "max",
     "shipping_is_available": "shipping is available",
-    "pickup_only_in": "pickup only in"
+    "pickup_only_in": "pickup only in",
+    "availability": "availability",
+    "in_stock": "in stock",
+    "out_of_stock": "out of stock",
+
+    "home_related": "home related",
+    "phones": "phones",
+    "hardware": "hardware",
+    "accessories": "accessories",
+    "computers": "computers",
+    "consoles": "consoles",
+    "toys_and_games": "toys & games",
+    "sports_equipment": "sports equipment",
+    "fashion": "fashion",
+    "health": "health",
+    "beauty": "beauty",
+    "vehicles": "vehicles",
+    "pet_supplies": "pet supplies",
+    "grocery": "grocery"
   },
   "chats": {
     "Explore_your_chats": "Explore your chats",
@@ -147,9 +178,11 @@
     "sticker": "sticker",
     "record": "record",
     "mentions": "mentions",
-    "selected_users": "selected users"
+    "selected_users": "selected users",
+    "find_friends_and_start_chatting": "Find friends and start chatting!",
+    "discover_people": "discover people"
   },
-  "user_page": {
+  "portfolio": {
     "all": "all",
     "message": "message",
     "friends": "friends",
@@ -164,7 +197,17 @@
     "speaking_languages": "speaking languages",
     "see_all": "see all",
     "posts": "Posts",
-    "photos": "Photos"
+    "photos": "Photos",
+    "follow": "follow",
+    "followers": "followers",
+    "products": "products",
+    "share_page": "share page",
+    "unfollowing_page": "unfollowing page",
+    "creator_and_admins": "creator and admins",
+    "page_created_at": "page created at",
+    "status": "status",
+    "public_page": "public page",
+    "private_page": "private page"
   },
   "forms": {
     "create_post": "create post",
@@ -187,20 +230,25 @@
   "auth": {
     "login": "login",
     "register": "register",
-    "please_enter_your_username": "please enter your username",
+    "login_into_your_account": "login into your account",
+    "create_your_account": "create your account",
+    "enter_your_firstname": "enter your firstname",
+    "firstname_is_required": "firstname is required",
+    "enter_your_lastname": "enter your lastname",
+    "lastname_is_required": "lastname is required",
     "username_must_be_at_least_3_characters": "username must be at least 3 characters",
-    "enter_your_username_or_email": "enter your username or email",
-    "please_enter_a_phone_number": "please enter a phone number",
+    "enter_your_phone_number": "enter your phone number",
     "phone_number_must_contain_only_digits": "phone number must contain only digits",
     "phone_number_must_be_at_least_10_digits_long": "phone number must be at least 10 digits long",
     "phone_number_must_be_at_most_15_digits_long": "phone number must be at most 15 digits long",
-    "your_phone_number": "your phone number",
-    "please_enter_your_email_address": "please enter your email address",
-    "please_enter_a_valid_email_address": "please enter a valid email address",
-    "your_email": "your email",
-    "please_enter_a_password": "please enter a password",
+    "enter_your_email_address": "enter your email address",
+    "your_email_address_is_required": "your email address is required",
+    "enter_a_valid_email_address": "enter a valid email address",
+    "enter_your_password": "enter your password",
+    "make_password_is_required": "make password is required",
     "password_must_be_at_least_8_characters_long": "password must be at least 8 characters long",
-    "please_confirm_your_password": "please confirm your password",
+    "confirm_your_password": "confirm your password",
+    "confirmation_your_password_is_required": "confirmation your password is required",
     "passwords_dont_match": "passwords don't match",
     "confirm_password": "confirm password",
     "did_you_forget_your_password": "did you forget your password?",

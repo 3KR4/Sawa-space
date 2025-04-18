@@ -14,87 +14,180 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
+import { emojiMap } from "@/utils/Data";
+import { useNotification } from "@/Contexts/NotificationContext";
+import { postService } from "@/services/api/postService";
 
 import { IoClose } from "react-icons/io5";
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
-import { FaRegComment } from "react-icons/fa";
+import { FaRegComment, FaUsers } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import {
   MdOutlineAddReaction,
   MdOutlinePhotoSizeSelectActual,
 } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
-import { FaRegComments } from "react-icons/fa6";
+import { FaRegComments, FaPager } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({ data }) {
   const { translations, locale } = useLanguage();
-
+  const { addNotification } = useNotification();
   const {
     setDataSwiperType,
     setDataForSwiper,
     setImgFocus,
     setImgIndex,
-    setNotification,
+    someThingHappen,
+    setSomeThingHappen,
   } = useContext(MenusContext);
-
-  const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
+  const { handleMenus, setOpenUsersReact, selectedDev } =
+    useContext(DynamicMenusContext);
   const { setMessageText } = useContext(InputActionsContext);
-  const { screenSize } = useContext(ScreenContext);
+  const { screenSize, userData } = useContext(ScreenContext);
+
+  const postId = data?._id;
+  const isMyPost = data?.author[0]?._id == userData?._id;
+
+  const [currentPost, setCurrentPost] = useState(data || {});
 
   const [seeComments, setSeeComments] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [comments, setComments] = useState([]);
+  const [replyTo, setReplyTo] = useState({});
+  const [commentsCount, setCommentsCount] = useState(data?.commentCount);
+  const [reloadComments, setReloadComments] = useState(false);
 
-  const handleImageClick = useCallback(
-    (id, index) => {
-      setDataSwiperType("post");
-      setImgFocus(id);
-      setDataForSwiper(data);
-      if (index !== "") {
-        setImgIndex(index);
-      }
-    },
-    [data]
-  );
+  const handleSeeComments = () => {
+    setSeeComments(true);
+    setPage(1); // reset to page 1
+    setComments([]); // clear old comments
+  };
 
-  const [loading, setLoading] = useState(true);
+  const fetchComments = async () => {
+    if (!seeComments) return;
+
+    setLoading(true);
+    try {
+      const { data } = await postService.getComments(postId, page);
+      setComments((prev) => {
+        const existingIds = new Set(prev.map((comment) => comment._id));
+        const newUniqueComments = data?.data?.filter(
+          (comment) => !existingIds.has(comment._id)
+        );
+        return [...prev, ...newUniqueComments];
+      });
+      setHasMore(page < data?.last_page);
+    } catch (err) {
+      console.error("Error fetching comments", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load comments. Please try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 0); // Adjust as needed
-  }, []);
+    fetchComments();
+  }, [page, seeComments, reloadComments]);
+
+  useEffect(() => {
+    if (someThingHappen?.type === "comment") {
+      const combinedLimit = page * limit;
+
+      postService.getComments(postId, 1, combinedLimit).then(({ data }) => {
+        setComments(data?.data);
+        setCommentsCount((prev) => Math.max(prev - 1, 0));
+        setHasMore(page < data?.last_page);
+        setSomeThingHappen("");
+      });
+    }
+  }, [someThingHappen]);
+
+  // const handleImageClick = useCallback(
+  //   (id, index) => {
+  //     setDataSwiperType("post");
+  //     setImgFocus(id);
+  //     setDataForSwiper(data);
+  //     if (index !== "") {
+  //       setImgIndex(index);
+  //     }
+  //   },
+  //   [data]
+  // );
 
   return (
     <div className={`post`}>
       {!seeComments ? (
         <>
-          <div className="top" onClick={() => setNotification((prev) => !prev)}>
+          <div className="top">
             <div className="left">
               <Image
                 className="rounded"
-                src={data.user.img || "/users/default.png"}
-                alt={data.user.name}
+                src={currentPost?.author[0]?.img.url || "/users/default.png"}
+                alt={`${currentPost?.author[0]?.fristname} ${currentPost?.author[0]?.lastname} img`}
                 width={40}
                 height={40}
-                onClick={(e) => handleMenus(e, "userInfo", data.user.id)}
+                onClick={(e) =>
+                  handleMenus(e, "user-Info", currentPost?.author[0]?._id)
+                }
               />
               <div className="info">
-                <h5>{data.user.name}</h5>
-                <span>{ConvertTime(data?.time, locale)}</span>
+                <h5>
+                  {currentPost?.author[0]?.fristname} {""}
+                  {currentPost?.author[0]?.lastname}
+                </h5>
+                <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
               </div>
+              {/* {currentPost?.creator == "page" ? (
+                <FaPager
+                  className="creatorType"
+                  onClick={(e) => handleMenus(e, "page-Info", currentPost?.user.id)}
+                />
+              ) : currentPost?.creator == "community" ? (
+                <FaUsers
+                  className="creatorType"
+                  onClick={(e) =>
+                    handleMenus(e, "community-Info", currentPost?.user.id)
+                  }
+                />
+              ) : null} */}
             </div>
             <HiDotsVertical
+              className="settingDotsIco"
               onClick={(e) => {
-                handleMenus(e, "settingMenu-post", data.id);
+                handleMenus(
+                  e,
+                  currentPost?.creator === "page"
+                    ? "settingMenu-page-posts"
+                    : "settingMenu-post",
+                  currentPost?._id,
+                  {
+                    isMyPost,
+                    isInFavorite: false,
+                    isMyFriend: false,
+                    isPostPage: false,
+                    isFollowedPage: false,
+                    isCommunity: false,
+                    isMeJoinedThisCommunity: false,
+                  }
+                );
               }}
             />
           </div>
           <div className="middle">
-            {data.link && (
+            {currentPost?.link && (
               <div className="Links">
-                {data?.link?.map((x, index) => (
+                {currentPost?.link?.map((x, index) => (
                   <div key={index}>
-                    {data?.link.length === 1 ? null : `${index + 1} -`}
+                    {currentPost?.link.length === 1 ? null : `${index + 1} -`}
 
                     <Link key={index} href={x}>
                       {x}
@@ -104,79 +197,97 @@ function Post({ data }) {
               </div>
             )}
 
-            {data.paragraph && <p>{data.paragraph}</p>}
+            {currentPost?.paragraph && <pre>{currentPost?.paragraph}</pre>}
 
-            {data.img && Array.isArray(data.img) && data.img.length > 0 ? (
-              data.img.length === 1 ? (
+            {currentPost?.img &&
+            Array.isArray(currentPost?.img) &&
+            currentPost?.img.length > 0 ? (
+              currentPost?.img.length === 1 ? (
                 <div className="image">
                   <Image
-                    src={data.img[0]}
+                    src={currentPost?.img[0].newpath.url}
                     alt="Post Image"
                     fill
                     onClick={() => {
-                      handleImageClick(data.id, "");
+                      handleImageClick(currentPost?._id, "");
                     }}
                   />
                 </div>
               ) : (
                 <div
                   className={`images ${
-                    data.img.length >= 4
+                    currentPost?.img.length >= 4
                       ? "big"
-                      : data.img.length === 3
+                      : currentPost?.img.length === 3
                       ? "mid"
                       : "small"
                   }`}
                 >
-                  {data.img.map((img, index) => (
+                  {currentPost?.img.map((img, index) => (
                     <Image
                       key={index}
-                      src={img}
+                      src={img.newpath.url}
                       alt={`Post Image ${index + 1}`}
                       fill
                       onClick={() => {
-                        handleImageClick(data.id, index);
+                        handleImageClick(currentPost?._id, index);
                       }}
                     />
                   ))}
                 </div>
               )
             ) : null}
-            {data.mentions.length > 0 && (
+            {currentPost?.mentions?.length > 0 && (
               <div className="mentions view">
                 <h5>
-                  {data.user.name} {translations?.post?.mention}
+                  {currentPost?.author[0]?.fristname} {""}{" "}
+                  {translations?.post?.mention}
                 </h5>
-                {data.mentions?.map((x, index) => (
+                {currentPost?.mentions?.map((x, index) => (
                   <button
                     key={index}
-                    onClick={(e) => handleMenus(e, "userInfo", x.userId)}
+                    onClick={(e) =>
+                      handleMenus(e, "user-Info", x.author[0]?._id)
+                    }
                   >
-                    @{x.userName}
+                    @{data?.author[0]?.fristname}
                   </button>
                 ))}
               </div>
             )}
           </div>
           <div className="bottom">
-            <div
-              className="left emojesCounter"
-              onClick={(e) => {
-                setOpenUsersReact("post");
-                handleMenus(e, "usersReact", data.id);
-              }}
-            >
-              {data.reacts.count !== 0 && (
-                <>
-                  {data.reacts.topUseage.map((x, index) => (
-                    <p key={index}>{x}</p>
-                  ))}
-                  <p>{data.reacts.count}</p>
-                </>
+            {currentPost?.reacts &&
+              Object.values(currentPost.reacts).reduce((a, b) => a + b, 0) >
+                0 && (
+                <div
+                  className="left emojesCounter"
+                  onClick={(e) => {
+                    setOpenUsersReact("post");
+                    handleMenus(e, "usersReact", currentPost?._id);
+                  }}
+                >
+                  <>
+                    {Object.entries(currentPost.reacts)
+                      .filter(([, count]) => count > 0) // ✅ only keep non-zero
+                      .sort(([, a], [, b]) => b - a)
+                      .slice(0, 2)
+                      .map(([reaction], index) => (
+                        <p key={index}>{emojiMap[reaction]}</p>
+                      ))}
+
+                    <p>
+                      {Object.values(currentPost.reacts).reduce(
+                        (a, b) => a + b,
+                        0
+                      )}
+                    </p>
+                  </>
+                </div>
               )}
-            </div>
+
             {screenSize !== "small" && (
-              <div className="actions">
+              <div className="actions mid">
                 <div>
                   <MdOutlineAddReaction
                     onClick={() => setReactsHolder((prev) => !prev)}
@@ -185,12 +296,19 @@ function Post({ data }) {
                     <ReactsHolder
                       reactsHolder={reactsHolder}
                       setReactsHolder={setReactsHolder}
-                      id={data.id}
+                      data={data}
+                      setState={setCurrentPost}
+                      type={"post"}
                     />
                   )}
                 </div>
                 <div>
-                  <FaRegComment onClick={() => setSeeComments(true)} />
+                  <FaRegComment
+                    onClick={() => {
+                      setSeeComments(true);
+                      handleSeeComments();
+                    }}
+                  />
                 </div>
                 <div>
                   <IoLink />
@@ -200,16 +318,16 @@ function Post({ data }) {
                 </div>
               </div>
             )}
-            <div className="right">
-              <div>
-                <PiShareFat />
-                {data.shareCount}
+            {currentPost?.commentsCount !== 0 && (
+              <div className="right">
+                {commentsCount !== 0 && (
+                  <div>
+                    <FaRegComment />
+                    {commentsCount}
+                  </div>
+                )}
               </div>
-              <div>
-                <FaRegComment />
-                {data.comments.count}
-              </div>
-            </div>
+            )}
           </div>
           {screenSize === "small" && (
             <div className="actions">
@@ -221,7 +339,7 @@ function Post({ data }) {
                   <ReactsHolder
                     reactsHolder={reactsHolder}
                     setReactsHolder={setReactsHolder}
-                    id={data.id}
+                    id={currentPost?._id}
                   />
                 )}
               </div>
@@ -246,19 +364,39 @@ function Post({ data }) {
         <div className="comments">
           <div className="top">
             <h3>
-              {translations?.comment?.comments} ({data.comments.count})
+              {translations?.comment?.comments} ({commentsCount})
             </h3>
             <IoIosClose onClick={() => setSeeComments(false)} />
           </div>
-          <div className="holder">
-            {loading ? (
+          <div className="holder comments-holder">
+            {loading && !comments.length ? (
               // Display skeleton loader while loading
               <>
                 <ContentLoader
                   className="skeleton skeleton-comment"
                   width="100%"
                   height={120}
-                  viewBox="0 0 740 120"
+                  viewBox="0 0 600 120"
+                  backgroundColor="#f3f3f3"
+                  foregroundColor="#e0e0e0"
+                >
+                  {/* Profile Picture */}
+                  <circle cx="35" cy="35" r="18" />
+
+                  {/* Comment Text & Timestamp */}
+                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+                  {/* Like/Reply Button */}
+                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+                </ContentLoader>
+                <ContentLoader
+                  className="skeleton skeleton-comment"
+                  width="100%"
+                  height={120}
+                  viewBox="0 0 600 120"
                   backgroundColor="#f3f3f3"
                   foregroundColor="#e0e0e0"
                 >
@@ -296,12 +434,35 @@ function Post({ data }) {
                 </ContentLoader>
               </>
             ) : // If not loading, display the comments or the "no comments" message
-            data.comments.allComments &&
-              Array.isArray(data.comments.allComments) &&
-              data.comments.allComments.length > 0 ? (
-              data.comments.allComments.map((comment, index) => (
-                <Comment key={index} data={comment} />
-              ))
+            comments.length || hasMore ? (
+              <>
+                {comments.map((comment, index) => (
+                  <Comment
+                    key={index}
+                    data={comment}
+                    isMyPost={isMyPost}
+                    replyTo={replyTo}
+                    setReplyTo={setReplyTo}
+                  />
+                ))}
+                {hasMore ? (
+                  <button
+                    style={{ padding: loading ? "0px" : "10px" }}
+                    className={loading ? "disable view" : "view"}
+                    onClick={() => !loading && setPage((prev) => prev + 1)}
+                  >
+                    {loading ? (
+                      <div className="lds-dual-ring"></div>
+                    ) : (
+                      translations?.comment?.view_more
+                    )}
+                  </button>
+                ) : page > 1 ? (
+                  <p className="view">
+                    {translations?.comment?.Thats_all_the_comments_or_now}
+                  </p>
+                ) : null}
+              </>
             ) : (
               <div className="noCommentsYet">
                 <FaRegComments />
@@ -311,7 +472,13 @@ function Post({ data }) {
             )}
           </div>
 
-          <TypeComment id={data.id} />
+          <TypeComment
+            id={currentPost?._id}
+            replyTo={replyTo}
+            setReplyTo={setReplyTo}
+            setComments={setComments}
+            setCommentsCount={setCommentsCount}
+          />
         </div>
       )}
     </div>

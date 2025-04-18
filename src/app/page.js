@@ -1,7 +1,15 @@
 "use client";
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import Link from "next/link";
-import { posts, stories, processStories } from "@/utils/Data";
+import Image from "next/image";
+
+import { posts as dummyPosts, stories, processStories } from "@/utils/Data";
 import Story from "@/components/post/Story";
 import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
@@ -13,230 +21,292 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { useNotification } from "@/Contexts/NotificationContext";
+import { postService } from "@/services/api/postService";
+import { storyService } from "@/services/api/storyService";
 
-import { FaAngleRight } from "react-icons/fa";
-import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 export default function Home() {
-  const { hideChats } = useContext(MenusContext);
+  const { addNotification } = useNotification();
+  const { screenSize, userData } = useContext(ScreenContext);
+  const { translations } = useLanguage();
+  const { someThingHappen, setSomeThingHappen, setOpenStoryForm } =
+    useContext(MenusContext);
 
-  const { screenSize } = useContext(ScreenContext);
+  const [stories, setStories] = useState([]);
+  const [currentUserStory, setCurrentUserStory] = useState({});
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [postsloading, setPostsLoading] = useState(false);
+  const [storyloading, setStoryLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const { translations, locale } = useLanguage();
-
-  const [loading, setLoading] = useState(true);
   const swiperRef = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 0); // Adjust as needed
+    let timeoutId;
+    let isMounted = true;
+
+    setPostsLoading(true);
+    timeoutId = setTimeout(async () => {
+      try {
+        const { data } = await postService.getPosts(page);
+        if (isMounted) {
+          setPosts((prev) => {
+            const newPosts = [...prev, ...data.data];
+            // إذا تجاوزت المنشورات 30، نحتفظ بأحدث 30 فقط
+            return newPosts.length > 30 ? newPosts.slice(-25) : newPosts;
+          });
+          setHasMore(page < data.last_page);
+        }
+      } catch (err) {
+        console.error("Error fetching posts", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load posts. Please try again.",
+        });
+      } finally {
+        if (isMounted) setPostsLoading(false);
+      }
+    }, 1500);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [page]);
+
+  useEffect(() => {
+    if (
+      someThingHappen?.type === "post" &&
+      someThingHappen?.event === "create"
+    ) {
+      setPosts((prev) => [someThingHappen.post, ...prev]);
+      document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    if (someThingHappen?.type === "post" && someThingHappen?.event === "edit") {
+      setPosts((prev) =>
+        prev.map((x) =>
+          x._id === someThingHappen.post._id ? someThingHappen.post : x
+        )
+      );
+    }
+    setSomeThingHappen("");
+  }, [someThingHappen]);
+
+  useEffect(() => {
+    const scrollHandler = () => {
+      if (!hasMore || postsloading) return;
+      if (
+        window.innerHeight + document.documentElement.scrollTop + 1200 >=
+        document.documentElement.scrollHeight
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener("scroll", scrollHandler);
+    return () => window.removeEventListener("scroll", scrollHandler);
+  }, [hasMore, postsloading]);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    return () => {
-      if (swiperRef.current) {
-        swiperRef.current.destroy();
+    let timeoutId;
+    let isMounted = true;
+
+    setStoryLoading(true);
+    timeoutId = setTimeout(async () => {
+      try {
+        const { data } = await storyService.getStories();
+        if (isMounted) {
+          setStories(data.data);
+          setCurrentUserStory(
+            data.data.find((x) => x.author[0]._id == userData._id)
+          );
+          // setHasMoreStories(page < data.last_page);
+        }
+      } catch (err) {
+        console.error("Error fetching stories", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load Stories. Please try again later.",
+        });
+      } finally {
+        if (isMounted) setStoryLoading(false);
       }
+    }, 1500);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
     };
   }, []);
 
-  const { addNotification } = useNotification();
-
-  // Usage
-  const latestStories = processStories(stories);
-
-  console.log(latestStories);
-
-  // Then in your render:
-  {
-    latestStories.map((story) => (
-      <SwiperSlide key={story.id}>
-        <Story
-          data={story}
-          smallView={true}
-          storyCount={story.totalStories > 1 ? story.totalStories : null}
-        />
-      </SwiperSlide>
-    ));
-  }
+  console.log(stories);
 
   return (
     <div className="home">
-      <div style={{ display: "flex", gap: "10px" }}>
-        <div
-          onClick={() =>
-            addNotification({
-              type: "success",
-              message:
-                "this is a this is a good message this is a good message this is a good message good message",
-            })
-          }
-        >
-          success Message
-        </div>
-        <div
-          onClick={() =>
-            addNotification({
-              type: "warning",
-              message: "this is a warning message",
-            })
-          }
-        >
-          warning Message
-        </div>
-        <div
-          onClick={() =>
-            addNotification({
-              type: "error",
-              message: "this is a very pad message",
-            })
-          }
-        >
-          error Message
-        </div>
-      </div>
-
-      <div className="stories-holder">
-        {!loading && screenSize !== "large" ? (
-          <div className="storiesTop">
-            <h5>{translations?.story?.stories}</h5>
-            {stories.length > 6 && (
-              <div className="navigations-icons forStories">
-                <FaAngleLeft className="custom-prev" />
-                <FaAngleRight className="custom-next" />
-              </div>
-            )}
-          </div>
-        ) : stories.length > 6 ? (
-          <div className="navigations-icons forStories">
-            <FaAngleLeft className="custom-prev" />
-            <FaAngleRight className="custom-next" />
-          </div>
-        ) : null}
-        {loading ? (
-          <div style={{ display: "flex", gap: "5px" }}>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                style={{ backgroundColor: "white", borderRadius: "10px" }}
-              >
-                <ContentLoader
-                  speed={2}
-                  width={`100%`}
-                  height={200}
-                  viewBox="0 0 80 100"
-                  backgroundColor="#E8E8E8"
-                  foregroundColor="#D5D5D5"
+      {userData && (
+        <div className="stories-holder">
+          {!postsloading && screenSize !== "large" ? (
+            <div className="storiesTop">
+              <h5>{translations?.story?.stories}</h5>
+              {stories.length > 6 && (
+                <div className="navigations-icons forStories">
+                  <FaAngleLeft className="custom-prev" />
+                  <FaAngleRight className="custom-next" />
+                </div>
+              )}
+            </div>
+          ) : stories.length > 6 ? (
+            <div className="navigations-icons forStories">
+              <FaAngleLeft className="custom-prev" />
+              <FaAngleRight className="custom-next" />
+            </div>
+          ) : null}
+          {storyloading || !mounted ? (
+            <div style={{ display: "flex", gap: "5px" }}>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  style={{ backgroundColor: "white", borderRadius: "10px" }}
                 >
-                  {/* Avatar placeholder (circle) */}
-                  <circle cx="40" cy="40" r="20" />
-                  {/* Name placeholder (single line) */}
-                  <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
-                </ContentLoader>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="swiper-container">
-            <Swiper
-              onSwiper={(swiper) => (swiperRef.current = swiper)}
-              key={loading ? "loading" : "loaded"}
-              modules={[Navigation]}
-              spaceBetween={6}
-              speed={1000}
-              navigation={{
-                nextEl: ".custom-next",
-                prevEl: ".custom-prev",
-              }}
-              slidesPerView={6}
-              breakpoints={{
-                320: { slidesPerView: 3 },
-                500: { slidesPerView: 4 }, // Use hideChats directly
-                1700: { slidesPerView: 6 },
-              }}
-            >
-              {latestStories.map((story, index) => (
-                <SwiperSlide key={story.id}>
-                  <Story
-                    data={story}
-                    smallView={true}
-                    index={index}
-                    storyCount={
-                      story.totalStories > 1 ? story.totalStories : null
-                    }
-                  />
-                </SwiperSlide>
+                  <ContentLoader
+                    speed={2}
+                    width={"100%"}
+                    height={200}
+                    viewBox="0 0 80 100"
+                    backgroundColor="#E8E8E8"
+                    foregroundColor="#D5D5D5"
+                  >
+                    <circle cx="40" cy="40" r="20" />
+                    <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
+                  </ContentLoader>
+                </div>
               ))}
-            </Swiper>
-          </div>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="swiper-container">
+              <Swiper
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                key={storyloading ? "storyloading" : "loaded"}
+                modules={[Navigation]}
+                spaceBetween={6}
+                speed={1000}
+                navigation={{
+                  nextEl: ".custom-next",
+                  prevEl: ".custom-prev",
+                }}
+                slidesPerView={6}
+                breakpoints={{
+                  320: { slidesPerView: 3 },
+                  500: { slidesPerView: 4 },
+                  1700: { slidesPerView: 6 },
+                }}
+              >
+                <SwiperSlide key={Date.now()}>
+                  {currentUserStory ? (
+                    <Story data={currentUserStory} smallView={true} />
+                  ) : (
+                    <div
+                      className="userStory-creation story"
+                      onClick={() => setOpenStoryForm(true)}
+                    >
+                      <Image src={userData?.img?.url} fill />
+                      <div className="bottom">
+                        <div className="svg-holder">
+                          <IoMdAddCircleOutline />
+                          <h5>{translations?.header?.createstory}</h5>
+                        </div>
+
+                        <h5>
+                          {userData?.fristname} {userData?.lastname}
+                        </h5>
+                      </div>
+                    </div>
+                  )}
+                </SwiperSlide>
+                {stories
+                  ?.filter((x) => x.author[0]._id !== userData._id)
+                  ?.map((story) => (
+                    <SwiperSlide key={story._id}>
+                      <Story data={story} smallView={true} />
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
+            </div>
+          )}
+        </div>
+      )}
       <div className="posts-holder">
-        {loading
+        {postsloading && posts.length === 0
           ? Array.from({ length: 3 }).map((_, index) => (
               <div key={index}>
                 <ContentLoader
                   className="skeleton skeleton-post"
-                  width={600}
-                  height={350}
-                  speed={5}
+                  width={"100%"}
+                  height={500}
+                  speed={100}
                   viewBox="0 0 600 350"
                   backgroundColor="#E8E8E8"
                   foregroundColor="#D5D5D5"
                 >
-                  {/* Profile Picture */}
                   <circle cx="35" cy="35" r="20" />
-                  {/* Name & Timestamp */}
                   <rect x="65" y="20" rx="5" ry="5" width="120" height="12" />
                   <rect x="65" y="38" rx="5" ry="5" width="100" height="10" />
-                  {/* Post Text */}
                   <rect x="20" y="70" rx="5" ry="5" width="93%" height="10" />
                   <rect x="20" y="90" rx="5" ry="5" width="500" height="10" />
                   <rect x="20" y="110" rx="5" ry="5" width="520" height="10" />
-                  {/* Image Placeholder */}
                   <rect x="20" y="140" rx="5" ry="5" width="93%" height="150" />
-                  {/* Footer (Likes, Comments, Shares) */}
-                  <rect
-                    x="20"
-                    y="310"
-                    rx="5"
-                    ry="5"
-                    width="30"
-                    height="10"
-                  />{" "}
-                  {/* Like Icon */}
-                  <rect
-                    x="60"
-                    y="310"
-                    rx="5"
-                    ry="5"
-                    width="20"
-                    height="10"
-                  />{" "}
-                  {/* Like Count */}
-                  <rect
-                    x="515"
-                    y="310"
-                    rx="5"
-                    ry="5"
-                    width="30"
-                    height="10"
-                  />{" "}
-                  {/* Comment Icon */}
-                  <rect
-                    x="555"
-                    y="310"
-                    rx="5"
-                    ry="5"
-                    width="20"
-                    height="10"
-                  />{" "}
-                  {/* Comment Count */}
+                  <rect x="20" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="60" y="310" rx="5" ry="5" width="20" height="10" />
+                  <rect x="515" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="555" y="310" rx="5" ry="5" width="20" height="10" />
                 </ContentLoader>
               </div>
             ))
-          : posts.map((x, index) => {
-              return <Post key={index} data={x} />;
-            })}
+          : posts.map((x) => <Post data={x} key={`${x._id}-${x.data}`} />)}
+        {postsloading && posts.length > 0 && (
+          <div className="postsloading-skeleton">
+            {Array.from({ length: 1 }).map((_, index) => (
+              <div key={index}>
+                <ContentLoader
+                  className="skeleton skeleton-post"
+                  width={"100%"}
+                  height={500}
+                  speed={10}
+                  viewBox="0 0 600 350"
+                  backgroundColor="#E8E8E8"
+                  foregroundColor="#D5D5D5"
+                >
+                  <circle cx="35" cy="35" r="20" />
+                  <rect x="65" y="20" rx="5" ry="5" width="120" height="12" />
+                  <rect x="65" y="38" rx="5" ry="5" width="100" height="10" />
+                  <rect x="20" y="70" rx="5" ry="5" width="93%" height="10" />
+                  <rect x="20" y="90" rx="5" ry="5" width="500" height="10" />
+                  <rect x="20" y="110" rx="5" ry="5" width="520" height="10" />
+                  <rect x="20" y="140" rx="5" ry="5" width="93%" height="150" />
+                  <rect x="20" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="60" y="310" rx="5" ry="5" width="20" height="10" />
+                  <rect x="515" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="555" y="310" rx="5" ry="5" width="20" height="10" />
+                </ContentLoader>
+              </div>
+            ))}
+          </div>
+        )}
+        {!hasMore && !postsloading && (
+          <div className="no-more-posts">
+            <p>{translations?.post?.You_have_reached_the_end_of_the_feed}</p>
+            <img src={"/Svgs/no more posts.png"} alt={`no more posts`} />
+          </div>
+        )}
       </div>
     </div>
   );

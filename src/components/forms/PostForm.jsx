@@ -8,6 +8,8 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
+import { postService } from "@/services/api/postService";
+import { useNotification } from "@/Contexts/NotificationContext";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -19,8 +21,10 @@ import { CircleAlert } from "lucide-react";
 
 function PostForm() {
   const { locale, translations } = useLanguage();
+  const { addNotification } = useNotification();
 
   const {
+    selectedUsers,
     setSelectedUsers,
     selectedUsersNames,
     setSelectedUsersNames,
@@ -28,6 +32,7 @@ function PostForm() {
     openPostForm,
     setOpenPostForm,
     usersSelectionRef,
+    setSomeThingHappen,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -44,6 +49,9 @@ function PostForm() {
 
   // Images
   const [images, setImages] = useState([]);
+  const [removedImages, setRemovedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingContent, setLoadingContent] = useState(false);
 
   const formMenuRef = useRef(null);
   const inputFileRef = useRef(null);
@@ -69,7 +77,24 @@ function PostForm() {
   };
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((image, i) => i !== index));
+    setImages((prevImages) => {
+      const removed = prevImages[index];
+
+      // Filter out the image at the given index
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+
+      // If it's a previously uploaded image and we're editing the post
+      if (removed?.publicid && openPostForm.type === "edit") {
+        setRemovedImages((prev) => [...prev, removed.publicid]);
+      }
+
+      // If no images left after removal, hide the image section
+      if (updatedImages.length === 0) {
+        setAddImages(false);
+      }
+
+      return updatedImages;
+    });
   };
 
   // Tags & Links
@@ -80,6 +105,8 @@ function PostForm() {
   const [links, setLinks] = useState([]);
   const [linkInput, setLinkInput] = useState("");
   const [linkError, setLinkError] = useState("");
+
+  const isDisabled = !images.length && !links.length && messageText.length < 3;
 
   const add_Tag_Link = async (e, type) => {
     e.preventDefault();
@@ -99,7 +126,6 @@ function PostForm() {
 
       // Check for duplicate hashtags
       if (tags.includes(trimmedTag)) {
-        console.log("a7a");
         setTagError(translations?.errors?.this_tag_has_already_been_added);
         return; // Stop if the hashtag already exists
       }
@@ -175,54 +201,165 @@ function PostForm() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (editProductId) {
-  //     const productToEdit = allProducts.find(
-  //       (product) => product.id === +editProductId
-  //     );
+  useEffect(() => {
+    if (openPostForm.type === "edit") {
+      setLoadingContent(false);
+      const fetchPost = async () => {
+        try {
+          const response = await postService.getSinglePost(openPostForm.postId);
+          const post = response?.data?.data?.[0];
 
-  //     if (productToEdit) {
-  //       setValue("name", productToEdit.name);
-  //       setValue("stock", productToEdit.stock);
-  //       setValue("price", productToEdit.price);
-  //       setValue("sale", productToEdit.sale);
-  //       setValue("details", productToEdit.details);
-  //       setValue("aboutInfo", productToEdit.about);
-  //       setTags(productToEdit.tags || []);
-  //       setImages(productToEdit.Images || []);
-  //       setSelectedDate(
-  //         productToEdit.endTime ? new Date(productToEdit.endTime) : null
-  //       );
-  //       setFlashSale(productToEdit.flashSale || false);
-  //       setSelectChange({
-  //         brand: productToEdit.brand || "Choose",
-  //         category: productToEdit.category || "Choose",
-  //         type: productToEdit.type || "Choose",
-  //       });
-  //       setSpecifications(
-  //         Object.entries(productToEdit.specifications || {}).map(
-  //           ([key, value]) => ({ key, value })
-  //         )
-  //       );
-  //     }
-  //   }
-  // }, [editProductId, setValue]);
+          if (post) {
+            setMessageText(post.paragraph);
+            setLinks(post.link || []);
+            setTags(post.hastags || []);
+            setSelectedUsers(post.mentions || []);
 
-  const onSubmit = (data) => {
-    console.log(data);
+            setAddImages((post.img || []).length > 0);
+            setAddLink((post.link || []).length > 0);
+            setAddHashtag((post.hastags || []).length > 0);
+
+            const formattedImages = (post.img || []).map((imgObj) => ({
+              url: imgObj.newpath.url,
+              publicid: imgObj.newpath.publicid,
+              originalname: imgObj.originalname,
+            }));
+
+            setImages(formattedImages);
+            setLoadingContent(true);
+          }
+        } catch (err) {
+          console.error("Error fetching post:", err);
+        }
+      };
+
+      fetchPost(); // call it
+    } else {
+      setMessageText("");
+      setLinks([]);
+      setTags([]);
+      setSelectedUsers([]);
+      setImages([]);
+    }
+  }, [openPostForm]);
+
+  const onSubmit = async () => {
+    setLoading(true);
+
+    const fallbackMentions = [
+      "67f6387225982aee32da9c68",
+      "67cfd61617bff9683742fdd9",
+      "67cfa8b8e0b8a8ebeff2f875",
+    ];
+
+    const postData = {
+      paragraph: messageText,
+      link: links,
+      mentions: fallbackMentions || selectedUsers,
+      hastags: tags,
+    };
+
+    try {
+      let postId;
+
+      if (openPostForm.type === "edit") {
+        // 🛠 Edit Post
+        postId = openPostForm.postId;
+        await postService.editPost(postId, postData);
+      } else {
+        // ✨ Create New Post
+        const postResponse = await postService.createPost(postData);
+        postId = postResponse?.data?.postId;
+        if (!postId) throw new Error("Post ID not returned from backend");
+      }
+
+      // 📤 Upload New Images
+      const newImages = images.filter((img) => !img.url); // only files
+      if (newImages.length > 0) {
+        const formData = new FormData();
+        newImages.forEach((img) => formData.append("imgs", img));
+        await postService.uploadPostImages(postId, formData);
+      }
+
+      // 🗑️ Delete Removed Images (Only on Edit)
+      if (removedImages.length > 0 && openPostForm.type === "edit") {
+        for (const publicid of removedImages) {
+          try {
+            await postService.deleteImg(postId, publicid);
+          } catch (err) {
+            console.warn(`Failed to delete image ${publicid}:`, err);
+          }
+        }
+      }
+
+      // 📦 Fetch Final Post
+      const post = await postService.getSinglePost(postId);
+      if (post) {
+
+        setSomeThingHappen({
+          event: openPostForm.type === "edit" ? "edit" : "create",
+          type: "post",
+          post: post.data.data[0],
+        });
+        addNotification({
+          type: "success",
+          message:
+            openPostForm.type === "edit"
+              ? "Post updated successfully."
+              : "Your post has been created successfully.",
+        });
+
+        // 🔁 Reset Form State
+        setOpenPostForm(false);
+        setMessageText("");
+        setLinks([]);
+        setTags([]);
+        setImages([]);
+        setSelectedUsers([]);
+        setRemovedImages([]);
+      }
+    } catch (err) {
+      console.log(err);
+      addNotification({
+        type: "error",
+        message: err?.response?.data?.messege || "Something went wrong.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form
-      onSubmit={onSubmit}
-      className={`focusedMsg FormMenu ${openPostForm ? "active" : ""}`}
+      onSubmit={handleSubmit(onSubmit)}
+      className={`focusedMsg FormMenu ${openPostForm ? "active" : ""} `}
     >
-      <div className="body postForm" ref={formMenuRef}>
+      <div
+        className={`body postForm ${
+          loadingContent || openPostForm.type !== "edit" ? "contentLoaded" : ""
+        }`}
+        ref={formMenuRef}
+      >
+        {!loadingContent && openPostForm.type === "edit" && (
+          <div className="lds-dual-ring big-loader"></div>
+        )}
+
         <div className="top">
-          <h4>{translations?.forms?.create_post}</h4>
+          <h4>
+            {openPostForm.type === "edit"
+              ? translations?.forms?.edit_post
+              : translations?.forms?.create_post}
+          </h4>
           <IoClose className="close" onClick={() => setOpenPostForm(false)} />
         </div>
-        <div>
+        <div
+          style={{
+            overflow:
+              !loadingContent && openPostForm.type === "edit"
+                ? "hidden"
+                : "auto",
+          }}
+        >
           <div className={`inputHolder`}>
             <div className="holder">
               <MdOutlineAddReaction
@@ -253,10 +390,6 @@ function PostForm() {
                   id="postLinks"
                   value={linkInput}
                   {...register("postLinks", {
-                    required: {
-                      value: true,
-                      message: translations?.errors?.please_enter_a_URL,
-                    },
                     pattern: {
                       value:
                         /^(https?:\/\/)?(www\.)?([\da-z\.-]+)\.com(\/[\/\w \.-]*)*\/?$/,
@@ -381,23 +514,17 @@ function PostForm() {
               <div className="imgHolder">
                 {images.map((image, index) => (
                   <div className="uploaded" key={index}>
-                    {false ? (
-                      typeof image === "string" ? (
-                        <img src={image} alt="Blog" width="150" />
-                      ) : (
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={image.name}
-                          width="150"
-                        />
-                      )
-                    ) : (
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={image.name}
-                        width="150"
-                      />
-                    )}
+                    <img
+                      src={
+                        typeof image === "string"
+                          ? image
+                          : image?.url
+                          ? image.url
+                          : URL.createObjectURL(image)
+                      }
+                      alt={image.originalname || image.name || `Image-${index}`}
+                      width="150"
+                    />
                     <p>{index + 1}</p>
                     <IoClose onClick={() => handleRemoveImage(index)} />
                   </div>
@@ -419,12 +546,6 @@ function PostForm() {
                   value={tagInput}
                   placeholder=""
                   id="postTags"
-                  {...register("postTags", {
-                    required: {
-                      value: true,
-                      message: translations?.errors?.please_enter_a_URL,
-                    },
-                  })}
                   onChange={(e) => setTagInput(e.target.value)}
                 />
                 <button onClick={(e) => add_Tag_Link(e, "hashtags")}>
@@ -495,14 +616,18 @@ function PostForm() {
           </div>
           <button
             type="submit"
-            className="main-button"
+            className={`main-button ${loading ? "loading" : ""}`}
             onClick={() => {
               setisSubmited(true);
             }}
+            disabled={isDisabled || loading}
           >
-            {false
-              ? translations?.forms?.edit_post
-              : translations?.forms?.create_post}
+            <span>
+              {openPostForm.type === "edit"
+                ? translations?.forms?.edit_post
+                : translations?.forms?.create_post}
+            </span>
+            <div className="lds-dual-ring"></div>
           </button>
         </div>
       </div>

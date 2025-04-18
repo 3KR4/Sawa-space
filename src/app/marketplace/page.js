@@ -17,7 +17,7 @@ export default function MarketPlace() {
   return (
     <div className={`marketplace`}>
       <SideSection>
-        <MarketSideSection />
+        <MarketSideSection type="render-for-marketPlace" />
       </SideSection>
 
       <div className="shop">

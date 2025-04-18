@@ -25,13 +25,14 @@ import {
   MdBlockFlipped,
   MdOutlinePushPin,
 } from "react-icons/md";
+
 import { IoSearch, IoClose, IoImageOutline } from "react-icons/io5";
-import { FaAngleLeft, FaAngleRight, FaArrowLeft } from "react-icons/fa6";
+import { FaAngleLeft, FaPlus, FaArrowLeft } from "react-icons/fa6";
 import { TbLogout2, TbArchiveOff } from "react-icons/tb";
 import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
-  const { hideChats, setHideChats } = useContext(MenusContext);
+  const [hideChats, setHideChats] = useState(false);
   const { screenSize, screenSizeWidth } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
 
@@ -84,7 +85,10 @@ export default function Chats() {
   }, []);
 
   return (
-    <div className={`chats ${hideChats ? "hide" : "active"}`}>
+    <div
+      className={`chats ${hideChats ? "hide" : "active"}`}
+      style={{ display: screenSize === "small" ? "none" : "block" }}
+    >
       <div
         className="open-close"
         onClick={() => {
@@ -114,147 +118,177 @@ export default function Chats() {
         </div>
       </div>
       <hr />
-      <ul className="filters">
-        <li
-          onClick={() => setChatsCurrentFilter("allchats")}
-          className={chatsCurrentFilter === "allchats" ? "active" : ""}
-        >
-          <MdMarkUnreadChatAlt /> {translations?.sidechats?.allchats}
-        </li>
-        <li
-          className={chatsCurrentFilter === "groups" ? "active" : ""}
-          onClick={() => setChatsCurrentFilter("groups")}
-        >
-          <FaUsers /> {translations?.sidechats?.groups}
-        </li>
-        <li
-          className={chatsCurrentFilter === "favorites" ? "active" : ""}
-          onClick={() => setChatsCurrentFilter("favorites")}
-        >
-          <MdFavorite /> {translations?.sidechats?.favorites}
-        </li>
-        <li
-          className={chatsCurrentFilter === "unread" ? "active" : ""}
-          onClick={() => setChatsCurrentFilter("unread")}
-        >
-          <FaEyeSlash /> {translations?.sidechats?.unread}
-        </li>
-        <li
-          className={chatsCurrentFilter === "drafts" ? "active" : ""}
-          onClick={() => setChatsCurrentFilter("drafts")}
-        >
-          <FaUnlink /> {translations?.sidechats?.drafts}
-        </li>
-      </ul>
-      <div
-        ref={actionMenu}
-        className={`menu userMenu ${userMenu && "active"}`}
-        style={{
-          top: `${menuPosition.top}px`,
-          left: locale === "ar" ? "unset" : `${menuPosition.left}px`,
-          right: locale === "ar" ? `${menuPosition.left}px` : "unset",
-        }}
-      >
-        <div className="top">{translations?.actions?.actions}</div>
-        <ul>
-          <li>
-            <MdOutlinePushPin /> {translations?.actions?.pintotop}
-          </li>
-          <li>
-            <FaRegHeart style={{ fontSize: "16px" }} />{" "}
-            {translations?.actions?.addtofavorite}
-          </li>
-          <li className="logOut">
-            <TbArchiveOff /> {translations?.actions?.archivechat}
-          </li>
-          <li className="danger">
-            <MdBlockFlipped /> {translations?.actions?.block}
-          </li>
-          <li className="danger">
-            <TbLogout2 /> {translations?.actions?.exitgroup}
-          </li>
-        </ul>
-      </div>
-      <div className="holder">
-        {loading
-          ? Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} style={{ minWidth: "230px", width: "100%" }}>
-                <ContentLoader
-                  viewBox="0 0 320 55"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#ecebeb"
-                >
-                  <circle cx="30" cy="30" r="25" />
-                  <rect x="70" y="10" rx="5" ry="5" width="240" height="15" />
-                  <rect x="70" y="35" rx="5" ry="5" width="180" height="15" />
-                </ContentLoader>
-              </div>
-            ))
-          : users?.map((x) => (
-              <Link
-                key={x.id}
-                href={`/chat/${x.id}`}
-                className={`chat ${curentUserId == x.id && "active"}`}
-                onClick={() => setCurentUserId(x.id)}
-                onContextMenu={(e) => {
-                  handleMessageActions(e);
-                  setCurentUserId(x.id);
-                }}
-              >
-                <Image
-                  className={`${x.newStatus && "status"} rounded`}
-                  src={x.img}
-                  width={45}
-                  height={45}
-                  alt={`user Image`}
-                />
-                <div className="content">
-                  <div className="top">
-                    <h4>
-                      {CutText(
-                        x.name,
-                        screenSizeWidth < 786
-                          ? 20
-                          : screenSizeWidth < 992
-                          ? 9
-                          : screenSizeWidth < 1100
-                          ? 12
-                          : 14
-                      )}
-                    </h4>
-                    <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
+      {!users.length ? (
+        <>
+          <ul className="filters">
+            <li
+              onClick={() => setChatsCurrentFilter("allchats")}
+              className={chatsCurrentFilter === "allchats" ? "active" : ""}
+            >
+              <MdMarkUnreadChatAlt /> {translations?.sidechats?.allchats}
+            </li>
+            <li
+              className={chatsCurrentFilter === "groups" ? "active" : ""}
+              onClick={() => setChatsCurrentFilter("groups")}
+            >
+              <FaUsers /> {translations?.sidechats?.groups}
+            </li>
+            <li
+              className={chatsCurrentFilter === "favorites" ? "active" : ""}
+              onClick={() => setChatsCurrentFilter("favorites")}
+            >
+              <MdFavorite /> {translations?.sidechats?.favorites}
+            </li>
+            <li
+              className={chatsCurrentFilter === "unread" ? "active" : ""}
+              onClick={() => setChatsCurrentFilter("unread")}
+            >
+              <FaEyeSlash /> {translations?.sidechats?.unread}
+            </li>
+            <li
+              className={chatsCurrentFilter === "drafts" ? "active" : ""}
+              onClick={() => setChatsCurrentFilter("drafts")}
+            >
+              <FaUnlink /> {translations?.sidechats?.drafts}
+            </li>
+          </ul>
+          <div
+            ref={actionMenu}
+            className={`menu userMenu ${userMenu && "active"}`}
+            style={{
+              top: `${menuPosition.top}px`,
+              left: locale === "ar" ? "unset" : `${menuPosition.left}px`,
+              right: locale === "ar" ? `${menuPosition.left}px` : "unset",
+            }}
+          >
+            <div className="top">{translations?.actions?.actions}</div>
+            <ul>
+              <li>
+                <MdOutlinePushPin /> {translations?.actions?.pintotop}
+              </li>
+              <li>
+                <FaRegHeart style={{ fontSize: "16px" }} />{" "}
+                {translations?.actions?.addtofavorite}
+              </li>
+              <li className="logOut">
+                <TbArchiveOff /> {translations?.actions?.archivechat}
+              </li>
+              <li className="danger">
+                <MdBlockFlipped /> {translations?.actions?.block}
+              </li>
+              <li className="danger">
+                <TbLogout2 /> {translations?.actions?.exitgroup}
+              </li>
+            </ul>
+          </div>
+          <div className="holder">
+            {loading
+              ? Array.from({ length: 10 }).map((_, index) => (
+                  <div key={index} style={{ minWidth: "230px", width: "100%" }}>
+                    <ContentLoader
+                      viewBox="0 0 320 55"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                    >
+                      <circle cx="30" cy="30" r="25" />
+                      <rect
+                        x="70"
+                        y="10"
+                        rx="5"
+                        ry="5"
+                        width="240"
+                        height="15"
+                      />
+                      <rect
+                        x="70"
+                        y="35"
+                        rx="5"
+                        ry="5"
+                        width="180"
+                        height="15"
+                      />
+                    </ContentLoader>
                   </div>
-                  <div className="bottom">
-                    <p>
-                      {x.lastMessage.type == "img" ? (
-                        <>
-                          <IoImageOutline /> {translations?.chats?.image}
-                        </>
-                      ) : x.lastMessage.type == "sticker" ? (
-                        <>
-                          <PiStickerDuotone /> {translations?.chats?.sticker}
-                        </>
-                      ) : (
-                        CutText(
-                          x.lastMessage.content,
-                          screenSizeWidth < 786
-                            ? 36
-                            : screenSizeWidth < 992
-                            ? 21
-                            : screenSizeWidth < 1100
-                            ? 26
-                            : 28
-                        )
-                      )}
-                    </p>
-                    {x.unReadCounter > 0 && (
-                      <span className="count">{x.unReadCounter}</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
-      </div>
+                ))
+              : users?.map((x) => (
+                  <Link
+                    key={x.id}
+                    href={`/chat/${x.id}`}
+                    className={`chat ${curentUserId == x.id && "active"}`}
+                    onClick={() => setCurentUserId(x.id)}
+                    onContextMenu={(e) => {
+                      handleMessageActions(e);
+                      setCurentUserId(x.id);
+                    }}
+                  >
+                    <Image
+                      className={`${x.newStatus && "status"} rounded`}
+                      src={x.img}
+                      width={45}
+                      height={45}
+                      alt={`user Image`}
+                    />
+                    <div className="content">
+                      <div className="top">
+                        <h4>
+                          {CutText(
+                            x.name,
+                            screenSizeWidth < 786
+                              ? 20
+                              : screenSizeWidth < 992
+                              ? 9
+                              : screenSizeWidth < 1100
+                              ? 12
+                              : 14
+                          )}
+                        </h4>
+                        <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
+                      </div>
+                      <div className="bottom">
+                        <p>
+                          {x.lastMessage.type == "img" ? (
+                            <>
+                              <IoImageOutline /> {translations?.chats?.image}
+                            </>
+                          ) : x.lastMessage.type == "sticker" ? (
+                            <>
+                              <PiStickerDuotone />{" "}
+                              {translations?.chats?.sticker}
+                            </>
+                          ) : (
+                            CutText(
+                              x.lastMessage.content,
+                              screenSizeWidth < 786
+                                ? 36
+                                : screenSizeWidth < 992
+                                ? 21
+                                : screenSizeWidth < 1100
+                                ? 26
+                                : 28
+                            )
+                          )}
+                        </p>
+                        {x.unReadCounter > 0 && (
+                          <span className="count">{x.unReadCounter}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+          </div>
+        </>
+      ) : (
+        <div className="no-friend-yet-svg">
+          <Link className="main-button" href={"/discover?friends"}>
+            <FaPlus /> <span>{translations?.chats?.discover_people}</span>
+          </Link>
+          <p>{translations?.chats?.find_friends_and_start_chatting}</p>
+          <img
+            src={"/Svgs/dont Has Friends Yet.svg"}
+            alt={`dont Has Friends Yet`}
+          />
+        </div>
+      )}
     </div>
   );
 }

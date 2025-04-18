@@ -12,6 +12,7 @@
 body.ar,
 body.ar * {
   direction: rtl !important;
+  text-align: right;
 }
 body.ar .swiper-container,
 body.ar .swiper-container * {
@@ -25,13 +26,14 @@ main {
 .skeleton {
   background: var(--body-color);
   max-width: 100%;
+  height: fit-content;
 }
 
 :root {
   --body-color: #ffffff;
   --main-color: #ff8e31;
   --second-color: #ccebff;
-  --third-color: #ffb36c;
+  --third-color: #ffa551;
   --title-color: #454545;
   --second-section-color: #d5d5d5;
   --paragraph-color: #858585;
@@ -56,13 +58,19 @@ body.dark {
 body {
   padding: 0;
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
   display: flex;
   font-family: "Rubik", sans-serif;
   background-color: #f4f4f4;
   height: 100vh;
+  overflow: hidden;
 }
-
+body:has(.posts-holder) {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: unset;
+  min-height: 100vh;
+}
 ::-webkit-scrollbar {
   width: 6px;
   height: 8px;
@@ -115,7 +123,9 @@ h5,
 h6,
 li,
 svg,
-a {
+a,
+pre,
+p {
   margin: 0;
   padding: 0;
   color: var(--title-color);
@@ -133,10 +143,12 @@ svg {
   transition: 0.3s;
   cursor: pointer;
 }
-p {
-  margin: 0;
-  padding: 0;
+p,
+pre {
   color: var(--paragraph-color);
+  white-space: pre-wrap;
+  font-size: 15px;
+  font-family: "Rubik";
 }
 ul {
   list-style: none;
@@ -144,7 +156,7 @@ ul {
   padding: 0;
 }
 hr {
-  background: var(--border-color);
+  background: #dddddd;
   height: 1px;
   border: none;
 }
@@ -157,6 +169,11 @@ textarea {
   background: transparent;
   font-family: "Rubik";
 }
+input:-webkit-autofill {
+  background-color: transparent !important;
+  color: var(--title-color) !important;
+  font-weight: normal !important; /* or whatever you want */
+}
 body.ar input {
   direction: rtl;
   font-size: 14px !important;
@@ -166,6 +183,13 @@ button {
   border: none;
   cursor: pointer;
   font-family: "Rubik" !important;
+  transition: 0.3s;
+}
+button:has(.lds-dual-ring) {
+  transition: color 0.3s, background-color 0.3s;
+}
+a {
+  transition: 0.3s;
 }
 svg.close {
   padding: 6px;
@@ -197,6 +221,62 @@ svg.closeMenu {
 }
 body.ar .goBackSvg {
   transform: rotate(180deg);
+}
+
+.sideMenu {
+  position: fixed;
+  z-index: 101;
+  background: var(--body-color);
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px 0px #b8b8b8;
+  display: flex;
+  flex-direction: column;
+  scale: 0.5;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, scale 0.3s;
+  width: 255px;
+  gap: 0px;
+  padding: 8px 0;
+  border: 1px solid var(--border-color);
+}
+.sideMenu.active {
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
+}
+.sideMenu > h4 {
+  margin: 10px 15px;
+  margin-bottom: 4px;
+}
+.sideMenu hr {
+  margin: 5px 0;
+}
+.sideMenu > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 0 10px;
+}
+.sideMenu > button:hover {
+  background: var(--border-color);
+}
+.sideMenu button.danger:hover {
+  color: white;
+  background-color: var(--red-color);
+}
+.sideMenu button.danger:hover svg,
+.sideMenu button.warning:hover svg {
+  color: white;
+}
+.sideMenu button.warning:hover {
+  color: white;
+  background-color: #ef8d32;
+}
+.sideMenu button svg {
+  font-size: 17px;
 }
 
 .notfication-holder {
@@ -329,7 +409,6 @@ body.ar .notification span.before {
   padding: 6px 18px !important;
   border-radius: 5px !important;
   font-weight: 500;
-  transition: 0.3s;
   cursor: pointer;
   background: #ebebeb;
   display: flex;
@@ -338,9 +417,20 @@ body.ar .notification span.before {
   color: var(--title-color);
 }
 .main-button:hover,
-.main-button.active {
-  color: white;
+.main-button:hover span,
+.main-button.active,
+.main-button.loading span {
+  color: white !important;
   background: var(--main-color);
+}
+
+.main-button span {
+  transition: 0.3s;
+  opacity: 1;
+  background: transparent !important;
+}
+.main-button.loading span {
+  opacity: 0;
 }
 .main-button svg {
   font-size: 15px;
@@ -349,6 +439,30 @@ body.ar .notification span.before {
 .main-button.active svg {
   color: white;
 }
+.main-button.danger,
+.main-button.danger span {
+  color: var(--red-color);
+}
+.main-button.danger:hover,
+.main-button.danger.loading {
+  background: var(--red-color) !important;
+  color: white !important;
+}
+
+.main-button .lds-dual-ring:after {
+  opacity: 0;
+  border: 3px solid var(--title-color);
+  border-color: var(--title-color) transparent var(--title-color) transparent;
+}
+.main-button.loading .lds-dual-ring:after {
+  opacity: 1;
+}
+.main-button:hover .lds-dual-ring:after,
+.main-button.loading .lds-dual-ring:after {
+  border: 3px solid white;
+  border-color: white transparent white transparent;
+}
+
 .rounded {
   object-fit: cover !important;
   border-radius: 50% !important;
@@ -358,19 +472,24 @@ body > main > .holder:has(.register-page) {
 }
 
 .lds-dual-ring {
-  /* change color here */
   color: white;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .lds-dual-ring,
 .lds-dual-ring:after {
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .lds-dual-ring:after {
   content: " ";
   display: flex;
-  width: 28px;
-  height: 28px;
-  margin: 8px;
+  width: 20px;
+  height: 20px;
+  margin: 0px;
   border-radius: 50%;
   border: 4px solid currentColor;
   border-color: currentColor transparent currentColor transparent;
@@ -461,6 +580,7 @@ body > main:has(.emoji-holder.active) > .holder {
   display: flex;
   align-items: center;
   cursor: pointer;
+  z-index: 2;
   transition: right 0.2s, width 0.3s;
 }
 .chats .open-close:hover,
@@ -497,6 +617,10 @@ body.ar .chats.hide:hover .open-close svg {
   gap: 19px;
   align-items: center;
   padding: 0px 19px;
+  transition: 0.3s;
+}
+.chats.hide > .top {
+  gap: 0;
 }
 .chats > .top div {
   display: flex;
@@ -505,6 +629,10 @@ body.ar .chats.hide:hover .open-close svg {
   font-size: 21px;
   font-weight: 500;
   color: var(--title-color);
+  transition: 0.3s;
+}
+.chats.hide > .top div {
+  font-size: 0px;
 }
 body.ar .chats > .top div {
   direction: rtl !important;
@@ -529,6 +657,68 @@ body.ar .chats > .top div {
 .chats hr {
   margin: 10px 0 12px;
   padding: 0px 19px;
+}
+
+.chats .no-friend-yet-svg {
+  width: 334px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+  gap: 9px;
+}
+.chats .no-friend-yet-svg a {
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 6px 12px !important;
+  background: var(--third-color);
+  z-index: 2;
+}
+.chats .no-friend-yet-svg a:hover {
+  background: var(--main-color);
+}
+.chats .no-friend-yet-svg a span {
+  transition: 0.3s;
+}
+.chats.hide .no-friend-yet-svg a span {
+  font-size: 0px;
+}
+.chats.hide .no-friend-yet-svg a {
+  gap: 0px;
+}
+.chats .no-friend-yet-svg a svg {
+  color: white;
+  font-size: 17px;
+}
+.chats.hide .no-friend-yet-svg a svg {
+  font-size: 22px;
+}
+.chats .no-friend-yet-svg p {
+  font-size: 17px;
+  font-weight: 500;
+  opacity: 1;
+  transition: 0.3s;
+}
+.chats .no-friend-yet-svg img {
+  width: 114%;
+  position: absolute;
+  left: 0;
+  top: 52px;
+  opacity: 1;
+  transition: 0.3s;
+  z-index: 1;
+}
+.chats.hide .no-friend-yet-svg p {
+  opacity: 0;
+  font-size: 1px;
+}
+.chats.hide .no-friend-yet-svg img {
+  width: 100%;
+  left: -2px;
+  top: -15px;
+  opacity: 0;
 }
 
 .chats .filters {
@@ -737,25 +927,6 @@ body.ar .chats.active .chat {
   transition: 0.3s;
   cursor: pointer;
 }
-.chats .userMenu li:hover {
-  background: var(--border-color);
-}
-.chats .userMenu li.danger:hover {
-  color: white;
-  background-color: var(--red-color);
-}
-.chats .userMenu li.danger:hover svg,
-.chats .userMenu li.yellow:hover {
-  color: white;
-}
-.chats .userMenu li.yellow:hover {
-  color: white;
-  background-color: orange;
-}
-.chats .userMenu li svg {
-  transform: translateY(1px);
-  font-size: 17px;
-}
 
 .chats.hide .chat {
   width: 46px;
@@ -774,8 +945,7 @@ body.ar .chats.active .chat {
   padding: 1px 4px;
 }
 .chats.hide .filters,
-.chats.hide .search-holder,
-.chats.hide > .top div {
+.chats.hide .search-holder {
   display: none;
 }
 .chats.hide {
@@ -830,7 +1000,7 @@ body.ar header {
 header .logo {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   margin-left: -5px;
 }
 header .logo img {
@@ -893,12 +1063,57 @@ body.ar .search-holder svg.delete {
 .search-holder .result {
   display: none;
 }
-header nav {
+
+.search-holderr {
+  height: 33px;
   display: flex;
-  gap: 3px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  gap: 5px;
+  overflow: hidden;
+}
+.search-holderr svg {
+}
+.search-holderr svg.searchIco {
+}
+.search-holderr .middle {
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-holderr h4 {
+  font-weight: 400;
+  font-size: 15px;
+}
+.search-holderr input {
+  color: var(--title-color);
+  font-weight: 500;
+  font-size: 15px;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+.search-holderr:has(input:-webkit-autofill) {
+  background: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+}
+.search-holderr svg.delete {
+  background: var(--red-color);
+  color: white;
+  font-size: 17px;
+  padding: 6px;
+  width: 33px;
+  height: 100%;
+}
+
+header nav .hold {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 header nav a {
   padding: 11px 20px;
@@ -932,6 +1147,26 @@ header nav a:hover {
 }
 header nav a span {
   width: max-content;
+}
+
+header .letsPegin {
+  background: var(--third-color);
+  color: white;
+  padding: 10px 10px 10px 13px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+header .letsPegin:hover {
+  background: var(--main-color);
+}
+header .letsPegin svg {
+  color: white;
+  transform: translateY(-1px);
 }
 header .events {
   display: flex;
@@ -1023,7 +1258,7 @@ header .events .menu {
   flex-direction: column;
   position: absolute;
   width: -moz-fit-content;
-  background: var(--section-color);
+  background: var(--body-color);
   border-radius: 8px;
   overflow: hidden;
   visibility: hidden;
@@ -1090,12 +1325,11 @@ header .events .menu button {
   font-size: 16px;
   font-weight: 500;
   color: var(--title-color);
-  transition: 0.3s;
   width: 100%;
   font-family: "Rubik";
 }
 header .events .menu button:hover {
-  background: var(--second-section-color);
+  background: var(--border-color);
 }
 header .events .menu svg {
   font-size: 24px;
@@ -1117,6 +1351,26 @@ header .events .menu.createMenu svg {
 }
 .home .posts-holder {
   width: 100%;
+}
+.posts-holder .no-more-posts {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+.posts-holder .no-more-posts p {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  font-size: 25px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+}
+.posts-holder .no-more-posts img {
+  width: 80%;
 }
 .post {
   display: flex;
@@ -1173,6 +1427,22 @@ header .events .menu.createMenu svg {
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
+}
+.post .top .left .creatorType {
+  border-radius: 50%;
+  position: absolute;
+  bottom: -4px;
+  padding: 3px;
+  width: 22px;
+  height: 22px;
+  left: 0px;
+  background: var(--title-color);
+  color: white;
+}
+body.ar .post .top .left .creatorType {
+  right: 0;
+  left: unset;
 }
 .post .comment .top .left {
   flex-direction: column;
@@ -1196,17 +1466,20 @@ header .events .menu.createMenu svg {
   font-weight: 500;
   display: block;
 }
-.post .top svg,
-.top.forUser svg {
+.settingDotsIco {
   width: 33px;
   height: 33px;
   border-radius: 50%;
   padding: 7px;
 }
-.post .top svg:hover,
-.top.forUser svg:hover {
+.settingDotsIco:hover {
   color: white;
-  background: var(--back-grident);
+  background: var(--main-color);
+}
+.comment .settingDotsIco {
+  width: 25px;
+  height: 25px;
+  padding: 5px;
 }
 
 .post .middle {
@@ -1225,6 +1498,9 @@ header .events .menu.createMenu svg {
   display: flex;
   align-items: center;
   font-size: 14px;
+}
+.post .middle pre {
+  overflow-wrap: anywhere;
 }
 .mentions.view {
   display: flex;
@@ -1253,7 +1529,6 @@ header .events .menu.createMenu svg {
   font-weight: 400;
   font-size: 14px;
   width: fit-content;
-  transition: 0.3s;
   text-decoration: underline !important;
 }
 .post .middle a:hover {
@@ -1268,7 +1543,7 @@ header .events .menu.createMenu svg {
   justify-content: center;
 }
 .post .middle .image img {
-  max-height: 400px;
+  max-height: 50vw;
   max-width: 100%;
   object-fit: contain;
   border-radius: 7px;
@@ -1319,8 +1594,8 @@ header .events .menu.createMenu svg {
   border-top: 1px solid var(--border-color);
   padding: 14px;
   position: relative;
+  min-height: 54px;
 }
-
 .post .emojesCounter {
   display: flex;
   align-items: center;
@@ -1339,9 +1614,10 @@ header .events .menu.createMenu svg {
   margin-left: 0;
 }
 .post .emojesCounter p:last-child {
-  font-size: 16px;
+  font-size: 14px;
   background: transparent;
   margin-left: -1px;
+  transform: translateY(2px);
 }
 
 body.ar .post .emojesCounter p {
@@ -1357,11 +1633,17 @@ body.ar .post .emojesCounter p:last-child {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-left: auto;
+}
+body.ar .post .bottom .right {
+  margin-right: auto;
+  margin-left: unset;
+}
+.post .comments .bottom .right {
   min-width: 65px;
 }
-
 .comments .sideMenu.reactsHolder {
-  left: calc(100% - 250px);
+  right: 0;
   transform: unset;
   box-shadow: unset;
 }
@@ -1370,15 +1652,20 @@ body.ar .post .emojesCounter p:last-child {
   top: -48px;
   left: 50%;
   padding: 0;
+  width: fit-content;
   transform: translateX(-50%);
 }
 body.ar .comments .sideMenu.reactsHolder {
   left: unset;
-  right: calc(100% - 250px);
+  right: 0;
 }
 .sideMenu.reactsHolder .reacts {
   margin: 0;
-  padding: 5px;
+  padding: 6px 8px;
+  transition: 0.3s;
+}
+.sideMenu.reactsHolder .reacts.loading {
+  opacity: 0.5;
 }
 .sideMenu.reactsHolder .reacts > * {
   width: 32px;
@@ -1421,6 +1708,10 @@ body.ar .comments .sideMenu.reactsHolder {
   padding: 14px;
   padding-right: 0;
 }
+body.ar .post .comments {
+  padding-right: unset;
+  padding-left: 0;
+}
 .post .comments .top {
   border: none;
   padding: unset;
@@ -1433,16 +1724,17 @@ body.ar .comments .sideMenu.reactsHolder {
   font-size: 17px;
   font-weight: 500;
 }
-.post .comments .top svg {
+.post .comments > .top svg {
   padding: 0;
   width: 28px;
   height: 28px;
+  border-radius: 50%;
 }
-.post .comments .top svg:hover {
+.post .comments > .top svg:hover {
   background: var(--red-color);
   color: white;
 }
-.post .comments .holder {
+.post .comments > .holder {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -1452,37 +1744,48 @@ body.ar .comments .sideMenu.reactsHolder {
 .post .comments > .holder {
   padding-right: 14px;
 }
-.post .comments .holder .comment {
+.post .comments > .holder .comment {
   display: flex;
   gap: 12px;
   border-bottom: 1px solid var(--border-color);
   padding: 10px;
+  padding-top: 4px;
   padding-left: 0;
   padding-right: 0;
+  position: relative;
+  transition: 0.3s;
+  margin-bottom: 6px;
 }
-.post .comments .holder .comment:last-child {
+.post .comments > .holder .comment .bottom {
+  position: unset;
+  margin-bottom: 2px;
+}
+.post .comments > .holder .comment:last-child {
   border: none;
+  margin-bottom: 15px;
 }
-.post .comments .holder .comment .image-holder {
+.post .comments > .holder .comment .image-holder {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
-.post .comments .holder .comment .image-holder span {
+.post .comments > .holder .comment .image-holder span {
   position: relative;
   height: 100%;
+  opacity: 0.6;
+  transition: 0.3s;
 }
-.post .comments .holder .comment .image-holder span::before {
+.post .comments > .holder .comment .image-holder span::before {
   content: "";
   position: absolute;
   left: 50%;
   bottom: 0;
   width: 1px;
   height: 100%;
-  background: var(--border-color);
+  background: var(--paragraph-color);
   transform: translateX(-50%);
 }
-.post .comments .holder .comment .image-holder span::after {
+.post .comments > .holder .comment .image-holder span::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -1490,55 +1793,135 @@ body.ar .comments .sideMenu.reactsHolder {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: var(--border-color);
+  background: var(--paragraph-color);
   transform: translate(-50%, -50%);
 }
-.post .comments .holder .comment .content img {
+.post .comments > .holder .comment .content img {
   border-radius: 10px;
   cursor: pointer;
   position: relative !important;
   max-height: 110px;
   width: fit-content !important;
 }
-.post .comments .holder .comment .content h5 {
+.post .comments > .holder .comment .content h5 {
   margin-top: 5px;
   font-size: 14px;
 }
-.post .comments .holder .comment .content span {
+.post .comments > .holder .comment .content span {
   color: var(--paragraph-color);
   font-weight: 400;
   font-size: 13px;
   display: flex;
 }
-.post .comments .holder .comment .content .holder > p {
+.post .comments > .holder .comment .content .holder > p {
   font-size: 15px;
-  margin: 2px 0 1px;
+  margin: 3px 0 2px;
   line-height: 1.3;
+  overflow-wrap: anywhere;
 }
-.post .comments .holder .comment .bottom {
+.post .comments > .holder .comment .content .react-reply-div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+  color: var(--paragraph-color);
+}
+.post .comments > .holder .comment .content .react-reply-div > * {
+  color: var(--paragraph-color);
+}
+.post .comments > .holder .comment .content .react-reply-div > *:hover {
+  color: var(--main-color);
+}
+.post .comments > .holder .comment .bottom {
   border: none;
   padding: 0;
+  min-height: unset;
+  position: absolute;
+  bottom: -19px;
+  padding: 0 5px;
+  width: 100%;
+  left: 0;
 }
-.post .comments .holder .comment .bottom .left {
+.post .comments > .holder .comment .bottom.forReply {
+  position: relative;
+  left: unset;
+  bottom: unset;
+  padding: 0;
+  margin: 0;
+}
+.post .comments > .holder .comment .bottom.forReply button {
+  font-size: 13px;
+  font-weight: 400;
+}
+.post .comments > .holder .comment .bottom > * {
+  background: var(--body-color);
+}
+.post .comments > .holder .comment .bottom .left {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.post .comments .holder .comment .bottom svg {
+.post .comments > .holder .comment .react-reply-div svg {
   color: var(--paragraph-color);
-  font-size: 18px;
+  font-size: 15px;
 }
-.post .comments .holder .comment .bottom button {
+.post .comments > .holder .comment .bottom button {
   color: var(--paragraph-color);
   font-weight: 500;
   font-size: 12px;
-  transition: 0.3s;
 }
-.post .comments .holder .comment .bottom button:hover {
+.post .comments > .holder .comment .bottom button:hover {
   color: var(--main-color);
 }
-.post .comments .holder .comment .content {
+.post .comments > .holder .comment .content {
   flex: 1;
+  position: relative;
+}
+.post .comments > .holder .comment.reply {
+  background: var(--back-grident);
+  padding: 10px;
+  border-radius: 8px;
+  margin: 6px;
+}
+.post .comments > .holder .comment.reply .bottom button,
+.post .comments > .holder .comment.reply .react-reply-div svg,
+.post .comments > .holder .comment.reply .content .react-reply-div > *,
+.post .comments > .holder .comment.reply .content span,
+.post .comments > .holder .comment.reply .bottom button,
+.post .comments > .holder .comment.reply .content .holder > p,
+.post .comments > .holder .comment.reply .content h5 {
+  color: white;
+}
+.post .comments > .holder .comment.reply .image-holder span {
+  opacity: 1;
+}
+.post .comments > .holder .comment.reply .image-holder span::after,
+.post .comments > .holder .comment.reply .image-holder span::before {
+  background: white;
+}
+.post .comments > .holder .comment.reply .content .react-reply-div > * {
+  font-weight: 500;
+}
+.post .comments > .holder .view {
+  background: var(--third-color);
+  color: white;
+  padding: 10px;
+  margin: 20px 15px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 15px;
+}
+.post .comments > .holder button.view {
+}
+.post .comments > .holder button.view .lds-dual-ring:after {
+  width: 21px;
+  height: 21px;
+  margin: 0px;
+  border: 3px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+}
+.post .comments > .holder button.view:hover {
+  background: var(--main-color);
 }
 
 .action-holder.forComments {
@@ -1628,11 +2011,15 @@ body.ar .action-holder.forComments .top svg {
 .action-holder.forComments .actions .right button {
   background: var(--back-grident);
   color: white;
-  padding: 11px 15px;
+  padding: 11px 15px !important;
   border-radius: 6px;
   font-weight: 500;
+  font-size: 13px;
 }
-
+.action-holder.forComments .actions .right button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--paragraph-color);
+}
 .focusedMsg .hold {
   display: flex;
   flex-direction: column;
@@ -1728,17 +2115,17 @@ body:has(.focusedMsg.active) .chats {
   margin-bottom: -1px;
   border-radius: 4px;
 }
-.focusedMsg .post .comments .holder {
+.focusedMsg .post .comments > .holder {
   max-height: unset;
   overflow: unset;
   flex: 1;
   display: flex;
   justify-content: center;
 }
-.focusedMsg .post .comments .holder .comment {
+.focusedMsg .post .comments > .holder .comment {
   padding: 10px 0;
 }
-.focusedMsg .post .comments .holder .comment .image-holder img {
+.focusedMsg .post .comments > .holder .comment .image-holder img {
   min-width: 35px;
   height: 40px;
 }
@@ -1785,6 +2172,11 @@ body:has(.focusedMsg.active) .chats {
 .posts-holder .post .bottom > .actions {
   gap: 4px;
 }
+.posts-holder .post .bottom > .actions.mid {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 .posts-holder .post .bottom > .actions > div {
   display: flex;
 }
@@ -1828,7 +2220,6 @@ body:has(.focusedMsg.active) .chats {
   width: 37px;
   height: 30px;
   color: var(--title-color);
-  transition: 0.3s;
 }
 .MenuOfUsers .topFilter button:hover,
 .MenuOfUsers .topFilter button.active {
@@ -2048,22 +2439,50 @@ body .sideSection + div {
 .usersSelection .holder .top p {
   font-size: 15px;
 }
-.usersSelection .holder .chat label {
+
+label.checkbox {
   display: flex;
-  scale: 0.75;
-}
-.usersSelection .holder .chat label > span {
-  border-color: var(--paragraph-color);
+  width: 17px;
+  height: 17px;
 }
 
-.userInfo.sideMenu {
+label.checkbox > span {
+  border-color: var(--paragraph-color);
+}
+.custom-checkbox {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--title-color);
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+}
+.custom-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--title-color);
+  border-radius: 2px;
+  opacity: 0;
+}
+
+/* Show the checkmark when checkbox is checked */
+.input[type="checkbox"]:checked + .custom-checkbox::after {
+  opacity: 1;
+}
+
+.info-menu.sideMenu {
   background: var(--body-color);
   padding: 15px;
   width: 340px;
   gap: 10px;
   z-index: 101;
 }
-.userInfo.sideMenu img {
+.info-menu.sideMenu img {
   position: relative !important;
   width: 100px !important;
   height: 100px !important;
@@ -2073,66 +2492,59 @@ body .sideSection + div {
   z-index: 1001 !important;
 }
 
-.userInfo.sideMenu .info {
+.info-menu.sideMenu .info {
   width: 100%;
 }
-.userInfo.sideMenu .holder {
+.info-menu.sideMenu .holder {
   display: flex;
   gap: 12px;
 }
-.userInfo.sideMenu img {
+.info-menu.sideMenu img {
   position: relative !important;
   width: 85px !important;
   height: 85px !important;
 }
 
-.userInfo.sideMenu .info .top {
+.info-menu.sideMenu .info .top {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.userInfo.sideMenu .info > p {
+.info-menu.sideMenu .info > p {
   font-weight: 500;
   font-size: 15px;
   margin-bottom: 8px;
   margin-top: -2px;
 }
-.userInfo.sideMenu .info > h5 {
+.info-menu.sideMenu .info > h5 {
   margin-bottom: 1px;
   font-weight: 700;
   font-size: 15px;
 }
-.userInfo.sideMenu .info .top div {
+.info-menu.sideMenu .info .top div {
   font-size: 18px;
 }
-.userInfo.sideMenu ul {
+.info-menu.sideMenu ul {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.userInfo.sideMenu .info ul li {
+.info-menu.sideMenu .info ul li {
   font-size: 14px;
   color: var(--title-color);
   font-weight: 500;
 }
-.userInfo.sideMenu .info ul span {
+.info-menu.sideMenu .info ul span {
   color: var(--paragraph-color);
   font-weight: 500;
 }
-.userInfo.sideMenu .actions {
+.info-menu.sideMenu .actions {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.userInfo.sideMenu .actions > *:last-child {
-  margin-left: auto;
-}
-.userInfo.sideMenu .actions > *:last-child {
-  margin-left: unset;
-  margin-right: auto;
-}
 
-.userInfo svg.close {
+.info-menu svg.close {
   width: 27px;
   height: 27px;
 }
@@ -2197,6 +2609,7 @@ body .sideSection + div {
   flex-direction: column;
   align-items: center;
   width: 48%;
+  max-width: 747px;
   margin: 0 auto;
 }
 .home .stories-holder {
@@ -2246,10 +2659,93 @@ body.ar .navigations-icons.forStories svg {
   height: 200px;
 }
 .home .stories-holder .story.smallView .top.forUser img {
-  width: unset;
-  height: unset;
+    width: 47px;
+    height: 47px;
+
+}
+.home .stories-holder .userStory-creation {
+  border: 1px solid var(--border-color);
+  background: var(--body-color);
+  cursor: pointer;
+  position: relative;
+}
+.home .stories-holder .userStory-creation img {
+  position: relative !important;
+  object-fit: cover;
+  scale: 1;
+  transition: 0.4s;
+}
+.home .stories-holder .userStory-creation:hover img {
+  scale: 1.5;
+}
+.home .stories-holder .userStory-creation .bottom h5 {
+  font-size: 13px;
+  transition: 0.4s;
+  font-weight: 500;
+}
+.home .stories-holder .userStory-creation:hover .bottom h5 {
+  font-size: 0;
+}
+.home .stories-holder .userStory-creation .bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 17px 0 6px;
+}
+.home .stories-holder .userStory-creation .svg-holder {
+  background: var(--main-color);
+  color: var(--body-color);
+  padding: 4px;
+  width: 26%;
+  height: 15%;
+  border-radius: 50%;
+  z-index: 1;
+  position: absolute;
+  top: 73%;
+  left: 50%;
+  transform: translate(-50%, -2%);
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0px;
+}
+.home .stories-holder .userStory-creation:hover .svg-holder {
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 0%;
+  transform: translate(-50%, -50%);
+  gap: 3px;
+}
+.home .stories-holder .userStory-creation .svg-holder h5 {
+  font-size: 0;
+  color: white;
+}
+.home .stories-holder .userStory-creation .svg-holder h5 {
+  transition: 0.4s;
+  font-size: 0px;
+  color: white;
+}
+.home .stories-holder .userStory-creation:hover .svg-holder h5 {
+  font-size: 15px;
+}
+.home .stories-holder .userStory-creation svg {
+  color: white;
+  font-size: 24px;
+}
+.home .stories-holder .userStory-creation:hover svg {
+  font-size: 45px;
 }
 
+.home .stories-holder .userStory-creation svg {
+}
+.home .stories-holder .userStory-creation:hover svg {
+}
 .story {
   width: 480px;
   height: 770px;
@@ -2531,6 +3027,140 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   pointer-events: none;
 }
 
+.Product {
+  border: 2px solid var(--border-color);
+  background: var(--body-color);
+  border-radius: 15px 15px 10px 10px;
+}
+.Product .mainImg {
+  object-fit: cover;
+  position: relative !important;
+  height: 220px !important;
+  border-radius: 20px 20px 0 0;
+}
+.Product .content {
+  padding-top: 4px;
+}
+.Product .content:not(:has(.last)) {
+  padding-bottom: 2px;
+}
+.Product .content > div {
+  padding: 2px 10px;
+}
+.Product .content > div:last-child {
+  padding: 6px 10px;
+}
+.Product .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--title-color);
+  gap: 5px;
+}
+.Product .row.last {
+  font-size: 13px;
+  font-weight: 600;
+}
+.Product .row img {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.Product .row.loc-serv {
+  margin-bottom: 5px;
+  justify-content: start;
+}
+.Product .row.loc-serv > * {
+  font-size: 13px;
+  font-weight: 500;
+}
+.Product .row h4 {
+}
+.Product .title {
+  font-weight: 500;
+}
+.Product .category {
+}
+.Product .price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+}
+.Product .price .originalPrice {
+  font-weight: 500;
+  color: var(--paragraph-color);
+  font-size: 15px;
+  text-decoration: line-through;
+}
+.Product .price .currentPrice {
+  font-weight: 700;
+  color: var(--title-color);
+}
+.Product .salePercentage {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--main-color);
+  font-size: 14px;
+}
+.Product .location {
+}
+.Product .deliveryService {
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pagination li .page-num,
+.pagination li.break {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 6px;
+  color: var(--title-color);
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+}
+.pagination li.active .page-num,
+.pagination li:hover .page-num {
+  background: var(--main-color);
+  color: white;
+  font-weight: 600;
+}
+.pagination li.active .page-num {
+  background: var(--back-grident);
+}
+.pagination li.next a,
+.pagination li.previous a {
+  width: 80px;
+  height: 40px;
+}
+.pagination li.break a {
+  transform: translateY(-2px);
+}
+.pagination li.disabled .page-num {
+  background: var(--body-color) !important;
+  color: var(--title-color) !important;
+  cursor: no-drop;
+}
+
+@media (min-width: 1700px) {
+  header nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
 @media (max-width: 1700px) {
   .focusedMsg .post .right-info {
     min-width: 35%;
@@ -2660,6 +3290,7 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   header {
     margin-right: 0;
   }
+
   .chats {
     width: 278px;
   }
@@ -2753,10 +3384,13 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   .home {
     width: 100%;
   }
-  body:has(.chats.active) header nav {
-    position: relative;
-    transform: unset;
-    left: unset;
+  header nav {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+  .post .middle .image img {
+    max-height: 126vw;
   }
   .chat-page > img {
     width: 100%;
@@ -2792,10 +3426,10 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     width: 100%;
   }
   body:has(.chats.hide) .home .stories-holder {
-    max-width: 700px;
+    max-width: 84vw;
   }
   .home .stories-holder {
-    max-width: 495px;
+    max-width: 59vw;
     margin: 0;
   }
   .story {
@@ -2804,6 +3438,9 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
 
   .home .stories-holder .story {
     height: 225px;
+  }
+  body:has(.chats.active) .home .stories-holder .story {
+    height: 176px;
   }
   .home .stories-holder .storiesTop {
     display: flex;
@@ -2850,6 +3487,7 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     width: 100vw;
     padding: 0;
     overflow: unset;
+    height: 99vh;
   }
   body > main > .holder {
     overflow: unset;
@@ -2907,14 +3545,24 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     position: relative;
     left: unset;
     transform: unset;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
   body main header:has(nav.active) {
     gap: 10px;
   }
   body main header nav.active {
-    height: 37px;
+    height: 82px;
     overflow: unset;
     opacity: 1;
+  }
+  body main header nav.active .letsPegin {
+    padding: 7px 15px 7px 15px;
+    font-size: 14px;
+  }
+  body main header nav.active .letsPegin svg {
   }
   header nav a {
     flex: 1;
@@ -2964,6 +3612,9 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   .post > .actions > div:nth-child(2) > svg {
     padding: 7px;
   }
+  .post .middle .image img {
+    max-height: unset;
+  }
   .post .images.small img {
     width: 48.3% !important;
     max-height: 160px;
@@ -3000,7 +3651,7 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     gap: 8px;
     width: fit-content;
   }
-  .post .comments .holder .comment,
+  .post .comments > .holder .comment,
   .post .bottom .right {
     gap: 8px;
   }
@@ -3019,7 +3670,7 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     height: 58px;
     padding: 3px 7px;
   }
-  .post .comments .holder .comment .content .holder > p {
+  .post .comments > .holder .comment .content .holder > p {
     padding: 8px 10px;
     font-size: 14px;
   }
@@ -3057,10 +3708,12 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     padding-top: 0;
     border-bottom: 1px solid var(--border-color);
     border-top: unset;
+    min-height: unset;
   }
   .focusedMsg .post .bottom {
     padding: 9px 14px 8px;
   }
+
   .actions > div {
     width: -webkit-fill-available;
   }
@@ -3068,11 +3721,11 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     transform: unset;
   }
   .comments .sideMenu.reactsHolder {
-    left: calc(100% - 200px);
+    left: 0;
   }
   body.ar .comments .sideMenu.reactsHolder {
     left: unset;
-    right: calc(100% - 200px);
+    right: 0;
   }
 
   .notification {
@@ -3122,8 +3775,12 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   .home .stories-holder .story.smallView .top.forUser {
     padding: 5px;
   }
+  .home .stories-holder .story.smallView .top.forUser > div {
+    padding: 6px 1px !important;
+  }
   .home .stories-holder {
     padding: 0 10px;
+    max-width: 100%;
   }
   .focusedMsg .stories .storySection {
     width: -webkit-fill-available;
@@ -3160,6 +3817,21 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   .action-holder.forComments .top svg {
     right: 3px !important;
     top: 3px !important;
+  }
+  .posts-holder .no-more-posts img {
+    width: 100%;
+  }
+  .posts-holder .no-more-posts p {
+    font-size: 17px;
+  }
+  .chats .no-friend-yet-svg {
+    width: 100%;
+  }
+  .chats .no-friend-yet-svg img {
+    width: 100%;
+    position: relative;
+    left: unset;
+    top: unset;
   }
 }
 @media (max-width: 500px) {

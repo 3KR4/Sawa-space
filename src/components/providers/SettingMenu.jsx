@@ -3,22 +3,31 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { postService } from "@/services/api/postService";
 
-
-import { MdBlock, MdReport, MdContentCopy } from "react-icons/md";
-import { IoPersonRemove } from "react-icons/io5";
+import { MdBlock, MdReport, MdContentCopy, MdEdit } from "react-icons/md";
+import { IoPersonRemove, IoPersonRemoveSharp, IoLogOut } from "react-icons/io5";
 import { BiSolidHide, BiVolumeMute } from "react-icons/bi";
-import { FaBookmark } from "react-icons/fa";
+import { FaBookmark, FaTrashAlt } from "react-icons/fa";
 import { HiUsers } from "react-icons/hi2";
+import { GoBookmarkSlashFill } from "react-icons/go";
 
-import { IoPersonRemoveSharp } from "react-icons/io5";
+import { RiShareForwardFill } from "react-icons/ri";
 
 function SettingMenu() {
   const { translations } = useLanguage();
+  const { userData } = useContext(ScreenContext);
 
-  const { settingsMenuRef } = useContext(MenusContext);
-  const { menuPosition, settingMenu, setSettingMenu, settingMenuType } =
-    useContext(DynamicMenusContext);
+  const { settingsMenuRef, setDangerEvent, setOpenPostForm } =
+    useContext(MenusContext);
+  const {
+    menuPosition,
+    settingMenu,
+    setSettingMenu,
+    settingMenuType,
+    selectedDev,
+  } = useContext(DynamicMenusContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,6 +44,8 @@ function SettingMenu() {
     };
   }, [setSettingMenu]);
 
+  // Delete Comment
+
   return (
     <div
       ref={settingsMenuRef}
@@ -46,26 +57,60 @@ function SettingMenu() {
     >
       {settingMenuType === "settingMenu-post" ? (
         <>
-          <button>
-            <FaBookmark /> {translations?.actions?.save_post}
-          </button>
-          <button>
-            <HiUsers /> {translations?.actions?.add_friend}
-          </button>
-          <hr />
-          <button className="yellow">
-            <BiSolidHide /> {translations?.actions?.hide}
-          </button>
-          <button className="yellow">
-            <MdBlock /> {translations?.actions?.block}
-          </button>
-          <hr />
-          <button className="danger">
-            <IoPersonRemove /> {translations?.actions?.remove_friend}
-          </button>
-          <button className="danger">
-            <MdReport /> {translations?.actions?.report}
-          </button>
+          {selectedDev.isMyPost && (
+            <button
+              onClick={() => {
+                setSettingMenu(false);
+                setOpenPostForm({ type: "edit", postId: selectedDev.id });
+              }}
+            >
+              <MdEdit /> {translations?.forms?.edit_post}
+            </button>
+          )}
+          {!selectedDev.isInFavorite && (
+            <button>
+              <FaBookmark /> {translations?.actions?.save_post}
+            </button>
+          )}
+          {!selectedDev.isMyPost && !selectedDev.isMyFriend && (
+            <button>
+              <HiUsers /> {translations?.actions?.add_friend}
+            </button>
+          )}
+          {!selectedDev.isMyPost && (
+            <>
+              <hr />
+              <button className="warning">
+                <BiSolidHide /> {translations?.actions?.hide}
+              </button>
+              <button className="warning">
+                <MdReport /> {translations?.actions?.report}
+              </button>
+              {selectedDev.isInFavorite && (
+                <button>
+                  <GoBookmarkSlashFill /> {translations?.actions?.un_save_post}
+                </button>
+              )}
+            </>
+          )}
+          {(!selectedDev.isMyPost ||
+            selectedDev.isMyPost ||
+            selectedDev.isMyFriend) && <hr />}
+          {selectedDev.isMyFriend && (
+            <button className="danger">
+              <IoPersonRemove /> {translations?.actions?.remove_friend}
+            </button>
+          )}
+          {!selectedDev.isMyPost && (
+            <button className="danger">
+              <MdBlock /> {translations?.actions?.block}
+            </button>
+          )}
+          {selectedDev.isMyPost && (
+            <button className="danger">
+              <FaTrashAlt /> {translations?.actions?.remove_post}
+            </button>
+          )}
         </>
       ) : settingMenuType === "settingMenu-user" ? (
         <>
@@ -86,6 +131,74 @@ function SettingMenu() {
           <button className="danger">
             <BiVolumeMute /> {translations?.story?.mute_stories_from} ahmed
           </button>
+        </>
+      ) : settingMenuType === "settingMenu-page" ? (
+        <>
+          <button>
+            <RiShareForwardFill /> {translations?.portfolio?.share_page}
+          </button>
+          <hr />
+          <button className="danger">
+            <IoLogOut style={{ transform: "rotate(180deg)" }} />{" "}
+            {translations?.portfolio?.unfollowing_page}
+          </button>
+          <button className="danger">
+            <MdReport /> {translations?.actions?.report_page}
+          </button>
+        </>
+      ) : settingMenuType === "settingMenu-page-posts" ? (
+        <>
+          <button>
+            <FaBookmark /> {translations?.actions?.save_post}
+          </button>
+          <button className="warning">
+            <BiSolidHide /> {translations?.actions?.hide}
+          </button>
+          <hr />
+
+          <button className="danger">
+            <MdBlock /> {translations?.actions?.block_page}
+          </button>
+          <button className="danger">
+            <MdReport /> {translations?.actions?.report_page}
+          </button>
+        </>
+      ) : settingMenuType === "settingMenu-comment" ? (
+        <>
+          {selectedDev.isMyComment ? (
+            <>
+              <button>
+                <MdEdit /> {translations?.actions?.edit_comment}
+              </button>
+              <button
+                className="danger"
+                onClick={() => {
+                  setSettingMenu(null);
+                  setDangerEvent({
+                    type: "delete_comment",
+                    message: "are you sure you want to delete this comment",
+                  });
+                }}
+              >
+                <FaTrashAlt /> {translations?.actions?.delete_comment}
+              </button>
+            </>
+          ) : selectedDev.isMyPost ? (
+            <>
+              <button
+                className="danger"
+                onClick={() => {
+                  setSettingMenu(null);
+                  setDangerEvent({
+                    type: "delete_comment",
+                    message: "are you sure you want to delete this comment",
+                  });
+                }}
+              >
+                <FaTrashAlt /> {translations?.actions?.delete_comment}
+              </button>
+            </>
+          ) : null}
         </>
       ) : (
         <div></div>
