@@ -139,7 +139,7 @@ function TypeComment({
             width={40}
             height={40}
           />
-          {userData?.fristname} {userData?.lastname}
+          {userData?.firstname} {userData?.lastname}
         </div>
         <div className="right">
           {screenSize === "large" && (

@@ -2622,6 +2622,9 @@ label.checkbox > span {
 .home .stories-holder .top.forUser .info span {
   display: none;
 }
+.home .stories-holder .swiper-wrapper {
+  justify-content: center;
+}
 .navigations-icons.forStories {
   position: absolute;
   z-index: 1;
@@ -2659,9 +2662,8 @@ body.ar .navigations-icons.forStories svg {
   height: 200px;
 }
 .home .stories-holder .story.smallView .top.forUser img {
-    width: 47px;
-    height: 47px;
-
+  width: 47px;
+  height: 47px;
 }
 .home .stories-holder .userStory-creation {
   border: 1px solid var(--border-color);
@@ -2792,6 +2794,22 @@ body.ar .navigations-icons.forStories svg {
   flex-direction: column;
   width: 100%;
   gap: 0;
+}
+.story.smallView .lds-dual-ring {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--title-color);
+  z-index: -1;
+  transition: 0.3s;
+  opacity: 0;
+}
+.story.smallView.loading .lds-dual-ring {
+  z-index: 0;
+  opacity: 1;
+}
+.story.smallView.loading .left .info,
+.story.smallView.loading .left img {
+  opacity: 0;
 }
 .counter-for-story {
   position: absolute;
@@ -2942,6 +2960,7 @@ body.ar .navigations-icons.forStories svg {
   padding: 6px 10px;
   cursor: pointer;
   transition: 0.3s;
+  position: relative;
 }
 .focusedMsg .stories .usersStories .singleStory:hover,
 .focusedMsg .stories .usersStories .singleStory.active {
@@ -2954,10 +2973,22 @@ body.ar .navigations-icons.forStories svg {
   font-size: 15px;
 }
 .focusedMsg .stories .usersStories .singleStory .info span {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--paragraph-color);
+  font-weight: 500;
 }
-
+.focusedMsg .stories .usersStories .singleStory.loading .lds-dual-ring {
+  opacity: 1;
+}
+.focusedMsg .stories .usersStories .singleStory .lds-dual-ring {
+  position: relative;
+  color: var(--title-color);
+  left: unset;
+  top: unset;
+  transform: unset;
+  opacity: 0;
+  transform: translateX(-5px);
+}
 .focusedMsg .stories .storySection {
   width: 32%;
   max-width: 100%;

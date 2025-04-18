@@ -14,24 +14,21 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
+import { storyService } from "@/services/api/storyService";
+import { useNotification } from "@/Contexts/NotificationContext";
 
 import { HiDotsVertical } from "react-icons/hi";
 
-function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
-  const { screenSize, userData } = useContext(ScreenContext);
+function Story({ data, smallView }) {
+  const { screenSize, userData, stories } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
 
-  const { setDataSwiperType, setDataForSwiper, setImgFocus, setImgIndex } =
-    useContext(MenusContext);
+  const { setSingleProvider, singleProvider } = useContext(MenusContext);
+  const { addNotification } = useNotification();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 0);
-  }, []);
-
-  // Helper function to adjust pixel values based on smallView
   const adjustSize = (value) => {
     if (typeof value === "number") {
       return smallView
@@ -58,9 +55,39 @@ function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
     return value;
   };
 
+  const author =
+    Array.isArray(data?.author) && data.author.length > 0
+      ? data.author[0]
+      : null;
+
+  const fetchUserStories = async () => {
+    setLoading(true);
+    try {
+      const { data } = await storyService.getUserStories(author._id);
+      setSingleProvider({
+        type: "stories",
+        shared_data: data.data,
+        id: data?._id,
+      });
+    } catch (err) {
+      console.error("Error fetching user stories", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user Stories. Please try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
-      className={`story ${smallView ? "smallView" : ""}`}
+      onClick={() => {
+        smallView && fetchUserStories();
+      }}
+      className={`story ${smallView ? "smallView" : ""} ${
+        loading ? "loading" : ""
+      }`}
       style={{
         background:
           data?.info?.settings?.backGround === undefined
@@ -68,11 +95,6 @@ function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
             : data?.info?.settings?.backGround.type === "gradient"
             ? `linear-gradient(${data?.info?.settings?.backGround.deg}deg, ${data?.info?.settings?.backGround.first} ${data?.info?.settings?.backGround.first_Acquisition}%, ${data?.info?.settings?.backGround.second} ${data?.info?.settings?.backGround.second_Acquisition}%)`
             : data?.info?.settings?.backGround?.color,
-      }}
-      onClick={() => {
-        setDataSwiperType("stories");
-        setImgFocus(data?.id);
-        setDataForSwiper(data);
       }}
     >
       {data?.info?.body && (
@@ -164,37 +186,42 @@ function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             width: "100%",
             padding: "6px 11px",
+            minHeight: smallView ? "74px" : "unset",
           }}
         >
-          <div className="left">
-            <Image
-              className="rounded"
-              src={data?.author[0]?.img.url}
-              alt={`${data?.author[0]?.fristname} img`}
-              width={smallView ? 48 : 40}
-              height={smallView ? 48 : 40}
-              onClick={(e) =>
-                !smallView && handleMenus(e, "user-Info", data?.author[0]?._id)
-              }
-            />
-            <div className="info">
-              <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
-                {data?.author[0]?._id === userData._id ? (
-                  <>
-                    {translations?.story?.your_story}
-                  </>
-                ) : (
-                  <>
-                    {data?.author[0]?.fristname} {``}
-                    {data?.author[0]?.lastname}
-                  </>
-                )}
-              </h5>
-              <span>{ConvertTime(data?.date, locale)}</span>
+          {author && (
+            <div className="left">
+              {smallView && <div className="lds-dual-ring"></div>}
+
+              <Image
+                className="rounded"
+                src={author.img?.url || "/users/default.png"}
+                alt={`${author.firstname} img`}
+                width={smallView ? 48 : 40}
+                height={smallView ? 48 : 40}
+                onClick={(e) =>
+                  !smallView && handleMenus(e, "user-Info", author._id)
+                }
+              />
+              <div className="info">
+                <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
+                  {author._id === userData._id ? (
+                    <>{translations?.story?.your_story}</>
+                  ) : (
+                    <>
+                      {author.firstname} {``}
+                      {author.lastname}
+                    </>
+                  )}
+                </h5>
+                <span>{ConvertTime(data?.date, locale)}</span>
+              </div>
             </div>
-          </div>
+          )}
+
           {!smallView && (
             <HiDotsVertical
               className="settingDotsIco"
@@ -206,10 +233,10 @@ function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
         </div>
       </div>
 
-      {!smallView && data?.mentions && data?.mentions.length > 0 && (
+      {/* {!smallView && data?.mentions && data?.mentions.length > 0 && (
         <div className="mentions view">
           <h5>
-            {data?.author[0]?.fristname} {translations?.post?.mention}
+            {author.firstname} {translations?.post?.mention}
           </h5>
           {data?.mentions?.map((x, index) => (
             <button
@@ -220,7 +247,7 @@ function Story({ data, smallView, index, storyCount = 0, currentStoryIndex }) {
             </button>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

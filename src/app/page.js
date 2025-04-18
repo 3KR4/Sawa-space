@@ -9,7 +9,6 @@ import React, {
 import Link from "next/link";
 import Image from "next/image";
 
-import { posts as dummyPosts, stories, processStories } from "@/utils/Data";
 import Story from "@/components/post/Story";
 import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
@@ -29,13 +28,17 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 export default function Home() {
   const { addNotification } = useNotification();
-  const { screenSize, userData } = useContext(ScreenContext);
+  const { screenSize, userData, stories, currentUserStory } =
+    useContext(ScreenContext);
   const { translations } = useLanguage();
-  const { someThingHappen, setSomeThingHappen, setOpenStoryForm } =
-    useContext(MenusContext);
+  const {
+    someThingHappen,
+    setSomeThingHappen,
+    setOpenStoryForm,
+    singleProvider,
+    setSingleProvider,
+  } = useContext(MenusContext);
 
-  const [stories, setStories] = useState([]);
-  const [currentUserStory, setCurrentUserStory] = useState({});
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [postsloading, setPostsLoading] = useState(false);
@@ -43,6 +46,8 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
 
   const swiperRef = useRef(null);
+
+  console.log(stories);
 
   useEffect(() => {
     let timeoutId;
@@ -116,40 +121,6 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    let timeoutId;
-    let isMounted = true;
-
-    setStoryLoading(true);
-    timeoutId = setTimeout(async () => {
-      try {
-        const { data } = await storyService.getStories();
-        if (isMounted) {
-          setStories(data.data);
-          setCurrentUserStory(
-            data.data.find((x) => x.author[0]._id == userData._id)
-          );
-          // setHasMoreStories(page < data.last_page);
-        }
-      } catch (err) {
-        console.error("Error fetching stories", err);
-        addNotification({
-          type: "error",
-          message: "Failed to load Stories. Please try again later.",
-        });
-      } finally {
-        if (isMounted) setStoryLoading(false);
-      }
-    }, 1500);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  console.log(stories);
-
   return (
     <div className="home">
       {userData && (
@@ -157,14 +128,14 @@ export default function Home() {
           {!postsloading && screenSize !== "large" ? (
             <div className="storiesTop">
               <h5>{translations?.story?.stories}</h5>
-              {stories.length > 6 && (
+              {stories?.length > 6 && (
                 <div className="navigations-icons forStories">
                   <FaAngleLeft className="custom-prev" />
                   <FaAngleRight className="custom-next" />
                 </div>
               )}
             </div>
-          ) : stories.length > 6 ? (
+          ) : stories?.length > 6 ? (
             <div className="navigations-icons forStories">
               <FaAngleLeft className="custom-prev" />
               <FaAngleRight className="custom-next" />
@@ -226,7 +197,7 @@ export default function Home() {
                         </div>
 
                         <h5>
-                          {userData?.fristname} {userData?.lastname}
+                          {userData?.firstname} {userData?.lastname}
                         </h5>
                       </div>
                     </div>
@@ -235,8 +206,12 @@ export default function Home() {
                 {stories
                   ?.filter((x) => x.author[0]._id !== userData._id)
                   ?.map((story) => (
-                    <SwiperSlide key={story._id}>
-                      <Story data={story} smallView={true} />
+                    <SwiperSlide key={`${story._id}-${Date.now}`}>
+                      <Story
+                        data={story}
+                        sharing_data={stories}
+                        smallView={true}
+                      />
                     </SwiperSlide>
                   ))}
               </Swiper>
@@ -271,7 +246,7 @@ export default function Home() {
                 </ContentLoader>
               </div>
             ))
-          : posts.map((x) => <Post data={x} key={`${x._id}-${x.data}`} />)}
+          : posts.map((x) => <Post data={x} key={`${x._id}-${Date.now()}`} />)}
         {postsloading && posts.length > 0 && (
           <div className="postsloading-skeleton">
             {Array.from({ length: 1 }).map((_, index) => (

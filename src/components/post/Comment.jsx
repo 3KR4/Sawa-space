@@ -88,7 +88,7 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
           <div className="top">
             <div className="left">
               <h5>
-                {data?.author[0]?.fristname} {``} {data?.author[0]?.lastname}
+                {data?.author[0]?.firstname} {``} {data?.author[0]?.lastname}
               </h5>
               <span>{ConvertTime(data?.time, locale, "post")}</span>
             </div>
@@ -133,7 +133,7 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
                   replyTo?.commentId == data?._id
                     ? setReplyTo({})
                     : setReplyTo({
-                        name: data?.author[0]?.fristname,
+                        name: data?.author[0]?.firstname,
                         commentId: data?._id,
                         isMyComment,
                       });

@@ -388,7 +388,7 @@ export default function Auth() {
                     <FaRegUser />
                     <input
                       type="text"
-                      {...register("fristname", {
+                      {...register("firstname", {
                         required: translations?.auth?.firstname_is_required,
                         minLength: {
                           value: 3,
@@ -399,14 +399,14 @@ export default function Auth() {
                       })}
                       placeholder={translations?.auth?.enter_your_firstname}
                       style={{
-                        borderColor: errors.fristname ? "red" : "black",
+                        borderColor: errors.firstname ? "red" : "black",
                       }}
                     />
                   </div>
-                  {errors.fristname && (
+                  {errors.firstname && (
                     <span>
                       <CircleAlert />
-                      {errors.fristname.message}
+                      {errors.firstname.message}
                     </span>
                   )}
                 </div>

@@ -3,7 +3,7 @@ import apiClient from "../apiClient";
 export const userService = {
   createUser: async (userData) => {
     return apiClient.post("/user/Create", {
-      fristname: userData.firstname,
+      firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
       password: userData.password,

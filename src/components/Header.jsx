@@ -39,7 +39,6 @@ export default function Header() {
   const { pathname, screenSize, userData, setUserData } =
     useContext(ScreenContext);
 
-
   const [userMenu, setUserMenu] = useState(false);
   const [createMenu, setCreateMenu] = useState(false);
   const [phoneMenu, setPhoneMenu] = useState(false);
@@ -268,7 +267,7 @@ export default function Header() {
                 <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
                   <Link href={`/user/4`} className="title">
                     <FaUser style={{ fontSize: "22px" }} />{" "}
-                    {userData?.fristname} {userData?.lastname}
+                    {userData?.firstname} {userData?.lastname}
                   </Link>
                   <ul>
                     <button>
@@ -358,7 +357,7 @@ export default function Header() {
                 <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
                   <Link href={`/user/4`} className="title">
                     <FaUser style={{ fontSize: "22px" }} />{" "}
-                    {userData?.fristname} {userData?.lastname}
+                    {userData?.firstname} {userData?.lastname}
                   </Link>
                   <ul>
                     <button>

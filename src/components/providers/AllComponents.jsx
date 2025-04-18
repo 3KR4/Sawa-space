@@ -17,7 +17,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
 
 function AllComponents() {
-  const { imgFocus, openPostForm, openStoryForm, dangerEvent } =
+  const { imgFocus, openPostForm, openStoryForm, dangerEvent, singleProvider } =
     useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
@@ -49,7 +49,7 @@ function AllComponents() {
       </div>
 
       {settingMenu && <SettingMenu />}
-      {imgFocus && !pathname.includes("chat") && <SingleDetails />}
+      {singleProvider.type && !pathname.includes("chat") && <SingleDetails />}
       {infoMenu && <UserInfo />}
       {openPostForm && <PostForm />}
       {openStoryForm && <StoryForm />}

@@ -1,11 +1,14 @@
 "use client";
 import { createContext, useContext, useRef, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { storyService } from "@/services/api/storyService";
+import { useNotification } from "@/Contexts/NotificationContext";
 
 export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
+  const { addNotification } = useNotification();
 
   const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
@@ -45,6 +48,40 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [userData]);
 
+  const [stories, setStories] = useState([]);
+  const [currentUserStory, setCurrentUserStory] = useState({});
+
+  useEffect(() => {
+    let timeoutId;
+    let isMounted = true;
+
+    timeoutId = setTimeout(async () => {
+      try {
+        const { data } = await storyService.getStories();
+        if (isMounted) {
+          console.log(data);
+
+          setStories(data.data);
+          setCurrentUserStory(
+            data.data.find((x) => x.author[0]._id == userData._id)
+          );
+          // setHasMoreStories(page < data.last_page);
+        }
+      } catch (err) {
+        console.error("Error fetching stories", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load Stories. Please try again later.",
+        });
+      }
+    }, 1500);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <ScreenContext.Provider
       value={{
@@ -53,6 +90,10 @@ export const ScreenProvider = ({ children }) => {
         screenSizeWidth,
         userData,
         setUserData,
+        stories,
+        setStories,
+        currentUserStory,
+        setCurrentUserStory,
       }}
     >
       {children}

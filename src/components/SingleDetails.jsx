@@ -10,6 +10,7 @@ import "swiper/css";
 import "@/Styles/chat.css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
+import { storyService } from "@/services/api/storyService";
 
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
@@ -45,11 +46,13 @@ function SingleDetails() {
     setOpenStoryForm,
     settingsMenuRef,
     closeImgHolderRef,
+    singleProvider,
+    setSingleProvider,
   } = useContext(MenusContext);
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
   const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
-  const { pathname, screenSize } = useContext(ScreenContext);
+  const { pathname, screenSize, stories } = useContext(ScreenContext);
 
   const [swiperRef, setSwiperRef] = useState(null);
   const data =
@@ -117,106 +120,48 @@ function SingleDetails() {
   const storySwiperRef = useRef(null);
   const userOrder = useRef([]);
 
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
-  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-  const [processedStories, setProcessedStories] = useState({});
-  const [activeUserId, setActiveUserId] = useState(null);
+  // stories
+  const [userStories, setUserStories] = useState(singleProvider?.shared_data);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [loadingStories, setLoadingStories] = useState(null);
 
-  let latestStories = processStories(stories);
+  const author =
+    Array.isArray(data?.author) && data.author.length > 0
+      ? data.author[0]
+      : null;
 
-  // Process and group stories
+  const fetchStoriesBerUser = async () => {
+    setLoadingStories(singleProvider.id);
+    try {
+      const { data } = await storyService.getUserStories(singleProvider.id);
+      setUserStories(data.data);
+      console.log("responce", data);
+      console.log("singleProvider.id", singleProvider.id);
+    } catch (err) {
+      console.error("Error fetching posts", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user Stories. Please try again later.",
+      });
+    } finally {
+      setLoadingStories(null);
+    }
+  };
+
   useEffect(() => {
-    const grouped = stories.reduce((acc, story) => {
-      if (!acc[story.userId]) {
-        acc[story.userId] = [];
-      }
-      acc[story.userId].push(story);
-      return acc;
-    }, {});
+    const shouldFetch =
+      singleProvider?.id && singleProvider?.type === "stories";
+    if (!shouldFetch) return;
 
-    // Sort stories by timestamp (newest first)
-    Object.keys(grouped).forEach((userId) => {
-      grouped[userId].sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-      );
-    });
-
-    setProcessedStories(grouped);
-    userOrder.current = Object.keys(grouped);
-    setActiveUserId(userOrder.current[0] || null);
-
-    // Create latest stories array for sidebar
-    const latest = Object.values(grouped).map((userStories) => ({
-      ...userStories[0],
-      totalStories: userStories.length,
-    }));
-    latestStories = latest;
-  }, []);
-
-
-  // Get current user's stories
-  const currentUserId = userOrder.current[currentUserIndex] || null;
-  const currentUserStories = currentUserId
-    ? processedStories[currentUserId]
-    : [];
-
-  // Handle slide change
-  const handleSlideChange = () => {
-    if (!userOrder.current.length || !currentUserStories.length) return;
-
-    if (currentStoryIndex < currentUserStories.length - 1) {
-      setCurrentStoryIndex((prev) => prev + 1);
-    } else {
-      const nextUserIndex = (currentUserIndex + 1) % userOrder.current.length;
-      setCurrentUserIndex(nextUserIndex);
-      setCurrentStoryIndex(0);
-      setActiveUserId(userOrder.current[nextUserIndex]);
-
-      if (storySwiperRef.current) {
-        storySwiperRef.current.slideTo(0);
-      }
-    }
-  };
-
-  // Get slides to display in Swiper
-  const getCurrentSlides = () => {
-    if (!currentUserId || !currentUserStories.length) return [];
-
-    const slides = [currentUserStories[currentStoryIndex]];
-
-    if (currentStoryIndex < currentUserStories.length - 1) {
-      slides.push(currentUserStories[currentStoryIndex + 1]);
-    } else {
-      const nextUserIndex = (currentUserIndex + 1) % userOrder.current.length;
-      const nextUserId = userOrder.current[nextUserIndex];
-      if (nextUserId && processedStories[nextUserId]?.[0]) {
-        slides.push(processedStories[nextUserId][0]);
-      }
-    }
-
-    return slides;
-  };
-
-  // Handle story selection from sidebar
-  const handleStorySelect = (userId) => {
-
-    const userIdx = userOrder.current.indexOf(userId);
-    if (userIdx !== -1) {
-      setCurrentUserIndex(userIdx);
-      setCurrentStoryIndex(0);
-      setActiveUserId(userId);
-      if (storySwiperRef.current) {
-        storySwiperRef.current.slideTo(0);
-      }
-    }
-  };
+    fetchStoriesBerUser();
+  }, [singleProvider?.id, singleProvider?.type]);
 
   return (
     <div
       ref={closeImgHolderRef}
       className={`focusedMsg ${!pathname.includes("chat") ? "forPosts" : ""} ${
-        imgFocus ? "active" : ""
-      } ${dataSwiperType}`}
+        singleProvider.type ? "active" : ""
+      } ${singleProvider.type}`}
     >
       {dataSwiperType === "post" ? (
         <div className={`post`}>
@@ -583,7 +528,7 @@ function SingleDetails() {
           )}
           {imgFocus?.paragraph && <p>{imgFocus?.paragraph}</p>}
         </div>
-      ) : (
+      ) : singleProvider.type === "stories" ? (
         <div className="stories">
           {screenSize !== "small" && (
             <div className="sideStoriesSection">
@@ -591,8 +536,7 @@ function SingleDetails() {
                 <IoClose
                   className="close"
                   onClick={() => {
-                    setImgFocus(null);
-                    setImgIndex(null);
+                    setSingleProvider({});
                   }}
                 />
                 <h3>{translations?.story?.stories}</h3>
@@ -603,8 +547,6 @@ function SingleDetails() {
                   className="createStory"
                   onClick={() => {
                     setOpenStoryForm(true);
-                    setImgFocus(null);
-                    setImgIndex(null);
                   }}
                 >
                   <FaPlus />
@@ -619,33 +561,51 @@ function SingleDetails() {
               <div className="hold">
                 <h4>{translations?.story?.friends_stories}</h4>
                 <div className="usersStories">
-                  {latestStories.map((data, index) => (
-                    <div
-                      className={`singleStory ${
-                        data.userId == activeUserId ? "active" : ""
-                      }`}
-                      key={index}
-                      onClick={() => handleStorySelect(data.userId)}
-                    >
-                      <Image
-                        className="rounded"
-                        src={data?.avatar}
-                        alt={data?.username}
-                        width={50}
-                        height={50}
-                        onClick={(e) => handleMenus(e, "user-Info", data?.id)}
-                      />
-                      <div className="info">
-                        <h5>{data?.username}</h5>
-                        <span>{ConvertTime(data?.timestamp, locale)}</span>
+                  {stories?.map((x) => {
+                    const xAuthor = Array.isArray(x?.author)
+                      ? x.author[0]
+                      : null;
+                    console.log(xAuthor?._id == singleProvider?._id);
+
+                    return (
+                      <div
+                        className={`singleStory ${
+                          xAuthor?._id == singleProvider?.id ? "active" : ""
+                        } ${xAuthor?._id == loadingStories ? "loading" : ""}`}
+                        key={`${xAuthor?._id}-${Date.now()}`}
+                        onClick={() => {
+                          setSingleProvider((prev) => ({
+                            ...prev,
+                            id: xAuthor?._id,
+                          }));
+                        }}
+                      >
+                        <Image
+                          className="rounded"
+                          src={xAuthor?.img?.url || "/users/default.png"}
+                          alt={`${xAuthor?.firstname}-img`}
+                          width={50}
+                          height={50}
+                          onClick={(e) =>
+                            handleMenus(e, "user-Info", xAuthor?._id)
+                          }
+                        />
+                        <div className="info">
+                          <h5>
+                            {xAuthor?.firstname} {xAuthor?.lastname}
+                          </h5>
+                          <span>{ConvertTime(x?.date, locale, "chat")}</span>
+                        </div>
+                        <div className="lds-dual-ring"></div>
+
+                        {x?.totalStories > 1 && (
+                          <span className="counter-for-story">
+                            {x?.totalStories}
+                          </span>
+                        )}
                       </div>
-                      {data?.totalStories > 1 && (
-                        <span className="counter-for-story">
-                          {data?.totalStories}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -683,8 +643,9 @@ function SingleDetails() {
               ) : (
                 <Swiper
                   onSwiper={setSwiperRef}
-                  onSlideChange={handleSlideChange}
-                  key={`${currentUserIndex}-${currentStoryIndex}`}
+                  onSlideChange={(swiper) =>
+                    setCurrentSlideIndex(swiper.activeIndex)
+                  }
                   modules={[Navigation]}
                   speed={1000}
                   spaceBetween={10}
@@ -694,22 +655,18 @@ function SingleDetails() {
                   }}
                   slidesPerView={1}
                 >
-                  {getCurrentSlides().map((story, index) => (
-                    <SwiperSlide key={`${story.userId}-${story.id}-${index}`}>
-                      <Story
-                        data={story}
-                        storyCount={processedStories[story.userId]?.length || 0}
-                        currentStoryIndex={currentStoryIndex}
-                      />
+                  {userStories.map((story) => (
+                    <SwiperSlide key={`${story._id}-${Date.now()}`}>
+                      <Story data={story} />
                     </SwiperSlide>
                   ))}
                 </Swiper>
               )}
             </div>
-            <TypeComment id={currentUserStories[currentStoryIndex]?.id} />
+            <TypeComment id={userStories?.[currentSlideIndex]?._id} />
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

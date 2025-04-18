@@ -14,17 +14,17 @@ import "@/Styles/globals.css";
 export default function RootLayout({ children }) {
   return (
     <LanguageProvider>
-      <ScreenProvider>
-        <MenuProvider>
-          <MenusProvider>
-            <InputActionsProvider>
-              <NotificationProvider>
+      <NotificationProvider>
+        <ScreenProvider>
+          <MenuProvider>
+            <MenusProvider>
+              <InputActionsProvider>
                 <LayoutContent>{children}</LayoutContent>
-              </NotificationProvider>
-            </InputActionsProvider>
-          </MenusProvider>
-        </MenuProvider>
-      </ScreenProvider>
+              </InputActionsProvider>
+            </MenusProvider>
+          </MenuProvider>
+        </ScreenProvider>
+      </NotificationProvider>
     </LanguageProvider>
   );
 }

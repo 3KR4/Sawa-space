@@ -143,7 +143,7 @@ const backgroundColors = [
 ];
 
 function StoryForm() {
-  const { userData } = useContext(ScreenContext);
+  const { userData, setStories } = useContext(ScreenContext);
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
 
@@ -498,9 +498,6 @@ function StoryForm() {
       }
 
       const newImages = storyData.images.filter((img) => !img.url);
-
-      console.log("imgs", storyData.images);
-
       if (newImages.length > 0) {
         const formData = new FormData();
         newImages.forEach((img) => formData.append("imgs", img));
@@ -520,18 +517,29 @@ function StoryForm() {
 
       const finalStory = {
         ...storyContent,
+        _id: storyId,
         img: storyData.images,
-        date: Date.now(),
+        date:
+          openStoryForm.type === "edit"
+            ? openStoryForm?.story?.date
+            : Date.now(),
         paragraph: null,
         user: userData._id,
         author: [userData],
       };
 
-      setSomeThingHappen({
-        event: openStoryForm.type === "edit" ? "edit" : "create",
-        type: "story",
-        story: finalStory,
+      setStories((prevStories) => {
+        if (openStoryForm.type === "edit") {
+          return prevStories.map((story) =>
+            story._id === storyId ? { ...story, ...finalStory } : story
+          );
+        }
+        const filtered = prevStories.filter(
+          (story) => story.user !== userData._id
+        );
+        return [finalStory, ...filtered];
       });
+
       addNotification({
         type: "success",
         message:
@@ -1202,14 +1210,16 @@ function StoryForm() {
                   <div className="left">
                     <Image
                       className="rounded"
-                      src={"/avatar.png"}
+                      src={userData?.img?.url || "/users/default.png"}
                       alt={"/users/default.png"}
                       width={40}
                       height={40}
                       onClick={(e) => handleMenus(e, "user-Info", data.user.id)}
                     />
                     <div className="info">
-                      <h5>Mahmoud Elshazly</h5>
+                      <h5>
+                        {userData?.firstname} {``} {userData?.lastname}
+                      </h5>
                       <span>
                         {ConvertTime(
                           "2025-03-03T09:40:00Z",
@@ -1224,7 +1234,9 @@ function StoryForm() {
 
                 {selectedUsersNames.length > 0 && (
                   <div className="mentions view">
-                    <h5>Mahmould Elshazly {translations?.post?.mention}</h5>
+                    <h5>
+                      {userData?.firstname} {``} {translations?.post?.mention}
+                    </h5>
                     {selectedUsersNames?.map((x, index) => (
                       <button
                         key={index}
@@ -1245,8 +1257,8 @@ function StoryForm() {
             >
               <span>
                 {openStoryForm.type === "edit"
-                  ? translations?.forms?.edit_post
-                  : translations?.forms?.create_post}
+                  ? translations?.story?.edit_story
+                  : translations?.story?.create_story}
               </span>
               <div className="lds-dual-ring"></div>
             </button>
