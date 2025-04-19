@@ -10,6 +10,7 @@ import { postService } from "@/services/api/postService";
 import { useNotification } from "@/Contexts/NotificationContext";
 
 import { IoClose } from "react-icons/io5";
+import { storyService } from "@/services/api/storyService";
 
 function DangerEvent() {
   const { locale, translations } = useLanguage();
@@ -21,10 +22,6 @@ function DangerEvent() {
   const [loading, setLoading] = useState(false);
 
   const dangerEventRef = useRef(null);
-
-  const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((image, i) => i !== index));
-  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -66,10 +63,33 @@ function DangerEvent() {
       setDangerEvent(null);
     }
   };
+  const deleteStory = async () => {
+    setLoading(true);
+    try {
+      await storyService.deleteStory(selectedDev.id);
+      addNotification({
+        type: "success",
+        message: "this story has been delete successfully",
+      });
+      setSomeThingHappen({
+        event: "delete",
+        type: "stories",
+      });
+    } catch (err) {
+      console.log(err);
+      addNotification({
+        type: "error",
+        message: err.response.data,
+      });
+    } finally {
+      setLoading(false);
+      setDangerEvent(null);
+    }
+  };
 
   const deleteHandlers = {
     delete_comment: deleteComment,
-    // Add more as needed
+    delete_story: deleteStory,
   };
 
   const handleDelete = () => {

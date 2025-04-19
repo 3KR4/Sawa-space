@@ -114,51 +114,34 @@ export default function Auth() {
       const userId = userResponse.data.userId;
       localStorage.setItem("authToken", userResponse.data.token);
 
+      // Upload the image if provided
       if (selectedFile) {
         const formDataImage = new FormData();
         formDataImage.append("img", selectedFile);
-
-        const imgUploadResponse = await userService.uploadUserImage(
-          userId,
-          formDataImage
-        );
-
-        // Instead of relying on the backend to return the image URL
-        const imageUrl = URL.createObjectURL(selectedFile);
-
-        setUserData({
-          ...formData,
-          img: {
-            url: imageUrl,
-          },
-        });
-
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            ...formData,
-            img: {
-              url: imageUrl,
-            },
-          })
-        );
-      } else {
-        setUserData(formData);
-        localStorage.setItem("user", JSON.stringify(formData));
+        await userService.uploadUserImage(userId, formDataImage);
       }
-      router.push("/");
+
+      // Always fetch the latest user data after creation + optional image upload
+      const getUserRes = await userService.getUserData(userId);
+      const updatedUser = getUserRes.data.data;
+
+      setUserData(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
       addNotification({
         type: "success",
         message: "Account created 🎉 You're ready to go!",
       });
+
+      router.push("/");
     } catch (err) {
-      console.log(err);
+      console.error("User creation failed:", err);
       addNotification({
         type: "warning",
-        message: err.response.data.message,
+        message: err?.response?.data?.message || "Something went wrong.",
       });
     } finally {
-      console.log("aaa");
+      console.log("Finished signup process.");
     }
   };
 
@@ -213,11 +196,12 @@ export default function Auth() {
             >
               <div className="userImg rounded">
                 <Image
+                  style={{ opacity: selectedFile ? "1" : "0.85" }}
                   className="rounded"
                   src={
                     selectedFile
                       ? URL.createObjectURL(selectedFile)
-                      : "/users/default.png"
+                      : "/users/default.svg"
                   }
                   alt="User Cover"
                   fill
@@ -354,7 +338,7 @@ export default function Auth() {
                     id="languages"
                     type="text"
                     name="languages"
-                    placeholder={translations?.auth?.languages}
+                    placeholder={translations?.portfolio?.speaking_languages}
                   />
                 </div>
               </div>
@@ -368,12 +352,12 @@ export default function Auth() {
                   {translations?.auth?.go_back}
                 </button>
 
-                <button type="submit" className="main-button">
-                  {loadingSpinner ? (
-                    <div className="lds-dual-ring"></div>
-                  ) : (
-                    translations?.auth?.finish
-                  )}
+                <button
+                  type="submit"
+                  className={`main-button ${loadingSpinner ? "loading" : ""}`}
+                >
+                  <div className="lds-dual-ring"></div>
+                  <span>{translations?.auth?.finish}</span>
                 </button>
               </div>
             </form>
@@ -592,14 +576,16 @@ export default function Auth() {
             )}
 
             <div className="btns">
-              <button className="main-button" type="submit">
-                {loadingSpinner ? (
-                  <div className="lds-dual-ring"></div>
-                ) : isLoginPage ? (
-                  translations?.auth?.login
-                ) : (
-                  translations?.auth?.register
-                )}
+              <button
+                className={`main-button ${loadingSpinner ? "loading" : ""}`}
+                type="submit"
+              >
+                <div className="lds-dual-ring"></div>
+                <span>
+                  {isLoginPage
+                    ? translations?.auth?.login
+                    : translations?.auth?.register}
+                </span>
               </button>
 
               <div

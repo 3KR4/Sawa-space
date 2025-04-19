@@ -515,29 +515,8 @@ function StoryForm() {
         }
       }
 
-      const finalStory = {
-        ...storyContent,
-        _id: storyId,
-        img: storyData.images,
-        date:
-          openStoryForm.type === "edit"
-            ? openStoryForm?.story?.date
-            : Date.now(),
-        paragraph: null,
-        user: userData._id,
-        author: [userData],
-      };
-
-      setStories((prevStories) => {
-        if (openStoryForm.type === "edit") {
-          return prevStories.map((story) =>
-            story._id === storyId ? { ...story, ...finalStory } : story
-          );
-        }
-        const filtered = prevStories.filter(
-          (story) => story.user !== userData._id
-        );
-        return [finalStory, ...filtered];
+      setSomeThingHappen({
+        stories: true,
       });
 
       addNotification({
@@ -1210,8 +1189,8 @@ function StoryForm() {
                   <div className="left">
                     <Image
                       className="rounded"
-                      src={userData?.img?.url || "/users/default.png"}
-                      alt={"/users/default.png"}
+                      src={userData?.img?.url || "/users/default.svg"}
+                      alt={"/users/default.svg"}
                       width={40}
                       height={40}
                       onClick={(e) => handleMenus(e, "user-Info", data.user.id)}

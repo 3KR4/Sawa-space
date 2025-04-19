@@ -46,7 +46,7 @@ function UserInfo() {
       <div className="holder">
         <Image
           className={`rounded`}
-          src={currentUserData?.img || "/user/default.png"}
+          src={currentUserData?.img || "/user/default.svg"}
           alt={currentUserData?.name}
           fill
         />

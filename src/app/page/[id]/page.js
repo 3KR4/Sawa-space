@@ -154,7 +154,7 @@ export default function Page({ params }) {
               <div className="userImg rounded">
                 <Image
                   className="rounded"
-                  src={curentChat?.img || "/users/default.png"}
+                  src={curentChat?.img || "/users/default.svg"}
                   alt="User Cover"
                   fill
                 />
@@ -202,7 +202,7 @@ export default function Page({ params }) {
                       key={x.id}
                       onClick={(e) => handleMenus(e, "user-Info", x.id)}
                       className="rounded"
-                      src={x.img || "/users/default.png"}
+                      src={x.img || "/users/default.svg"}
                       width={32}
                       height={32}
                       alt={`user Image`}
@@ -724,7 +724,7 @@ export default function Page({ params }) {
                     >
                       <Image
                         className="rounded"
-                        src={x.img || "/users/default.png"}
+                        src={x.img || "/users/default.svg"}
                         fill
                         alt={`user Image`}
                       />
@@ -766,18 +766,14 @@ export default function Page({ params }) {
                 pageCount={pageSize}
                 marginPagesDisplayed={1}
                 pageRangeDisplayed={3}
-
                 breakLabel="..."
                 nextLabel="next >"
                 previousLabel="< prev"
-
                 pageLinkClassName="page-num"
                 previousLinkClassName="page-num btns"
                 nextLinkClassName="page-num btns"
-
                 containerClassName="pagination"
                 activeClassName="active"
-
                 onPageChange={(e) => setPage(e.selected + 1)}
                 renderOnZeroPageCount={null}
               />
@@ -837,7 +833,7 @@ export default function Page({ params }) {
                       >
                         <Image
                           className="rounded"
-                          src={owner.img || "/users/default.png"}
+                          src={owner.img || "/users/default.svg"}
                           fill
                           alt="user Image"
                         />
@@ -855,7 +851,7 @@ export default function Page({ params }) {
                         >
                           <Image
                             className="rounded"
-                            src={x.img || "/users/default.png"}
+                            src={x.img || "/users/default.svg"}
                             fill
                             alt="user Image"
                           />

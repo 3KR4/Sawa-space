@@ -74,7 +74,7 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
       <div className="image-holder">
         <Image
           className="rounded"
-          src={data?.author[0]?.img?.url || "/users/default.png"}
+          src={data?.author[0]?.img?.url || "/users/default.svg"}
           alt="Comment Image"
           width={40}
           height={40}

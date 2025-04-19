@@ -258,7 +258,7 @@ export default function Header() {
               >
                 <Image
                   className="rounded"
-                  src={userData?.img?.url || "/users/default.png"}
+                  src={userData?.img?.url || "/users/default.svg"}
                   width={45}
                   height={45}
                   alt={`user Image`}
@@ -294,6 +294,7 @@ export default function Header() {
                         setUserData(null);
                         localStorage.removeItem("user");
                         localStorage.removeItem("authToken");
+                        window.location.reload();
                       }}
                     >
                       <TbLogout2 /> {translations?.header?.logout}
@@ -348,7 +349,7 @@ export default function Header() {
               >
                 <Image
                   className="rounded"
-                  src={userData?.img?.url || "/users/default.png"}
+                  src={userData?.img?.url || "/users/default.svg"}
                   width={45}
                   height={45}
                   alt={`user Image`}
@@ -383,8 +384,8 @@ export default function Header() {
                       onClick={() => {
                         setUserData(null);
                         localStorage.removeItem("user");
-
                         localStorage.removeItem("authToken");
+                        window.location.reload();
                       }}
                     >
                       <TbLogout2 /> {translations?.header?.logout}

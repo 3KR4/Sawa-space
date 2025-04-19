@@ -10,6 +10,8 @@
     "add_friend": "add friend",
     "remove_friend": "remove friend",
     "remove_post": "remove post",
+    "delete_story": "delete this story",
+
     "hide": "hide",
     "report": "report",
     "save_post": "save post",
@@ -261,7 +263,6 @@
     "current_location": "Current Location",
     "work": "Work",
     "college": "College",
-    "speaking_languages": "Speaking Languages",
     "go_back": "Go Back",
     "finish": "Finish"
   }

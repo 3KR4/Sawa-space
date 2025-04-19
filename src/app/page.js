@@ -28,7 +28,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 export default function Home() {
   const { addNotification } = useNotification();
-  const { screenSize, userData, stories, currentUserStory } =
+  const { screenSize, userData, stories, currentUserStory, storyloading } =
     useContext(ScreenContext);
   const { translations } = useLanguage();
   const {
@@ -42,12 +42,9 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [postsloading, setPostsLoading] = useState(false);
-  const [storyloading, setStoryLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   const swiperRef = useRef(null);
-
-  console.log(stories);
 
   useEffect(() => {
     let timeoutId;
@@ -115,11 +112,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, [hasMore, postsloading]);
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  console.log(posts);
 
   return (
     <div className="home">
@@ -141,7 +134,7 @@ export default function Home() {
               <FaAngleRight className="custom-next" />
             </div>
           ) : null}
-          {storyloading || !mounted ? (
+          {storyloading ? (
             <div style={{ display: "flex", gap: "5px" }}>
               {Array.from({ length: 6 }).map((_, index) => (
                 <div
@@ -182,7 +175,8 @@ export default function Home() {
                 }}
               >
                 <SwiperSlide key={Date.now()}>
-                  {currentUserStory ? (
+                  {currentUserStory &&
+                  Object.keys(currentUserStory).length > 0 ? (
                     <Story data={currentUserStory} smallView={true} />
                   ) : (
                     <div
@@ -196,7 +190,7 @@ export default function Home() {
                           <h5>{translations?.header?.createstory}</h5>
                         </div>
 
-                        <h5>
+                        <h5 className="ellipsisText">
                           {userData?.firstname} {userData?.lastname}
                         </h5>
                       </div>

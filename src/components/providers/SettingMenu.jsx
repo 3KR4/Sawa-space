@@ -124,13 +124,36 @@ function SettingMenu() {
         </>
       ) : settingMenuType === "settingMenu-story" ? (
         <>
+          {selectedDev.isMyStory && (
+            <>
+              <button>
+                <MdEdit /> {translations?.story?.edit_story}
+              </button>
+            </>
+          )}
           <button>
             <MdContentCopy />{" "}
             {translations?.story?.copy_link_to_share_this_story}
           </button>
-          <button className="danger">
-            <BiVolumeMute /> {translations?.story?.mute_stories_from} ahmed
-          </button>
+          <hr />
+          {selectedDev.isMyStory ? (
+            <button
+              className="danger"
+              onClick={() => {
+                setSettingMenu(null);
+                setDangerEvent({
+                  type: "delete_story",
+                  message: "are you sure you want to delete this story?",
+                });
+              }}
+            >
+              <FaTrashAlt /> {translations?.actions?.delete_story}
+            </button>
+          ) : (
+            <button className="danger">
+              <BiVolumeMute /> {translations?.story?.mute_stories_from} ahmed
+            </button>
+          )}
         </>
       ) : settingMenuType === "settingMenu-page" ? (
         <>

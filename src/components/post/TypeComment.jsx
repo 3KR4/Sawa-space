@@ -134,7 +134,7 @@ function TypeComment({
         <div className="left">
           <Image
             className="rounded"
-            src={userData?.img?.url || "/users/default.png"}
+            src={userData?.img?.url || "/users/default.svg"}
             alt={"user"}
             width={40}
             height={40}

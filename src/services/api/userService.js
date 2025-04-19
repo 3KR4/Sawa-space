@@ -17,6 +17,9 @@ export const userService = {
       password: userData.password,
     });
   },
+  getUserData: async (userId) => {
+    return apiClient.get(`/user/${userId}`);
+  },
   uploadUserImage: async (userId, imageFile) => {
     return apiClient.post(`/user/img/${userId}`, imageFile, {
       headers: {

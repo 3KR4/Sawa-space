@@ -86,7 +86,7 @@ export default function User({ params }) {
               <div className="userImg rounded">
                 <Image
                   className="rounded"
-                  src={curentChat?.img || "/users/default.png"}
+                  src={curentChat?.img || "/users/default.svg"}
                   alt="User Cover"
                   fill
                 />
@@ -270,7 +270,7 @@ export default function User({ params }) {
                       >
                         <Image
                           className="rounded"
-                          src={x.img || "/users/default.png"}
+                          src={x.img || "/users/default.svg"}
                           fill
                           alt={`user Image`}
                         />
@@ -434,7 +434,7 @@ export default function User({ params }) {
                     >
                       <Image
                         className="rounded"
-                        src={x.img || "/users/default.png"}
+                        src={x.img || "/users/default.svg"}
                         fill
                         alt={`user Image`}
                       />

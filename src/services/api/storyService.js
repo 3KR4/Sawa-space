@@ -21,6 +21,6 @@ export const storyService = {
     });
   },
   deleteStory: (id) => {
-    return apiClient.put(`/story/${id}`);
+    return apiClient.delete(`/story/${id}`);
   },
 };

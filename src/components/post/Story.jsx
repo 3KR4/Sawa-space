@@ -60,6 +60,8 @@ function Story({ data, smallView }) {
       ? data.author[0]
       : null;
 
+  const isMyStory = author?._id == userData._id;
+
   const fetchUserStories = async () => {
     setLoading(true);
     try {
@@ -67,7 +69,7 @@ function Story({ data, smallView }) {
       setSingleProvider({
         type: "stories",
         shared_data: data.data,
-        id: data?._id,
+        id: author._id,
       });
     } catch (err) {
       console.error("Error fetching user stories", err);
@@ -198,7 +200,7 @@ function Story({ data, smallView }) {
 
               <Image
                 className="rounded"
-                src={author.img?.url || "/users/default.png"}
+                src={author.img?.url || "/users/default.svg"}
                 alt={`${author.firstname} img`}
                 width={smallView ? 48 : 40}
                 height={smallView ? 48 : 40}
@@ -207,7 +209,10 @@ function Story({ data, smallView }) {
                 }
               />
               <div className="info">
-                <h5 style={{ fontSize: smallView ? "0.8rem" : "14px" }}>
+                <h5
+                  className="ellipsisText"
+                  style={{ fontSize: smallView ? "0.8rem" : "14px" }}
+                >
                   {author._id === userData._id ? (
                     <>{translations?.story?.your_story}</>
                   ) : (
@@ -226,7 +231,9 @@ function Story({ data, smallView }) {
             <HiDotsVertical
               className="settingDotsIco"
               onClick={(e) => {
-                handleMenus(e, "settingMenu-story", data?._id);
+                handleMenus(e, "settingMenu-story", data?._id, {
+                  isMyStory,
+                });
               }}
             />
           )}

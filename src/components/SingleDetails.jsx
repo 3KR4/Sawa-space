@@ -11,6 +11,7 @@ import "@/Styles/chat.css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { storyService } from "@/services/api/storyService";
+import { useNotification } from "@/Contexts/NotificationContext";
 
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
@@ -31,14 +32,14 @@ import { HiDotsVertical } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 
 function SingleDetails() {
+  const { addNotification } = useNotification();
+
   const { translations, locale } = useLanguage();
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   const {
     dataSwiperType,
     dataForSwiper,
-    imgFocus,
-    setImgFocus,
     imgIndex,
     setImgIndex,
     usersreactMenuRef,
@@ -48,6 +49,8 @@ function SingleDetails() {
     closeImgHolderRef,
     singleProvider,
     setSingleProvider,
+    setsomeThingHappen,
+    someThingHappen,
   } = useContext(MenusContext);
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
@@ -134,9 +137,12 @@ function SingleDetails() {
     setLoadingStories(singleProvider.id);
     try {
       const { data } = await storyService.getUserStories(singleProvider.id);
-      setUserStories(data.data);
-      console.log("responce", data);
-      console.log("singleProvider.id", singleProvider.id);
+      if (data.data.length === 0) {
+        setsomeThingHappen({ deleteAllUserStories: true });
+        setSomeThing;
+      } else {
+        setUserStories(data.data);
+      }
     } catch (err) {
       console.error("Error fetching posts", err);
       addNotification({
@@ -149,12 +155,18 @@ function SingleDetails() {
   };
 
   useEffect(() => {
+    console.log(singleProvider);
+    console.log(singleProvider.id);
+
     const shouldFetch =
-      singleProvider?.id && singleProvider?.type === "stories";
+      (singleProvider?.id && singleProvider?.type === "stories") ||
+      (someThingHappen.type === "stories" &&
+        someThingHappen.event === "delete");
+    console.log("shouldFetch", shouldFetch);
     if (!shouldFetch) return;
 
     fetchStoriesBerUser();
-  }, [singleProvider?.id, singleProvider?.type]);
+  }, [singleProvider?.id, singleProvider?.type, someThingHappen.type]);
 
   return (
     <div
@@ -198,7 +210,6 @@ function SingleDetails() {
                       key={index}
                       onClick={() => {
                         handleImageClick(dataForSwiper.id, index);
-                        console.log(index);
                       }}
                       style={{ display: "flex", justifyContent: "center" }}
                     >
@@ -274,7 +285,7 @@ function SingleDetails() {
               <div className="top">
                 <div className="left">
                   <Image
-                    src={dataForSwiper?.user?.img || "/users/default.png"}
+                    src={dataForSwiper?.user?.img || "/users/default.svg"}
                     alt={dataForSwiper?.user?.name}
                     width={40}
                     height={40}
@@ -565,7 +576,6 @@ function SingleDetails() {
                     const xAuthor = Array.isArray(x?.author)
                       ? x.author[0]
                       : null;
-                    console.log(xAuthor?._id == singleProvider?._id);
 
                     return (
                       <div
@@ -582,7 +592,7 @@ function SingleDetails() {
                       >
                         <Image
                           className="rounded"
-                          src={xAuthor?.img?.url || "/users/default.png"}
+                          src={xAuthor?.img?.url || "/users/default.svg"}
                           alt={`${xAuthor?.firstname}-img`}
                           width={50}
                           height={50}

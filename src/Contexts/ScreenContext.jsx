@@ -3,13 +3,14 @@ import { createContext, useContext, useRef, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
+import { MenusContext } from "@/Contexts/MenusContext";
 
 export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
   const { addNotification } = useNotification();
-
+  const { someThingHappen, setSomeThingHappen } = useContext(MenusContext);
   const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
     function getScreenSize() {
@@ -49,38 +50,44 @@ export const ScreenProvider = ({ children }) => {
   }, [userData]);
 
   const [stories, setStories] = useState([]);
+  const [storyloading, setStoryloading] = useState(false);
   const [currentUserStory, setCurrentUserStory] = useState({});
 
   useEffect(() => {
-    let timeoutId;
-    let isMounted = true;
+    if (userData) {
+      setStoryloading(true);
+      let timeoutId;
+      let isMounted = true;
 
-    timeoutId = setTimeout(async () => {
-      try {
-        const { data } = await storyService.getStories();
-        if (isMounted) {
-          console.log(data);
-
-          setStories(data.data);
-          setCurrentUserStory(
-            data.data.find((x) => x.author[0]._id == userData._id)
-          );
-          // setHasMoreStories(page < data.last_page);
+      timeoutId = setTimeout(async () => {
+        try {
+          const { data } = await storyService.getStories();
+          if (isMounted) {
+            setStories(data.data);
+            setCurrentUserStory(
+              data.data.find((x) => x.author[0]._id == userData._id) || {}
+            );
+          }
+        } catch (err) {
+          console.error("Error fetching stories", err);
+          addNotification({
+            type: "error",
+            message: "Failed to load Stories. Please try again later.",
+          });
+        } finally {
+          setStoryloading(false);
+          setSomeThingHappen({});
         }
-      } catch (err) {
-        console.error("Error fetching stories", err);
-        addNotification({
-          type: "error",
-          message: "Failed to load Stories. Please try again later.",
-        });
-      }
-    }, 1500);
+      }, 1500);
 
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
-  }, []);
+      return () => {
+        isMounted = false;
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [someThingHappen.stories, someThingHappen.deleteAllUserStories, userData]);
+
+  console.log(someThingHappen);
 
   return (
     <ScreenContext.Provider
@@ -94,6 +101,8 @@ export const ScreenProvider = ({ children }) => {
         setStories,
         currentUserStory,
         setCurrentUserStory,
+        storyloading,
+        setStoryloading,
       }}
     >
       {children}

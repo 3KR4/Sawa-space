@@ -10,6 +10,7 @@
     "add_friend": "طلب صداقة",
     "remove_friend": "إلغاء الصداقة",
     "remove_post": "ازالة المنشور",
+    "delete_story": "حذف هذه القصة",
 
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
@@ -78,6 +79,7 @@
     "friends_stories": "قصص الاصدقاء",
     "create_story": "إنشاء قصة قصيرة",
     "edit_story": "تعديل قصتك القصيرة",
+
     "your_story": "قصتك الشخصية",
     "your_stories": "قصصك الشخصية",
     "add_to_your_story": "أضف عناصر إلى قصتك",
