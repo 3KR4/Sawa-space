@@ -5,6 +5,7 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { postService } from "@/services/api/postService";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
 
 import { MdBlock, MdReport, MdContentCopy, MdEdit } from "react-icons/md";
 import { IoPersonRemove, IoPersonRemoveSharp, IoLogOut } from "react-icons/io5";
@@ -19,8 +20,12 @@ function SettingMenu() {
   const { translations } = useLanguage();
   const { userData } = useContext(ScreenContext);
 
-  const { settingsMenuRef, setDangerEvent, setOpenPostForm } =
-    useContext(MenusContext);
+  const {
+    settingsMenuRef,
+    setDangerEvent,
+    setOpenPostForm,
+    setSomeThingHappen,
+  } = useContext(MenusContext);
   const {
     menuPosition,
     settingMenu,
@@ -28,6 +33,7 @@ function SettingMenu() {
     settingMenuType,
     selectedDev,
   } = useContext(DynamicMenusContext);
+  const { setMessageText } = useContext(InputActionsContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -107,7 +113,16 @@ function SettingMenu() {
             </button>
           )}
           {selectedDev.isMyPost && (
-            <button className="danger">
+            <button
+              className="danger"
+              onClick={() => {
+                setSettingMenu(null);
+                setDangerEvent({
+                  type: "remove_post",
+                  message: "are you sure you want to remove your post",
+                });
+              }}
+            >
               <FaTrashAlt /> {translations?.actions?.remove_post}
             </button>
           )}
@@ -190,7 +205,19 @@ function SettingMenu() {
         <>
           {selectedDev.isMyComment ? (
             <>
-              <button>
+              <button
+                onClick={() => {
+                  setMessageText(selectedDev?.comment?.paragraph);
+                  setSomeThingHappen({
+                    comment: {
+                      event: "edit",
+                      data: selectedDev?.comment,
+                      level: selectedDev?.level,
+                    },
+                  });
+                  setSettingMenu(null);
+                }}
+              >
                 <MdEdit /> {translations?.actions?.edit_comment}
               </button>
               <button

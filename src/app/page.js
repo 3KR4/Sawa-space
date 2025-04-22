@@ -86,16 +86,19 @@ export default function Home() {
     ) {
       setPosts((prev) => [someThingHappen.post, ...prev]);
       document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+      setSomeThingHappen("");
     }
     if (someThingHappen?.type === "post" && someThingHappen?.event === "edit") {
       setPosts((prev) =>
         prev.map((x) =>
-          x._id === someThingHappen.post._id ? someThingHappen.post : x
+          x._id === someThingHappen.post._id
+            ? { ...someThingHappen.post, updated: Date.now() }
+            : x
         )
       );
+      setSomeThingHappen("");
     }
-    setSomeThingHappen("");
-  }, [someThingHappen]);
+  }, [someThingHappen.type]);
 
   useEffect(() => {
     const scrollHandler = () => {
@@ -111,8 +114,6 @@ export default function Home() {
     window.addEventListener("scroll", scrollHandler);
     return () => window.removeEventListener("scroll", scrollHandler);
   }, [hasMore, postsloading]);
-
-  console.log(posts);
 
   return (
     <div className="home">
@@ -183,7 +184,7 @@ export default function Home() {
                       className="userStory-creation story"
                       onClick={() => setOpenStoryForm(true)}
                     >
-                      <Image src={userData?.img?.url} fill />
+                      <Image src={userData?.img?.url} fill alt={`userImg`} />
                       <div className="bottom">
                         <div className="svg-holder">
                           <IoMdAddCircleOutline />
@@ -240,7 +241,9 @@ export default function Home() {
                 </ContentLoader>
               </div>
             ))
-          : posts.map((x) => <Post data={x} key={`${x._id}-${Date.now()}`} />)}
+          : posts.map((x) => (
+              <Post data={x} key={`${x._id}-${x.updated || ""}`} />
+            ))}
         {postsloading && posts.length > 0 && (
           <div className="postsloading-skeleton">
             {Array.from({ length: 1 }).map((_, index) => (

@@ -25,7 +25,7 @@ function TypeComment({
 }) {
   const { screenSize, userData } = useContext(ScreenContext);
   const { addNotification } = useNotification();
-  const { setSomeThingHappen } = useContext(MenusContext);
+  const { someThingHappen, setSomeThingHappen } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
   const { locale, translations } = useLanguage();
@@ -46,53 +46,99 @@ function TypeComment({
 
   const handleCreateComment = async () => {
     setLoading(true);
-    const commentData = {
-      paragraph: messageText,
-      replay: replyTo?.commentId || null,
-    };
-    try {
-      await postService.createComment(id, commentData);
-      let comentCreated = {
-        _id: "",
-        time: Date.now(),
-        postid: id,
+
+    if (someThingHappen.comment && someThingHappen.comment.event == "edit") {
+      const commentBody = {
         paragraph: messageText,
-        seeMore: false,
-        replay: true,
-        author: [userData],
       };
-      if (replyTo?.commentId) {
-        addNotification({
-          type: "success",
-          message: `Your reply to ${replyTo?.name} has been posted successfully.`,
-        });
-        setComments((prev) =>
-          prev.map((comment) =>
-            comment._id === replyTo?.commentId
-              ? { ...comment, seeMore: true }
-              : comment
-          )
+      try {
+        await postService.editComment(
+          someThingHappen.comment.data._id,
+          commentBody
         );
-      } else {
-        setComments((prev) => [comentCreated, ...prev]);
-        const container = document.querySelector(".comments-holder");
-        if (container) container.scrollTo({ top: 0, behavior: "smooth" });
+        const ubdatedComment = {
+          ...someThingHappen.comment.data,
+          paragraph: messageText,
+        };
         addNotification({
           type: "success",
-          message: "Your comment has been posted successfully.",
+          message: `Your comment has been updated successfully`,
         });
+        if (someThingHappen.comment.level == 0) {
+          setComments((prev) =>
+            prev.map((comment) =>
+              comment._id === someThingHappen.comment.data._id
+                ? ubdatedComment
+                : comment
+            )
+          );
+          setSomeThingHappen("");
+        } else {
+          setSomeThingHappen({
+            type: "nested_comment",
+            event: "edit",
+            data: ubdatedComment,
+          });
+        }
+
+        setMessageText("");
+      } catch (err) {
+        console.error("Error fetching comments", err);
+        addNotification({
+          type: "error",
+          message: "Failed to update your comment",
+        });
+      } finally {
+        setLoading(false);
       }
-      setCommentsCount((prev) => prev + 1);
-      setMessageText("");
-      setReplyTo({});
-    } catch (err) {
-      console.error("Error fetching comments", err);
-      addNotification({
-        type: "error",
-        message: "Failed to post Your Comment",
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      const commentData = {
+        paragraph: messageText,
+        replay: replyTo?.commentId || null,
+      };
+      try {
+        const { data } = await postService.createComment(id, commentData);
+        const commentBody = {
+          ...data.data,
+          author: [userData],
+        };
+        if (replyTo?.commentId) {
+          addNotification({
+            type: "success",
+            message: `Your reply to ${replyTo?.name} has been posted successfully.`,
+          });
+          setSomeThingHappen({
+            type: "reply",
+            replyTo: replyTo?.commentId,
+          });
+          setComments((prev) =>
+            prev.map((comment) =>
+              comment._id === replyTo?.commentId
+                ? { ...comment, seeMore: true }
+                : comment
+            )
+          );
+        } else {
+          setComments((prev) => [commentBody, ...prev]);
+          const container = document.querySelector(".comments-holder");
+          if (container) container.scrollTo({ top: 0, behavior: "smooth" });
+          addNotification({
+            type: "success",
+            message: "Your comment has been posted successfully.",
+          });
+        }
+        setCommentsCount((prev) => prev + 1);
+        setMessageText("");
+        setReplyTo({});
+      } catch (err) {
+        console.error("Error fetching comments", err);
+        addNotification({
+          type: "error",
+          message: "Failed to post Your Comment",
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -154,7 +200,9 @@ function TypeComment({
             disabled={messageText === "" || loading}
           >
             <span>
-              {replyTo?.commentId
+              {someThingHappen?.comment?.data
+                ? translations?.comment?.update_your_comment
+                : replyTo?.commentId
                 ? replyTo?.isMyComment
                   ? translations?.comment?.replying_to_yourself
                   : `${translations?.comment?.reply_to} ${replyTo?.name}`

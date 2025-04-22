@@ -101,6 +101,10 @@ const formatDate = (date, locale, withYear = false) => {
 const timeAgo = (value, unit, lang) => {
   const t = timeUnits[lang];
 
+  if (value === 0) {
+    return lang === "ar" ? "الآن" : "now";
+  }
+
   if (lang === "ar") {
     if (value === 1) {
       return `${t.since} ${unit[0]}`;

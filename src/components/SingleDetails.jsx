@@ -155,14 +155,10 @@ function SingleDetails() {
   };
 
   useEffect(() => {
-    console.log(singleProvider);
-    console.log(singleProvider.id);
-
     const shouldFetch =
       (singleProvider?.id && singleProvider?.type === "stories") ||
       (someThingHappen.type === "stories" &&
         someThingHappen.event === "delete");
-    console.log("shouldFetch", shouldFetch);
     if (!shouldFetch) return;
 
     fetchStoriesBerUser();

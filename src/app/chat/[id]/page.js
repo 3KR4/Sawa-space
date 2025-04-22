@@ -594,7 +594,6 @@ export default function Chat({ params }) {
                       type="checkbox"
                       className="input"
                       checked={selectedMsgs.includes(x.id) ? true : false}
-                      onChange={() => console.log("x")}
                     />
                     <span className="custom-checkbox"></span>
                   </label>

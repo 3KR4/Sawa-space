@@ -11,6 +11,7 @@
     "remove_friend": "إلغاء الصداقة",
     "remove_post": "ازالة المنشور",
     "delete_story": "حذف هذه القصة",
+    "cancel_edit": "الغاء التعديل",
 
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
@@ -112,11 +113,11 @@
     "comments": "التعليقات",
     "reply": "قم بالرد",
     "cancel_reply": "الغاء الرد",
-
     "see": "تفقد",
     "replys": "من الردود",
     "hide_replays": "اخفاء الردود",
     "post_a_comment": "انشر تعليق",
+    "update_your_comment": "تعديل التعليق",
     "wright_a_comment": "قم بكتابة تعليق...",
     "view_more": "انظر المزيد",
     "Thats_all_the_comments_or_now": "هذه هي كل التعليقات حتي الان",

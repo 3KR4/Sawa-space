@@ -4,8 +4,11 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import Image from "next/image";
+import Link from "next/link";
+
 import { users } from "@/utils/Data";
 import SettingMenu from "@/components/providers/SettingMenu";
+import { useRouter } from "next/navigation";
 
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
@@ -15,11 +18,12 @@ import { IoClose } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 
 function UserInfo() {
+  const router = useRouter();
   const { selectedDev, infoMenu, setInfoMenu, menuPosition, setMenuPosition2 } =
     useContext(DynamicMenusContext);
   const { infoMenuRef } = useContext(MenusContext);
 
-  let currentUserData = users.find((x) => x.id == selectedDev);
+  let currentUserData = selectedDev;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -33,6 +37,7 @@ function UserInfo() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const skipKeys = ["birthDate", "languages", "current_location"];
 
   return (
     <div
@@ -46,13 +51,15 @@ function UserInfo() {
       <div className="holder">
         <Image
           className={`rounded`}
-          src={currentUserData?.img || "/user/default.svg"}
-          alt={currentUserData?.name}
+          src={currentUserData?.img?.url || "/user/default.svg"}
+          alt={currentUserData?.firstname}
           fill
         />
         <div className="info">
           <div className="top">
-            <h4>{currentUserData?.name}</h4>
+            <h4>
+              {currentUserData?.firstname} {currentUserData?.lastname}
+            </h4>
             <IoClose
               onClick={() => {
                 setInfoMenu(null);
@@ -61,18 +68,18 @@ function UserInfo() {
               className="close"
             />
           </div>
-          <p>150 Friends - 5 mutual</p>
+          <p>no friends yet</p>
           <h5>About</h5>
           <ul>
-            <li>
-              Work: <span>FrontEnd Developer</span>
-            </li>
-            <li>
-              Study: <span>Mci Academy</span>
-            </li>
-            <li>
-              Location: <span>Nasr CIty</span>
-            </li>
+            {Object.entries(currentUserData?.info || {}).map(([key, value]) => {
+              if (skipKeys.includes(key)) return null;
+
+              return (
+                <li key={key} className="ellipsisText">
+                  {key.replace(/_/g, " ")}: <span>{value}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -102,9 +109,9 @@ function UserInfo() {
         )} */}
 
         {true ? (
-          <button className="main-button">
+          <Link href={`/user/${currentUserData?._id}`} className="main-button">
             <FaEye /> See Profile
-          </button>
+          </Link>
         ) : (
           <button className="main-button">
             <FaEye /> visit Page

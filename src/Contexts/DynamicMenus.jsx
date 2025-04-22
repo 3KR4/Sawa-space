@@ -72,8 +72,8 @@ export const MenuProvider = ({ children }) => {
     if (type.includes("settingMenu")) {
       setSettingMenu(true);
       setSettingMenuType(type);
-      info && setSelectedDev({ id, ...info });
     }
+    info && setSelectedDev({ id, ...info });
     id && !info && setSelectedDev(id);
     setMenuPosition({ top, left });
   };

@@ -11,6 +11,7 @@
     "remove_friend": "remove friend",
     "remove_post": "remove post",
     "delete_story": "delete this story",
+    "cancel_edit": "cancel edit",
 
     "hide": "hide",
     "report": "report",
@@ -115,6 +116,7 @@
     "replys": "replys",
     "hide_replays": "hide replays",
     "post_a_comment": "post a comment",
+    "update_your_comment": "update your comment",
     "wright_a_comment": "wright a comment...",
     "view_more": "view more",
     "Thats_all_the_comments_or_now": "that's all the comments for now..",

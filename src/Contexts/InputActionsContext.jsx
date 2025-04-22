@@ -35,8 +35,6 @@ export const InputActionsProvider = ({ children }) => {
     }, 0);
   };
 
-
-
   return (
     <InputActionsContext.Provider
       value={{

@@ -50,10 +50,10 @@ function DangerEvent() {
       setSomeThingHappen({
         event: "delete",
         type: "comment",
+        nisted: selectedDev.level > 0,
         id: selectedDev.id,
       });
     } catch (err) {
-      console.log(err);
       addNotification({
         type: "error",
         message: err.response.data,
@@ -63,6 +63,7 @@ function DangerEvent() {
       setDangerEvent(null);
     }
   };
+
   const deleteStory = async () => {
     setLoading(true);
     try {
@@ -76,7 +77,6 @@ function DangerEvent() {
         type: "stories",
       });
     } catch (err) {
-      console.log(err);
       addNotification({
         type: "error",
         message: err.response.data,

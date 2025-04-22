@@ -38,19 +38,10 @@ function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
   const handleReact = async (react) => {
     setLoading(true);
 
-    const alreadyReacted = data.userreact === react;
-    const isSwitchingReact = data.userreact && data.userreact !== react;
+    const alreadyReacted = data?.userreact === react;
+    const previousReact = data?.userreact;
 
     try {
-      // If switching, remove the old react first
-      if (isSwitchingReact) {
-        await postService.makeReact(data._id, {
-          islike: false,
-          react: data.userreact,
-        });
-      }
-
-      // Then toggle or add the new one
       await postService.makeReact(data._id, {
         islike: !alreadyReacted,
         react,
@@ -58,72 +49,121 @@ function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
 
       setState((prev) => {
         let updatedReacts = { ...prev.reacts };
+        let newReactCount = prev.reactCount || 0;
 
         if (alreadyReacted) {
-          // Remove the react
+          // Remove the existing reaction
           updatedReacts[react] = Math.max((updatedReacts[react] || 1) - 1, 0);
-        } else {
-          if (isSwitchingReact) {
-            const prevReact = data.userreact;
-            updatedReacts[prevReact] = Math.max(
-              (updatedReacts[prevReact] || 1) - 1,
-              0
-            );
-          }
+          newReactCount = Math.max(newReactCount - 1, 0);
 
-          updatedReacts[react] = (updatedReacts[react] || 0) + 1;
+          return {
+            ...prev,
+            reacts: updatedReacts,
+            userreact: "",
+            reactCount: newReactCount,
+          };
         }
+
+        if (previousReact && previousReact !== react) {
+          // Switching reactions: decrement old, increment new
+          updatedReacts[previousReact] = Math.max(
+            (updatedReacts[previousReact] || 1) - 1,
+            0
+          );
+          // reactCount stays the same
+        } else {
+          // New reaction
+          newReactCount += 1;
+        }
+
+        updatedReacts[react] = (updatedReacts[react] || 0) + 1;
 
         return {
           ...prev,
           reacts: updatedReacts,
-          userreact: alreadyReacted ? "" : react,
+          userreact: react,
+          reactCount: newReactCount,
         };
       });
     } catch (err) {
       console.error(err);
       addNotification({
         type: "error",
-        message: "Cannot make react right now, please try again later.",
+        message: "Cannot react right now, please try again later.",
       });
     } finally {
       setReactsHolder(false);
       setLoading(false);
     }
   };
+
+  const emojes = [
+    {
+      emoji: "👍",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f44d.png",
+    },
+    {
+      emoji: "❤️",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/2764-fe0f.png",
+    },
+    {
+      emoji: "😂",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f602.png",
+    },
+    {
+      emoji: "😠",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png",
+    },
+    {
+      emoji: "😢",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png",
+    },
+    {
+      emoji: "🙏",
+      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png",
+    },
+  ];
+
   return (
     <div
       ref={reactsRef}
       className={`reactsHolder sideMenu ${reactsHolder && "active"}`}
     >
       <div className={`reacts ${loading ? "loading" : ""}`}>
-        <img
-          onClick={() => handleReact("like")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f44d.png"
+        {data?.userreact &&
+          !emojes.some((e) => e.emoji === data?.userreact) && (
+            <div
+              key={data?.userreact}
+              onClick={() => !loading && handleReact(data?.userreact)}
+              className="active"
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "22px",
+              }}
+            >
+              {data?.userreact}
+            </div>
+          )}
+
+        {emojes.map(({ emoji, url }) => (
+          <div
+            key={emoji}
+            onClick={() => !loading && handleReact(emoji)}
+            className={data?.userreact === emoji ? "active" : ""}
+          >
+            <img src={url} alt={emoji} />
+          </div>
+        ))}
+
+        <FaPlus
+          onClick={(e) =>
+            handleMenus(e, "emojiHolder", data._id, {
+              type: "react_for_post",
+              function: (emojiObject) => handleReact(emojiObject.emoji),
+            })
+          }
         />
-        <img
-          onClick={() => handleReact("love")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/2764-fe0f.png"
-        />
-        <img
-          onClick={() => handleReact("haha")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f602.png"
-        />
-        <img
-          onClick={() => handleReact("angry")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f62e.png"
-        />
-        <img
-          onClick={() => handleReact("sad")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f625.png"
-        />
-        <img
-          onClick={() => handleReact("prayer")}
-          src="https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f64f.png"
-        />
-        {type == "chat" && (
-          <FaPlus onClick={(e) => handleMenus(e, "emojiHolder", id)} />
-        )}
       </div>
     </div>
   );

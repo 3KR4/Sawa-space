@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState, useContext, useEffect, useCallback } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Comment from "@/components/post/Comment";
@@ -23,10 +23,7 @@ import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
 import { FaRegComment, FaUsers } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
-import {
-  MdOutlineAddReaction,
-  MdOutlinePhotoSizeSelectActual,
-} from "react-icons/md";
+import { MdOutlineAddReaction } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
 import { FaRegComments, FaPager } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -34,6 +31,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 function Post({ data }) {
   const { translations, locale } = useLanguage();
   const { addNotification } = useNotification();
+  const postRef = useRef(null);
   const {
     setDataSwiperType,
     setDataForSwiper,
@@ -60,6 +58,7 @@ function Post({ data }) {
   const limit = 5;
   const [comments, setComments] = useState([]);
   const [replyTo, setReplyTo] = useState({});
+  const [editedComment, setEditedComment] = useState({});
   const [commentsCount, setCommentsCount] = useState(data?.commentCount);
   const [reloadComments, setReloadComments] = useState(false);
 
@@ -111,31 +110,32 @@ function Post({ data }) {
     }
   }, [someThingHappen]);
 
-  const handleImageClick = useCallback(
-    (id, index) => {
-      setDataSwiperType("post");
-      setImgFocus(id);
-      setDataForSwiper(data);
-      if (index !== "") {
-        setImgIndex(index);
-      }
-    },
-    [data]
-  );
+  // const handleImageClick = useCallback(
+  //   (id, index) => {
+  //     setDataSwiperType("post");
+  //     setImgFocus(id);
+  //     setDataForSwiper(data);
+  //     if (index !== "") {
+  //       setImgIndex(index);
+  //     }
+  //   },
+  //   [data]
+  // );*
+
   return (
-    <div className={`post`}>
+    <div className={`post`} ref={postRef}>
       {!seeComments ? (
         <>
           <div className="top">
             <div className="left">
               <Image
                 className="rounded"
-                src={currentPost?.author[0]?.img.url || "/users/default.svg"}
+                src={currentPost?.author[0]?.img.url || "/users/default.png"}
                 alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname} img`}
                 width={40}
                 height={40}
                 onClick={(e) =>
-                  handleMenus(e, "user-Info", currentPost?.author[0]?._id)
+                  handleMenus(e, "user-Info", null, currentPost?.author[0])
                 }
               />
               <div className="info">
@@ -146,18 +146,18 @@ function Post({ data }) {
                 <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
               </div>
               {/* {currentPost?.creator == "page" ? (
-              <FaPager
-                className="creatorType"
-                onClick={(e) => handleMenus(e, "page-Info", currentPost?.user.id)}
-              />
-            ) : currentPost?.creator == "community" ? (
-              <FaUsers
-                className="creatorType"
-                onClick={(e) =>
-                  handleMenus(e, "community-Info", currentPost?.user.id)
-                }
-              />
-            ) : null} */}
+                <FaPager
+                  className="creatorType"
+                  onClick={(e) => handleMenus(e, "page-Info", currentPost?.user.id)}
+                />
+              ) : currentPost?.creator == "community" ? (
+                <FaUsers
+                  className="creatorType"
+                  onClick={(e) =>
+                    handleMenus(e, "community-Info", currentPost?.user.id)
+                  }
+                />
+              ) : null} */}
             </div>
             <HiDotsVertical
               className="settingDotsIco"
@@ -182,7 +182,7 @@ function Post({ data }) {
             />
           </div>
           <div className="middle">
-            {currentPost?.link?.length > 0 && (
+            {currentPost?.link && (
               <div className="Links">
                 {currentPost?.link?.map((x, index) => (
                   <div key={index}>
@@ -256,46 +256,49 @@ function Post({ data }) {
             )}
           </div>
           <div className="bottom">
-            {currentPost?.reacts &&
-              Object.values(currentPost.reacts).reduce((a, b) => a + b, 0) >
-                0 && (
-                <div
-                  className="left emojesCounter"
-                  onClick={(e) => {
-                    setOpenUsersReact("post");
-                    handleMenus(e, "usersReact", currentPost?._id);
-                  }}
-                >
-                  <>
-                    {Object.entries(currentPost.reacts)
-                      .filter(([, count]) => count > 0) // ✅ only keep non-zero
-                      .sort(([, a], [, b]) => b - a)
-                      .slice(0, 2)
-                      .map(([reaction], index) => (
-                        <p key={index}>{emojiMap[reaction]}</p>
-                      ))}
+            {currentPost?.reacts && currentPost?.reactCount > 0 && (
+              <div
+                className="left emojesCounter"
+                onClick={(e) => {
+                  setOpenUsersReact("post");
+                  handleMenus(e, "usersReact", currentPost?._id);
+                }}
+              >
+                <>
+                  {Object.entries(currentPost.reacts)
+                    .filter(([, count]) => count > 0)
+                    .sort(([, a], [, b]) => b - a)
+                    .slice(0, 2)
+                    .map(([emoji], index) => (
+                      <p key={index}>{emoji}</p>
+                    ))}
 
-                    <p>
-                      {Object.values(currentPost.reacts).reduce(
-                        (a, b) => a + b,
-                        0
-                      )}
-                    </p>
-                  </>
-                </div>
-              )}
+                  <p>{currentPost?.reactCount}</p>
+                </>
+              </div>
+            )}
 
             {screenSize !== "small" && (
               <div className="actions mid">
                 <div>
-                  <MdOutlineAddReaction
-                    onClick={() => setReactsHolder((prev) => !prev)}
-                  />
+                  {currentPost.userreact ? (
+                    <span
+                      className="curentUserReact"
+                      onClick={() => setReactsHolder((prev) => !prev)}
+                    >
+                      {currentPost.userreact}
+                    </span>
+                  ) : (
+                    <MdOutlineAddReaction
+                      onClick={() => setReactsHolder((prev) => !prev)}
+                    />
+                  )}
+
                   {reactsHolder && (
                     <ReactsHolder
                       reactsHolder={reactsHolder}
                       setReactsHolder={setReactsHolder}
-                      data={data}
+                      data={currentPost}
                       setState={setCurrentPost}
                       type={"post"}
                     />
@@ -306,6 +309,18 @@ function Post({ data }) {
                     onClick={() => {
                       setSeeComments(true);
                       handleSeeComments();
+                      setTimeout(() => {
+                        const element = postRef.current;
+                        if (element) {
+                          const headerHeight = 80; // Replace with your actual header height
+                          const y =
+                            element.getBoundingClientRect().top +
+                            window.pageYOffset -
+                            headerHeight;
+
+                          window.scrollTo({ top: y, behavior: "smooth" });
+                        }
+                      }, 100);
                     }}
                   />
                 </div>
@@ -331,9 +346,18 @@ function Post({ data }) {
           {screenSize === "small" && (
             <div className="actions">
               <div>
-                <MdOutlineAddReaction
-                  onClick={() => setReactsHolder((prev) => !prev)}
-                />
+                {currentPost.userreact ? (
+                  <span
+                    className="curentUserReact"
+                    onClick={() => setReactsHolder((prev) => !prev)}
+                  >
+                    {currentPost.userreact}
+                  </span>
+                ) : (
+                  <MdOutlineAddReaction
+                    onClick={() => setReactsHolder((prev) => !prev)}
+                  />
+                )}
                 {reactsHolder && (
                   <ReactsHolder
                     reactsHolder={reactsHolder}
@@ -347,6 +371,18 @@ function Post({ data }) {
                   onClick={() => {
                     setMessageText("");
                     setSeeComments(true);
+                    setTimeout(() => {
+                      const element = postRef.current;
+                      if (element) {
+                        const headerHeight = 80; // Replace with your actual header height
+                        const y =
+                          element.getBoundingClientRect().top +
+                          window.pageYOffset -
+                          headerHeight;
+
+                        window.scrollTo({ top: y, behavior: "smooth" });
+                      }
+                    }, 100);
                   }}
                 />
               </div>
@@ -437,11 +473,12 @@ function Post({ data }) {
               <>
                 {comments.map((comment, index) => (
                   <Comment
-                    key={`${comment._id}-${Date.now()}`}
+                    key={index}
                     data={comment}
                     isMyPost={isMyPost}
                     replyTo={replyTo}
                     setReplyTo={setReplyTo}
+                    setEditedComment={setEditedComment}
                   />
                 ))}
                 {hasMore ? (
@@ -475,6 +512,7 @@ function Post({ data }) {
             id={currentPost?._id}
             replyTo={replyTo}
             setReplyTo={setReplyTo}
+            editedComment={editedComment}
             setComments={setComments}
             setCommentsCount={setCommentsCount}
           />

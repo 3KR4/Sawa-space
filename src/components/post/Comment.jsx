@@ -10,17 +10,25 @@ import ConvertTime from "@/utils/ConvertTime";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
 
 import { MdOutlineAddReaction } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 
-function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
+function Comment({
+  data,
+  isMyPost,
+  replyTo,
+  setReplyTo,
+  setEditedComment,
+  level = 0,
+}) {
   const { userData } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
   const { addNotification } = useNotification();
 
-  const isMyComment = data?.author[0]?._id == userData?._id;
-
+  const isMyComment = data && data?.author[0]?._id == userData?._id;
+  const { setMessageText } = useContext(InputActionsContext);
   const { someThingHappen, setSomeThingHappen } = useContext(MenusContext);
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
 
@@ -52,25 +60,57 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
   };
   const handleToggleReplies = () => {
     setSeeReplays((prev) => !prev);
+    setRepliesLoaded((prev) => !prev);
     setReplyTo({});
     if (!repliesLoaded && data?.seeMore) {
       fetchingReplyies();
     }
   };
   useEffect(() => {
-    if (
-      someThingHappen?.type === "comment" &&
-      someThingHappen?.type === "reply"
-    ) {
-      fetchingReplyies();
+    if (someThingHappen?.type === "reply") {
+      setReplies((prev) =>
+        prev.map((reply) =>
+          reply._id === someThingHappen.replyTo
+            ? { ...reply, seeMore: true }
+            : reply
+        )
+      );
       setSomeThingHappen("");
     }
-  }, [someThingHappen]);
+  }, [someThingHappen.type]);
+
+  useEffect(() => {
+    if (someThingHappen?.type === "nested_comment") {
+      setReplies((prev) =>
+        prev.map((reply) =>
+          reply._id === someThingHappen.data._id ? someThingHappen.data : reply
+        )
+      );
+      setSomeThingHappen("");
+    }
+  }, [someThingHappen.data]);
+
+  let focused =
+    replyTo?.commentId == data?._id ||
+    someThingHappen?.comment?.data?._id === data?._id;
+  let replyFocused = replyTo?.commentId == data?._id;
+  let editFocused = someThingHappen?.comment?.data?._id === data?._id;
+
+  useEffect(() => {
+    editFocused && setSeeReplays(false);
+  }, [someThingHappen.comment]);
+
+  useEffect(() => {
+    if (someThingHappen.nisted) {
+      setReplies((prev) =>
+        prev.filter((reply) => reply._id !== someThingHappen.id)
+      );
+      setSomeThingHappen("");
+    }
+  }, [someThingHappen.nisted]);
+
   return (
-    <div
-      key={data?._id}
-      className={`comment ${replyTo?.commentId == data?._id ? "reply" : ""}`}
-    >
+    <div key={data?._id} className={`comment ${focused ? "reply" : ""}`}>
       <div className="image-holder">
         <Image
           className="rounded"
@@ -79,7 +119,7 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
           width={40}
           height={40}
           unoptimized
-          onClick={(e) => handleMenus(e, "user-Info", data?.author[0]._id)}
+          onClick={(e) => handleMenus(e, "user-Info", null, data?.author[0])}
         />
         <span></span>
       </div>
@@ -92,13 +132,15 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
               </h5>
               <span>{ConvertTime(data?.time, locale, "post")}</span>
             </div>
-            {replyTo?.commentId !== data?._id && (isMyPost || isMyComment) && (
+            {!focused && (isMyPost || isMyComment) && (
               <HiDotsVertical
                 className="settingDotsIco"
                 onClick={(e) => {
                   handleMenus(e, "settingMenu-comment", data?._id, {
                     isMyPost,
                     isMyComment,
+                    comment: isMyComment ? data : null,
+                    level,
                   });
                 }}
               />
@@ -112,7 +154,7 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
             onClick={() => handleImageClick(data)}
           /> */}
           <div className="react-reply-div">
-            {replyTo?.commentId !== data?._id && (
+            {!focused && (
               <div style={{ display: "flex", position: "relative" }}>
                 <MdOutlineAddReaction
                   onClick={() => setReactsHolder((prev) => !prev)}
@@ -126,11 +168,12 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
                 )}
               </div>
             )}
-            {level < 2 && (
+            {level < 2 && !editFocused && (
               <button
                 onClick={() => {
                   setSeeReplays(false);
-                  replyTo?.commentId == data?._id
+                  setRepliesLoaded(false);
+                  replyFocused
                     ? setReplyTo({})
                     : setReplyTo({
                         name: data?.author[0]?.firstname,
@@ -139,39 +182,47 @@ function Comment({ data, isMyPost, replyTo, setReplyTo, level = 0 }) {
                       });
                 }}
               >
-                {replyTo?.commentId == data?._id
+                {replyFocused
                   ? translations?.comment?.cancel_reply
                   : translations?.comment?.reply}
               </button>
             )}
-            {data?.seeMore &&
-              data?.replay !== null &&
-              replyTo?.commentId !== data?._id && (
-                <>
-                  |
-                  <div className="bottom forReply">
-                    <button onClick={handleToggleReplies}>
-                      {seeReplays
-                        ? translations?.comment?.hide_replays
-                        : `${translations?.comment?.see} ${translations?.comment?.replys}`}
-                    </button>
-                    <div
-                      className="right emojesCounter"
-                      onClick={(e) => {
-                        setOpenUsersReact("post");
-                        handleMenus(e, "usersReact", data.id);
-                      }}
-                    >
-                      {data?.reacts?.topUseage.map((x, index) => (
-                        <p key={index}>{x}</p>
-                      ))}
-                      <p>{data?.reacts?.count}</p>
-                    </div>
+            {editFocused && (
+              <button
+                onClick={() => {
+                  setSomeThingHappen("");
+                  setMessageText("");
+                }}
+              >
+                {translations?.actions?.cancel_edit}
+              </button>
+            )}
+            {data?.seeMore && data?.replay !== null && !focused && (
+              <>
+                |
+                <div className="bottom forReply">
+                  <button onClick={handleToggleReplies}>
+                    {seeReplays
+                      ? translations?.comment?.hide_replays
+                      : `${translations?.comment?.see} ${translations?.comment?.replys}`}
+                  </button>
+                  <div
+                    className="right emojesCounter"
+                    onClick={(e) => {
+                      setOpenUsersReact("post");
+                      handleMenus(e, "usersReact", data.id);
+                    }}
+                  >
+                    {data?.reacts?.topUseage.map((x, index) => (
+                      <p key={index}>{x}</p>
+                    ))}
+                    <p>{data?.reacts?.count}</p>
                   </div>
-                </>
-              )}
+                </div>
+              </>
+            )}
           </div>
-          {replyTo?.commentId !== data?._id && (
+          {!focused && (
             <div className="bottom">
               {data?.seeMore && data?.replay == null && (
                 <button onClick={handleToggleReplies}>

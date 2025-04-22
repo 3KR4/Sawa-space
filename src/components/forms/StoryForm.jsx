@@ -502,7 +502,6 @@ function StoryForm() {
         const formData = new FormData();
         newImages.forEach((img) => formData.append("imgs", img));
         const imgRes = await storyService.uploadStoryImages(storyId, formData);
-        console.log(imgRes);
       }
 
       if (removedImages.length > 0 && openStoryForm.type === "edit") {
@@ -553,7 +552,6 @@ function StoryForm() {
         },
       });
     } catch (err) {
-      console.log(err);
       addNotification({
         type: "error",
         message: err?.response?.data?.messege || "Something went wrong.",

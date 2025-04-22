@@ -1453,6 +1453,7 @@ body.ar .post .top .left .creatorType {
 .top.forUser img {
   width: 45px;
   height: 45px;
+  cursor: pointer;
 }
 .post .top .info h5,
 .top.forUser .info h5 {
@@ -1541,6 +1542,7 @@ body.ar .post .top .left .creatorType {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 .post .middle .image img {
   max-height: 50vw;
@@ -1672,8 +1674,8 @@ body.ar .comments .sideMenu.reactsHolder {
   height: 32px;
 }
 .sideMenu.reactsHolder .reacts > svg {
-  background: var(--second-section-color);
-  color: #656565;
+  background: var(--section-color);
+  color: var(--paragraph-color);
   width: 30px;
   height: 30px;
 }
@@ -1762,12 +1764,19 @@ body.ar .post .comments {
 }
 .post .comments > .holder .comment:last-child {
   border: none;
+  margin-bottom: 0;
+}
+.post .comments > .holder > .comment:last-child {
   margin-bottom: 15px;
 }
 .post .comments > .holder .comment .image-holder {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+.post .comments > .holder .comment .image-holder img {
+  min-width: 40px;
+  max-width: 40px;
 }
 .post .comments > .holder .comment .image-holder span {
   position: relative;
@@ -2153,6 +2162,7 @@ body:has(.focusedMsg.active) .chats {
 }
 .post .middle .actions svg,
 .post .bottom .actions > div > svg,
+.post .bottom .actions span,
 .post .bottom .actions > svg,
 .post > .actions > div > svg {
   background: var(--section-color);
@@ -2183,10 +2193,21 @@ body:has(.focusedMsg.active) .chats {
 .posts-holder .post .bottom > .actions > div:first-child {
   position: unset;
 }
-.posts-holder .post .bottom > .actions > div > svg {
+.posts-holder .post .bottom > .actions > div > svg,
+.posts-holder .post .bottom > .actions > div > .curentUserReact {
   width: 50px;
   padding: 7px;
 }
+.post .actions .curentUserReact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.curentUserReact {
+  cursor: pointer;
+}
+
 .posts-holder .post .bottom > .actions > div:nth-child(2) svg {
   padding: 8.3px;
 }
@@ -2266,17 +2287,38 @@ body:has(.focusedMsg.active) .chats {
   margin: 3px 15px 0;
 }
 .reacts > * {
-  min-width: 30px;
-  min-height: 30px;
+  width: 30px;
+  height: 30px;
   padding: 2px;
   border-radius: 50%;
   cursor: pointer;
   transition: 0.3s;
 }
-
-.reacts img:hover {
+.reacts div {
+  position: relative;
+  display: flex;
+}
+.reacts div img {
+  width: 100%;
+  transition: 0.3s;
+}
+.reacts div:hover img {
   scale: 1.5;
   transform: translateY(-4px);
+}
+
+.reacts div::before {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  width: 0;
+  left: 50%;
+  height: 3px;
+  transform: translateX(-50%);
+  background: var(--main-color);
+}
+.reacts div.active::before {
+  width: 100%;
 }
 .reacts > svg {
   padding: 5px;
@@ -2309,11 +2351,11 @@ body .sideSection + div {
   height: 32px;
 }
 .sideMenu .reacts > svg {
-  background: var(--second-section-color);
-  color: #656565;
+  background: var(--section-color);
+  color: var(--paragraph-color);
   width: 30px;
   height: 30px;
-  padding: 5px !important;
+  padding: 6px !important;
   min-height: 30px !important;
 }
 .sideMenu .reacts > svg:hover {
@@ -2493,7 +2535,7 @@ label.checkbox > span {
 }
 
 .info-menu.sideMenu .info {
-  width: 100%;
+width: 70%;
 }
 .info-menu.sideMenu .holder {
   display: flex;
@@ -2542,6 +2584,9 @@ label.checkbox > span {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+.info-menu.sideMenu .actions > * {
+width: -webkit-fill-available;
 }
 
 .info-menu svg.close {
@@ -2665,6 +2710,9 @@ body.ar .navigations-icons.forStories svg {
   width: 47px;
   height: 47px;
 }
+.home .stories-holder .story.smallView .top.forUser .info {
+  max-width: 100%;
+}
 .home .stories-holder .userStory-creation {
   border: 1px solid var(--border-color);
   background: var(--body-color);
@@ -2676,15 +2724,16 @@ body.ar .navigations-icons.forStories svg {
   object-fit: cover;
   scale: 1;
   transition: 0.4s;
+  min-height: 88%;
+  max-height: 88%;
 }
 .home .stories-holder .userStory-creation:hover img {
   scale: 1.5;
 }
 .home .stories-holder .userStory-creation .bottom h5 {
-  font-size: 13px;
+  font-size: 12px;
   transition: 0.4s;
   font-weight: 500;
-
 }
 .ellipsisText {
   overflow: hidden;
@@ -2701,7 +2750,8 @@ body.ar .navigations-icons.forStories svg {
   flex-direction: column;
   align-items: center;
   gap: 1px;
-  padding: 17px 7px 6px;
+  padding: 3px 8px;
+  height: -webkit-fill-available;
 }
 .home .stories-holder .userStory-creation .svg-holder {
   background: var(--main-color);
@@ -3426,6 +3476,9 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
   .post .middle .image img {
     max-height: 126vw;
   }
+  .post .actions .curentUserReact {
+    font-size: 18px;
+  }
   .chat-page > img {
     width: 100%;
   }
@@ -3635,13 +3688,16 @@ body.ar .focusedMsg .stories .navigations-icons.forStories svg {
     padding: 0 12px 5px;
   }
   .post > .actions > div {
-    display: flex;
-    width: -webkit-fill-available;
+    align-items: center;
+    justify-content: center;
+    background: var(--section-color);
+    height: 31px;
+    border-radius: 5px;
   }
   .post > .actions > div > svg {
     width: 100%;
     padding: 6px;
-    height: 31px;
+    height: 100%;
   }
   .post > .actions > div:nth-child(2) > svg {
     padding: 7px;

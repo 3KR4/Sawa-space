@@ -55,17 +55,11 @@ const Sections = [
         <ul>
           <li
             className="active"
-            onClick={() => {
-              console.log(x.name);
-            }}
           >
             <FaShoppingBasket />
             {translations?.market_place?.browse_all}
           </li>
           <li
-            onClick={() => {
-              console.log(x.name);
-            }}
           >
             <FaHeartCircleBolt />
             {translations?.market_place?.following_pages}
@@ -121,9 +115,6 @@ const Sections = [
             return (
               <li
                 key={index}
-                onClick={() => {
-                  console.log(x.name);
-                }}
               >
                 <IconComponent key={x.id} />
                 {translations?.market_place?.[x.name]}

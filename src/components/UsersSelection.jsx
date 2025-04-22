@@ -55,8 +55,6 @@ function UsersSelection() {
     };
   }, []);
 
-  console.log(selectionMenuTitle);
-
   return (
     <div
       ref={usersSelectionRef}
@@ -121,7 +119,6 @@ function UsersSelection() {
                 type="checkbox"
                 className="input"
                 checked={selectedUsers.includes(x.id) ? true : false}
-                onChange={() => console.log("x")}
               />
               <span className="custom-checkbox"></span>
             </label>

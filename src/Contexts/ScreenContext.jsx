@@ -87,8 +87,6 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [someThingHappen.stories, someThingHappen.deleteAllUserStories, userData]);
 
-  console.log(someThingHappen);
-
   return (
     <ScreenContext.Provider
       value={{

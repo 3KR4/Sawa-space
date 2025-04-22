@@ -145,14 +145,13 @@ export default function Auth() {
     }
   };
 
-  const maxDate = new Date(); // Today
-  const minDate = new Date(1900, 0, 1); // January 1, 1900
+  const maxDate = new Date();
+  const minDate = new Date(1900, 0, 1);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.match("image.*")) {
       addNotification({
         type: "warnign",
@@ -161,7 +160,6 @@ export default function Auth() {
       return;
     }
 
-    // Validate file size (e.g., 5MB max)
     if (file.size > 5 * 1024 * 1024) {
       addNotification({
         type: "warnign",

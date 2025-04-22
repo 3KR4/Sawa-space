@@ -29,8 +29,8 @@ export const postService = {
   createComment: (postId, data) => {
     return apiClient.post(`/comment/${postId}`, data);
   },
-  editComment: (commentId) => {
-    return apiClient.put(`/comment/${commentId}`);
+  editComment: (commentId, body) => {
+    return apiClient.put(`/comment/${commentId}`, body);
   },
   deleteComments: (commentId) => {
     return apiClient.delete(`/comment/${commentId}`);

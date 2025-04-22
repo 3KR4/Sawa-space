@@ -318,7 +318,6 @@ function PostForm() {
         setRemovedImages([]);
       }
     } catch (err) {
-      console.log(err);
       addNotification({
         type: "error",
         message: err?.response?.data?.messege || "Something went wrong.",

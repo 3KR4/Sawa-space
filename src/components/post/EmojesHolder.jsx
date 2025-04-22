@@ -7,7 +7,7 @@ import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import EmojiPicker from "emoji-picker-react";
 
 function EmojesHolder() {
-  const { menuPosition, emojiHolder, setEmojiHolder } =
+  const { menuPosition, emojiHolder, setEmojiHolder, selectedDev } =
     useContext(DynamicMenusContext);
   const { handleEmojiClick, emojiHolderRef } = useContext(InputActionsContext);
 
@@ -26,6 +26,7 @@ function EmojesHolder() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <div
       ref={emojiHolderRef}
@@ -36,7 +37,14 @@ function EmojesHolder() {
       }}
     >
       <EmojiPicker
-        onEmojiClick={handleEmojiClick}
+        onEmojiClick={
+          selectedDev.function
+            ? (emojiObject) => {
+                selectedDev.function(emojiObject);
+                setEmojiHolder(false);
+              }
+            : handleEmojiClick
+        }
         theme="light"
         emojiStyle="facebook"
         previewConfig={{ showPreview: false }}

@@ -15,15 +15,15 @@ export default function RootLayout({ children }) {
   return (
     <LanguageProvider>
       <NotificationProvider>
-        <MenuProvider>
-          <MenusProvider>
-            <ScreenProvider>
-              <InputActionsProvider>
+        <InputActionsProvider>
+          <MenuProvider>
+            <MenusProvider>
+              <ScreenProvider>
                 <LayoutContent>{children}</LayoutContent>
-              </InputActionsProvider>
-            </ScreenProvider>
-          </MenusProvider>
-        </MenuProvider>
+              </ScreenProvider>
+            </MenusProvider>
+          </MenuProvider>
+        </InputActionsProvider>
       </NotificationProvider>
     </LanguageProvider>
   );
