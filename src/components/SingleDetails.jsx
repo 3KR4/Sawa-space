@@ -57,34 +57,6 @@ function SingleDetails() {
   const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
   const { pathname, screenSize, stories } = useContext(ScreenContext);
 
-  const [swiperRef, setSwiperRef] = useState(null);
-  const data =
-    dataSwiperType === "msg" && messages.find((msg) => msg.id === imgFocus);
-
-  useEffect(() => {
-    if (swiperRef) {
-      swiperRef.slideTo(imgIndex);
-    }
-  }, [imgIndex, swiperRef]);
-
-  const handleImageClick = (id, index) => {
-    setImgFocus(id);
-    if (index === "") {
-      const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
-      swiperRef.slideTo(mediaIndex, 500);
-      setImgIndex(mediaIndex);
-    } else {
-      swiperRef.slideTo(index, 500);
-      setImgIndex(index);
-    }
-  };
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 0); // Adjust as needed
-  }, []);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       const allowedRefs = [
@@ -120,10 +92,35 @@ function SingleDetails() {
     };
   }, []);
 
-  const storySwiperRef = useRef(null);
-  const userOrder = useRef([]);
+  //! msg
+  const [swiperRef, setSwiperRef] = useState(null);
+  const data =
+    dataSwiperType === "msg" && messages.find((msg) => msg.id === imgFocus);
 
-  // stories
+  useEffect(() => {
+    if (swiperRef) {
+      swiperRef.slideTo(imgIndex);
+    }
+  }, [imgIndex, swiperRef]);
+
+  const handleImageClick = (id, index) => {
+    setImgFocus(id);
+    if (index === "") {
+      const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
+      swiperRef.slideTo(mediaIndex, 500);
+      setImgIndex(mediaIndex);
+    } else {
+      swiperRef.slideTo(index, 500);
+      setImgIndex(index);
+    }
+  };
+
+  //! post 
+  const [loading, setLoading] = useState(true);
+  const [postSwiperIndex, setPostSwiperIndex] = useState(singleProvider?.focused_img_index);
+  const currentPost = singleProvider?.sharing_data
+
+  //! stories
   const [userStories, setUserStories] = useState(singleProvider?.shared_data);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [loadingStories, setLoadingStories] = useState(null);
@@ -171,27 +168,28 @@ function SingleDetails() {
         singleProvider.type ? "active" : ""
       } ${singleProvider.type}`}
     >
-      {dataSwiperType === "post" ? (
+      {singleProvider.type === "post" ? (
         <div className={`post`}>
-          {screenSize === "large" && (
+          {screenSize === "large" && currentPost?.img &&
+            currentPost?.img.length > 0 && (
             <div className="left-img">
               <div className="hold">
                 {dataForSwiper?.img && (
                   <img
                     src={
-                      dataForSwiper?.img[
-                        dataForSwiper?.img.length === 1 ? 0 : imgIndex
+                      currentPost?.img[
+                        currentPost?.img.length === 1 ? 0 : postSwiperIndex
                       ]
                     }
                     alt={
-                      dataForSwiper?.user
-                        ? `${dataForSwiper?.user.name}'s image`
+                      currentPost?.author[0]
+                        ? `${currentPost?.author[0].firstname}'s image`
                         : "User image"
                     }
                   />
                 )}
               </div>
-              {dataForSwiper?.img?.length > 1 && (
+              {currentPost?.img?.length > 1 && (
                 <Swiper
                   className={`previewSmallImages`}
                   dir={direction}
@@ -201,7 +199,7 @@ function SingleDetails() {
                   loop={false}
                   centeredSlides={true}
                 >
-                  {dataForSwiper.img.map((x, index) => (
+                  {currentPost.img.map((x, index) => (
                     <SwiperSlide
                       key={index}
                       onClick={() => {
@@ -226,7 +224,7 @@ function SingleDetails() {
               )}
             </div>
           )}
-          {loading ? (
+          {!currentPost ? (
             <ContentLoader
               className="skeleton skeleton-SingleDetails"
               width={600}

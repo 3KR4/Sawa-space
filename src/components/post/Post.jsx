@@ -17,7 +17,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { emojiMap } from "@/utils/Data";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
-
+import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
@@ -29,6 +29,7 @@ import { FaRegComments, FaPager } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
 function Post({ data }) {
+  const router = useRouter();
   const { translations, locale } = useLanguage();
   const { addNotification } = useNotification();
   const postRef = useRef(null);
@@ -110,17 +111,9 @@ function Post({ data }) {
     }
   }, [someThingHappen]);
 
-  // const handleImageClick = useCallback(
-  //   (id, index) => {
-  //     setDataSwiperType("post");
-  //     setImgFocus(id);
-  //     setDataForSwiper(data);
-  //     if (index !== "") {
-  //       setImgIndex(index);
-  //     }
-  //   },
-  //   [data]
-  // );*
+  const handleImageClick = (id, index) => {
+    router.push(`?post=${currentPost._id}&index=${index}`);
+  };
 
   return (
     <div className={`post`} ref={postRef}>

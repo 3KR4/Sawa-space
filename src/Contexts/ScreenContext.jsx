@@ -4,13 +4,16 @@ import { usePathname } from "next/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { useSearchParams } from "next/navigation";
+import { postService } from "@/services/api/postService";
 
 export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
   const { addNotification } = useNotification();
-  const { someThingHappen, setSomeThingHappen } = useContext(MenusContext);
+  const { someThingHappen, setSomeThingHappen, singleProvider, setSingleProvider } =
+    useContext(MenusContext);
   const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
     function getScreenSize() {
@@ -86,6 +89,44 @@ export const ScreenProvider = ({ children }) => {
       };
     }
   }, [someThingHappen.stories, someThingHappen.deleteAllUserStories, userData]);
+
+  const searchParams = useSearchParams();
+  const postId = searchParams.get("post");
+  const index = parseInt(searchParams.get("index") || "0", 10);
+
+  useEffect(() => {
+    const getSingleProduct = async () => {
+      try {
+        const { data } = await postService.getSinglePost(postId);
+
+        const post = data?.data?.[0];
+        if (post) {
+          setSingleProvider({
+            type: "post",
+            sharing_data: post,
+            focused_img_index: index,
+          });
+        } else {
+          addNotification({
+            type: "warning",
+            message: "Post not found",
+          });
+        }
+      } catch (error) {
+        addNotification({
+          type: "error",
+          message: "something went wrong while fetching post",
+        });
+      }
+    };
+
+    if (postId) {
+      getSingleProduct();
+    }
+  }, [postId, index]);
+
+  console.log(singleProvider);
+  
 
   return (
     <ScreenContext.Provider
