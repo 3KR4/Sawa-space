@@ -1,17 +1,15 @@
 "use client";
-import React, { useState, useContext, useRef } from "react";
 import "@/Styles/forms.css";
-import { useLanguage } from "@/Contexts/LanguageContext";
-import { useForm } from "react-hook-form";
+import React, { useState, useContext, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { useLanguage } from "@/Contexts/LanguageContext";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import TextField from "@mui/material/TextField";
-import { useRouter } from "next/navigation"; // ✅ App Router
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { MdModeEditOutline } from "react-icons/md";
 import { ScreenContext } from "@/Contexts/ScreenContext";
-
 import { userService } from "@/services/api/userService";
 import { useNotification } from "@/Contexts/NotificationContext";
 
@@ -49,7 +47,6 @@ export default function Auth() {
     watch,
     formState: { errors },
     reset,
-    getValues,
   } = useForm();
 
   const password = watch("password", "");

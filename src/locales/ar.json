@@ -32,7 +32,9 @@
     "copy": "نسخ النص",
     "add": "اضف",
     "block_page": "حظر الصفحة",
-    "report_page": "ارسال تقرير عن الصفحة"
+    "report_page": "ارسال تقرير عن الصفحة",
+    "next": "التالي",
+    "perv": "السابق"
   },
   "placeHolders": {
     "search": "ابحث",
@@ -218,7 +220,13 @@
     "page_created_at": "تاريخ انشاء الصفحة",
     "status": "حالة الصفحة",
     "public_page": "صفحة عامة",
-    "private_page": "صفحة خاصة"
+    "private_page": "صفحة خاصة",
+    "your_page_bio": "وصف لصفحتحك",
+    "your_page_name": "اسم صفحتك",
+    "page_category": "تصنيف صفحتك",
+    "Contact_number": "رقم التواصل الخاص بكم",
+    "address": "عنوانكم",
+    "website": "رابط موقعك الالكتروني"
   },
   "forms": {
     "create_post": "انشاء منشور",
@@ -239,7 +247,17 @@
     "zoom": "تكبير",
     "rotate": "تدوير",
     "delete_image": "حذف الصورة",
-    "change_image": "تغيير الصورة"
+    "change_image": "تغيير الصورة",
+    "page_details": "تفاصيل الصفحة",
+    "your_page_is_where_people_go_to_learn_more_about_you_make_sure_yours_has_all_the_information_they_may_need": "صفحتك هي المكان الذي يذهب إليه الناس لمعرفة المزيد عنك. تأكد من أن لديك جميع المعلومات التي قد يحتاجونها.",
+    "finish_setting_up_your_page": "أكمل إعداد صفحتك",
+    "now_add_more_details_to_help_people_connect_with_you": "الآن أضف المزيد من التفاصيل لمساعدة الناس على التواصل معك.",
+    "customize_your_page": "خصص صفحتك",
+    "your_profile_picture_is_one_of_the_first_things_people_see_try_using_your_logo_or_an_image_people_can_easily_associate_with_you": "صورة ملفك الشخصي هي واحدة من أول الأشياء التي يراها الناس. حاول استخدام شعارك أو صورة يمكن للناس التعرف عليها بسهولة.",
+    "use_the_name_of_your_business_brand_or_organization_or_a_name_that_helps_explain_your_page": "استخدم اسم عملك أو علامتك التجارية أو مؤسستك أو اسم يساعد في توضيح صفحتك",
+    "tell_people_a_little_about_your_business": "أخبر الناس قليلاً عن عملك.",
+    "please_fill_all_other_info_before_adding_more": "يرجى ملء جميع المعلومات الأخرى قبل إضافة المزيد.",
+    "add_page_img_and_cover": "أضف صورة الصفحة والغلاف"
   },
   "errors": {
     "please_enter_a_valid_URL": "يرجى إدخال رابط صحيح",

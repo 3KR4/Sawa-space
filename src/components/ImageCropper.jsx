@@ -1,14 +1,20 @@
-import { Cropper } from "react-easy-crop";
-import { Slider } from "@mui/material";
-import { FaCloudUploadAlt, FaRotate } from "react-icons/fa";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
+
+import Cropper from "react-easy-crop";
+import Slider from "@mui/material/Slider";
+import { getCroppedImg } from "@/utils/cropImage";
+
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaRotate } from "react-icons/fa6";
 import { IoMdResize } from "react-icons/io";
 
 export default function ImageCropper({
+  type,
   imageURL,
   setImageURL,
   aspect = 1,
   inputRef,
-  onCropDone,
+  setState,
 }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -24,24 +30,41 @@ export default function ImageCropper({
     if (file) {
       const url = URL.createObjectURL(file);
       setImageURL(url);
+
+      // 🛠️ Reset crop settings
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setRotation(0);
+      setCroppedAreaPixels(null);
+      inputRef.current.value = null;
     }
   };
 
-  const handleCrop = async () => {
+  const updateCroppedImage = useCallback(async () => {
+    if (!imageURL || !croppedAreaPixels) {
+      setState(null); // خلي الـstate null لما مافي بيانات
+      return;
+    }
     const blob = await getCroppedImg(imageURL, croppedAreaPixels, rotation);
-    onCropDone(blob); // send the cropped blob outside
-  };
+    setState(blob);
+  }, [imageURL, croppedAreaPixels, rotation, setState]);
+
+  useEffect(() => {
+    updateCroppedImage();
+  }, [updateCroppedImage]);
 
   const handleDelete = () => {
     setImageURL(null);
+    setState(null);
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setRotation(0);
     setCroppedAreaPixels(null);
+    inputRef.current.value = null;
   };
 
   return (
-    <div className="cropperContainer">
+    <div className={`cropperContainer ${type}`}>
       {imageURL ? (
         <>
           <div className="cropperBox">
@@ -67,6 +90,12 @@ export default function ImageCropper({
                 step={0.1}
                 value={zoom}
                 onChange={(e, value) => setZoom(value)}
+                sx={{
+                  "& .MuiSlider-thumb": {
+                    width: 13,
+                    height: 13,
+                  },
+                }}
               />
               <IoMdResize />
             </div>
@@ -79,13 +108,27 @@ export default function ImageCropper({
                 step={1}
                 value={rotation}
                 onChange={(e, value) => setRotation(value)}
+                sx={{
+                  "& .MuiSlider-thumb": {
+                    width: 13,
+                    height: 13,
+                  },
+                }}
               />
               <FaRotate />
             </div>
-            <div className="actions">
-              <button onClick={handleCrop}>Crop & Save</button>
-              <button onClick={handleDelete}>Delete</button>
-            </div>
+          </div>
+
+          <div className="actions row">
+            <button className="main-button danger" onClick={handleDelete}>
+              remove
+            </button>
+            <button
+              className="main-button"
+              onClick={() => inputRef.current.click()}
+            >
+              change
+            </button>
           </div>
         </>
       ) : (

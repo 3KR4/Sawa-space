@@ -33,7 +33,9 @@
     "copy": "copy",
     "add": "add",
     "block_page": "block page",
-    "report_page": "report page"
+    "report_page": "report page",
+        "next":"next",
+    "perv":"perv"
   },
   "placeHolders": {
     "search": "search",
@@ -218,14 +220,20 @@
     "page_created_at": "page created at",
     "status": "status",
     "public_page": "public page",
-    "private_page": "private page"
+    "private_page": "private page",
+    "your_page_bio": "your page bio",
+    "your_page_name": "your page name",
+    "page_category": "your page category",
+    "contact_number": "your contact number",
+    "address": "your company address",
+    "website": "your website link"
   },
   "forms": {
     "create_post": "create post",
     "edit_post": "edit post",
     "add_to_your_post": "add to your post",
     "click_or_drop_images_her": "click or drop images her",
-    "click_to_uploud_image_her":"click to uploud image her",
+    "click_to_uploud_image_her": "click to uploud image her",
     "click_her": "click her!!",
     "drop_her": "drop her!!",
     "Mentiond_People": "Mentiond People",
@@ -237,7 +245,17 @@
     "zoom": "zoom",
     "rotate": "rotate",
     "delete_image": "delete image",
-    "change_image": "change image"
+    "change_image": "change image",
+    "page_details": "page details",
+    "your_page_is_where_people_go_to_learn_more_about_you_make_sure_yours_has_all_the_information_they_may_need": "Your Page is where people go to learn more about you. Make sure yours has all the information they may need.",
+    "finish_setting_up_your_page": "Finish setting up your Page",
+    "now_add_more_details_to_help_people_connect_with_you": "Now add more details to help people connect with you.",
+    "customize_your_page": "Customize your Page",
+    "your_profile_picture_is_one_of_the_first_things_people_see_try_using_your_logo_or_an_image_people_can_easily_associate_with_you": "Your profile picture is one of the first things people see. Try using your logo or an image people can easily associate with you.",
+    "use_the_name_of_your_business_brand_or_organization_or_a_name_that_helps_explain_your_page": "Use the name of your business, brand or organization, or a name that helps explain your Page",
+    "tell_people_a_little_about_your_business": "Tell people a little about your business.",
+    "please_fill_all_other_info_before_adding_more": "Please fill all other info before adding more.",
+    "add_page_img_and_cover": "Add page img and cover"
   },
   "errors": {
     "please_enter_a_valid_URL": "please enter a valid URL",

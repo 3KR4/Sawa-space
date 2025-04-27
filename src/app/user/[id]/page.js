@@ -14,6 +14,7 @@ import "@/Styles/user.css";
 import PostsHolder from "@/components/post/PostsHolder";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useNotification } from "@/Contexts/NotificationContext";
+import { userService } from "@/services/api/userService";
 
 import { FaAngleRight } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
@@ -29,7 +30,6 @@ import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
 
 import { IoInformationCircleSharp } from "react-icons/io5";
-import { userService } from "@/services/api/userService";
 
 export default function User({ params }) {
   const { translations } = useLanguage();
@@ -66,8 +66,6 @@ export default function User({ params }) {
     };
     fetchUser();
   }, [id]);
-
-  console.log("userData", userData);
 
   return (
     <div className={`portfolio userPage ${isMyPage ? "myPage" : ""}`}>

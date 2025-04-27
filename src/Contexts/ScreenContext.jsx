@@ -57,20 +57,34 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [userData]);
 
-    const getUser = async () => {
-      try {
-        const { data } = await userService.getUserData(userData?._id);
-        setUserData(data.data);
-      } catch (err) {
-        console.error("Error fetching stories", err);
-        addNotification({
-          type: "error",
-          message: "Failed to load user data",
-        });
-      } finally {
-        setSomeThingHappen({});
-      }
-    };
+  const [userPage, setUserPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedPage = localStorage.getItem("page");
+      return storedPage ? JSON.parse(storedPage) : null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (userPage) {
+      localStorage.setItem("page", JSON.stringify(userPage));
+    }
+  }, [userPage]);
+
+  const getUser = async () => {
+    try {
+      const { data } = await userService.getUserData(userData?._id);
+      setUserData(data.data);
+    } catch (err) {
+      console.error("Error fetching stories", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user data",
+      });
+    } finally {
+      setSomeThingHappen({});
+    }
+  };
 
   console.log(userData);
 
@@ -165,6 +179,8 @@ export const ScreenProvider = ({ children }) => {
         storyloading,
         setStoryloading,
         getUser,
+        userPage,
+        setUserPage,
       }}
     >
       {children}

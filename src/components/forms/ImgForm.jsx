@@ -144,10 +144,7 @@ function ImgForm() {
 
   return (
     <form className={`focusedMsg FormMenu  ${openImgForm ? "active" : ""}`}>
-      <div
-        className={`body imgForm contentLoaded ${openImgForm.type}`}
-        ref={imgFormMenuRef}
-      >
+      <div className={`body imgForm contentLoaded `} ref={imgFormMenuRef}>
         <div className="top">
           <h4>
             {openImgForm.type === "img"
@@ -161,7 +158,7 @@ function ImgForm() {
           <IoClose className="close" onClick={() => setOpenImgForm(false)} />
         </div>
 
-        <div className="cropperContainer">
+        <div className={`cropperContainer ${openImgForm.type}`}>
           {imageURL ? (
             <>
               <div className="cropperBox">

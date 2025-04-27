@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import "swiper/css";
 import "@/Styles/chat.css";
+import "@/Styles/user.css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { storyService } from "@/services/api/storyService";
@@ -16,12 +17,10 @@ import Post from "@/components/post/Post";
 import ImageCropper from "@/components/ImageCropper";
 import { useForm } from "react-hook-form";
 import Cropper from "react-easy-crop";
-import { Slider } from "@mui/material";
 import { getCroppedImg } from "@/utils/cropImage";
+import ContentLoader from "react-content-loader";
 
 import { IoMdResize } from "react-icons/io";
-
-import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import ConvertTime from "@/utils/ConvertTime";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
@@ -32,6 +31,8 @@ import Comment from "@/components/post/Comment";
 import Story from "@/components/post/Story";
 import ActionsBtns from "@/components/post/ActionsBtns";
 import TypeComment from "@/components/post/TypeComment";
+import { pageService } from "@/services/api/pageService";
+
 import { PiShareFat } from "react-icons/pi";
 import { FaPause, FaPlus, FaRotate } from "react-icons/fa6";
 import {
@@ -39,11 +40,15 @@ import {
   FaAngleRight,
   FaAngleLeft,
   FaTrashAlt,
-  FaCloudUploadAlt,
+  FaShoppingCart,
 } from "react-icons/fa";
-import { HiDotsVertical } from "react-icons/hi";
+
+import { BsThreeDots } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
-import { pageService } from "@/services/api/pageService";
+import { BsFillPostcardFill } from "react-icons/bs";
+import { HiUsers } from "react-icons/hi2";
+
+import { IoInformationCircleSharp } from "react-icons/io5";
 
 function SingleDetails() {
   const { addNotification } = useNotification();
@@ -78,8 +83,15 @@ function SingleDetails() {
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
   const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
-  const { pathname, screenSize, stories, userData, currentUserStory } =
-    useContext(ScreenContext);
+  const {
+    pathname,
+    screenSize,
+    stories,
+    userData,
+    currentUserStory,
+    userPage,
+    setUserPage,
+  } = useContext(ScreenContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -284,8 +296,16 @@ function SingleDetails() {
 
   //! Page
   const [currentPagePosition, setCurrentPagePosition] = useState(0);
+  const [pageImage, setPageImage] = useState(null);
+  const [pageCover, setPageCover] = useState(null);
+  const [seeAllAbout, setSeeAllAbout] = useState(false);
+
+  const [pageImageURL, setPageImageURL] = useState(null);
+  const [pageCoverURL, setPageCoverURL] = useState(null);
   const [pageName, setPageName] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
+
+  console.log(pageImage);
 
   const [pageInfo, setPageInfo] = useState([
     { key: "bio", value: "" },
@@ -301,8 +321,8 @@ function SingleDetails() {
   );
 
   const placeHolders = {
-    "page category": "your_page_category",
-    "Contact number": "your_contact_number",
+    page_category: "your_page_category",
+    contact_number: "your_contact_number",
     address: "your_company_address",
     website: "your_website_link",
   };
@@ -341,97 +361,55 @@ function SingleDetails() {
     !pageName.trim() ||
     !pageInfo.find((info) => info.key === "bio")?.value.trim();
 
-  const [imageURL, setImageURL] = useState(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const pageImageInputRef = useRef();
+  const pageCoverInputRef = useRef();
 
-  const inputFileRef = useRef(null);
+  const createPage = async (e) => {
+    e.preventDefault();
+    setPageLoading(true);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => setImageURL(reader.result);
-    }
-  };
-
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
-
-  const handleSaveCroppedImage = async () => {
     try {
-      const croppedBlob = await getCroppedImg(
-        imageURL,
-        croppedAreaPixels,
-        rotation
-      );
-      const croppedUrl = URL.createObjectURL(croppedBlob);
-      // Do something with the cropped image (upload it, preview it, save it)
-      console.log("Cropped Image URL:", croppedUrl);
-    } catch (e) {
-      console.error(e);
+      const Data = {
+        pagename: pageName,
+        info: infoObject,
+      };
+
+      const createPageRes = await pageService.createPage(Data);
+      const pageId = createPageRes.data.pageid;
+
+      if (pageImage) {
+        const formData = new FormData();
+        formData.append("img", pageImage);
+        await pageService.page_img_cover("img", formData);
+      }
+      if (pageCover) {
+        const formData = new FormData();
+        formData.append("img", pageCover);
+        await pageService.page_img_cover("cover", formData);
+      }
+
+      const getPageRes = await pageService.getPage(pageId);
+      const updatedPage = getPageRes.data.data;
+
+      setUserPage(updatedPage);
+      localStorage.setItem("page", JSON.stringify(updatedPage));
+
+      addNotification({
+        type: "success",
+        message: "Your page has been created successfully!",
+      });
+
+      setSingleProvider(null);
+    } catch (err) {
+      console.error("Page creation failed:", err);
+      addNotification({
+        type: "warning",
+        message: err?.response?.data?.message || "Something went wrong.",
+      });
+    } finally {
+      setPageLoading(false);
     }
   };
-
-const createPage = async (e) => {
-  e.preventDefault();
-  setPageLoading(true);
-
-  try {
-    // Prepare data for creating the page
-    const Data = {
-      pagename: pageName,
-      info: infoObject,
-    };
-
-    // Create the page
-    const createPageRes = await pageService.createPage(Data);
-    const pageId = createPageRes.data.pageid;
-
-    // If user uploaded an image, upload it as the page cover
-    if (imageURL && croppedAreaPixels) {
-      const croppedBlob = await getCroppedImg(
-        imageURL,
-        croppedAreaPixels,
-        rotation
-      );
-      const formDataImage = new FormData();
-      formDataImage.append("img", croppedBlob, "page-cover.jpeg");
-
-      await pageService.page_img_cover("cover", formDataImage);
-    }
-
-    // Fetch the updated page data
-    const getPageRes = await pageService.getPage(pageId);
-    const updatedPage = getPageRes.data.data;
-
-    // Save updated page in state and localStorage
-    setUserPage(updatedPage);
-    localStorage.setItem("userPage", JSON.stringify(updatedPage));
-
-    // Success notification
-    addNotification({
-      type: "success",
-      message: "Your page has been created successfully!",
-    });
-
-    // Close the create page modal
-    setSingleProvider(null);
-  } catch (err) {
-    console.error("Page creation failed:", err);
-    addNotification({
-      type: "warning",
-      message: err?.response?.data?.message || "Something went wrong.",
-    });
-  } finally {
-    setPageLoading(false);
-  }
-};
-
 
   return (
     <div
@@ -917,29 +895,37 @@ const createPage = async (e) => {
                   setSingleProvider({});
                 }}
               />
-              <h3>create page</h3>
+              <h3>{translations?.header.createpage}</h3>
             </div>
             {currentPagePosition === 0 && (
               <div className="hold ">
                 <p>
-                  Your Page is where people go to learn more about you. Make
-                  sure yours has all the information they may need.
+                  {
+                    translations?.forms
+                      ?.your_page_is_where_people_go_to_learn_more_about_you_make_sure_yours_has_all_the_information_they_may_need
+                  }
                 </p>
               </div>
             )}
             {currentPagePosition === 1 && (
               <div className="hold">
-                <h4>Finish setting up your Page</h4>
-                <p>Now add more details to help people connect with you.</p>
+                <h4>{translations?.forms?.finish_setting_up_your_page}</h4>
+                <p>
+                  {
+                    translations?.forms
+                      ?.now_add_more_details_to_help_people_connect_with_you
+                  }
+                </p>
               </div>
             )}
             {currentPagePosition === 2 && (
               <div className="hold " style={{ gap: "7px" }}>
-                <h4>Customize your Page</h4>
+                <h4>{translations?.forms?.customize_your_page}</h4>
                 <p>
-                  Your profile picture is one of the first things people see.
-                  Try using your logo or an image people can easily associate
-                  with you.
+                  {
+                    translations?.forms
+                      ?.your_profile_picture_is_one_of_the_first_things_people_see_try_using_your_logo_or_an_image_people_can_easily_associate_with_you
+                  }
                 </p>
               </div>
             )}
@@ -960,18 +946,17 @@ const createPage = async (e) => {
                     />
                   </div>
                   <p className="small-text">
-                    Use the name of your business, brand or organization, or a
-                    name that helps explain your Page
+                    {
+                      translations?.forms
+                        ?.use_the_name_of_your_business_brand_or_organization_or_a_name_that_helps_explain_your_page
+                    }
                   </p>
                 </div>
 
                 <div className="inputHolder">
                   <div className="holder">
                     <textarea
-                      placeholder={
-                        translations?.placeHolders?.your_page_bio ||
-                        "your page bio"
-                      }
+                      placeholder={translations?.portfolio?.your_page_bio}
                       value={
                         pageInfo.find((item) => item.key === "bio")?.value || ""
                       }
@@ -987,7 +972,10 @@ const createPage = async (e) => {
                     />
                   </div>
                   <p className="small-text">
-                    Tell people a little about your business.
+                    {
+                      translations?.forms
+                        ?.tell_people_a_little_about_your_business
+                    }
                   </p>
                 </div>
               </div>
@@ -995,10 +983,10 @@ const createPage = async (e) => {
             {currentPagePosition === 1 && (
               <div className="hold adding-info">
                 <div className="top">
-                  <h4>Page details</h4>
+                  <h4>{translations?.forms?.page_details}</h4>
                   <button onClick={addInfo}>
                     <FaPlus />
-                    Add
+                    {translations?.actions?.add}
                   </button>
                 </div>
 
@@ -1038,7 +1026,10 @@ const createPage = async (e) => {
                   ))}
                 {pageInfoError && (
                   <span className="error">
-                    please fill all other info before adding more
+                    {
+                      translations?.forms
+                        ?.please_fill_all_other_info_before_adding_more
+                    }
                   </span>
                 )}
               </div>
@@ -1046,14 +1037,26 @@ const createPage = async (e) => {
             {currentPagePosition === 2 && (
               <div className="hold adding-imgs">
                 <div className="top">
-                  <h4>add page img</h4>
+                  <h4>{translations?.forms?.add_page_img_and_cover}</h4>
                 </div>
                 <ImageCropper
-                  imageURL={imageURL}
-                  setImageURL={setImageURL}
-                  aspect={1} // or 16/6
-                  inputRef={inputFileRef}
-                  onCropDone={handleCropDone}
+                  type={`img`}
+                  imageURL={pageImageURL}
+                  setImageURL={setPageImageURL}
+                  aspect={1}
+                  inputRef={pageImageInputRef}
+                  setState={setPageImage}
+                />
+
+                <hr />
+
+                <ImageCropper
+                  type={`cover`}
+                  imageURL={pageCoverURL}
+                  setImageURL={setPageCoverURL}
+                  aspect={16 / 6}
+                  inputRef={pageCoverInputRef}
+                  setState={setPageCover}
                 />
               </div>
             )}
@@ -1082,7 +1085,7 @@ const createPage = async (e) => {
                   onClick={() => setCurrentPagePosition(1)}
                   disabled={isFirstStepDisable}
                 >
-                  next
+                  {translations?.actions?.next}
                 </button>
               ) : currentPagePosition === 1 ? (
                 <div className="row row-btns">
@@ -1090,7 +1093,7 @@ const createPage = async (e) => {
                     className="main-button"
                     onClick={() => setCurrentPagePosition(0)}
                   >
-                    back
+                    {translations?.actions?.perv}
                   </button>{" "}
                   <button
                     className="main-button"
@@ -1099,7 +1102,7 @@ const createPage = async (e) => {
                       (info) => !info.key.trim() || !info.value.trim()
                     )}
                   >
-                    next
+                    {translations?.actions?.next}
                   </button>
                 </div>
               ) : currentPagePosition === 2 ? (
@@ -1108,16 +1111,155 @@ const createPage = async (e) => {
                     className="main-button"
                     onClick={() => setCurrentPagePosition(1)}
                   >
-                    back
+                    {translations?.actions?.perv}
                   </button>{" "}
-                  <button type="submit" className="main-button">
-                    Finish
+                  <button
+                    className={`main-button ${pageLoading ? "loading" : ""}`}
+                    onClick={createPage}
+                  >
+                    <div className="lds-dual-ring"></div>
+
+                    <span>{translations?.auth?.finish}</span>
                   </button>
                 </div>
               ) : null}
             </div>
           </div>
-          <div className="storySection swiper-container"></div>
+
+          <div className={`portfolio userPage`}>
+            <div className="top">
+              {/* Cover Image */}
+              <div className="cover">
+                {(pageCoverURL || pageCover) && (
+                  <Image
+                    src={pageCoverURL || pageCover}
+                    alt="Page Cover"
+                    fill
+                  />
+                )}
+              </div>
+
+              {/* Profile Image */}
+              <nav>
+                <div className="top">
+                  <div className="leftHolder">
+                    <div className="userImg rounded">
+                      <Image
+                        className="rounded"
+                        src={pageImageURL || pageImage || "/users/default.svg"}
+                        alt="User Image"
+                        fill
+                      />
+                    </div>
+                  </div>
+
+                  <div className="right">
+                    <div className="left-data">
+                      <h4>
+                        {pageName ||
+                          translations?.portfolio?.["your_page_name"]}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="bottom">
+                  <div>
+                    <button className={`main-button active`}>
+                      <BsFillPostcardFill />
+                      {translations?.portfolio?.posts}
+                    </button>
+                    <button className={`main-button `}>
+                      <HiUsers />
+                      {translations?.portfolio?.followers}
+                    </button>
+                    <button className={`main-button `}>
+                      <FaShoppingCart />
+                      {translations?.portfolio?.products}
+                    </button>
+                    <button className={`main-button `}>
+                      <IoInformationCircleSharp />
+                      {translations?.portfolio?.about}
+                    </button>
+                  </div>
+                  <button className={`main-button `}>
+                    <BsThreeDots />
+                  </button>
+                </div>
+              </nav>
+            </div>
+
+            {/* Page Info Section */}
+            <div className="bottom-holder">
+              <div className="side-menu">
+                <ul className="about">
+                  <h4>{translations?.portfolio?.about}</h4>
+                  {pageInfo.map((info) => {
+                    return (
+                      <li
+                        key={info.key}
+                        className={info.key === "bio" ? "bio" : ""}
+                      >
+                        <strong>{info.key}:</strong>{" "}
+                        {info.key === "bio" ? (
+                          <pre style={{ overflowWrap: "anywhere" }}>
+                            {info.value
+                              ? seeAllAbout
+                                ? info?.value
+                                : info?.value.length > 165
+                                ? `${info?.value.slice(0, 165)}... `
+                                : info?.value
+                              : "N/A"}
+                            {info?.value.length > 165 && (
+                              <span
+                                onClick={() => setSeeAllAbout(!seeAllAbout)}
+                                className={`seeMore`}
+                              >
+                                {seeAllAbout ? "see less" : "see more"}
+                              </span>
+                            )}
+                          </pre>
+                        ) : (
+                          <span>{info.value || "N/A"}</span>
+                        )}
+                        {info.key === "bio" && <hr />}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Posts Section */}
+              <div className="bigSection">
+                <div className="actions">
+                  <h4>
+                    {translations?.portfolio?.all}{" "}
+                    {translations?.portfolio?.posts}
+                  </h4>
+                </div>
+                <ContentLoader
+                  className="skeleton skeleton-post"
+                  width={"100%"}
+                  height={500}
+                  speed={100}
+                  viewBox="0 0 600 350"
+                  backgroundColor="#E8E8E8"
+                  foregroundColor="#D5D5D5"
+                >
+                  <circle cx="35" cy="35" r="20" />
+                  <rect x="65" y="20" rx="5" ry="5" width="120" height="12" />
+                  <rect x="65" y="38" rx="5" ry="5" width="100" height="10" />
+                  <rect x="20" y="70" rx="5" ry="5" width="93%" height="10" />
+                  <rect x="20" y="90" rx="5" ry="5" width="500" height="10" />
+                  <rect x="20" y="110" rx="5" ry="5" width="520" height="10" />
+                  <rect x="20" y="140" rx="5" ry="5" width="93%" height="150" />
+                  <rect x="20" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="60" y="310" rx="5" ry="5" width="20" height="10" />
+                  <rect x="515" y="310" rx="5" ry="5" width="30" height="10" />
+                  <rect x="555" y="310" rx="5" ry="5" width="20" height="10" />
+                </ContentLoader>
+              </div>
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
