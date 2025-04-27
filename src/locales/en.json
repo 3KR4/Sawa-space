@@ -1,5 +1,6 @@
 {
   "actions": {
+    "you": "you",
     "action": "action",
     "actions": "actions",
     "pintotop": "pin to top",
@@ -12,6 +13,8 @@
     "remove_post": "remove post",
     "delete_story": "delete this story",
     "cancel_edit": "cancel edit",
+    "delete": "delete",
+    "delete_img": "delete your img",
 
     "hide": "hide",
     "report": "report",
@@ -81,11 +84,14 @@
     "create_story": "create story",
     "edit_story": "edit your story",
     "your_story": "your story",
+    "see_all_stories": "see all stories",
     "your_stories": "your stories",
     "add_to_your_story": "add to your story",
     "choose_a_background": "choose a background",
     "story_body": "story body",
     "story_link": "story link",
+    "auto_play_stories": "auto play stories",
+    "stop_playing_stories": "stop playing stories",
     "x_position": "x position",
     "y_position": "y position",
     "font_size": "font size",
@@ -219,11 +225,19 @@
     "edit_post": "edit post",
     "add_to_your_post": "add to your post",
     "click_or_drop_images_her": "click or drop images her",
+    "click_to_uploud_image_her":"click to uploud image her",
     "click_her": "click her!!",
     "drop_her": "drop her!!",
     "Mentiond_People": "Mentiond People",
     "add_links": "add links",
-    "add_hashtags": "add hashtags"
+    "edit_profile_img": "edit profile img",
+    "add_profile_img": "add profile img",
+    "edit_profile_cover": "edit profile cover",
+    "add_profile_cover": "add profile cover",
+    "zoom": "zoom",
+    "rotate": "rotate",
+    "delete_image": "delete image",
+    "change_image": "change image"
   },
   "errors": {
     "please_enter_a_valid_URL": "please enter a valid URL",

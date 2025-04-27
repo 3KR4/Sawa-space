@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { messages, stories, processStories } from "@/utils/Data";
 import Link from "next/link";
@@ -12,30 +12,53 @@ import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
+import Post from "@/components/post/Post";
+import ImageCropper from "@/components/ImageCropper";
+import { useForm } from "react-hook-form";
+import Cropper from "react-easy-crop";
+import { Slider } from "@mui/material";
+import { getCroppedImg } from "@/utils/cropImage";
+
+import { IoMdResize } from "react-icons/io";
 
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import ConvertTime from "@/utils/ConvertTime";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
-import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import Comment from "@/components/post/Comment";
 import Story from "@/components/post/Story";
 import ActionsBtns from "@/components/post/ActionsBtns";
 import TypeComment from "@/components/post/TypeComment";
-
 import { PiShareFat } from "react-icons/pi";
-import { FaRegComments, FaPlus } from "react-icons/fa6";
-import { FaRegComment, FaAngleRight, FaAngleLeft } from "react-icons/fa";
+import { FaPause, FaPlus, FaRotate } from "react-icons/fa6";
+import {
+  FaPlay,
+  FaAngleRight,
+  FaAngleLeft,
+  FaTrashAlt,
+  FaCloudUploadAlt,
+} from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
+import { pageService } from "@/services/api/pageService";
 
 function SingleDetails() {
   const { addNotification } = useNotification();
 
   const { translations, locale } = useLanguage();
   const direction = locale === "ar" ? "rtl" : "ltr";
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+    getValues,
+  } = useForm();
 
   const {
     dataSwiperType,
@@ -55,7 +78,8 @@ function SingleDetails() {
 
   const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
   const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
-  const { pathname, screenSize, stories } = useContext(ScreenContext);
+  const { pathname, screenSize, stories, userData, currentUserStory } =
+    useContext(ScreenContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -103,48 +127,112 @@ function SingleDetails() {
     }
   }, [imgIndex, swiperRef]);
 
-  const handleImageClick = (id, index) => {
-    setImgFocus(id);
-    if (index === "") {
-      const mediaIndex = mediaMsgs.findIndex((msg) => msg.id == id);
-      swiperRef.slideTo(mediaIndex, 500);
-      setImgIndex(mediaIndex);
-    } else {
-      swiperRef.slideTo(index, 500);
-      setImgIndex(index);
+  //! stories
+  const storySwiperRef = useRef(null);
+  const intervalRef = useRef(null);
+
+  const [userStories, setUserStories] = useState(
+    singleProvider?.shared_data || []
+  );
+  const [loadingStories, setLoadingStories] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [activeStoryIndex, setActiveStoryIndex] = useState(-1);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+  const currentUserIndex = stories.findIndex(
+    (s) => s.author?.[0]?._id === singleProvider.id
+  );
+  const hasPrevUser = currentUserIndex > 0;
+  const hasNextUser = currentUserIndex < stories.length - 1;
+
+  const goToPrev = () => {
+    if (!storySwiperRef.current) return;
+
+    const swiper = storySwiperRef.current;
+    if (swiper.activeIndex > 0) {
+      swiper.slidePrev();
+    } else if (hasPrevUser) {
+      const prevUser = stories[currentUserIndex - 1]?.author?.[0];
+      if (prevUser) {
+        setSingleProvider((prev) => ({ ...prev, id: prevUser._id }));
+      }
     }
+    // Reset timer when manually navigating
+    startAutoAdvance();
   };
 
-  //! post 
-  const [loading, setLoading] = useState(true);
-  const [postSwiperIndex, setPostSwiperIndex] = useState(singleProvider?.focused_img_index);
-  const currentPost = singleProvider?.sharing_data
+  const goToNext = () => {
+    if (!storySwiperRef.current) return;
 
-  //! stories
-  const [userStories, setUserStories] = useState(singleProvider?.shared_data);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [loadingStories, setLoadingStories] = useState(null);
+    const swiper = storySwiperRef.current;
+    if (swiper.activeIndex < userStories.length - 1) {
+      swiper.slideNext();
+    } else if (hasNextUser) {
+      const nextUser = stories[currentUserIndex + 1]?.author?.[0];
+      if (nextUser) {
+        setSingleProvider((prev) => ({ ...prev, id: nextUser._id }));
+      }
+    }
+    // Reset timer when manually navigating
+    startAutoAdvance();
+  };
 
-  const author =
-    Array.isArray(data?.author) && data.author.length > 0
-      ? data.author[0]
-      : null;
+  const startAutoAdvance = () => {
+    clearInterval(intervalRef.current);
+
+    if (!storySwiperRef.current || isPaused || !userStories.length) return;
+
+    // Reset the active index to trigger fresh animation
+    if (storySwiperRef.current.activeIndex === 0) {
+      setActiveStoryIndex(-1);
+      setTimeout(() => setActiveStoryIndex(0), 50);
+    }
+
+    intervalRef.current = setInterval(() => {
+      const swiper = storySwiperRef.current;
+      if (!swiper) return;
+
+      if (swiper.activeIndex < userStories.length - 1) {
+        swiper.slideNext();
+      } else if (hasNextUser) {
+        clearInterval(intervalRef.current);
+        const nextUser = stories[currentUserIndex + 1]?.author?.[0];
+        if (nextUser) {
+          setSingleProvider((prev) => ({ ...prev, id: nextUser._id }));
+        }
+      } else {
+        clearInterval(intervalRef.current);
+      }
+    }, 5000);
+  };
+
+  const handlePausePlay = () => {
+    setIsPaused((prev) => {
+      const newPaused = !prev;
+      if (!newPaused && storySwiperRef.current?.activeIndex === 0) {
+        // Special handling for first slide when resuming
+        setActiveStoryIndex(-1);
+        setTimeout(() => setActiveStoryIndex(0), 50);
+      }
+      return newPaused;
+    });
+  };
 
   const fetchStoriesBerUser = async () => {
     setLoadingStories(singleProvider.id);
     try {
       const { data } = await storyService.getUserStories(singleProvider.id);
-      if (data.data.length === 0) {
-        setsomeThingHappen({ deleteAllUserStories: true });
-        setSomeThing;
-      } else {
-        setUserStories(data.data);
-      }
+      setUserStories(data.data);
     } catch (err) {
-      console.error("Error fetching posts", err);
+      console.error("Error fetching stories", err);
       addNotification({
         type: "error",
-        message: "Failed to load user Stories. Please try again later.",
+        message:
+          translations?.story?.failed_to_load || "Failed to load stories",
       });
     } finally {
       setLoadingStories(null);
@@ -156,10 +244,194 @@ function SingleDetails() {
       (singleProvider?.id && singleProvider?.type === "stories") ||
       (someThingHappen.type === "stories" &&
         someThingHappen.event === "delete");
-    if (!shouldFetch) return;
 
-    fetchStoriesBerUser();
-  }, [singleProvider?.id, singleProvider?.type, someThingHappen.type]);
+    if (shouldFetch) {
+      fetchStoriesBerUser();
+    }
+  }, [singleProvider?.id, singleProvider?.type, someThingHappen]);
+
+  useEffect(() => {
+    startAutoAdvance();
+    return () => clearInterval(intervalRef.current);
+  }, [storySwiperRef.current, userStories, isPaused, currentUserIndex]);
+
+  useEffect(() => {
+    if (storySwiperRef.current && userStories.length) {
+      storySwiperRef.current.slideTo(0);
+      setActiveStoryIndex(0); // Reset active index
+      startAutoAdvance();
+    }
+  }, [userStories]);
+
+  useEffect(() => {
+    if (userStories.length === 0 && singleProvider?.id) {
+      // find next user with stories
+      const otherUsersWithStories = stories.filter(
+        (story) => story.author[0]._id !== singleProvider.id
+      );
+
+      if (otherUsersWithStories.length > 0) {
+        const nextUser = otherUsersWithStories[0].author[0];
+        setSingleProvider((prev) => ({
+          ...prev,
+          id: nextUser?._id,
+        }));
+      } else {
+        setSingleProvider({});
+      }
+    }
+  }, [userStories]);
+
+  //! Page
+  const [currentPagePosition, setCurrentPagePosition] = useState(0);
+  const [pageName, setPageName] = useState("");
+  const [pageLoading, setPageLoading] = useState(false);
+
+  const [pageInfo, setPageInfo] = useState([
+    { key: "bio", value: "" },
+    { key: "page category", value: "" },
+    { key: "Contact number", value: "" },
+    { key: "address", value: "" },
+    { key: "website", value: "" },
+  ]);
+  const [pageInfoError, setPageInfoError] = useState(false);
+
+  const infoObject = Object.fromEntries(
+    pageInfo.map((item) => [item.key, item.value])
+  );
+
+  const placeHolders = {
+    "page category": "your_page_category",
+    "Contact number": "your_contact_number",
+    address: "your_company_address",
+    website: "your_website_link",
+  };
+
+  useEffect(() => {
+    setPageInfoError(false);
+  }, [pageInfo]);
+
+  const addInfo = () => {
+    const hasEmptyField = pageInfo.some(
+      (info) => !info.key.trim() || !info.value.trim()
+    );
+
+    if (hasEmptyField) {
+      setPageInfoError(true);
+      return;
+    }
+
+    setPageInfoError(false);
+    setPageInfo([...pageInfo, { key: "", value: "" }]);
+  };
+
+  const removeInfo = (index) => {
+    const updatedInfo = [...pageInfo];
+    updatedInfo.splice(index, 1);
+    setPageInfo(updatedInfo);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedInfo = [...pageInfo];
+    updatedInfo[index][field] = value;
+    setPageInfo(updatedInfo);
+  };
+
+  const isFirstStepDisable =
+    !pageName.trim() ||
+    !pageInfo.find((info) => info.key === "bio")?.value.trim();
+
+  const [imageURL, setImageURL] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  const inputFileRef = useRef(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => setImageURL(reader.result);
+    }
+  };
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleSaveCroppedImage = async () => {
+    try {
+      const croppedBlob = await getCroppedImg(
+        imageURL,
+        croppedAreaPixels,
+        rotation
+      );
+      const croppedUrl = URL.createObjectURL(croppedBlob);
+      // Do something with the cropped image (upload it, preview it, save it)
+      console.log("Cropped Image URL:", croppedUrl);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+const createPage = async (e) => {
+  e.preventDefault();
+  setPageLoading(true);
+
+  try {
+    // Prepare data for creating the page
+    const Data = {
+      pagename: pageName,
+      info: infoObject,
+    };
+
+    // Create the page
+    const createPageRes = await pageService.createPage(Data);
+    const pageId = createPageRes.data.pageid;
+
+    // If user uploaded an image, upload it as the page cover
+    if (imageURL && croppedAreaPixels) {
+      const croppedBlob = await getCroppedImg(
+        imageURL,
+        croppedAreaPixels,
+        rotation
+      );
+      const formDataImage = new FormData();
+      formDataImage.append("img", croppedBlob, "page-cover.jpeg");
+
+      await pageService.page_img_cover("cover", formDataImage);
+    }
+
+    // Fetch the updated page data
+    const getPageRes = await pageService.getPage(pageId);
+    const updatedPage = getPageRes.data.data;
+
+    // Save updated page in state and localStorage
+    setUserPage(updatedPage);
+    localStorage.setItem("userPage", JSON.stringify(updatedPage));
+
+    // Success notification
+    addNotification({
+      type: "success",
+      message: "Your page has been created successfully!",
+    });
+
+    // Close the create page modal
+    setSingleProvider(null);
+  } catch (err) {
+    console.error("Page creation failed:", err);
+    addNotification({
+      type: "warning",
+      message: err?.response?.data?.message || "Something went wrong.",
+    });
+  } finally {
+    setPageLoading(false);
+  }
+};
+
 
   return (
     <div
@@ -169,303 +441,7 @@ function SingleDetails() {
       } ${singleProvider.type}`}
     >
       {singleProvider.type === "post" ? (
-        <div className={`post`}>
-          {screenSize === "large" && currentPost?.img &&
-            currentPost?.img.length > 0 && (
-            <div className="left-img">
-              <div className="hold">
-                {dataForSwiper?.img && (
-                  <img
-                    src={
-                      currentPost?.img[
-                        currentPost?.img.length === 1 ? 0 : postSwiperIndex
-                      ]
-                    }
-                    alt={
-                      currentPost?.author[0]
-                        ? `${currentPost?.author[0].firstname}'s image`
-                        : "User image"
-                    }
-                  />
-                )}
-              </div>
-              {currentPost?.img?.length > 1 && (
-                <Swiper
-                  className={`previewSmallImages`}
-                  dir={direction}
-                  onSwiper={setSwiperRef}
-                  spaceBetween={5}
-                  slidesPerView={"auto"}
-                  loop={false}
-                  centeredSlides={true}
-                >
-                  {currentPost.img.map((x, index) => (
-                    <SwiperSlide
-                      key={index}
-                      onClick={() => {
-                        handleImageClick(dataForSwiper.id, index);
-                      }}
-                      style={{ display: "flex", justifyContent: "center" }}
-                    >
-                      <img
-                        src={x}
-                        alt={`Slide ${index}`}
-                        className={`${imgIndex == index ? "active" : ""}`}
-                        style={{
-                          maxWidth: "90%",
-                          maxHeight: "90%",
-                          objectFit: "cover",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              )}
-            </div>
-          )}
-          {!currentPost ? (
-            <ContentLoader
-              className="skeleton skeleton-SingleDetails"
-              width={600}
-              height={600}
-              viewBox="0 0 600 600"
-              backgroundColor="#f3f3f3"
-              foregroundColor="#e0e0e0"
-            >
-              {/* Profile Picture */}
-              <circle cx="35" cy="45" r="25" />
-
-              {/* User Name and Timestamp */}
-              <rect x="65" y="30" rx="5" ry="5" width="150" height="12" />
-              <rect x="65" y="50" rx="5" ry="5" width="100" height="10" />
-
-              <rect x="30" y="90" rx="5" ry="5" width="80" height="34" />
-
-              <rect x="160" y="90" rx="5" ry="5" width="80" height="34" />
-              <rect x="250" y="90" rx="5" ry="5" width="80" height="34" />
-              <rect x="340" y="90" rx="5" ry="5" width="80" height="34" />
-
-              <rect x="470" y="90" rx="5" ry="5" width="80" height="34" />
-
-              {/* Post Content */}
-              <rect x="35" y="145" rx="5" ry="5" width="500" height="10" />
-              <rect x="35" y="165" rx="5" ry="5" width="500" height="10" />
-              <rect x="35" y="185" rx="5" ry="5" width="300" height="10" />
-
-              {/* Links */}
-              <rect x="35" y="210" rx="5" ry="5" width="200" height="10" />
-              <rect x="35" y="230" rx="5" ry="5" width="200" height="10" />
-
-              {screenSize !== "large" && (
-                <rect x="20" y="260" rx="5" ry="5" width="94%" height="150" />
-              )}
-
-              {/* Comments Section */}
-              <circle cx="70" cy="460" r="20" />
-              <rect x="100" y="445" rx="5" ry="5" width="150" height="12" />
-              <rect x="100" y="470" rx="5" ry="5" width="400" height="10" />
-
-              <circle cx="70" cy="515" r="20" />
-              <rect x="100" y="500" rx="5" ry="5" width="150" height="12" />
-              <rect x="100" y="525" rx="5" ry="5" width="400" height="10" />
-
-              <circle cx="70" cy="572" r="20" />
-              <rect x="100" y="555" rx="5" ry="5" width="150" height="12" />
-              <rect x="100" y="580" rx="5" ry="5" width="400" height="10" />
-            </ContentLoader>
-          ) : (
-            <div className="right-info">
-              <div className="top">
-                <div className="left">
-                  <Image
-                    src={dataForSwiper?.user?.img || "/users/default.svg"}
-                    alt={dataForSwiper?.user?.name}
-                    width={40}
-                    height={40}
-                    className={`rounded`}
-                    onClick={(e) => handleMenus(e, "user-Info", data?.id)}
-                  />
-                  <div className="info">
-                    <h5>{dataForSwiper?.user?.name}</h5>
-                    <span>{ConvertTime(dataForSwiper?.time, locale)}</span>
-                  </div>
-                </div>
-                <div className="icons-holder">
-                  <HiDotsVertical
-                    className="settingDotsIco"
-                    onClick={(e) => {
-                      handleMenus(e, "settingMenu-post", dataForSwiper.id);
-                    }}
-                  />
-                  <IoClose
-                    className="close closeMenu"
-                    onClick={() => {
-                      setImgFocus(null);
-                      setMessageText("");
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="bottom">
-                {dataForSwiper?.reacts?.count !== 0 && (
-                  <div
-                    className="left emojesCounter"
-                    onClick={(e) => {
-                      setOpenUsersReact("post");
-                      handleMenus(e, "usersReact", dataForSwiper.id);
-                    }}
-                  >
-                    {dataForSwiper?.reacts?.topUseage.map((x, index) => (
-                      <p key={index}>{x}</p>
-                    ))}
-                    <p>{dataForSwiper?.reacts?.count}</p>
-                  </div>
-                )}
-
-                {screenSize !== "small" && (
-                  <ActionsBtns id={dataForSwiper.id} />
-                )}
-
-                <div className="right">
-                  <div>
-                    <PiShareFat />
-                    {dataForSwiper?.shareCount}
-                  </div>
-                  <div>
-                    <FaRegComment />
-                    {dataForSwiper?.comments?.count}
-                  </div>
-                </div>
-              </div>
-              {screenSize !== "large" && (
-                <div className="left-img">
-                  <div className="hold">
-                    {dataForSwiper?.img && (
-                      <img
-                        src={
-                          dataForSwiper?.img[
-                            dataForSwiper?.img.length === 1 ? 0 : imgIndex
-                          ]
-                        }
-                        alt={
-                          dataForSwiper?.user
-                            ? `${dataForSwiper?.user?.name}'s image`
-                            : "User image"
-                        }
-                      />
-                    )}
-                  </div>
-                  {dataForSwiper?.img?.length > 1 && (
-                    <Swiper
-                      className={`previewSmallImages`}
-                      dir={direction}
-                      onSwiper={setSwiperRef}
-                      spaceBetween={5}
-                      slidesPerView={"auto"}
-                      loop={false}
-                      centeredSlides={true}
-                    >
-                      {dataForSwiper.img.map((x, index) => (
-                        <SwiperSlide
-                          key={index}
-                          onClick={() => {
-                            handleImageClick(dataForSwiper.id, index);
-                          }}
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <img
-                            src={x}
-                            alt={`Slide ${index}`}
-                            className={`${imgIndex == index ? "active" : ""}`}
-                            style={{
-                              maxWidth: "90%",
-                              maxHeight: "90%",
-                              objectFit: "cover",
-                              cursor: "pointer",
-                            }}
-                          />
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  )}
-                </div>
-              )}
-
-              <div className="middle">
-                {dataForSwiper.link && (
-                  <div className="Links">
-                    {dataForSwiper?.link?.map((x, index) => (
-                      <div key={index}>
-                        {dataForSwiper?.link.length === 1
-                          ? null
-                          : `${index + 1} -`}
-                        <Link key={index} href={x}>
-                          {x}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {dataForSwiper?.paragraph && <p>{dataForSwiper?.paragraph}</p>}
-
-                {dataForSwiper?.mentions?.length > 0 && (
-                  <div className="mentions view">
-                    <h5>
-                      {dataForSwiper.user.name} {translations?.post?.mention}
-                    </h5>
-                    {dataForSwiper.mentions?.map((x, index) => (
-                      <button
-                        key={index}
-                        onClick={(e) => handleMenus(e, "user-Info", x.userId)}
-                      >
-                        @{x.userName}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {screenSize === "small" && (
-                  <ActionsBtns id={dataForSwiper.id} />
-                )}
-
-                <div className="comments">
-                  <div className="topHolderComments">
-                    <div className="top">
-                      <h3>
-                        {translations?.comment?.comments} (
-                        {dataForSwiper?.comments?.count})
-                      </h3>
-                    </div>
-                    <div className="holder">
-                      {dataForSwiper?.comments &&
-                      Array.isArray(dataForSwiper?.comments?.allComments) &&
-                      dataForSwiper?.comments?.allComments?.length > 0 ? (
-                        dataForSwiper?.comments?.allComments.map(
-                          (comment, index) => (
-                            <Comment key={index} data={comment} />
-                          )
-                        )
-                      ) : (
-                        <div className="noCommentsYet">
-                          <FaRegComments />
-                          <h4>
-                            {translations?.post?.thereis_nothing_here_yet}
-                          </h4>
-                          <p>
-                            {translations?.post?.be_the_first_to_post_a_comment}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <TypeComment id={dataForSwiper.id} />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <Post data={singleProvider?.sharing_data} focused={true} />
       ) : dataSwiperType === "msg" ? (
         <>
           <div className="hold">
@@ -536,7 +512,7 @@ function SingleDetails() {
       ) : singleProvider.type === "stories" ? (
         <div className="stories">
           {screenSize !== "small" && (
-            <div className="sideStoriesSection">
+            <div className="sideSection">
               <div className="top">
                 <IoClose
                   className="close"
@@ -562,101 +538,363 @@ function SingleDetails() {
                     </p>
                   </div>
                 </div>
+                {currentUserStory &&
+                  Object.keys(currentUserStory).length > 0 && (
+                    <div
+                      className={`singleStory ${
+                        currentUserStory?.author[0]?._id == singleProvider?.id
+                          ? "active"
+                          : ""
+                      } ${
+                        currentUserStory?.author[0]?._id == loadingStories
+                          ? "loading"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        setSingleProvider((prev) => ({
+                          ...prev,
+                          id: currentUserStory?.author[0]?._id,
+                        }));
+                      }}
+                    >
+                      <Image
+                        className="rounded"
+                        src={
+                          currentUserStory?.author[0]?.img?.url ||
+                          "/users/default.svg"
+                        }
+                        alt={`${currentUserStory?.firstname}-img`}
+                        width={50}
+                        height={50}
+                        onClick={(e) =>
+                          handleMenus(
+                            e,
+                            "user-Info",
+                            currentUserStory?.author[0]
+                          )
+                        }
+                      />
+                      <div className="info">
+                        <h5>{translations?.actions?.you}</h5>
+                        <span>
+                          {ConvertTime(currentUserStory?.date, locale, "chat")}
+                        </span>
+                      </div>
+                      <div className="lds-dual-ring"></div>
+
+                      {currentUserStory?.totalStories > 1 && (
+                        <span className="counter-for-story">
+                          {currentUserStory?.totalStories}
+                        </span>
+                      )}
+                    </div>
+                  )}
               </div>
               <div className="hold">
                 <h4>{translations?.story?.friends_stories}</h4>
                 <div className="usersStories">
-                  {stories?.map((x) => {
-                    const xAuthor = Array.isArray(x?.author)
-                      ? x.author[0]
-                      : null;
+                  {stories
+                    ?.filter((x) => x?.author[0]?._id !== userData._id)
+                    ?.map((x) => {
+                      const xAuthor = Array.isArray(x?.author)
+                        ? x.author[0]
+                        : null;
 
-                    return (
-                      <div
-                        className={`singleStory ${
-                          xAuthor?._id == singleProvider?.id ? "active" : ""
-                        } ${xAuthor?._id == loadingStories ? "loading" : ""}`}
-                        key={`${xAuthor?._id}-${Date.now()}`}
-                        onClick={() => {
-                          setSingleProvider((prev) => ({
-                            ...prev,
-                            id: xAuthor?._id,
-                          }));
-                        }}
-                      >
-                        <Image
-                          className="rounded"
-                          src={xAuthor?.img?.url || "/users/default.svg"}
-                          alt={`${xAuthor?.firstname}-img`}
-                          width={50}
-                          height={50}
-                          onClick={(e) =>
-                            handleMenus(e, "user-Info", xAuthor?._id)
-                          }
-                        />
-                        <div className="info">
-                          <h5>
-                            {xAuthor?.firstname} {xAuthor?.lastname}
-                          </h5>
-                          <span>{ConvertTime(x?.date, locale, "chat")}</span>
+                      return (
+                        <div
+                          className={`singleStory ${
+                            xAuthor?._id == singleProvider?.id ? "active" : ""
+                          } ${xAuthor?._id == loadingStories ? "loading" : ""}`}
+                          key={`${xAuthor?._id}-${Date.now()}`}
+                          onClick={() => {
+                            setSingleProvider((prev) => ({
+                              ...prev,
+                              id: xAuthor?._id,
+                            }));
+                          }}
+                        >
+                          <Image
+                            className="rounded"
+                            src={xAuthor?.img?.url || "/users/default.svg"}
+                            alt={`${xAuthor?.firstname}-img`}
+                            width={50}
+                            height={50}
+                            onClick={(e) =>
+                              handleMenus(e, "user-Info", xAuthor)
+                            }
+                          />
+                          <div className="info">
+                            <h5>
+                              {xAuthor?.firstname} {xAuthor?.lastname}
+                            </h5>
+                            <span>{ConvertTime(x?.date, locale, "chat")}</span>
+                          </div>
+                          <div className="lds-dual-ring"></div>
+
+                          {x?.totalStories > 1 && (
+                            <span className="counter-for-story">
+                              {x?.totalStories}
+                            </span>
+                          )}
                         </div>
-                        <div className="lds-dual-ring"></div>
-
-                        {x?.totalStories > 1 && (
-                          <span className="counter-for-story">
-                            {x?.totalStories}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             </div>
           )}
           <div className="storySection swiper-container">
-            <div className="holder">
-              <div className="navigations-icons forStories">
-                {screenSize !== "small" ? (
-                  <>
-                    <FaAngleLeft className="custom-prev" />
-                    <FaAngleRight className="custom-next" />
-                  </>
-                ) : (
-                  <>
-                    <h4>{translations?.story?.stories}</h4>
-                    <div className="svg-holder">
-                      <FaAngleLeft className="custom-prev" />
-                      <FaAngleRight className="custom-next" />
-                    </div>
-                  </>
-                )}
+            {screenSize === "small" && (
+              <div className="hold">
+                <div className="top small">
+                  <h4>{translations?.story?.friends_stories}</h4>
+                  <IoClose
+                    className="close"
+                    onClick={() => {
+                      setSingleProvider({});
+                    }}
+                  />
+                </div>
+                <div className="usersStories">
+                  <Swiper speed={1000} spaceBetween={8} slidesPerView={3}>
+                    {currentUserStory &&
+                      Object.keys(currentUserStory).length > 0 && (
+                        <SwiperSlide>
+                          <div
+                            className={`singleStory ${
+                              currentUserStory?.author[0]?._id ==
+                              singleProvider?.id
+                                ? "active"
+                                : ""
+                            } ${
+                              currentUserStory?.author[0]?._id == loadingStories
+                                ? "loading"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setSingleProvider((prev) => ({
+                                ...prev,
+                                id: currentUserStory?.author[0]?._id,
+                              }));
+                            }}
+                          >
+                            <Image
+                              className="rounded"
+                              src={
+                                currentUserStory?.author[0]?.img?.url ||
+                                "/users/default.svg"
+                              }
+                              alt={`${currentUserStory?.author[0]?.firstname}-img`}
+                              width={50}
+                              height={50}
+                              onClick={(e) =>
+                                handleMenus(
+                                  e,
+                                  "user-Info",
+                                  currentUserStory?.author[0]?._id
+                                )
+                              }
+                            />
+                            <div className="info">
+                              <span>
+                                {ConvertTime(
+                                  currentUserStory?.date,
+                                  locale,
+                                  "chat"
+                                )}
+                              </span>
+                              <h5 className="ellipsisText">
+                                {currentUserStory?.author[0]?.firstname}{" "}
+                                {currentUserStory?.author[0]?.lastname}
+                              </h5>
+                            </div>
+                            <div className="lds-dual-ring"></div>
+
+                            {currentUserStory?.totalStories > 1 && (
+                              <span className="counter-for-story">
+                                {currentUserStory?.totalStories}
+                              </span>
+                            )}
+                          </div>
+                        </SwiperSlide>
+                      )}
+                    {stories
+                      ?.filter((x) => x?.author[0]?._id !== userData?._id)
+                      ?.map((x) => {
+                        const xAuthor = Array.isArray(x?.author)
+                          ? x.author[0]
+                          : null;
+
+                        return (
+                          <SwiperSlide key={`${xAuthor?._id}-${Date.now()}`}>
+                            <div
+                              className={`singleStory ${
+                                xAuthor?._id == singleProvider?.id
+                                  ? "active"
+                                  : ""
+                              } ${
+                                xAuthor?._id == loadingStories ? "loading" : ""
+                              }`}
+                              onClick={() => {
+                                setSingleProvider((prev) => ({
+                                  ...prev,
+                                  id: xAuthor?._id,
+                                }));
+                              }}
+                            >
+                              <Image
+                                className="rounded"
+                                src={xAuthor?.img?.url || "/users/default.svg"}
+                                alt={`${xAuthor?.firstname}-img`}
+                                width={50}
+                                height={50}
+                                onClick={(e) =>
+                                  handleMenus(e, "user-Info", xAuthor?._id)
+                                }
+                              />
+                              <div className="info">
+                                <span>
+                                  {ConvertTime(x?.date, locale, "chat")}
+                                </span>
+                                <h5 className="ellipsisText">
+                                  {xAuthor?.firstname} {xAuthor?.lastname}
+                                </h5>
+                              </div>
+                              <div className="lds-dual-ring"></div>
+
+                              {x?.totalStories > 1 && (
+                                <span className="counter-for-story">
+                                  {x?.totalStories}
+                                </span>
+                              )}
+                            </div>
+                          </SwiperSlide>
+                        );
+                      })}
+                  </Swiper>
+                </div>
               </div>
-              {loading ? (
-                <ContentLoader
-                  speed={2}
-                  width="100%"
-                  height={200}
-                  viewBox="0 0 80 100"
-                  backgroundColor="#E8E8E8"
-                  foregroundColor="#D5D5D5"
+            )}
+            <div className="holder">
+              {!loadingStories && screenSize === "large" && (
+                <button onClick={handlePausePlay} className="pausePlayBtn">
+                  {isPaused ? <FaPlay className="play" /> : <FaPause />}
+                  {isPaused
+                    ? translations?.story?.auto_play_stories
+                    : translations?.story?.stop_playing_stories}
+                </button>
+              )}
+
+              <div className="navigations-icons forStories">
+                <button
+                  className="custom-prev"
+                  onClick={goToPrev}
+                  disabled={
+                    storySwiperRef.current?.activeIndex === 0 && !hasPrevUser
+                  }
                 >
-                  <circle cx="40" cy="40" r="20" />
-                  <rect x="15" y="65" rx="3" ry="3" width="50" height="10" />
-                </ContentLoader>
+                  <FaAngleLeft />
+                </button>
+                {screenSize !== "large" && (
+                  <button onClick={handlePausePlay} className="pausePlayBtn">
+                    {isPaused ? <FaPlay className="play" /> : <FaPause />}
+                    {isPaused
+                      ? translations?.story?.auto_play_stories
+                      : translations?.story?.stop_playing_stories}
+                  </button>
+                )}
+
+                <button
+                  className="custom-next"
+                  onClick={goToNext}
+                  disabled={
+                    storySwiperRef.current?.activeIndex ===
+                      userStories.length - 1 && !hasNextUser
+                  }
+                >
+                  <FaAngleRight />
+                </button>
+              </div>
+              {!loadingStories && (
+                <div className="stories-length">
+                  {userStories.map((_, index) => (
+                    <div className="back-light" key={index}>
+                      <span
+                        style={{
+                          width:
+                            activeStoryIndex > index
+                              ? "100%"
+                              : activeStoryIndex === index
+                              ? isPaused
+                                ? "0%"
+                                : "100%"
+                              : "0%",
+                          transition:
+                            activeStoryIndex === index && !isPaused && isMounted
+                              ? "width 5s linear"
+                              : "none",
+                        }}
+                      ></span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {loadingStories ? (
+                <div className="loading-stories">
+                  <ContentLoader
+                    width={"100%"}
+                    height={"100%"}
+                    viewBox="0 0 480 820"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#e0e0e0"
+                  >
+                    {/* Header with avatar */}
+                    <circle cx="30" cy="40" r="24" />
+                    <rect x="70" y="25" rx="4" ry="4" width="180" height="16" />
+                    <rect x="70" y="50" rx="4" ry="4" width="120" height="12" />
+
+                    {/* Main content area (taller rectangle) */}
+                    <rect
+                      x="0"
+                      y="80"
+                      rx="4"
+                      ry="4"
+                      width="100%"
+                      height="620"
+                    />
+
+                    {/* Footer */}
+                    <rect
+                      x="15"
+                      y="720"
+                      rx="4"
+                      ry="4"
+                      width="350"
+                      height="16"
+                    />
+                    <rect
+                      x="15"
+                      y="750"
+                      rx="4"
+                      ry="4"
+                      width="250"
+                      height="14"
+                    />
+                  </ContentLoader>
+                </div>
               ) : (
                 <Swiper
-                  onSwiper={setSwiperRef}
+                  onSwiper={(swiper) => {
+                    storySwiperRef.current = swiper;
+                    // Set initial active index after mount
+                    setTimeout(() => setActiveStoryIndex(0), 100);
+                  }}
                   onSlideChange={(swiper) =>
-                    setCurrentSlideIndex(swiper.activeIndex)
+                    setActiveStoryIndex(swiper.activeIndex)
                   }
-                  modules={[Navigation]}
                   speed={1000}
                   spaceBetween={10}
-                  navigation={{
-                    nextEl: ".custom-next",
-                    prevEl: ".custom-prev",
-                  }}
                   slidesPerView={1}
                 >
                   {userStories.map((story) => (
@@ -667,8 +905,219 @@ function SingleDetails() {
                 </Swiper>
               )}
             </div>
-            <TypeComment id={userStories?.[currentSlideIndex]?._id} />
           </div>
+        </div>
+      ) : singleProvider.type === "page" ? (
+        <div className="create-page">
+          <div className="sideSection">
+            <div className="top">
+              <IoClose
+                className="close"
+                onClick={() => {
+                  setSingleProvider({});
+                }}
+              />
+              <h3>create page</h3>
+            </div>
+            {currentPagePosition === 0 && (
+              <div className="hold ">
+                <p>
+                  Your Page is where people go to learn more about you. Make
+                  sure yours has all the information they may need.
+                </p>
+              </div>
+            )}
+            {currentPagePosition === 1 && (
+              <div className="hold">
+                <h4>Finish setting up your Page</h4>
+                <p>Now add more details to help people connect with you.</p>
+              </div>
+            )}
+            {currentPagePosition === 2 && (
+              <div className="hold " style={{ gap: "7px" }}>
+                <h4>Customize your Page</h4>
+                <p>
+                  Your profile picture is one of the first things people see.
+                  Try using your logo or an image people can easily associate
+                  with you.
+                </p>
+              </div>
+            )}
+            {currentPagePosition === 0 && (
+              <div className="hold last-child">
+                <div className="inputHolder">
+                  <div className="holder">
+                    <input
+                      type="text"
+                      placeholder={
+                        translations?.auth?.enter_your_pagename ||
+                        "enter your page name"
+                      }
+                      value={pageName}
+                      onInput={(e) => {
+                        setPageName(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <p className="small-text">
+                    Use the name of your business, brand or organization, or a
+                    name that helps explain your Page
+                  </p>
+                </div>
+
+                <div className="inputHolder">
+                  <div className="holder">
+                    <textarea
+                      placeholder={
+                        translations?.placeHolders?.your_page_bio ||
+                        "your page bio"
+                      }
+                      value={
+                        pageInfo.find((item) => item.key === "bio")?.value || ""
+                      }
+                      onInput={(e) => {
+                        const updatedPageInfo = pageInfo.map((item) => {
+                          if (item.key === "bio") {
+                            return { ...item, value: e.target.value };
+                          }
+                          return item;
+                        });
+                        setPageInfo(updatedPageInfo);
+                      }}
+                    />
+                  </div>
+                  <p className="small-text">
+                    Tell people a little about your business.
+                  </p>
+                </div>
+              </div>
+            )}
+            {currentPagePosition === 1 && (
+              <div className="hold adding-info">
+                <div className="top">
+                  <h4>Page details</h4>
+                  <button onClick={addInfo}>
+                    <FaPlus />
+                    Add
+                  </button>
+                </div>
+
+                {pageInfo
+                  ?.filter((x) => x.key !== "bio")
+                  ?.map((info, index) => (
+                    <div className="row" key={index}>
+                      <div className="holder top">
+                        <input
+                          type="text"
+                          value={info.key}
+                          placeholder="Field Name"
+                          className="key"
+                          onChange={(e) =>
+                            handleInputChange(index + 1, "key", e.target.value)
+                          }
+                        />
+                        <FaTrashAlt onClick={() => removeInfo(index + 1)} />
+                      </div>
+                      <div className="holder">
+                        <input
+                          type="text"
+                          value={info.value}
+                          placeholder={
+                            placeHolders[info.key] || "Enter details"
+                          }
+                          onChange={(e) =>
+                            handleInputChange(
+                              index + 1,
+                              "value",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                {pageInfoError && (
+                  <span className="error">
+                    please fill all other info before adding more
+                  </span>
+                )}
+              </div>
+            )}
+            {currentPagePosition === 2 && (
+              <div className="hold adding-imgs">
+                <div className="top">
+                  <h4>add page img</h4>
+                </div>
+                <ImageCropper
+                  imageURL={imageURL}
+                  setImageURL={setImageURL}
+                  aspect={1} // or 16/6
+                  inputRef={inputFileRef}
+                  onCropDone={handleCropDone}
+                />
+              </div>
+            )}
+            <div className="bottom">
+              <p>
+                {currentPagePosition === 0
+                  ? "first step"
+                  : currentPagePosition === 1
+                  ? "second step"
+                  : "third step"}
+              </p>
+              <div className="steps-slider">
+                {[0, 1, 2].map((index) => (
+                  <div className="step" key={index}>
+                    <span
+                      style={{
+                        width: currentPagePosition > index ? "100%" : "0%",
+                      }}
+                    ></span>
+                  </div>
+                ))}
+              </div>
+              {currentPagePosition === 0 ? (
+                <button
+                  className="main-button"
+                  onClick={() => setCurrentPagePosition(1)}
+                  disabled={isFirstStepDisable}
+                >
+                  next
+                </button>
+              ) : currentPagePosition === 1 ? (
+                <div className="row row-btns">
+                  <button
+                    className="main-button"
+                    onClick={() => setCurrentPagePosition(0)}
+                  >
+                    back
+                  </button>{" "}
+                  <button
+                    className="main-button"
+                    onClick={() => setCurrentPagePosition(2)}
+                    disabled={pageInfo.some(
+                      (info) => !info.key.trim() || !info.value.trim()
+                    )}
+                  >
+                    next
+                  </button>
+                </div>
+              ) : currentPagePosition === 2 ? (
+                <div className="row row-btns">
+                  <button
+                    className="main-button"
+                    onClick={() => setCurrentPagePosition(1)}
+                  >
+                    back
+                  </button>{" "}
+                  <button type="submit" className="main-button">
+                    Finish
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="storySection swiper-container"></div>
         </div>
       ) : null}
     </div>

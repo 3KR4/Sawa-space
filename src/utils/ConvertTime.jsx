@@ -91,8 +91,7 @@ const formatDate = (date, locale, withYear = false) => {
   const year = date.getFullYear();
 
   if (locale === "ar") {
-    const arabicMonth = arabicMonths[month];
-    return withYear ? `${day} ${arabicMonth} ${year}` : `${day} ${arabicMonth}`;
+    return withYear ? `${day} ${month} ${year}` : `${day} ${month}`;
   }
 
   return withYear ? `${month} ${day}, ${year}` : `${month} ${day}`;

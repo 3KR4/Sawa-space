@@ -1,5 +1,6 @@
 {
   "actions": {
+    "you": "انت",
     "action": "قم بي",
     "actions": "الإجراءات",
     "pintotop": "تثبيت في الأعلى",
@@ -12,7 +13,8 @@
     "remove_post": "ازالة المنشور",
     "delete_story": "حذف هذه القصة",
     "cancel_edit": "الغاء التعديل",
-
+    "delete": "حذف",
+    "delete_img": "حذف الصورة",
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
     "save_post": "حفظ المنشور",
@@ -82,6 +84,9 @@
     "edit_story": "تعديل قصتك القصيرة",
 
     "your_story": "قصتك الشخصية",
+    "see_all_stories": "رؤية جميع القصص",
+    "auto_play_stories": "تشغيل القصص تلقائيًا",
+    "stop_playing_stories": "إيقاف تشغيل القصص التلقائي",
     "your_stories": "قصصك الشخصية",
     "add_to_your_story": "أضف عناصر إلى قصتك",
     "choose_a_background": "اختر خلفية",
@@ -220,11 +225,21 @@
     "edit_post": "تعديل المنشور",
     "add_to_your_post": "قم بالاضافة علي منشورك",
     "click_or_drop_images_her": "انقر او القي الصور هنا",
+    "click_to_uploud_image_her": "قم بالضغط هنا لرفع صورتك",
+
     "click_her": "انقر هنا",
     "drop_her": "القي الصور هنا",
     "Mentiond_People": "الأشخاص المذكورين",
     "add_links": "قم بأضافة روابط",
-    "add_hashtags": "قم بأضافة علامات التصنيف"
+    "add_hashtags": "قم بأضافة علامات التصنيف",
+    "edit_profile_img": "تعديل صورة الملف الشخصي",
+    "add_profile_img": "إضافة صورة للملف الشخصي",
+    "edit_profile_cover": "تعديل صورة الغلاف",
+    "add_profile_cover": "إضافة صورة الغلاف",
+    "zoom": "تكبير",
+    "rotate": "تدوير",
+    "delete_image": "حذف الصورة",
+    "change_image": "تغيير الصورة"
   },
   "errors": {
     "please_enter_a_valid_URL": "يرجى إدخال رابط صحيح",

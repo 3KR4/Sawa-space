@@ -14,10 +14,16 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
-import { emojiMap } from "@/utils/Data";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
 import { useRouter } from "next/navigation";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "@/Styles/chat.css";
+import { Navigation } from "swiper/modules";
+import "swiper/css/navigation";
+
 import { IoClose } from "react-icons/io5";
 import { IoLink } from "react-icons/io5";
 import { PiShareFat } from "react-icons/pi";
@@ -28,16 +34,17 @@ import { IoIosClose } from "react-icons/io";
 import { FaRegComments, FaPager } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
-function Post({ data }) {
+function Post({ data, focused = false }) {
+  //! post
   const router = useRouter();
   const { translations, locale } = useLanguage();
   const { addNotification } = useNotification();
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   const postRef = useRef(null);
   const {
-    setDataSwiperType,
-    setDataForSwiper,
-    setImgFocus,
-    setImgIndex,
+    singleProvider,
+    setSingleProvider,
     someThingHappen,
     setSomeThingHappen,
   } = useContext(MenusContext);
@@ -50,6 +57,7 @@ function Post({ data }) {
   const isMyPost = data?.author[0]?._id == userData?._id;
 
   const [currentPost, setCurrentPost] = useState(data || {});
+  const [swiperRef, setSwiperRef] = useState(null);
 
   const [seeComments, setSeeComments] = useState(false);
   const [reactsHolder, setReactsHolder] = useState(false);
@@ -61,16 +69,18 @@ function Post({ data }) {
   const [replyTo, setReplyTo] = useState({});
   const [editedComment, setEditedComment] = useState({});
   const [commentsCount, setCommentsCount] = useState(data?.commentCount);
-  const [reloadComments, setReloadComments] = useState(false);
+  const [activeImg, setActiveImg] = useState(() => {
+    const index = singleProvider?.focused_img_index || 0;
+    return data?.img?.[index]?.newpath?.url || "";
+  });
 
   const handleSeeComments = () => {
     setSeeComments(true);
     setPage(1); // reset to page 1
     setComments([]); // clear old comments
   };
-
   const fetchComments = async () => {
-    if (!seeComments) return;
+    if (!focused && !seeComments) return;
 
     setLoading(true);
     try {
@@ -93,10 +103,15 @@ function Post({ data }) {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchComments();
-  }, [page, seeComments, reloadComments]);
+  }, [page, seeComments]);
+  useEffect(() => {
+    if (focused) {
+      console.log("xxxx");
+      fetchComments();
+    }
+  }, []);
 
   useEffect(() => {
     if (someThingHappen?.type === "comment") {
@@ -111,34 +126,247 @@ function Post({ data }) {
     }
   }, [someThingHappen]);
 
-  const handleImageClick = (id, index) => {
-    router.push(`?post=${currentPost._id}&index=${index}`);
-  };
+  const bottomAction = () => (
+    <div className="bottom">
+      <div
+        className="left emojesCounter"
+        onClick={(e) => {
+          setOpenUsersReact("post");
+          handleMenus(e, "usersReact", currentPost?._id);
+        }}
+      >
+        {currentPost?.reacts && currentPost?.reactCount > 0 && (
+          <>
+            {Object.entries(currentPost.reacts)
+              .filter(([, count]) => count > 0)
+              .sort(([, a], [, b]) => b - a)
+              .slice(0, 2)
+              .map(([emoji], index) => (
+                <p key={index}>{emoji}</p>
+              ))}
+
+            <p>{currentPost?.reactCount}</p>
+          </>
+        )}
+      </div>
+
+      {screenSize !== "small" && (
+        <div className="actions mid">
+          <div>
+            {currentPost.userreact ? (
+              <span
+                className="curentUserReact"
+                onClick={() => setReactsHolder((prev) => !prev)}
+              >
+                {currentPost.userreact}
+              </span>
+            ) : (
+              <MdOutlineAddReaction
+                onClick={() => setReactsHolder((prev) => !prev)}
+              />
+            )}
+
+            {reactsHolder && (
+              <ReactsHolder
+                reactsHolder={reactsHolder}
+                setReactsHolder={setReactsHolder}
+                data={currentPost}
+                setState={setCurrentPost}
+                type={"post"}
+              />
+            )}
+          </div>
+          {!focused && (
+            <div>
+              <FaRegComment
+                onClick={() => {
+                  setSeeComments(true);
+                  handleSeeComments();
+                  setTimeout(() => {
+                    const element = postRef.current;
+                    if (element) {
+                      const headerHeight = 80; // Replace with your actual header height
+                      const y =
+                        element.getBoundingClientRect().top +
+                        window.pageYOffset -
+                        headerHeight;
+
+                      window.scrollTo({ top: y, behavior: "smooth" });
+                    }
+                  }, 100);
+                }}
+              />
+            </div>
+          )}
+          <div>
+            <IoLink />
+          </div>
+          <div>
+            <PiShareFat
+              onClick={() => {
+                const postUrl = `${window.location.origin}?post=${currentPost._id}`;
+                navigator.clipboard.writeText(postUrl);
+              }}
+            />
+          </div>
+        </div>
+      )}
+      <div className="right">
+        {commentsCount !== 0 && (
+          <div>
+            <FaRegComment />
+            {commentsCount}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  const renderComments = () => (
+    <div className="comments">
+      <div className="top">
+        <h3>
+          {translations?.comment?.comments} ({commentsCount})
+        </h3>
+        {!focused && <IoIosClose onClick={() => setSeeComments(false)} />}
+      </div>
+      <div className="holder comments-holder">
+        {loading && !comments.length ? (
+          <>
+            <ContentLoader
+              className="skeleton skeleton-comment"
+              width="100%"
+              height={120}
+              viewBox="0 0 600 120"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#e0e0e0"
+            >
+              {/* Profile Picture */}
+              <circle cx="35" cy="35" r="18" />
+
+              {/* Comment Text & Timestamp */}
+              <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+              <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+              <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+              <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+              {/* Like/Reply Button */}
+              <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+            </ContentLoader>
+            <ContentLoader
+              className="skeleton skeleton-comment"
+              width="100%"
+              height={120}
+              viewBox="0 0 600 120"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#e0e0e0"
+            >
+              {/* Profile Picture */}
+              <circle cx="35" cy="35" r="18" />
+
+              {/* Comment Text & Timestamp */}
+              <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+              <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+              <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+              <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+              {/* Like/Reply Button */}
+              <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+            </ContentLoader>
+            <ContentLoader
+              className="skeleton skeleton-comment"
+              width="100%"
+              height={120}
+              viewBox="0 0 600 120"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#e0e0e0"
+            >
+              <circle cx="35" cy="35" r="18" />
+
+              <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
+              <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
+              <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
+              <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
+
+              <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
+            </ContentLoader>
+          </>
+        ) : comments.length || hasMore ? (
+          <>
+            {comments.map((comment, index) => (
+              <Comment
+                key={index}
+                data={comment}
+                isMyPost={isMyPost}
+                replyTo={replyTo}
+                setReplyTo={setReplyTo}
+                setEditedComment={setEditedComment}
+              />
+            ))}
+            {hasMore ? (
+              <button
+                style={{ padding: loading ? "0px" : "10px" }}
+                className={`main-button view ${loading ? "loading" : ""}`}
+                onClick={() => !loading && setPage((prev) => prev + 1)}
+              >
+                <div className="lds-dual-ring"></div>
+                <span>{translations?.comment?.view_more}</span>
+              </button>
+            ) : page > 1 ? (
+              <p className="view">
+                {translations?.comment?.Thats_all_the_comments_or_now}
+              </p>
+            ) : null}
+          </>
+        ) : (
+          <div className="noCommentsYet">
+            <FaRegComments />
+            <h4>{translations?.post?.thereis_nothing_here_yet}</h4>
+            <p>{translations?.post?.be_the_first_to_post_a_comment}</p>
+          </div>
+        )}
+      </div>
+
+      <TypeComment
+        id={currentPost?._id}
+        replyTo={replyTo}
+        setReplyTo={setReplyTo}
+        editedComment={editedComment}
+        setComments={setComments}
+        setCommentsCount={setCommentsCount}
+      />
+    </div>
+  );
 
   return (
     <div className={`post`} ref={postRef}>
-      {!seeComments ? (
-        <>
-          <div className="top">
-            <div className="left">
-              <Image
-                className="rounded"
-                src={currentPost?.author[0]?.img.url || "/users/default.png"}
-                alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname} img`}
-                width={40}
-                height={40}
-                onClick={(e) =>
-                  handleMenus(e, "user-Info", null, currentPost?.author[0])
-                }
-              />
-              <div className="info">
-                <h5>
-                  {currentPost?.author[0]?.firstname} {""}
-                  {currentPost?.author[0]?.lastname}
-                </h5>
-                <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
-              </div>
-              {/* {currentPost?.creator == "page" ? (
+      {!focused ? (
+        !seeComments ? (
+          <>
+            <div className="top">
+              <div className="left">
+                <Image
+                  className="rounded"
+                  src={
+                    isMyPost
+                      ? userData?.img?.url || "/users/default.svg"
+                      : currentPost?.author[0]?.img.url || "/users/default.svg"
+                  }
+                  alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname} img`}
+                  width={40}
+                  height={40}
+                  onClick={(e) =>
+                    handleMenus(e, "user-Info", null, currentPost?.author[0])
+                  }
+                />
+                <div className="info">
+                  <h5>
+                    {isMyPost
+                      ? `${userData?.firstname} ${userData?.lastname}`
+                      : `${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname}`}
+                  </h5>
+                  <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
+                </div>
+                {/* {currentPost?.creator == "page" ? (
                 <FaPager
                   className="creatorType"
                   onClick={(e) => handleMenus(e, "page-Info", currentPost?.user.id)}
@@ -151,128 +379,113 @@ function Post({ data }) {
                   }
                 />
               ) : null} */}
-            </div>
-            <HiDotsVertical
-              className="settingDotsIco"
-              onClick={(e) => {
-                handleMenus(
-                  e,
-                  currentPost?.creator === "page"
-                    ? "settingMenu-page-posts"
-                    : "settingMenu-post",
-                  currentPost?._id,
-                  {
-                    isMyPost,
-                    isInFavorite: false,
-                    isMyFriend: false,
-                    isPostPage: false,
-                    isFollowedPage: false,
-                    isCommunity: false,
-                    isMeJoinedThisCommunity: false,
-                  }
-                );
-              }}
-            />
-          </div>
-          <div className="middle">
-            {currentPost?.link && (
-              <div className="Links">
-                {currentPost?.link?.map((x, index) => (
-                  <div key={index}>
-                    {currentPost?.link.length === 1 ? null : `${index + 1} -`}
-
-                    <Link key={index} href={x}>
-                      {x}
-                    </Link>
-                  </div>
-                ))}
               </div>
-            )}
+              <HiDotsVertical
+                className="settingDotsIco"
+                onClick={(e) => {
+                  handleMenus(
+                    e,
+                    currentPost?.creator === "page"
+                      ? "settingMenu-page-posts"
+                      : "settingMenu-post",
+                    currentPost?._id,
+                    {
+                      isMyPost,
+                      isInFavorite: false,
+                      isMyFriend: false,
+                      isPostPage: false,
+                      isFollowedPage: false,
+                      isCommunity: false,
+                      isMeJoinedThisCommunity: false,
+                    }
+                  );
+                }}
+              />
+            </div>
+            <div className="middle">
+              {currentPost?.link && (
+                <div className="Links">
+                  {currentPost?.link?.map((x, index) => (
+                    <div key={index}>
+                      {currentPost?.link.length === 1 ? null : `${index + 1} -`}
 
-            {currentPost?.paragraph && <pre>{currentPost?.paragraph}</pre>}
-
-            {currentPost?.img &&
-            Array.isArray(currentPost?.img) &&
-            currentPost?.img.length > 0 ? (
-              currentPost?.img.length === 1 ? (
-                <div className="image">
-                  <Image
-                    src={currentPost?.img[0].newpath.url}
-                    alt="Post Image"
-                    fill
-                    onClick={() => {
-                      handleImageClick(currentPost?._id, "");
-                    }}
-                  />
-                </div>
-              ) : (
-                <div
-                  className={`images ${
-                    currentPost?.img.length >= 4
-                      ? "big"
-                      : currentPost?.img.length === 3
-                      ? "mid"
-                      : "small"
-                  }`}
-                >
-                  {currentPost?.img.map((img, index) => (
-                    <Image
-                      key={index}
-                      src={img.newpath.url}
-                      alt={`Post Image ${index + 1}`}
-                      fill
-                      onClick={() => {
-                        handleImageClick(currentPost?._id, index);
-                      }}
-                    />
+                      <Link key={index} href={x}>
+                        {x}
+                      </Link>
+                    </div>
                   ))}
                 </div>
-              )
-            ) : null}
-            {currentPost?.mentions?.length > 0 && (
-              <div className="mentions view">
-                <h5>
-                  {currentPost?.author[0]?.firstname} {""}{" "}
-                  {translations?.post?.mention}
-                </h5>
-                {currentPost?.mentions?.map((x, index) => (
-                  <button
-                    key={index}
-                    onClick={(e) =>
-                      handleMenus(e, "user-Info", x.author[0]?._id)
-                    }
+              )}
+
+              {currentPost?.paragraph && <pre>{currentPost?.paragraph}</pre>}
+
+              {currentPost?.img &&
+              Array.isArray(currentPost?.img) &&
+              currentPost?.img.length > 0 ? (
+                currentPost?.img.length === 1 ? (
+                  <div className="image">
+                    <Image
+                      src={currentPost?.img[0].newpath.url}
+                      alt="Post Image"
+                      fill
+                      onClick={() => {
+                        setSingleProvider({
+                          type: "post",
+                          sharing_data: currentPost,
+                        });
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className={`images ${
+                      currentPost?.img.length >= 4
+                        ? "big"
+                        : currentPost?.img.length === 3
+                        ? "mid"
+                        : "small"
+                    }`}
                   >
-                    @{data?.author[0]?.firstname}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="bottom">
-            {currentPost?.reacts && currentPost?.reactCount > 0 && (
-              <div
-                className="left emojesCounter"
-                onClick={(e) => {
-                  setOpenUsersReact("post");
-                  handleMenus(e, "usersReact", currentPost?._id);
-                }}
-              >
-                <>
-                  {Object.entries(currentPost.reacts)
-                    .filter(([, count]) => count > 0)
-                    .sort(([, a], [, b]) => b - a)
-                    .slice(0, 2)
-                    .map(([emoji], index) => (
-                      <p key={index}>{emoji}</p>
+                    {currentPost?.img.map((img, index) => (
+                      <Image
+                        key={index}
+                        src={img.newpath.url}
+                        alt={`Post Image ${index + 1}`}
+                        fill
+                        onClick={() => {
+                          setSingleProvider({
+                            type: "post",
+                            sharing_data: currentPost,
+                            focused_img_index: index,
+                          });
+                        }}
+                      />
                     ))}
-
-                  <p>{currentPost?.reactCount}</p>
-                </>
-              </div>
-            )}
-
-            {screenSize !== "small" && (
-              <div className="actions mid">
+                  </div>
+                )
+              ) : null}
+              {currentPost?.mentions?.length > 0 && (
+                <div className="mentions view">
+                  <h5>
+                    {currentPost?.author[0]?.firstname} {""}{" "}
+                    {translations?.post?.mention}
+                  </h5>
+                  {currentPost?.mentions?.map((x, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) =>
+                        handleMenus(e, "user-Info", x.author[0]?._id)
+                      }
+                    >
+                      @{data?.author[0]?.firstname}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {bottomAction()}
+            {screenSize === "small" && (
+              <div className="actions">
                 <div>
                   {currentPost.userreact ? (
                     <span
@@ -286,7 +499,6 @@ function Post({ data }) {
                       onClick={() => setReactsHolder((prev) => !prev)}
                     />
                   )}
-
                   {reactsHolder && (
                     <ReactsHolder
                       reactsHolder={reactsHolder}
@@ -300,8 +512,8 @@ function Post({ data }) {
                 <div>
                   <FaRegComment
                     onClick={() => {
+                      setMessageText("");
                       setSeeComments(true);
-                      handleSeeComments();
                       setTimeout(() => {
                         const element = postRef.current;
                         if (element) {
@@ -321,195 +533,291 @@ function Post({ data }) {
                   <IoLink />
                 </div>
                 <div>
-                  <PiShareFat />
+                  <PiShareFat
+                    onClick={() => {
+                      const postUrl = `${window.location.origin}?post=${currentPost._id}`;
+                      navigator.clipboard.writeText(postUrl);
+                    }}
+                  />
                 </div>
               </div>
             )}
-            {currentPost?.commentsCount !== 0 && (
-              <div className="right">
-                {commentsCount !== 0 && (
-                  <div>
-                    <FaRegComment />
-                    {commentsCount}
+          </>
+        ) : (
+          renderComments()
+        )
+      ) : (
+        <>
+          {screenSize === "large" && (
+            <div className="left-img">
+              <div className="hold">
+                {currentPost?.img && (
+                  <img
+                    src={activeImg}
+                    alt={
+                      currentPost?.author[0]
+                        ? `${currentPost?.author[0]?.firstname}'s image`
+                        : "User image"
+                    }
+                  />
+                )}
+              </div>
+              {currentPost?.img?.length > 1 && (
+                <Swiper
+                  ref={swiperRef}
+                  onSwiper={setSwiperRef}
+                  className={`previewSmallImages`}
+                  dir={direction}
+                  spaceBetween={5}
+                  slidesPerView={"auto"}
+                  loop={false}
+                  centeredSlides={true}
+                >
+                  {currentPost.img.map((x, index) => (
+                    <SwiperSlide
+                      key={index}
+                      onClick={() => {
+                        swiperRef.slideTo(index);
+                        setActiveImg(x?.newpath?.url);
+                      }}
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <img
+                        src={x.newpath.url}
+                        alt={`Slide ${index}`}
+                        className={`${
+                          activeImg == x.newpath.url ? "active" : ""
+                        }`}
+                        style={{
+                          maxWidth: "90%",
+                          maxHeight: "90%",
+                          objectFit: "cover",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+            </div>
+          )}
+          {!currentPost ? (
+            <ContentLoader
+              className="skeleton skeleton-SingleDetails"
+              width={600}
+              height={600}
+              viewBox="0 0 600 600"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#e0e0e0"
+            >
+              {/* ... skeleton loader content ... */}
+            </ContentLoader>
+          ) : (
+            <div className="right-info">
+              <div className="top">
+                <div className="left">
+                  <Image
+                    src={
+                      isMyPost
+                        ? userData?.img?.url || "/users/default.svg"
+                        : currentPost?.author[0]?.img.url ||
+                          "/users/default.svg"
+                    }
+                    alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname}`}
+                    width={40}
+                    height={40}
+                    className={`rounded`}
+                    onClick={(e) =>
+                      handleMenus(e, "user-Info", currentPost?.author[0]?._id)
+                    }
+                  />
+                  <div className="info">
+                    <h5>
+                      {currentPost?.author[0]?.firstname}{" "}
+                      {currentPost?.author[0]?.lastname}
+                    </h5>
+                    <span>{ConvertTime(currentPost?.data, locale)}</span>
+                  </div>
+                </div>
+                <div className="icons-holder">
+                  <HiDotsVertical
+                    className="settingDotsIco"
+                    onClick={(e) => {
+                      handleMenus(
+                        e,
+                        currentPost?.creator === "page"
+                          ? "settingMenu-page-posts"
+                          : "settingMenu-post",
+                        currentPost?._id,
+                        {
+                          isMyPost,
+                          isInFavorite: false,
+                          isMyFriend: false,
+                          isPostPage: false,
+                          isFollowedPage: false,
+                          isCommunity: false,
+                          isMeJoinedThisCommunity: false,
+                        }
+                      );
+                    }}
+                  />
+                  <IoClose
+                    className="close closeMenu"
+                    onClick={() => {
+                      const baseUrl =
+                        window.location.origin + window.location.pathname;
+                      window.history.pushState({}, "", baseUrl);
+                      setSingleProvider(null);
+                      setMessageText("");
+                    }}
+                  />
+                </div>
+              </div>
+              {screenSize !== "small" && bottomAction()}
+              {screenSize !== "large" && (
+                <div className="left-img">
+                  <div className="hold">
+                    {currentPost?.img && (
+                      <img
+                        src={activeImg}
+                        alt={
+                          currentPost?.author[0]
+                            ? `${currentPost?.author[0]?.firstname}'s image`
+                            : "User image"
+                        }
+                      />
+                    )}
+                  </div>
+                  {currentPost?.img?.length > 1 && (
+                    <Swiper
+                      ref={swiperRef}
+                      onSwiper={setSwiperRef}
+                      className={`previewSmallImages`}
+                      dir={direction}
+                      spaceBetween={5}
+                      slidesPerView={"auto"}
+                      loop={false}
+                      centeredSlides={screenSize === "small" ? false : true}
+                    >
+                      {currentPost.img.map((x, index) => (
+                        <SwiperSlide
+                          key={index}
+                          onClick={() => {
+                            swiperRef.slideTo(index);
+                            setActiveImg(x?.newpath?.url);
+                          }}
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <img
+                            src={x.newpath.url}
+                            alt={`Slide ${index}`}
+                            className={`${
+                              activeImg == x.newpath.url ? "active" : ""
+                            }`}
+                            style={{
+                              maxWidth: "90%",
+                              maxHeight: "90%",
+                              objectFit: "cover",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  )}
+                </div>
+              )}
+              <div className="middle">
+                {currentPost?.link && (
+                  <div className="Links">
+                    {currentPost?.link?.map((x, index) => (
+                      <div key={index}>
+                        {currentPost?.link.length === 1
+                          ? null
+                          : `${index + 1} -`}
+                        <Link key={index} href={x}>
+                          {x}
+                        </Link>
+                      </div>
+                    ))}
                   </div>
                 )}
-              </div>
-            )}
-          </div>
-          {screenSize === "small" && (
-            <div className="actions">
-              <div>
-                {currentPost.userreact ? (
-                  <span
-                    className="curentUserReact"
-                    onClick={() => setReactsHolder((prev) => !prev)}
-                  >
-                    {currentPost.userreact}
-                  </span>
-                ) : (
-                  <MdOutlineAddReaction
-                    onClick={() => setReactsHolder((prev) => !prev)}
-                  />
-                )}
-                {reactsHolder && (
-                  <ReactsHolder
-                    reactsHolder={reactsHolder}
-                    setReactsHolder={setReactsHolder}
-                    id={currentPost?._id}
-                  />
-                )}
-              </div>
-              <div>
-                <FaRegComment
-                  onClick={() => {
-                    setMessageText("");
-                    setSeeComments(true);
-                    setTimeout(() => {
-                      const element = postRef.current;
-                      if (element) {
-                        const headerHeight = 80; // Replace with your actual header height
-                        const y =
-                          element.getBoundingClientRect().top +
-                          window.pageYOffset -
-                          headerHeight;
+                {currentPost?.paragraph && <p>{currentPost?.paragraph}</p>}
 
-                        window.scrollTo({ top: y, behavior: "smooth" });
-                      }
-                    }, 100);
-                  }}
-                />
-              </div>
-              <div>
-                <IoLink />
-              </div>
-              <div>
-                <PiShareFat />
+                {currentPost?.mentions?.length > 0 && (
+                  <div className="mentions view">
+                    <h5>
+                      {currentPost?.author[0]?.firstname}{" "}
+                      {translations?.post?.mention}
+                    </h5>
+                    {currentPost?.mentions?.map((x, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) =>
+                          handleMenus(e, "user-Info", x.author[0]?._id)
+                        }
+                      >
+                        @{currentPost.author[0]?.firstname}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {screenSize === "small" && bottomAction()}
+
+                {screenSize === "small" && (
+                  <div className="actions">
+                    <div>
+                      {currentPost.userreact ? (
+                        <span
+                          className="curentUserReact"
+                          onClick={() => setReactsHolder((prev) => !prev)}
+                        >
+                          {currentPost.userreact}
+                        </span>
+                      ) : (
+                        <MdOutlineAddReaction
+                          onClick={() => setReactsHolder((prev) => !prev)}
+                        />
+                      )}
+                      {reactsHolder && (
+                        <ReactsHolder
+                          reactsHolder={reactsHolder}
+                          setReactsHolder={setReactsHolder}
+                          data={currentPost}
+                          setState={setCurrentPost}
+                          type={"post"}
+                        />
+                      )}
+                    </div>
+                    {!focused && (
+                      <div>
+                        <FaRegComment
+                          onClick={() => {
+                            setSeeComments(true);
+                            handleSeeComments();
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <IoLink />
+                    </div>
+                    <div>
+                      <PiShareFat
+                        onClick={() => {
+                          const postUrl = `${window.location.origin}?post=${currentPost._id}`;
+                          navigator.clipboard.writeText(postUrl);
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {renderComments()}
               </div>
             </div>
           )}
         </>
-      ) : (
-        <div className="comments">
-          <div className="top">
-            <h3>
-              {translations?.comment?.comments} ({commentsCount})
-            </h3>
-            <IoIosClose onClick={() => setSeeComments(false)} />
-          </div>
-          <div className="holder comments-holder">
-            {loading && !comments.length ? (
-              // Display skeleton loader while loading
-              <>
-                <ContentLoader
-                  className="skeleton skeleton-comment"
-                  width="100%"
-                  height={120}
-                  viewBox="0 0 600 120"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#e0e0e0"
-                >
-                  {/* Profile Picture */}
-                  <circle cx="35" cy="35" r="18" />
-
-                  {/* Comment Text & Timestamp */}
-                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
-                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
-                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
-                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
-
-                  {/* Like/Reply Button */}
-                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
-                </ContentLoader>
-                <ContentLoader
-                  className="skeleton skeleton-comment"
-                  width="100%"
-                  height={120}
-                  viewBox="0 0 600 120"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#e0e0e0"
-                >
-                  {/* Profile Picture */}
-                  <circle cx="35" cy="35" r="18" />
-
-                  {/* Comment Text & Timestamp */}
-                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
-                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
-                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
-                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
-
-                  {/* Like/Reply Button */}
-                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
-                </ContentLoader>
-                <ContentLoader
-                  className="skeleton skeleton-comment"
-                  width="100%"
-                  height={120}
-                  viewBox="0 0 600 120"
-                  backgroundColor="#f3f3f3"
-                  foregroundColor="#e0e0e0"
-                >
-                  {/* Profile Picture */}
-                  <circle cx="35" cy="35" r="18" />
-
-                  {/* Comment Text & Timestamp */}
-                  <rect x="65" y="15" rx="5" ry="5" width="200" height="12" />
-                  <rect x="65" y="35" rx="5" ry="5" width="150" height="10" />
-                  <rect x="65" y="55" rx="5" ry="5" width="400" height="10" />
-                  <rect x="65" y="75" rx="5" ry="5" width="300" height="10" />
-
-                  {/* Like/Reply Button */}
-                  <rect x="540" y="80" rx="5" ry="5" width="60" height="10" />
-                </ContentLoader>
-              </>
-            ) : // If not loading, display the comments or the "no comments" message
-            comments.length || hasMore ? (
-              <>
-                {comments.map((comment, index) => (
-                  <Comment
-                    key={index}
-                    data={comment}
-                    isMyPost={isMyPost}
-                    replyTo={replyTo}
-                    setReplyTo={setReplyTo}
-                    setEditedComment={setEditedComment}
-                  />
-                ))}
-                {hasMore ? (
-                  <button
-                    style={{ padding: loading ? "0px" : "10px" }}
-                    className={loading ? "disable view" : "view"}
-                    onClick={() => !loading && setPage((prev) => prev + 1)}
-                  >
-                    {loading ? (
-                      <div className="lds-dual-ring"></div>
-                    ) : (
-                      translations?.comment?.view_more
-                    )}
-                  </button>
-                ) : page > 1 ? (
-                  <p className="view">
-                    {translations?.comment?.Thats_all_the_comments_or_now}
-                  </p>
-                ) : null}
-              </>
-            ) : (
-              <div className="noCommentsYet">
-                <FaRegComments />
-                <h4>{translations?.post?.thereis_nothing_here_yet}</h4>
-                <p>{translations?.post?.be_the_first_to_post_a_comment}</p>
-              </div>
-            )}
-          </div>
-
-          <TypeComment
-            id={currentPost?._id}
-            replyTo={replyTo}
-            setReplyTo={setReplyTo}
-            editedComment={editedComment}
-            setComments={setComments}
-            setCommentsCount={setCommentsCount}
-          />
-        </div>
       )}
     </div>
   );

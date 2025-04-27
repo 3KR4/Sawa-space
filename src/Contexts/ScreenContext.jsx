@@ -6,14 +6,19 @@ import { useNotification } from "@/Contexts/NotificationContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useSearchParams } from "next/navigation";
 import { postService } from "@/services/api/postService";
+import { userService } from "@/services/api/userService";
 
 export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
   const { addNotification } = useNotification();
-  const { someThingHappen, setSomeThingHappen, singleProvider, setSingleProvider } =
-    useContext(MenusContext);
+  const {
+    someThingHappen,
+    setSomeThingHappen,
+    singleProvider,
+    setSingleProvider,
+  } = useContext(MenusContext);
   const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   useEffect(() => {
     function getScreenSize() {
@@ -52,12 +57,32 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [userData]);
 
+    const getUser = async () => {
+      try {
+        const { data } = await userService.getUserData(userData?._id);
+        setUserData(data.data);
+      } catch (err) {
+        console.error("Error fetching stories", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load user data",
+        });
+      } finally {
+        setSomeThingHappen({});
+      }
+    };
+
+  console.log(userData);
+
   const [stories, setStories] = useState([]);
   const [storyloading, setStoryloading] = useState(false);
   const [currentUserStory, setCurrentUserStory] = useState({});
 
   useEffect(() => {
-    if (userData) {
+    if (
+      userData ||
+      (someThingHappen.type === "stories" && someThingHappen.event === "delete")
+    ) {
       setStoryloading(true);
       let timeoutId;
       let isMounted = true;
@@ -88,14 +113,14 @@ export const ScreenProvider = ({ children }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, [someThingHappen.stories, someThingHappen.deleteAllUserStories, userData]);
+  }, [someThingHappen.stories, someThingHappen.type, userData]);
 
   const searchParams = useSearchParams();
   const postId = searchParams.get("post");
   const index = parseInt(searchParams.get("index") || "0", 10);
 
   useEffect(() => {
-    const getSingleProduct = async () => {
+    const getSinglePost = async () => {
       try {
         const { data } = await postService.getSinglePost(postId);
 
@@ -121,12 +146,9 @@ export const ScreenProvider = ({ children }) => {
     };
 
     if (postId) {
-      getSingleProduct();
+      getSinglePost();
     }
   }, [postId, index]);
-
-  console.log(singleProvider);
-  
 
   return (
     <ScreenContext.Provider
@@ -142,6 +164,7 @@ export const ScreenProvider = ({ children }) => {
         setCurrentUserStory,
         storyloading,
         setStoryloading,
+        getUser,
       }}
     >
       {children}

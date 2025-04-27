@@ -9,9 +9,11 @@ export const MenusProvider = ({ children }) => {
   const closeImgHolderRef = useRef(null);
   const usersreactMenuRef = useRef(null);
   const usersSelectionRef = useRef(null);
+  const dangerEventRef = useRef(null);
 
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openStoryForm, setOpenStoryForm] = useState(false);
+  const [openImgForm, setOpenImgForm] = useState(false);
   const [dangerEvent, setDangerEvent] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUsersNames, setSelectedUsersNames] = useState([]);
@@ -31,6 +33,7 @@ export const MenusProvider = ({ children }) => {
         singleProvider,
         setSingleProvider,
         settingsMenuRef,
+        dangerEventRef,
         closeImgHolderRef,
         selectedUsers,
         setSelectedUsers,
@@ -43,6 +46,8 @@ export const MenusProvider = ({ children }) => {
         setOpenPostForm,
         openStoryForm,
         setOpenStoryForm,
+        openImgForm,
+        setOpenImgForm,
         setUsersSelectionSearch,
         usersSelectionRef,
         usersreactMenuRef,

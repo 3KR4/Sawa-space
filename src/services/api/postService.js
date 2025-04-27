@@ -2,8 +2,14 @@ import apiClient from "../apiClient";
 
 export const postService = {
   //! Posts
-  getPosts: (page) => {
-    return apiClient.get(`/post/?page=${page}&limit=4`);
+  getPosts: (page = 1, type = "", id = "") => {
+    const base = `/post`;
+    const url =
+      type && id
+        ? `${base}/${type}/${id}?page=${page}&limit=4`
+        : `${base}/?page=${page}&limit=4`;
+
+    return apiClient.get(url);
   },
   getSinglePost: (id) => {
     return apiClient.get(`/post/${id}`);

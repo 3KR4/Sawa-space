@@ -146,6 +146,7 @@ body:has(.marketplace) header {
   color: var(--title-color);
 }
 
+
 .swiper {
   width: 100% !important;
 }

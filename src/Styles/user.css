@@ -10,7 +10,7 @@ body:has(.portfolio) > main {
   padding-top: 0;
 }
 .portfolio {
-  width: 80%;
+  width: 70%;
   margin: auto;
 }
 .portfolio > .top {
@@ -19,14 +19,15 @@ body:has(.portfolio) > main {
   flex-direction: column;
 }
 .portfolio .top .cover {
-  height: 470px;
   position: relative;
   border-radius: 0 0 25px 25px;
   overflow: hidden;
+  background: var(--back-grident);
+  min-height: 100px;
 }
 .portfolio .top .cover img {
-  max-height: 500px;
-  object-fit: cover;
+  position: relative !important;
+  aspect-ratio: 16 / 6;
 }
 .portfolio .editICo {
   position: absolute;
@@ -40,6 +41,10 @@ body:has(.portfolio) > main {
   align-items: center;
   gap: 5px;
   transition: 0.3s;
+}
+body.ar {
+  right: unset;
+  left: 17px;
 }
 
 .portfolio .editICo svg {
@@ -77,18 +82,26 @@ body:has(.portfolio) > main {
   width: 140px;
   height: 140px;
   z-index: 30;
-  border: 1px solid var(--title-color);
-  background-color: var(--body-color);
+  border: 6px solid var(--title-color);
+  border-style: double;
+  background-color: var(--paragraph-color);
 }
 
 .portfolio .userImg .editICo {
   padding: 6px;
   font-size: 16px;
-  right: 2px;
+  right: -2px;
+}
+body.ar .portfolio .userImg .editICo {
+  right: unset;
+  left: -5px;
 }
 .portfolio .editICo:hover {
   cursor: pointer;
-  background: var(--main-color);
+  background: white;
+}
+.portfolio .editICo:hover svg {
+  color: var(--title-color);
 }
 .portfolio nav .top .right {
   display: flex;
@@ -447,7 +460,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 .portfolio .bigSection .about {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 8px;
   font-weight: 600;
   background: var(--body-color);
   padding: 15px;

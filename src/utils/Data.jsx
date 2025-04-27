@@ -1505,11 +1505,3 @@ export const products = [
     page: { name: "LuxuryTime", img: "/users/user14.png" },
   },
 ];
-
-export const emojiMap = {
-  love: "❤️",
-  sad: "😢",
-  angry: "😠",
-  prayer: "🙏",
-  haha: "😂",
-};

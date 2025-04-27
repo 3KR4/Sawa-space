@@ -7,7 +7,9 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { postService } from "@/services/api/postService";
+import { userService } from "@/services/api/userService";
 import { useNotification } from "@/Contexts/NotificationContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { IoClose } from "react-icons/io5";
 import { storyService } from "@/services/api/storyService";
@@ -15,22 +17,28 @@ import { storyService } from "@/services/api/storyService";
 function DangerEvent() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
+  const { getUser } = useContext(ScreenContext);
 
-  const { dangerEvent, setDangerEvent, setSomeThingHappen } =
-    useContext(MenusContext);
+  const {
+    dangerEvent,
+    setDangerEvent,
+    setSomeThingHappen,
+    openImgForm,
+    setOpenImgForm,
+    dangerEventRef,
+  } = useContext(MenusContext);
   const { selectedDev } = useContext(DynamicMenusContext);
   const [loading, setLoading] = useState(false);
-
-  const dangerEventRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         dangerEventRef.current &&
-        !dangerEventRef.current.contains(event.target)
+        dangerEventRef.current.contains(event.target)
       ) {
-        setMentionHolder(false);
+        return;
       }
+      setDangerEvent(null);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -87,9 +95,34 @@ function DangerEvent() {
     }
   };
 
+  const deleteUserImg = async () => {
+    setLoading(true);
+    try {
+      const res = await userService.delete_img_cover(
+        openImgForm.userId,
+        openImgForm.type
+      );
+      console.log("delete_img_cover", res);
+
+      addNotification({
+        type: "success",
+        message: "Image deleted successfully.",
+      });
+      await getUser();
+    } catch (err) {
+      console.log(err);
+      addNotification({ type: "error", message: "Failed to delete image." });
+    } finally {
+      setLoading(false);
+      setDangerEvent(null);
+      setOpenImgForm(false);
+    }
+  };
+
   const deleteHandlers = {
     delete_comment: deleteComment,
     delete_story: deleteStory,
+    delete_img: deleteUserImg,
   };
 
   const handleDelete = () => {
@@ -110,7 +143,7 @@ function DangerEvent() {
         </div>
         <div className="the-important-message">{dangerEvent.message}</div>
         <div className="button-area">
-          <button className="main-button">
+          <button className="main-button" onClick={() => setDangerEvent(null)}>
             {translations?.actions?.cancel}
           </button>
           <button
@@ -119,7 +152,13 @@ function DangerEvent() {
           >
             <div className="lds-dual-ring"></div>
 
-            <span>{translations?.actions?.[dangerEvent.type]}</span>
+            <span>
+              {
+                translations?.actions?.[
+                  dangerEvent.type == "delete_img" ? "delete" : dangerEvent.type
+                ]
+              }
+            </span>
           </button>
         </div>
       </div>

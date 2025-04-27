@@ -19,15 +19,13 @@ import { useNotification } from "@/Contexts/NotificationContext";
 
 import { HiDotsVertical } from "react-icons/hi";
 
-function Story({ data, smallView }) {
+function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
   const { screenSize, userData, stories } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
 
   const { setSingleProvider, singleProvider } = useContext(MenusContext);
   const { addNotification } = useNotification();
-
-  const [loading, setLoading] = useState(false);
 
   const adjustSize = (value) => {
     if (typeof value === "number") {
@@ -38,7 +36,6 @@ function Story({ data, smallView }) {
         : value;
     }
 
-    // Handle string values like "10px" or "10%"
     if (typeof value === "string") {
       const num = parseFloat(value);
       const unit = value.replace(num, "");
@@ -62,33 +59,13 @@ function Story({ data, smallView }) {
 
   const isMyStory = author?._id == userData._id;
 
-  const fetchUserStories = async () => {
-    setLoading(true);
-    try {
-      const { data } = await storyService.getUserStories(author._id);
-      setSingleProvider({
-        type: "stories",
-        shared_data: data.data,
-        id: author._id,
-      });
-    } catch (err) {
-      console.error("Error fetching user stories", err);
-      addNotification({
-        type: "error",
-        message: "Failed to load user Stories. Please try again later.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div
       onClick={() => {
-        smallView && fetchUserStories();
+        smallView && fetchUserStories(author._id);
       }}
       className={`story ${smallView ? "smallView" : ""} ${
-        loading ? "loading" : ""
+        smallStoryLoad == author._id ? "loading" : ""
       }`}
       style={{
         background:
@@ -211,7 +188,7 @@ function Story({ data, smallView }) {
               <div className="info">
                 <h5
                   className="ellipsisText"
-                  style={{ fontSize: smallView ? "0.8rem" : "14px" }}
+                  style={{ fontSize: smallView ? "0.7rem" : "14px" }}
                 >
                   {author._id === userData._id ? (
                     <>{translations?.story?.your_story}</>
@@ -222,17 +199,18 @@ function Story({ data, smallView }) {
                     </>
                   )}
                 </h5>
-                <span>{ConvertTime(data?.date, locale)}</span>
+                <span>{ConvertTime(data?.date, locale, "post")}</span>
               </div>
             </div>
           )}
 
-          {!smallView && (
+          {!smallView && isMyStory && (
             <HiDotsVertical
               className="settingDotsIco"
               onClick={(e) => {
                 handleMenus(e, "settingMenu-story", data?._id, {
                   isMyStory,
+                  story: data,
                 });
               }}
             />

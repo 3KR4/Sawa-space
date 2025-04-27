@@ -50,11 +50,11 @@ const fontFamilies = [
 const backgroundColors = [
   {
     type: "gradient",
-    first: "#FF9A9E",
-    second: "#FAD0C4",
-    deg: "180",
-    first_Acquisition: 15,
-    second_Acquisition: 50,
+    first: "#F6D365",
+    second: "#FF9A9E",
+    deg: "300",
+    first_Acquisition: 50,
+    second_Acquisition: 100,
   },
   {
     type: "static",
@@ -134,11 +134,11 @@ const backgroundColors = [
   },
   {
     type: "gradient",
-    first: "#F6D365",
-    second: "#FF9A9E",
-    deg: "300",
-    first_Acquisition: 50,
-    second_Acquisition: 100,
+    first: "#FF9A9E",
+    second: "#FAD0C4",
+    deg: "180",
+    first_Acquisition: 15,
+    second_Acquisition: 50,
   },
 ];
 
@@ -210,7 +210,10 @@ function StoryForm() {
   });
 
   const isDisabled =
-    !images.length && !storyData.link && messageText.length < 3;
+    !storyData.images.length && !storyData.link && messageText.length === 0;
+
+  console.log("storyData", storyData);
+  console.log("story", openStoryForm?.story);
 
   useEffect(() => {
     setStoryData((prev) => ({
@@ -427,20 +430,36 @@ function StoryForm() {
     if (openStoryForm.type === "edit") {
       setLoadingContent(false);
       const story = openStoryForm?.story;
+
       if (story) {
-        setMessageText(story.paragraph);
-        setLinks(story.link || "");
-        setSelectedUsers(story.mentions || []);
-
-        setAddLink(story.link ? true : false);
-
-        const formattedImages = (story.img || []).map((imgObj) => ({
-          url: imgObj.newpath.url,
-          publicid: imgObj.newpath.publicid,
-          originalname: imgObj.originalname,
-        }));
-
-        setImages(formattedImages);
+        const info = story.info;
+        console.log("info", info);
+        setMessageText(info?.body || "");
+        setLinkValue(info?.link || "");
+        setSelectedBackground(info?.settings?.backGround || "");
+        setStoryData({
+          body: info?.body || "",
+          images: story.img || [],
+          link: info?.link || "",
+          mentions: info?.mentions || [],
+          settings: {
+            body: {
+              x: info?.settings?.body?.x ?? 0,
+              y: info?.settings?.body?.y ?? 0,
+              size: info?.settings?.body?.size ?? 16,
+              family: info?.settings?.body?.family || "Rubik",
+              color: info?.settings?.body?.color || "454545",
+              background: info?.settings?.body?.background || "ffffff",
+            },
+            link: {
+              x: info?.settings?.link?.x ?? 0,
+              y: info?.settings?.link?.y ?? 0,
+              size: info?.settings?.link?.size ?? 16,
+            },
+            images: info?.settings?.images || [],
+            backGround: info?.settings?.backGround || "",
+          },
+        });
         setLoadingContent(true);
       }
     } else {
@@ -485,12 +504,15 @@ function StoryForm() {
       },
     };
 
+    console.log("storyContent", storyContent);
+
     try {
       let storyId;
 
       if (openStoryForm.type === "edit") {
-        storyId = openStoryForm.storyId;
-        await storyService.editStory(storyId, storyContent);
+        storyId = openStoryForm.story._id;
+        const res = await storyService.editStory(storyId, storyContent);
+        console.log("res", res);
       } else {
         const storyResponse = await storyService.createStory(storyContent);
         storyId = storyResponse?.data.storyId;
@@ -1060,7 +1082,7 @@ function StoryForm() {
                       : `Image ${index + 1} Settings`}
                   </h5>
                   <div className="productImages">
-                    <h5>{image.name}</h5>
+                    <h5>{image.name || image.originalname}</h5>
                     <IoClose onClick={() => handleRemoveImage(index)} />
                   </div>
                   <div className="settings forImage">
@@ -1179,7 +1201,16 @@ function StoryForm() {
                       }
                     }
                   >
-                    <img src={URL.createObjectURL(image)} width={`100%`} />
+                    <img
+                      src={
+                        image instanceof File || image instanceof Blob
+                          ? URL.createObjectURL(image)
+                          : typeof image === "string"
+                          ? image
+                          : image?.newpath?.url || ""
+                      }
+                      width="100%"
+                    />
                   </DraggableElement>
                 ))}
 

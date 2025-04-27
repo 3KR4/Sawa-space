@@ -20,11 +20,14 @@ export const userService = {
   getUserData: async (userId) => {
     return apiClient.get(`/user/${userId}`);
   },
-  uploadUserImage: async (userId, imageFile) => {
-    return apiClient.post(`/user/img/${userId}`, imageFile, {
+  upload_img_cover: async (userId, type, formData) => {
+    return apiClient.post(`/user/${type}/${userId}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "multipart/form-data", // This is crucial
       },
     });
+  },
+  delete_img_cover: async (userId, type) => {
+    return apiClient.delete(`/user/${type}/${userId}`);
   },
 };

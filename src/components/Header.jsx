@@ -34,7 +34,8 @@ import { HiUsers } from "react-icons/hi2";
 import { useDefaultReduceAnimations } from "@mui/x-date-pickers/internals";
 
 export default function Header() {
-  const { setOpenPostForm, setOpenStoryForm } = useContext(MenusContext);
+  const { setOpenPostForm, setOpenStoryForm, setSingleProvider } =
+    useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
   const { pathname, screenSize, userData, setUserData } =
     useContext(ScreenContext);
@@ -117,6 +118,96 @@ export default function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY, screenSize]);
+
+  const Notfication = () => (
+    <li className="notifications">
+      <MdNotificationsActive />
+      <span className="length">20</span>
+    </li>
+  );
+  const creation = () => (
+    <li
+      ref={createMenuRef}
+      className="use-case"
+      onClick={() => setCreateMenu((prev) => !prev)}
+    >
+      <IoGrid />
+      <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
+        <h4 className="title">{translations?.header?.create}</h4>
+        <ul>
+          <button onClick={() => setOpenPostForm(true)}>
+            <BsFillPostcardFill /> {translations?.header?.createpost}
+          </button>
+          <button onClick={() => setOpenStoryForm(true)}>
+            <FaHistory /> {translations?.header?.createstory}
+          </button>
+          <button>
+            <HiUsers /> {translations?.header?.creategroup}
+          </button>
+          <button
+            onClick={() => {
+              setSingleProvider({
+                type: "page",
+              });
+            }}
+          >
+            <FaPager /> {translations?.header?.createpage}
+          </button>
+          <button>
+            <FaUsers /> {translations?.header?.createcommunity}
+          </button>
+        </ul>
+      </div>
+    </li>
+  );
+  const user = () => (
+    <li
+      ref={userMenuRef}
+      className="user"
+      onClick={() => setUserMenu((prev) => !prev)}
+    >
+      <Image
+        className="rounded"
+        src={userData?.img?.url || "/users/default.svg"}
+        width={45}
+        height={45}
+        alt={`user Image`}
+      />
+      <FaUser className="x" /> <FaCaretDown className="angle" />
+      <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
+        <Link href={`/user/${userData?._id}`} className="title">
+          <FaUser style={{ fontSize: "22px" }} /> {userData?.firstname}{" "}
+          {userData?.lastname}
+        </Link>
+        <ul>
+          <button>
+            <IoMdSettings /> {translations?.header?.settings_and_privacy}
+          </button>
+          <button>
+            <BiSupport /> {translations?.header?.help_and_support}
+          </button>
+          <button>
+            <RiColorFilterAiFill />
+            {translations?.header?.display_and_accessibility}
+          </button>
+          <button onClick={() => changeLanguage(locale === "en" ? "ar" : "en")}>
+            <IoLanguage /> {translations?.header?.swithlang}
+          </button>
+          <button
+            className="logOut"
+            onClick={() => {
+              setUserData(null);
+              localStorage.removeItem("user");
+              localStorage.removeItem("authToken");
+              window.location.reload();
+            }}
+          >
+            <TbLogout2 /> {translations?.header?.logout}
+          </button>
+        </ul>
+      </div>
+    </li>
+  );
 
   return (
     <header
@@ -210,7 +301,7 @@ export default function Header() {
             <IoCartOutline /> <span>{translations?.header?.marketplace}</span>
           </Link>
         </div>
-        {screenSize === "small" && (
+        {screenSize === "small" && !userData && (
           <Link className="letsPegin" href="/auth">
             {translations?.header?.lets_begin}
             <FaStar />
@@ -222,177 +313,15 @@ export default function Header() {
         <div className="events">
           {screenSize === "small" ? (
             <>
-              <li
-                ref={createMenuRef}
-                className="use-case"
-                onClick={() => setCreateMenu((prev) => !prev)}
-              >
-                <IoGrid />
-                <div
-                  className={`menu createMenu ${createMenu ? "active" : ""}`}
-                >
-                  <h4 className="title">Creation Menu</h4>
-                  <ul>
-                    <button onClick={() => setOpenPostForm(true)}>
-                      <BsFillPostcardFill /> Create Post
-                    </button>
-                    <button>
-                      <FaHistory /> Create Story
-                    </button>
-                    <button>
-                      <HiUsers /> Create Group
-                    </button>
-                    <button>
-                      <FaPager /> Create Page
-                    </button>
-                    <button>
-                      <FaUsers /> Create Community
-                    </button>
-                  </ul>
-                </div>
-              </li>
-              <li
-                ref={userMenuRef}
-                className="user"
-                onClick={() => setUserMenu((prev) => !prev)}
-              >
-                <Image
-                  className="rounded"
-                  src={userData?.img?.url || "/users/default.svg"}
-                  width={45}
-                  height={45}
-                  alt={`user Image`}
-                />
-                <FaUser className="x" /> <FaCaretDown className="angle" />
-                <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
-                  <Link href={`/user/4`} className="title">
-                    <FaUser style={{ fontSize: "22px" }} />{" "}
-                    {userData?.firstname} {userData?.lastname}
-                  </Link>
-                  <ul>
-                    <button>
-                      <IoMdSettings />{" "}
-                      {translations?.header?.settings_and_privacy}
-                    </button>
-                    <button>
-                      <BiSupport /> {translations?.header?.help_and_support}
-                    </button>
-                    <button>
-                      <RiColorFilterAiFill />
-                      {translations?.header?.display_and_accessibility}
-                    </button>
-                    <button
-                      onClick={() =>
-                        changeLanguage(locale === "en" ? "ar" : "en")
-                      }
-                    >
-                      <IoLanguage /> {translations?.header?.swithlang}
-                    </button>
-                    <button
-                      className="logOut"
-                      onClick={() => {
-                        setUserData(null);
-                        localStorage.removeItem("user");
-                        localStorage.removeItem("authToken");
-                        window.location.reload();
-                      }}
-                    >
-                      <TbLogout2 /> {translations?.header?.logout}
-                    </button>
-                  </ul>
-                </div>
-              </li>
-              <li className="notifications">
-                <MdNotificationsActive />
-                <span className="length">20</span>
-              </li>
+              {creation()}
+              {user()}
+              {Notfication()}
             </>
           ) : (
             <>
-              <li
-                ref={createMenuRef}
-                className="use-case"
-                onClick={() => setCreateMenu((prev) => !prev)}
-              >
-                <IoGrid />
-                <div
-                  className={`menu createMenu ${createMenu ? "active" : ""}`}
-                >
-                  <h4 className="title">{translations?.header?.create}</h4>
-                  <ul>
-                    <button onClick={() => setOpenPostForm(true)}>
-                      <BsFillPostcardFill /> {translations?.header?.createpost}
-                    </button>
-                    <button onClick={() => setOpenStoryForm(true)}>
-                      <FaHistory /> {translations?.header?.createstory}
-                    </button>
-                    <button>
-                      <HiUsers /> {translations?.header?.creategroup}
-                    </button>
-                    <button>
-                      <FaPager /> {translations?.header?.createpage}
-                    </button>
-                    <button>
-                      <FaUsers /> {translations?.header?.createcommunity}
-                    </button>
-                  </ul>
-                </div>
-              </li>
-              <li className="notifications">
-                <MdNotificationsActive />
-                <span className="length">20</span>
-              </li>
-              <li
-                ref={userMenuRef}
-                className="user"
-                onClick={() => setUserMenu((prev) => !prev)}
-              >
-                <Image
-                  className="rounded"
-                  src={userData?.img?.url || "/users/default.svg"}
-                  width={45}
-                  height={45}
-                  alt={`user Image`}
-                />
-                <FaUser className="x" /> <FaCaretDown className="angle" />
-                <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
-                  <Link href={`/user/4`} className="title">
-                    <FaUser style={{ fontSize: "22px" }} />{" "}
-                    {userData?.firstname} {userData?.lastname}
-                  </Link>
-                  <ul>
-                    <button>
-                      <IoMdSettings />{" "}
-                      {translations?.header?.settings_and_privacy}
-                    </button>
-                    <button>
-                      <BiSupport /> {translations?.header?.help_and_support}
-                    </button>
-                    <button>
-                      <RiColorFilterAiFill />{" "}
-                      {translations?.header?.display_and_accessibility}
-                    </button>
-                    <button
-                      onClick={() =>
-                        changeLanguage(locale === "en" ? "ar" : "en")
-                      }
-                    >
-                      <IoLanguage /> {translations?.header?.swithlang}
-                    </button>
-                    <button
-                      className="logOut"
-                      onClick={() => {
-                        setUserData(null);
-                        localStorage.removeItem("user");
-                        localStorage.removeItem("authToken");
-                        window.location.reload();
-                      }}
-                    >
-                      <TbLogout2 /> {translations?.header?.logout}
-                    </button>
-                  </ul>
-                </div>
-              </li>
+              {creation()}
+              {Notfication()}
+              {user()}
             </>
           )}
         </div>

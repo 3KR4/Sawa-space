@@ -6,6 +6,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import EmojesHolder from "@/components/post/EmojesHolder";
 import UsersSelection from "@/components/UsersSelection";
 import PostForm from "@/components/forms/PostForm";
+import ImgForm from "@/components/forms/ImgForm";
 import DangerEvent from "@/components/forms/DangerEvent";
 import SingleDetails from "@/components/SingleDetails";
 import UserInfo from "@/components/UserInfo";
@@ -17,8 +18,13 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
 
 function AllComponents() {
-  const { imgFocus, openPostForm, openStoryForm, dangerEvent, singleProvider } =
-    useContext(MenusContext);
+  const {
+    openPostForm,
+    openStoryForm,
+    openImgForm,
+    dangerEvent,
+    singleProvider,
+  } = useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
 
@@ -49,10 +55,11 @@ function AllComponents() {
       </div>
 
       {settingMenu && <SettingMenu />}
-      {singleProvider.type && !pathname.includes("chat") && <SingleDetails />}
+      {singleProvider?.type && !pathname.includes("chat") && <SingleDetails />}
       {infoMenu && <UserInfo />}
       {openPostForm && <PostForm />}
       {openStoryForm && <StoryForm />}
+      {openImgForm && <ImgForm />}
       {dangerEvent && <DangerEvent />}
       {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}

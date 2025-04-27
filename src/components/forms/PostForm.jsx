@@ -10,6 +10,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { postService } from "@/services/api/postService";
 import { useNotification } from "@/Contexts/NotificationContext";
+import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -22,6 +23,7 @@ import { CircleAlert } from "lucide-react";
 function PostForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
+  const { userData } = useContext(ScreenContext);
 
   const {
     selectedUsers,
@@ -367,7 +369,7 @@ function PostForm() {
 
               <textarea
                 ref={InputRef}
-                placeholder={`mahmoud ${translations?.placeHolders?.whats_on_your_mind}`}
+                placeholder={`${userData.firstname} ${translations?.placeHolders?.whats_on_your_mind}`}
                 value={messageText}
                 onInput={(e) => setMessageText(e.target.value)}
               />

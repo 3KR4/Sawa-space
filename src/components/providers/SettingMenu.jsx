@@ -24,6 +24,7 @@ function SettingMenu() {
     settingsMenuRef,
     setDangerEvent,
     setOpenPostForm,
+    setOpenStoryForm,
     setSomeThingHappen,
   } = useContext(MenusContext);
   const {
@@ -141,7 +142,12 @@ function SettingMenu() {
         <>
           {selectedDev.isMyStory && (
             <>
-              <button>
+              <button
+                onClick={() => {
+                  setSettingMenu(false);
+                  setOpenStoryForm({ type: "edit", story: selectedDev.story });
+                }}
+              >
                 <MdEdit /> {translations?.story?.edit_story}
               </button>
             </>

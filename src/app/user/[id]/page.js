@@ -11,6 +11,9 @@ import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import "@/Styles/user.css";
+import PostsHolder from "@/components/post/PostsHolder";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+import { useNotification } from "@/Contexts/NotificationContext";
 
 import { FaAngleRight } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
@@ -26,59 +29,78 @@ import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
 
 import { IoInformationCircleSharp } from "react-icons/io5";
+import { userService } from "@/services/api/userService";
 
 export default function User({ params }) {
   const { translations } = useLanguage();
-
-  const {
-    setDataSwiperType,
-    dataForSwiper,
-    setDataForSwiper,
-    setImgFocus,
-    setImgIndex,
-  } = useContext(MenusContext);
+  const { addNotification } = useNotification();
+  const { userData } = useContext(ScreenContext);
+  const { openImgForm, setOpenImgForm } = useContext(MenusContext);
 
   const { handleMenus, settingMenu } = useContext(DynamicMenusContext);
 
-  const { id } = use(params); // Unwrap the Promise
+  const { id } = use(params);
+
+  const isMyPage = userData?._id === id;
+
+  const [currentUser, setCurrentUser] = useState({});
+  const [currentSelectedData, setCurrentSelectedData] = useState("posts");
+  const [loading, setLoading] = useState(true);
   const [postSearch, setPostSearch] = useState("");
 
-  const mediaMsgs = messages.filter((msg) => msg.img);
-  const [curentChat, setCurentChat] = useState({});
-  const [currentSelectedData, setCurrentSelectedData] = useState("posts");
-
   useEffect(() => {
-    let currentChat = users.find((x) => x.id == id);
-    setCurentChat(currentChat);
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const { data } = await userService.getUserData(id);
+        setCurrentUser(data.data);
+      } catch (err) {
+        console.error("Error fetching posts", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load user data. Please try again later.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
   }, [id]);
 
-  const handleImageClick = (id, index) => {
-    setDataSwiperType("msg");
-    setImgFocus(id);
-    setDataForSwiper(mediaMsgs);
-
-    if (index === "") {
-      const mediaIndex = dataForSwiper.findIndex((msg) => msg.id == id);
-      setImgIndex(mediaIndex);
-    } else {
-      setImgIndex(index);
-    }
-  };
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 0); // Adjust as needed
-  }, []);
+  console.log("userData", userData);
 
   return (
-    <div className={`portfolio userPage`}>
+    <div className={`portfolio userPage ${isMyPage ? "myPage" : ""}`}>
       <div className="top">
         <div className="cover">
-          <Image src={"/chat4.png"} alt="User Cover" fill />
-          <div className="editICo">
-            <MdModeEditOutline />
-            {translations?.actions?.edit}
-          </div>
+          {(currentUser?.cover?.url || (isMyPage && userData?.cover?.url)) && (
+            <Image
+              src={isMyPage ? userData?.cover?.url : currentUser?.cover?.url}
+              alt="User Cover"
+              fill
+            />
+          )}
+          {isMyPage && (
+            <div
+              className="editICo"
+              onClick={() => {
+                setOpenImgForm({
+                  type: "cover",
+                  event: isMyPage
+                    ? userData?.cover?.url
+                      ? "edit"
+                      : "add"
+                    : currentUser?.cover?.url
+                    ? "edit"
+                    : "add",
+                  userId: id,
+                  image: userData?.cover?.url,
+                });
+              }}
+            >
+              <MdModeEditOutline />
+            </div>
+          )}
         </div>
         <nav>
           <div className="top">
@@ -86,18 +108,43 @@ export default function User({ params }) {
               <div className="userImg rounded">
                 <Image
                   className="rounded"
-                  src={curentChat?.img || "/users/default.svg"}
+                  src={
+                    isMyPage
+                      ? userData?.img?.url || "/users/default.svg"
+                      : currentUser?.img?.url || "/users/default.svg"
+                  }
                   alt="User Cover"
                   fill
                 />
-                <div className="editICo rounded">
-                  <MdModeEditOutline />
-                </div>
+                {isMyPage && (
+                  <div
+                    className="editICo rounded"
+                    onClick={() => {
+                      setOpenImgForm({
+                        type: "img",
+                        event: isMyPage
+                          ? userData?.img?.url
+                            ? "edit"
+                            : "add"
+                          : currentUser?.img?.url
+                          ? "edit"
+                          : "add",
+                        userId: id,
+                        image: userData?.img?.url,
+                      });
+                    }}
+                  >
+                    <MdModeEditOutline />
+                  </div>
+                )}
               </div>
             </div>
             <div className="right">
               <div className="left-data">
-                <h4>{curentChat?.name}</h4>
+                <h4>
+                  {isMyPage ? userData?.firstname : currentUser?.firstname}{" "}
+                  {isMyPage ? userData?.lastname : currentUser?.lastname}
+                </h4>
                 <h5>
                   46 {translations?.portfolio?.friends} - 10{" "}
                   {translations?.portfolio?.mutual}
@@ -167,26 +214,64 @@ export default function User({ params }) {
         <div className="side-menu">
           {currentSelectedData !== "about" && (
             <ul className="about">
-              <div className="top">
-                <h4>{translations?.portfolio?.about}</h4>
-              </div>
-              <li>
-                {translations?.portfolio?.birthdate}: <span>19-12-2003</span>
-              </li>
-              <li>
-                {translations?.portfolio?.region}: <span>Egypt</span>
-              </li>
-              <li>
-                {translations?.portfolio?.current_location}:<span>Cairo</span>
-              </li>
-              <li>
-                {translations?.portfolio?.work}: <span>FrontEnd Developer</span>
-              </li>
+              <h4>{translations?.portfolio?.about}</h4>
+
+              {currentUser?.bio && (
+                <li>
+                  Bio: <span>{currentUser.bio}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.birthDate && (
+                <li>
+                  {translations?.portfolio?.birthdate}:{" "}
+                  <span>
+                    {new Date(currentUser.info.birthDate).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </span>
+                </li>
+              )}
+
+              {currentUser?.info?.region && (
+                <li>
+                  {translations?.portfolio?.region}:{" "}
+                  <span>{currentUser.info.region}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.current_location && (
+                <li>
+                  {translations?.portfolio?.current_location}:{" "}
+                  <span>{currentUser.info.current_location}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.work && (
+                <li>
+                  {translations?.portfolio?.work}:{" "}
+                  <span>{currentUser.info.work}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.college && (
+                <li>
+                  {translations?.portfolio?.college}:{" "}
+                  <span>{currentUser.info.college}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.languages && (
+                <li>
+                  {translations?.portfolio?.speaking_languages}:{" "}
+                  <span>{currentUser.info.languages}</span>
+                </li>
+              )}
             </ul>
           )}
           {currentSelectedData !== "photos" && (
             <div className="images">
-              <div className="top">
+              {/* <div className="top">
                 <h4> {translations?.portfolio?.photos}</h4>
                 {mediaMsgs?.length > 6 && (
                   <button onClick={() => setCurrentSelectedData("photos")}>
@@ -227,7 +312,7 @@ export default function User({ params }) {
                         }}
                       />
                     ))}
-              </div>
+              </div> */}
             </div>
           )}
           {currentSelectedData !== "friends" && (
@@ -297,114 +382,7 @@ export default function User({ params }) {
           )}
 
           {currentSelectedData === "posts" ? (
-            <div className="posts-holder">
-              {loading
-                ? Array.from({ length: 2 }).map((_, index) => (
-                    <div style={{ maxWidth: "700px" }}>
-                      <ContentLoader
-                        className="skeleton skeleton-post"
-                        width={600}
-                        height={350}
-                        speed={5}
-                        viewBox="0 0 600 350"
-                        backgroundColor="#E8E8E8"
-                        foregroundColor="#D5D5D5"
-                      >
-                        {/* Profile Picture */}
-                        <circle cx="35" cy="35" r="20" />
-                        {/* Name & Timestamp */}
-                        <rect
-                          x="65"
-                          y="20"
-                          rx="5"
-                          ry="5"
-                          width="120"
-                          height="12"
-                        />
-                        <rect
-                          x="65"
-                          y="38"
-                          rx="5"
-                          ry="5"
-                          width="100"
-                          height="10"
-                        />
-                        {/* Post Text */}
-                        <rect
-                          x="20"
-                          y="70"
-                          rx="5"
-                          ry="5"
-                          width="93%"
-                          height="10"
-                        />
-                        <rect
-                          x="20"
-                          y="90"
-                          rx="5"
-                          ry="5"
-                          width="500"
-                          height="10"
-                        />
-                        <rect
-                          x="20"
-                          y="110"
-                          rx="5"
-                          ry="5"
-                          width="520"
-                          height="10"
-                        />
-                        {/* Image Placeholder */}
-                        <rect
-                          x="20"
-                          y="140"
-                          rx="5"
-                          ry="5"
-                          width="93%"
-                          height="150"
-                        />
-                        {/* Footer (Likes, Comments, Shares) */}
-                        <rect
-                          x="20"
-                          y="310"
-                          rx="5"
-                          ry="5"
-                          width="30"
-                          height="10"
-                        />{" "}
-                        {/* Like Icon */}
-                        <rect
-                          x="60"
-                          y="310"
-                          rx="5"
-                          ry="5"
-                          width="20"
-                          height="10"
-                        />{" "}
-                        {/* Like Count */}
-                        <rect
-                          x="515"
-                          y="310"
-                          rx="5"
-                          ry="5"
-                          width="30"
-                          height="10"
-                        />{" "}
-                        {/* Comment Icon */}
-                        <rect
-                          x="555"
-                          y="310"
-                          rx="5"
-                          ry="5"
-                          width="20"
-                          height="10"
-                        />{" "}
-                        {/* Comment Count */}
-                      </ContentLoader>
-                    </div>
-                  ))
-                : posts.map((data, index) => <Post data={data} key={index} />)}
-            </div>
+            <PostsHolder type="user" id={id} />
           ) : currentSelectedData === "friends" ? (
             <div className="friends">
               {loading
@@ -447,7 +425,7 @@ export default function User({ params }) {
             </div>
           ) : currentSelectedData === "photos" ? (
             <div className="photos">
-              {loading
+              {/* {loading
                 ? Array.from({ length: 10 }).map((_, index) => (
                     <ContentLoader
                       width={120}
@@ -475,36 +453,63 @@ export default function User({ params }) {
                       fill
                       onClick={() => handleImageClick(x.id, index)}
                     />
-                  ))}
+                  ))} */}
             </div>
           ) : (
             <ul className="about">
               <h4>{translations?.portfolio?.about}</h4>
 
-              <li>
-                Bio:
-                <span>في ناس حطناهم فوق راسنا بس طلع المكان عالي عليهم</span>
-              </li>
-              <li>
-                {translations?.portfolio?.birthdate}: <span>19-12-2003</span>
-              </li>
-              <li>
-                {translations?.portfolio?.region}: <span>Egypt</span>
-              </li>
-              <li>
-                {translations?.portfolio?.current_location}: <span>Cairo</span>
-              </li>
-              <li>
-                {translations?.portfolio?.work}: <span>FrontEnd Developer</span>
-              </li>
-              <li>
-                {translations?.portfolio?.college}:{" "}
-                <span>Cairo University</span>
-              </li>
-              <li>
-                {translations?.portfolio?.speaking_languages}:{" "}
-                <span>Arabic, English</span>
-              </li>
+              {currentUser?.bio && (
+                <li>
+                  Bio: <span>{currentUser.bio}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.birthDate && (
+                <li>
+                  {translations?.portfolio?.birthdate}:{" "}
+                  <span>
+                    {new Date(currentUser.info.birthDate).toLocaleDateString(
+                      "en-GB"
+                    )}
+                  </span>
+                </li>
+              )}
+
+              {currentUser?.info?.region && (
+                <li>
+                  {translations?.portfolio?.region}:{" "}
+                  <span>{currentUser.info.region}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.current_location && (
+                <li>
+                  {translations?.portfolio?.current_location}:{" "}
+                  <span>{currentUser.info.current_location}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.work && (
+                <li>
+                  {translations?.portfolio?.work}:{" "}
+                  <span>{currentUser.info.work}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.college && (
+                <li>
+                  {translations?.portfolio?.college}:{" "}
+                  <span>{currentUser.info.college}</span>
+                </li>
+              )}
+
+              {currentUser?.info?.languages && (
+                <li>
+                  {translations?.portfolio?.speaking_languages}:{" "}
+                  <span>{currentUser.info.languages}</span>
+                </li>
+              )}
             </ul>
           )}
         </div>
