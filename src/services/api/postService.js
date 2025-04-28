@@ -3,12 +3,12 @@ import apiClient from "../apiClient";
 export const postService = {
   //! Posts
   getPosts: (page = 1, type = "", id = "") => {
-    const base = `/post`;
     const url =
-      type && id
-        ? `${base}/${type}/${id}?page=${page}&limit=4`
-        : `${base}/?page=${page}&limit=4`;
-
+      type === "page"
+        ? `/page/page/${id}?page=${page}&limit=4`
+        : type === "user"
+        ? `/post/user/${id}?page=${page}&limit=4`
+        : `/post/?page=${page}&limit=4`;
     return apiClient.get(url);
   },
   getSinglePost: (id) => {

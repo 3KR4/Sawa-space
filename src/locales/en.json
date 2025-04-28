@@ -196,6 +196,7 @@
     "discover_people": "discover people"
   },
   "portfolio": {
+    "bio":"bio",
     "all": "all",
     "message": "message",
     "friends": "friends",

@@ -51,10 +51,19 @@ function Post({ data, focused = false }) {
   const { handleMenus, setOpenUsersReact, selectedDev } =
     useContext(DynamicMenusContext);
   const { setMessageText } = useContext(InputActionsContext);
-  const { screenSize, userData } = useContext(ScreenContext);
+  const { screenSize, userData, userPage } = useContext(ScreenContext);
 
   const postId = data?._id;
-  const isMyPost = data?.author[0]?._id == userData?._id;
+  const isAuthorArray = Array.isArray(data?.author);
+  const author = isAuthorArray && data.author[0] ? data.author[0] : null;
+  const isPageArray = Array.isArray(data?.page);
+  const pagee = isPageArray && data.page[0] ? data.page[0] : null;
+
+  const isMyPost = author && author._id === userData?._id;
+  const isMyPage = pagee && pagee._id === userPage?._id;
+
+  // Determine post owner data (prioritize page over author)
+  const postOwnerData = pagee || author;
 
   const [currentPost, setCurrentPost] = useState(data || {});
   const [swiperRef, setSwiperRef] = useState(null);
@@ -337,8 +346,14 @@ function Post({ data, focused = false }) {
     </div>
   );
 
+
   return (
-    <div className={`post`} ref={postRef}>
+    <div
+      className={`post ${
+        currentPost?.isShared ? "focused-from-link post-highlight" : ""
+      }`}
+      ref={postRef}
+    >
       {!focused ? (
         !seeComments ? (
           <>
@@ -349,45 +364,53 @@ function Post({ data, focused = false }) {
                   src={
                     isMyPost
                       ? userData?.img?.url || "/users/default.svg"
-                      : currentPost?.author[0]?.img.url || "/users/default.svg"
+                      : isMyPage
+                      ? userPage?.img?.url || "/users/default.svg"
+                      : postOwnerData?.img.url || "/users/default.svg"
                   }
-                  alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname} img`}
+                  alt={`${
+                    postOwnerData?.firstname || postOwnerData?.pagename
+                  } ${postOwnerData?.lastname} img`}
                   width={40}
                   height={40}
                   onClick={(e) =>
-                    handleMenus(e, "user-Info", null, currentPost?.author[0])
+                    handleMenus(e, "user-Info", null, postOwnerData)
                   }
                 />
                 <div className="info">
                   <h5>
                     {isMyPost
                       ? `${userData?.firstname} ${userData?.lastname}`
-                      : `${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname}`}
+                      : isMyPage
+                      ? userPage?.pagename
+                      : author
+                      ? `${postOwnerData?.firstname} ${postOwnerData?.lastname}`
+                      : postOwnerData?.pagename}
                   </h5>
                   <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
                 </div>
-                {/* {currentPost?.creator == "page" ? (
-                <FaPager
-                  className="creatorType"
-                  onClick={(e) => handleMenus(e, "page-Info", currentPost?.user.id)}
-                />
-              ) : currentPost?.creator == "community" ? (
-                <FaUsers
-                  className="creatorType"
-                  onClick={(e) =>
-                    handleMenus(e, "community-Info", currentPost?.user.id)
-                  }
-                />
-              ) : null} */}
+                {pagee && (
+                  <FaPager
+                    className="creatorType"
+                    onClick={(e) => handleMenus(e, "page-Info", postOwnerData)}
+                  />
+                )}
+
+                {/* // currentPost?.creator == "community" ? (
+                //   <FaUsers
+                //     className="creatorType"
+                //     onClick={(e) =>
+                //       handleMenus(e, "community-Info", postOwnerData)
+                //     }
+                //   />
+                // ) : null} */}
               </div>
               <HiDotsVertical
                 className="settingDotsIco"
                 onClick={(e) => {
                   handleMenus(
                     e,
-                    currentPost?.creator === "page"
-                      ? "settingMenu-page-posts"
-                      : "settingMenu-post",
+                    pagee ? "settingMenu-page-posts" : "settingMenu-post",
                     currentPost?._id,
                     {
                       isMyPost,
@@ -467,7 +490,7 @@ function Post({ data, focused = false }) {
               {currentPost?.mentions?.length > 0 && (
                 <div className="mentions view">
                   <h5>
-                    {currentPost?.author[0]?.firstname} {""}{" "}
+                    {postOwnerData?.firstname} {""}{" "}
                     {translations?.post?.mention}
                   </h5>
                   {currentPost?.mentions?.map((x, index) => (
@@ -555,8 +578,8 @@ function Post({ data, focused = false }) {
                   <img
                     src={activeImg}
                     alt={
-                      currentPost?.author[0]
-                        ? `${currentPost?.author[0]?.firstname}'s image`
+                      postOwnerData
+                        ? `${postOwnerData?.firstname}'s image`
                         : "User image"
                     }
                   />
@@ -620,21 +643,19 @@ function Post({ data, focused = false }) {
                     src={
                       isMyPost
                         ? userData?.img?.url || "/users/default.svg"
-                        : currentPost?.author[0]?.img.url ||
-                          "/users/default.svg"
+                        : postOwnerData?.img.url || "/users/default.svg"
                     }
-                    alt={`${currentPost?.author[0]?.firstname} ${currentPost?.author[0]?.lastname}`}
+                    alt={`${postOwnerData?.firstname} ${postOwnerData?.lastname}`}
                     width={40}
                     height={40}
                     className={`rounded`}
                     onClick={(e) =>
-                      handleMenus(e, "user-Info", currentPost?.author[0]?._id)
+                      handleMenus(e, "user-Info", postOwnerData?._id)
                     }
                   />
                   <div className="info">
                     <h5>
-                      {currentPost?.author[0]?.firstname}{" "}
-                      {currentPost?.author[0]?.lastname}
+                      {postOwnerData?.firstname} {postOwnerData?.lastname}
                     </h5>
                     <span>{ConvertTime(currentPost?.data, locale)}</span>
                   </div>
@@ -681,8 +702,8 @@ function Post({ data, focused = false }) {
                       <img
                         src={activeImg}
                         alt={
-                          currentPost?.author[0]
-                            ? `${currentPost?.author[0]?.firstname}'s image`
+                          postOwnerData
+                            ? `${postOwnerData?.firstname}'s image`
                             : "User image"
                         }
                       />
@@ -747,8 +768,7 @@ function Post({ data, focused = false }) {
                 {currentPost?.mentions?.length > 0 && (
                   <div className="mentions view">
                     <h5>
-                      {currentPost?.author[0]?.firstname}{" "}
-                      {translations?.post?.mention}
+                      {postOwnerData?.firstname} {translations?.post?.mention}
                     </h5>
                     {currentPost?.mentions?.map((x, index) => (
                       <button

@@ -37,7 +37,7 @@ export default function Header() {
   const { setOpenPostForm, setOpenStoryForm, setSingleProvider } =
     useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
-  const { pathname, screenSize, userData, setUserData } =
+  const { pathname, screenSize, userData, userPage, setUserData } =
     useContext(ScreenContext);
 
   const [userMenu, setUserMenu] = useState(false);
@@ -144,15 +144,18 @@ export default function Header() {
           <button>
             <HiUsers /> {translations?.header?.creategroup}
           </button>
-          <button
-            onClick={() => {
-              setSingleProvider({
-                type: "page",
-              });
-            }}
-          >
-            <FaPager /> {translations?.header?.createpage}
-          </button>
+          {!userPage && (
+            <button
+              onClick={() => {
+                setSingleProvider({
+                  type: "page",
+                });
+              }}
+            >
+              <FaPager /> {translations?.header?.createpage}
+            </button>
+          )}
+
           <button>
             <FaUsers /> {translations?.header?.createcommunity}
           </button>
@@ -175,11 +178,20 @@ export default function Header() {
       />
       <FaUser className="x" /> <FaCaretDown className="angle" />
       <div className={`menu userMenu ${userMenu ? "active" : ""}`}>
-        <Link href={`/user/${userData?._id}`} className="title">
-          <FaUser style={{ fontSize: "22px" }} /> {userData?.firstname}{" "}
-          {userData?.lastname}
+        <Link href={`/portfolio/user/${userData?._id}`} className="title">
+          <FaUser style={{ fontSize: "22px" }} />
+          <span className="ellipsisText">
+            {userData?.firstname} {""} {userData?.lastname}
+          </span>
         </Link>
+
         <ul>
+          <button>
+            <Link href={`/portfolio/page/${userPage?._id}`} className="title">
+              <FaPager style={{ fontSize: "22px" }} />{" "}
+              <span className="ellipsisText">{userPage?.pagename}</span>
+            </Link>
+          </button>
           <button>
             <IoMdSettings /> {translations?.header?.settings_and_privacy}
           </button>

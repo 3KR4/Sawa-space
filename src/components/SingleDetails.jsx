@@ -69,7 +69,6 @@ function SingleDetails() {
     dataSwiperType,
     dataForSwiper,
     imgIndex,
-    setImgIndex,
     usersreactMenuRef,
     usersSelectionRef,
     setOpenStoryForm,
@@ -77,19 +76,17 @@ function SingleDetails() {
     closeImgHolderRef,
     singleProvider,
     setSingleProvider,
-    setsomeThingHappen,
     someThingHappen,
   } = useContext(MenusContext);
 
-  const { handleMenus, setOpenUsersReact } = useContext(DynamicMenusContext);
-  const { setMessageText, emojiHolderRef } = useContext(InputActionsContext);
+  const { handleMenus } = useContext(DynamicMenusContext);
+  const { emojiHolderRef } = useContext(InputActionsContext);
   const {
     pathname,
     screenSize,
     stories,
     userData,
     currentUserStory,
-    userPage,
     setUserPage,
   } = useContext(ScreenContext);
 
@@ -305,8 +302,6 @@ function SingleDetails() {
   const [pageName, setPageName] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
 
-  console.log(pageImage);
-
   const [pageInfo, setPageInfo] = useState([
     { key: "bio", value: "" },
     { key: "page category", value: "" },
@@ -388,7 +383,7 @@ function SingleDetails() {
         await pageService.page_img_cover("cover", formData);
       }
 
-      const getPageRes = await pageService.getPage(pageId);
+      const getPageRes = await pageService.getPageData(pageId);
       const updatedPage = getPageRes.data.data;
 
       setUserPage(updatedPage);
@@ -1036,9 +1031,9 @@ function SingleDetails() {
             )}
             {currentPagePosition === 2 && (
               <div className="hold adding-imgs">
-                <div className="top">
-                  <h4>{translations?.forms?.add_page_img_and_cover}</h4>
-                </div>
+                <h4 style={{ margin: "10px 0" }}>
+                  {translations?.forms?.add_page_img_and_cover}
+                </h4>
                 <ImageCropper
                   type={`img`}
                   imageURL={pageImageURL}
@@ -1132,7 +1127,7 @@ function SingleDetails() {
               <div className="cover">
                 {(pageCoverURL || pageCover) && (
                   <Image
-                    src={pageCoverURL || pageCover}
+                    src={pageCover && URL.createObjectURL(pageCover)}
                     alt="Page Cover"
                     fill
                   />
@@ -1146,7 +1141,10 @@ function SingleDetails() {
                     <div className="userImg rounded">
                       <Image
                         className="rounded"
-                        src={pageImageURL || pageImage || "/users/default.svg"}
+                        src={
+                          (pageImage && URL.createObjectURL(pageImage)) ||
+                          "/users/default.svg"
+                        }
                         alt="User Image"
                         fill
                       />
@@ -1193,38 +1191,45 @@ function SingleDetails() {
               <div className="side-menu">
                 <ul className="about">
                   <h4>{translations?.portfolio?.about}</h4>
-                  {pageInfo.map((info) => {
-                    return (
-                      <li
-                        key={info.key}
-                        className={info.key === "bio" ? "bio" : ""}
+
+                  <pre style={{ overflowWrap: "anywhere" }}>
+                    {pageInfo?.find((x) => x.key === "bio")?.value
+                      ? seeAllAbout
+                        ? pageInfo?.find((x) => x.key === "bio")?.value
+                        : pageInfo?.find((x) => x.key === "bio")?.value.length >
+                          165
+                        ? `${pageInfo
+                            ?.find((x) => x.key === "bio")
+                            ?.value.slice(0, 165)}... `
+                        : pageInfo?.find((x) => x.key === "bio")?.value
+                      : "your page details: ...................."}
+                    {pageInfo?.find((x) => x.key === "bio")?.value.length >
+                      165 && (
+                      <span
+                        onClick={() => setSeeAllAbout(!seeAllAbout)}
+                        className={`seeMore`}
                       >
-                        <strong>{info.key}:</strong>{" "}
-                        {info.key === "bio" ? (
-                          <pre style={{ overflowWrap: "anywhere" }}>
-                            {info.value
-                              ? seeAllAbout
-                                ? info?.value
-                                : info?.value.length > 165
-                                ? `${info?.value.slice(0, 165)}... `
-                                : info?.value
-                              : "N/A"}
-                            {info?.value.length > 165 && (
-                              <span
-                                onClick={() => setSeeAllAbout(!seeAllAbout)}
-                                className={`seeMore`}
-                              >
-                                {seeAllAbout ? "see less" : "see more"}
-                              </span>
-                            )}
-                          </pre>
-                        ) : (
-                          <span>{info.value || "N/A"}</span>
-                        )}
-                        {info.key === "bio" && <hr />}
-                      </li>
-                    );
-                  })}
+                        {seeAllAbout ? "see less" : "see more"}
+                      </span>
+                    )}
+                  </pre>
+
+                  {pageInfo
+                    .filter((x) => x.key !== "bio")
+                    .map((info) => {
+                      return (
+                        <li
+                          key={info.key}
+                          className={info.key === "bio" ? "bio" : ""}
+                        >
+                          <strong>{info.key || "field name"}:</strong>{" "}
+                          <span>
+                            {info.value || "..............................."}
+                          </span>
+                          {info.key === "bio" && <hr />}
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
 

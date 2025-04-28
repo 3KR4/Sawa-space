@@ -8,7 +8,7 @@ export const pageService = {
     return apiClient.put(`/page/${id}`, data);
   },
 
-  getPage: async (id) => {
+  getPageData: async (id) => {
     return apiClient.get(`/page/${id}`);
   },
 

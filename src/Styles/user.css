@@ -250,6 +250,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 .portfolio .bottom-holder .side-menu .about li span {
   font-weight: 500;
   font-size: 15px;
+  overflow-wrap: anywhere;
   color: var(--paragraph-color);
 }
 .portfolio .bottom-holder .side-menu .images .hold {
@@ -560,9 +561,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
     justify-content: center;
     gap: 7px;
   }
-  .portfolio .top .cover {
-    height: 160px;
-  }
+
   .portfolio nav .userImg {
     width: 125px;
     height: 125px;
@@ -620,6 +619,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   .portfolio .bigSection .grid-products {
     grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
   }
+
 }
 @media (max-width: 768px) {
   body > main > .holder:has(.portfolio) {

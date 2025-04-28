@@ -85,6 +85,22 @@ function PostsHolder(param) {
       document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
       setSomeThingHappen("");
     }
+    if (
+      someThingHappen?.type === "post" &&
+      someThingHappen?.event === "shared"
+    ) {
+      setPosts((prev) => {
+        const isAlreadyExist = prev.some(
+          (post) => post.id === someThingHappen.post.id
+        );
+        if (!isAlreadyExist) {
+          return [someThingHappen.post, ...prev];
+        }
+        return prev; // لا تضيفه لو كان موجود
+      });
+
+      setSomeThingHappen(""); // تنظيف بعد التحقق
+    }
     if (someThingHappen?.type === "post" && someThingHappen?.event === "edit") {
       setPosts((prev) =>
         prev.map((x) =>

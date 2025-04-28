@@ -86,8 +86,6 @@ export const ScreenProvider = ({ children }) => {
     }
   };
 
-  console.log(userData);
-
   const [stories, setStories] = useState([]);
   const [storyloading, setStoryloading] = useState(false);
   const [currentUserStory, setCurrentUserStory] = useState({});
@@ -140,11 +138,19 @@ export const ScreenProvider = ({ children }) => {
 
         const post = data?.data?.[0];
         if (post) {
-          setSingleProvider({
-            type: "post",
-            sharing_data: post,
-            focused_img_index: index,
-          });
+          if (post.img.length > 0) {
+            setSingleProvider({
+              type: "post",
+              sharing_data: post,
+              focused_img_index: index,
+            });
+          } else {
+            setSomeThingHappen({
+              type: "post",
+              event: "shared",
+              post: { ...data?.data?.[0], isShared: true },
+            });
+          }
         } else {
           addNotification({
             type: "warning",

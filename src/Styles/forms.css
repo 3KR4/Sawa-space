@@ -1489,6 +1489,7 @@ body.ar .imgForm .actions .row {
 
 .create-page .sideSection {
   max-width: 415px;
+  min-width: 414px;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -1671,6 +1672,28 @@ body.ar .imgForm .actions .row {
     width: 100px;
     height: 100px;
   }
+  .create-page0 .portfolio nav .main-button {
+    padding: 8px 17px !important;
+  }
+  .create-page .portfolio .bottom-holder {
+    flex-direction: column !important;
+  }
+  .create-page {
+    flex-direction: column;
+    align-items: center;
+  }
+  .create-page .sideSection {
+    max-width: unset;
+    width: 100%;
+    overflow: unset;
+    min-width: unset;
+  }
+  .create-page .portfolio {
+    overflow: unset;
+  }
+  body .sideSection + div {
+    width: 100%;
+  }
 }
 @media (max-width: 768px) {
   .register-page {
@@ -1774,5 +1797,9 @@ body.ar .imgForm .actions .row {
     right: unset;
     top: unset;
     align-self: center;
+  }
+  .create-page {
+    overflow: auto;
+    overflow-x: hidden;
   }
 }

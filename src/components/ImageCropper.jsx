@@ -142,7 +142,7 @@ export default function ImageCropper({
             onClick={() => inputRef.current.click()}
           >
             <FaCloudUploadAlt size={48} />
-            <p>Click to upload</p>
+            <p>Click to upload {type}</p>
           </div>
         </div>
       )}

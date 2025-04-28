@@ -1303,6 +1303,7 @@ header .events .menu > .title {
   align-items: center;
   gap: 7px;
   transition: 0.3s;
+  font-weight: 500;
 }
 body.ar header .events .createMenu > .title {
   justify-content: flex-end;
@@ -1338,6 +1339,30 @@ header .events .menu button {
 }
 header .events .menu button:hover {
   background: var(--border-color);
+}
+
+header .events .menu button a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.3s;
+  width: 100%;
+}
+header .events .menu button a svg {
+  transform: translateY(1px);
+}
+header .events .menu button:has(a):hover {
+  background: var(--main-color);
+}
+header .events .menu button:hover a,
+header .events .menu button:hover a svg {
+  color: white !important;
+}
+header .events .menu button a span {
+  text-align: left;
+}
+body.ar header .events .menu button a span {
+  text-align: right;
 }
 header .events .menu svg {
   font-size: 24px;
@@ -1390,6 +1415,9 @@ header .events .menu.createMenu svg {
   overflow: hidden;
   background: var(--body-color);
   z-index: 1;
+}
+.post.focused-from-link {
+  border: 1px solid #ff8e3163;
 }
 .post .noCommentsYet {
   display: flex;
@@ -4187,4 +4215,74 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
 @media (max-width: 500px) {
 }
 @media (max-width: 360px) {
+}
+
+.post {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.post.focused-from-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ff8e31;
+  animation: borderGrow 1.2s linear;
+  animation-fill-mode: forwards; /* هنا الإضافة */
+  z-index: 10;
+}
+
+/* وغير شوي الـ keyframes */
+
+.post.focused-from-link::after {
+    content: "";
+    position: absolute;
+    inset: 0px;
+    background: linear-gradient(165deg, rgb(255 115 0 / 24%) -62%, rgba(255, 142, 49, 0) 60%);
+    animation: 1.5s linear 0s 1 normal none running fadeBackground;
+    z-index: -1;
+}
+
+@keyframes borderGrow {
+  0% {
+    width: 0%;
+    left: 0%;
+  }
+  50% {
+    width: 100%;
+    left: 0%;
+  }
+  100% {
+    width: 0%;
+    left: 100%; /* مو 50% */
+  }
+}
+
+@keyframes fadeBackground {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.post-highlight {
+  animation: gentlePulse 1.5s ease-in-out;
+}
+
+@keyframes gentlePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 142, 49, 0.3);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 142, 49, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 142, 49, 0);
+  }
 }
