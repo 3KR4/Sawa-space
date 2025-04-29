@@ -406,6 +406,7 @@ form {
 form .rowHolder {
   display: flex;
   gap: 9px;
+  flex-direction: row !important;
 }
 form .inputHolder {
   width: 100%;
@@ -829,7 +830,9 @@ body.ar .focusedMsg .body .top {
   padding-right: unset;
   padding-left: 20px;
 }
-
+.focusedMsg .body .adding-info .top {
+  margin: 0;
+}
 .focusedMsg .body > div {
   display: flex;
   flex-direction: column;
@@ -1310,7 +1313,10 @@ body.ar .storyForm .setting-holder .main-title {
 .Date-Picker {
   height: 49px;
   border-radius: 7px;
-  background: var(--border-color);
+  background: var(--section-color);
+}
+.editProfile .Date-Picker {
+  height: 47px;
 }
 
 .dangerEvent {
@@ -1474,7 +1480,7 @@ body.ar .imgForm .actions .row {
   flex-direction: column;
   gap: 6px;
 }
-.create-page .holder input {
+.adding-info input {
   flex: 1;
   border: 0.5px solid var(--border-color);
   padding: 12px;
@@ -1482,7 +1488,7 @@ body.ar .imgForm .actions .row {
   font-weight: 600;
   background: var(--section-color);
 }
-.create-page .holder input.key {
+.adding-info input.key {
   color: var(--title-color);
 }
 
@@ -1493,24 +1499,30 @@ body.ar .imgForm .actions .row {
   flex-direction: column;
   overflow: auto;
 }
-.create-page .sideSection .holder svg {
+.adding-info .holder svg {
   padding: 11px;
   height: 100%;
   width: 41px;
   color: var(--red-color);
   border: 0.5px solid var(--border-color);
+  border-radius: 7px !important;
 }
-.create-page .sideSection .holder svg:hover {
+.adding-info .holder svg:hover {
   color: white;
   background: var(--red-color);
 }
-.create-page .sideSection .row .top {
+.adding-info .row .top {
   padding-bottom: 0;
+  gap: 7px;
 }
-.create-page .adding-info {
+.adding-info {
   gap: 9px !important;
+  width: 100%;
 }
-.create-page .adding-info .error {
+.editProfile > * {
+  overflow: unset !important;
+}
+.adding-info .error {
   font-size: 15px;
   color: var(--red-color);
   margin: 5px auto;
@@ -1580,14 +1592,15 @@ body.ar .imgForm .actions .row {
 .sideSection .adding-info .top button:hover svg {
   color: white;
 }
-.create-page .adding-info .row {
+.adding-info .row {
   width: 100%;
   display: flex;
   gap: 8px;
   flex-direction: column;
 }
-.create-page .adding-info .row .holder {
+.adding-info .row .holder {
   flex-direction: row;
+  display: flex;
 }
 .create-page .bottom {
   margin-top: auto;
@@ -1712,7 +1725,7 @@ body.ar .imgForm .actions .row {
     width: 100%;
   }
   form .rowHolder {
-    flex-direction: column;
+    flex-direction: column !important;
   }
   .register-page .btns .main-button {
     height: 40px;

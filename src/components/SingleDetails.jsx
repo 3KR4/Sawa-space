@@ -890,7 +890,7 @@ function SingleDetails() {
                   setSingleProvider({});
                 }}
               />
-              <h3>{translations?.header.createpage}</h3>
+              <h3>{translations?.header?.createpage}</h3>
             </div>
             {currentPagePosition === 0 && (
               <div className="hold ">

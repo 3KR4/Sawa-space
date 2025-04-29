@@ -10,7 +10,9 @@ import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import "@/Styles/user.css";
+import "@/Styles/forms.css";
 import PostsHolder from "@/components/post/PostsHolder";
+import EditProfileForm from "@/components/forms/EditProfileForm";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { userService } from "@/services/api/userService";
@@ -42,6 +44,7 @@ export default function Portfolio({ params }) {
   const [currentSelectedData, setCurrentSelectedData] = useState("posts");
   const [loading, setLoading] = useState(true);
   const [seeAllAbout, setSeeAllAbout] = useState(false);
+  const [editType, setEditType] = useState(null);
 
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -187,7 +190,10 @@ export default function Portfolio({ params }) {
               </div>
               <div className="right-btns">
                 {isMyPage || isMyProfile ? (
-                  <button className="main-button edit-btn">
+                  <button
+                    className="main-button edit-btn"
+                    onClick={() => setEditType(type)}
+                  >
                     <MdEdit />{" "}
                     {isMyProfile
                       ? translations?.actions?.edit_profile
@@ -804,6 +810,7 @@ export default function Portfolio({ params }) {
           )}
         </div>
       </div>
+      <EditProfileForm editType={editType} setEditType={setEditType} />
     </div>
   );
 }

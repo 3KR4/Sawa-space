@@ -491,6 +491,25 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   color: var(--paragraph-color);
 }
 
+.portfolio .inputHolder input:focus,
+.portfolio .inputHolder input:not(:placeholder-shown) {
+  padding: 10px 16px 10px 40px !important;
+}
+body.ar .portfolio .inputHolder input:focus,
+body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
+  padding: 10px 40px 10px 16px !important;
+}
+.portfolio .focusedMsg.FormMenu .add-btn {
+  padding: 7px 12px !important;
+  font-size: 13px;
+}
+.portfolio .focusedMsg.FormMenu .add-btn svg {
+  width: unset;
+  height: unset;
+  padding: 0;
+  background: transparent;
+}
+
 @media (min-width: 1700px) {
   .portfolio .posts-holder .post .images.small img {
     max-height: 450px;
