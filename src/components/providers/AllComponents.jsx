@@ -8,6 +8,7 @@ import UsersSelection from "@/components/UsersSelection";
 import PostForm from "@/components/forms/PostForm";
 import ImgForm from "@/components/forms/ImgForm";
 import DangerEvent from "@/components/forms/DangerEvent";
+import EditProfileForm from "@/components/forms/EditProfileForm";
 import SingleDetails from "@/components/SingleDetails";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/providers/SettingMenu";

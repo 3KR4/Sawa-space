@@ -889,7 +889,6 @@ body.ar .focusedMsg .body > div > h4 {
   font-size: 95px;
   transition: opacity 0.5s, font-size 0.3s;
   color: var(--main-color);
-  margin-bottom: -7px;
 }
 .productImages:has(.uploaded) .uploadlabel svg {
   font-size: 80px;

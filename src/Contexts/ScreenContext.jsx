@@ -7,6 +7,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useSearchParams } from "next/navigation";
 import { postService } from "@/services/api/postService";
 import { userService } from "@/services/api/userService";
+import { pageService } from "@/services/api/pageService";
 
 export const ScreenContext = createContext();
 
@@ -51,6 +52,8 @@ export const ScreenProvider = ({ children }) => {
     return null;
   });
 
+  console.log(userData);
+
   useEffect(() => {
     if (userData) {
       localStorage.setItem("user", JSON.stringify(userData));
@@ -71,10 +74,15 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [userPage]);
 
-  const getUser = async () => {
+  const getUser = async (type = "user") => {
     try {
-      const { data } = await userService.getUserData(userData?._id);
-      setUserData(data.data);
+      if (type == "user") {
+        const { data } = await userService.getUserData(userData?._id);
+        setUserData(data.data);
+      } else {
+        const { data } = await pageService.getPageData(userPage?._id);
+        setUserPage(data.data);
+      }
     } catch (err) {
       console.error("Error fetching stories", err);
       addNotification({
@@ -148,7 +156,7 @@ export const ScreenProvider = ({ children }) => {
             setSomeThingHappen({
               type: "post",
               event: "shared",
-              post: { ...data?.data?.[0], isShared: true },
+              post: { ...post, isShared: true },
             });
           }
         } else {

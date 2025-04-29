@@ -8,6 +8,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { postService } from "@/services/api/postService";
 import { userService } from "@/services/api/userService";
+import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 
@@ -94,21 +95,24 @@ function DangerEvent() {
       setDangerEvent(null);
     }
   };
-
-  const deleteUserImg = async () => {
+  console.log(dangerEvent);
+  const deleteImg = async () => {
     setLoading(true);
     try {
-      const res = await userService.delete_img_cover(
-        openImgForm.userId,
-        openImgForm.type
-      );
-      console.log("delete_img_cover", res);
+      if (dangerEvent.for === "user") {
+        await userService.delete_img_cover(
+          openImgForm.userId,
+          openImgForm.type
+        );
+      } else {
+        await pageService.deletePage_img_cover(openImgForm.type);
+      }
 
       addNotification({
         type: "success",
         message: "Image deleted successfully.",
       });
-      await getUser();
+      await getUser(dangerEvent.for);
     } catch (err) {
       console.log(err);
       addNotification({ type: "error", message: "Failed to delete image." });
@@ -122,7 +126,7 @@ function DangerEvent() {
   const deleteHandlers = {
     delete_comment: deleteComment,
     delete_story: deleteStory,
-    delete_img: deleteUserImg,
+    delete_img: deleteImg,
   };
 
   const handleDelete = () => {

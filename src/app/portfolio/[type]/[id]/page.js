@@ -3,7 +3,7 @@ import React, { useState, use, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CutText from "@/utils/CutText";
-import { messages, users, posts } from "@/utils/Data";
+import { messages, users, products } from "@/utils/Data";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import Post from "@/components/post/Post";
@@ -16,29 +16,23 @@ import { useNotification } from "@/Contexts/NotificationContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 
-import { FaAngleRight } from "react-icons/fa";
-import { MdModeEditOutline } from "react-icons/md";
+import { FaAngleRight, FaShoppingCart } from "react-icons/fa";
+import { MdModeEditOutline, MdEdit } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
-import { IoSearch, IoClose } from "react-icons/io5";
 import { IoMdPersonAdd } from "react-icons/io";
 import { AiFillMessage } from "react-icons/ai";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 import { IoMdPhotos } from "react-icons/io";
-import { FaRegTrashCan } from "react-icons/fa6";
-import { IoPersonRemoveSharp } from "react-icons/io5";
-import { MdBlock } from "react-icons/md";
-
 import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage } = useContext(ScreenContext);
-  const { openImgForm, setOpenImgForm } = useContext(MenusContext);
+  const { userData, userPage, screenSize } = useContext(ScreenContext);
+  const { setOpenImgForm } = useContext(MenusContext);
 
-  const { handleMenus, settingMenu } = useContext(DynamicMenusContext);
-
+  const { handleMenus } = useContext(DynamicMenusContext);
   const { id, type } = use(params);
 
   const isMyProfile = type === "user" ? userData?._id === id : null;
@@ -79,6 +73,8 @@ export default function Portfolio({ params }) {
     fetchPortfolioData();
   }, [id, type]);
 
+  console.log(currentPortfolio);
+
   return (
     <div
       className={`portfolio ${type} ${isMyProfile ? "myProfile" : ""} ${
@@ -87,19 +83,17 @@ export default function Portfolio({ params }) {
     >
       <div className="top">
         <div className="cover">
-          {currentPortfolio?.cover?.url && (
-            <Image
-              src={
-                isMyProfile
-                  ? userData?.cover?.url
-                  : isMyPage
-                  ? userPage?.cover?.url
-                  : currentPortfolio?.cover?.url
-              }
-              alt="User Cover"
-              fill
-            />
-          )}
+          <Image
+            src={
+              isMyProfile
+                ? userData?.cover?.url
+                : isMyPage
+                ? userPage?.cover?.url
+                : currentPortfolio?.cover?.url
+            }
+            alt="User Cover"
+            fill
+          />
           {(isMyProfile || isMyPage) && (
             <div
               className="editICo"
@@ -111,7 +105,7 @@ export default function Portfolio({ params }) {
                     ? userData?.cover?.url
                       ? "edit"
                       : "add"
-                    : isMyPage?.cover?.url
+                    : userPage?.cover?.url
                     ? "edit"
                     : "add",
                   userId: id,
@@ -135,6 +129,8 @@ export default function Portfolio({ params }) {
                   src={
                     isMyProfile
                       ? userData?.img?.url || "/users/default.svg"
+                      : isMyPage
+                      ? userPage?.img?.url || "/users/default.svg"
                       : currentPortfolio?.img?.url || "/users/default.svg"
                   }
                   alt="User Cover"
@@ -151,7 +147,7 @@ export default function Portfolio({ params }) {
                           ? userData?.img?.url
                             ? "edit"
                             : "add"
-                          : isMyPage?.img?.url
+                          : userPage?.img?.url
                           ? "edit"
                           : "add",
                         userId: id,
@@ -191,8 +187,11 @@ export default function Portfolio({ params }) {
               </div>
               <div className="right-btns">
                 {isMyPage || isMyProfile ? (
-                  <button className="main-button">
-                    ✏️ {translations?.actions?.edit}
+                  <button className="main-button edit-btn">
+                    <MdEdit />{" "}
+                    {isMyProfile
+                      ? translations?.actions?.edit_profile
+                      : translations?.actions?.edit_page}
                   </button>
                 ) : type === "page" ? (
                   <button className="main-button">
@@ -277,6 +276,15 @@ export default function Portfolio({ params }) {
                   {translations?.sidechats?.friends}
                 </button>
               )}
+              <button
+                className={`main-button ${
+                  currentSelectedData == "products" ? "active" : ""
+                }`}
+                onClick={() => setCurrentSelectedData("products")}
+              >
+                <FaShoppingCart />
+                {translations?.portfolio?.products}
+              </button>
 
               <button
                 className={`main-button ${
@@ -313,116 +321,129 @@ export default function Portfolio({ params }) {
         </nav>
       </div>
       <div className="bottom-holder">
-        <div className="side-menu">
-          {currentSelectedData !== "about" && (
-            <ul className="about">
-              <h4>{translations?.portfolio?.about}</h4>
+        {currentSelectedData !== "products" && (
+          <div className="side-menu sideSection">
+            {currentSelectedData !== "about" && (
+              <ul className="about">
+                <h4>{translations?.portfolio?.about}</h4>
 
-              {currentPortfolio?.info?.bio &&
-                (type === "page" ? (
-                  <li style={{ display: "block" }}>
-                    {seeAllAbout
-                      ? currentPortfolio?.info?.find(key === "bio")?.value
-                      : currentPortfolio?.info?.find(key === "bio")?.value
-                          .length > 165
-                      ? `${currentPortfolio?.info
-                          ?.find(key === "bio")
-                          ?.value.slice(0, 165)}... `
-                      : currentPortfolio?.info?.find(key === "bio")?.value}
+                {currentPortfolio?.info && (
+                  <>
+                    {type === "page"
+                      ? () => {
+                          const bioItem = currentPortfolio?.info?.bio;
+                          if (!bioItem) return null;
 
-                    {currentPortfolio?.info?.bio.length > 165 && (
-                      <span
-                        onClick={() => setSeeAllAbout(!seeAllAbout)}
-                        className={`seeMore`}
-                      >
-                        {seeAllAbout ? "see less" : "see more"}
-                      </span>
+                          return (
+                            <li style={{ display: "block" }}>
+                              {seeAllAbout
+                                ? bioItem
+                                : bioItem.length > 165
+                                ? `${bioItem.slice(0, 165)}... `
+                                : bioItem}
+
+                              {bioItem.length > 165 && (
+                                <span
+                                  onClick={() => setSeeAllAbout(!seeAllAbout)}
+                                  className="seeMore"
+                                >
+                                  {seeAllAbout ? "see less" : "see more"}
+                                </span>
+                              )}
+                            </li>
+                          );
+                        }
+                      : currentPortfolio?.info?.bio && (
+                          <li style={{ display: "block" }}>
+                            {seeAllAbout
+                              ? currentPortfolio?.info?.bio
+                              : `${currentPortfolio?.info?.bio.slice(
+                                  0,
+                                  165
+                                )}... `}
+
+                            {currentPortfolio?.info?.bio.length > 165 && (
+                              <span
+                                onClick={() => setSeeAllAbout(!seeAllAbout)}
+                                className="seeMore"
+                              >
+                                {seeAllAbout ? "see less" : "see more"}
+                              </span>
+                            )}
+                          </li>
+                        )}
+                    {/* OTHER INFO */}
+                    {type === "user" && (
+                      <>
+                        {currentPortfolio?.info?.birthDate && (
+                          <li>
+                            {translations?.portfolio?.birthdate}:{" "}
+                            <span>
+                              {new Date(
+                                currentPortfolio?.info?.birthDate
+                              ).toLocaleDateString("en-GB")}
+                            </span>
+                          </li>
+                        )}
+
+                        {currentPortfolio?.info?.region && (
+                          <li>
+                            {translations?.portfolio?.region}:{" "}
+                            <span>{currentPortfolio?.info?.region}</span>
+                          </li>
+                        )}
+
+                        {currentPortfolio?.info?.current_location && (
+                          <li>
+                            {translations?.portfolio?.current_location}:{" "}
+                            <span>
+                              {currentPortfolio?.info?.current_location}
+                            </span>
+                          </li>
+                        )}
+
+                        {currentPortfolio?.info?.work && (
+                          <li>
+                            {translations?.portfolio?.work}:{" "}
+                            <span>{currentPortfolio?.info?.work}</span>
+                          </li>
+                        )}
+
+                        {currentPortfolio?.info?.college && (
+                          <li>
+                            {translations?.portfolio?.college}:{" "}
+                            <span>{currentPortfolio?.info?.college}</span>
+                          </li>
+                        )}
+
+                        {currentPortfolio?.info?.languages && (
+                          <li>
+                            {translations?.portfolio?.speaking_languages}:{" "}
+                            <span>{currentPortfolio?.info?.languages}</span>
+                          </li>
+                        )}
+                      </>
                     )}
-                  </li>
-                ) : (
-                  <li style={{ display: "block" }}>
-                    {seeAllAbout
-                      ? currentPortfolio?.info?.bio
-                      : `${currentPortfolio?.info?.bio.slice(0, 165)}... `}
-                    {currentPortfolio?.info?.bio.length > 165 && (
-                      <span
-                        onClick={() => setSeeAllAbout(!seeAllAbout)}
-                        className={`seeMore`}
-                      >
-                        {seeAllAbout ? "see less" : "see more"}
-                      </span>
-                    )}
-                  </li>
-                ))}
-
-              {type === "user" && (
-                <>
-                  {currentPortfolio?.info?.birthDate && (
-                    <li>
-                      {translations?.portfolio?.birthdate}:{" "}
-                      <span>
-                        {new Date(
-                          currentPortfolio.info.birthDate
-                        ).toLocaleDateString("en-GB")}
-                      </span>
-                    </li>
-                  )}
-
-                  {currentPortfolio?.info?.region && (
-                    <li>
-                      {translations?.portfolio?.region}:{" "}
-                      <span>{currentPortfolio.info.region}</span>
-                    </li>
-                  )}
-
-                  {currentPortfolio?.info?.current_location && (
-                    <li>
-                      {translations?.portfolio?.current_location}:{" "}
-                      <span>{currentPortfolio.info.current_location}</span>
-                    </li>
-                  )}
-
-                  {currentPortfolio?.info?.work && (
-                    <li>
-                      {translations?.portfolio?.work}:{" "}
-                      <span>{currentPortfolio.info.work}</span>
-                    </li>
-                  )}
-
-                  {currentPortfolio?.info?.college && (
-                    <li>
-                      {translations?.portfolio?.college}:{" "}
-                      <span>{currentPortfolio.info.college}</span>
-                    </li>
-                  )}
-
-                  {currentPortfolio?.info?.languages && (
-                    <li>
-                      {translations?.portfolio?.speaking_languages}:{" "}
-                      <span>{currentPortfolio.info.languages}</span>
-                    </li>
-                  )}
-                </>
-              )}
-
-              {type === "page" &&
-                currentPortfolio?.info
-                  ?.filter((x) => x.key !== "bio")
-                  .map((x, index) => (
-                    <li key={index}>
-                      {x.key}:{" "}
-                      {x.key === "website" ? (
-                        <Link href={x.value}>{x.value}</Link>
-                      ) : (
-                        <span>{x.value}</span>
-                      )}
-                    </li>
-                  ))}
-            </ul>
-          )}
-          {currentSelectedData !== "photos" && (
-            <div className="images">
-              {/* <div className="top">
+                    {type === "page" &&
+                      Object.entries(currentPortfolio?.info || {})
+                        .filter(([key]) => key !== "bio")
+                        .map(([key, value], index) => (
+                          <li key={index}>
+                            {key}:{" "}
+                            {key === "website" ? (
+                              <Link href={value}>{value}</Link>
+                            ) : (
+                              <span>{value}</span>
+                            )}
+                          </li>
+                        ))}
+                  </>
+                )}
+              </ul>
+            )}
+            {currentSelectedData !== "photos" && (
+              <div className="images">
+                {/* <div className="top">
                 <h4> {translations?.portfolio?.photos}</h4>
                 {mediaMsgs?.length > 6 && (
                   <button onClick={() => setCurrentSelectedData("photos")}>
@@ -464,65 +485,114 @@ export default function Portfolio({ params }) {
                       />
                     ))}
               </div> */}
-            </div>
-          )}
-          {currentSelectedData !== "friends" && (
-            <div className="holder friends">
-              <div className="top">
-                <h4>
-                  {type === "user"
-                    ? translations?.sidechats?.friends
-                    : translations?.portfolio?.followers}
-                </h4>
-                {users?.length > 6 && (
-                  <button onClick={() => setCurrentSelectedData("friends")}>
-                    {translations?.portfolio?.see_all}{" "}
-                    {translations?.sidechats?.friends} <FaAngleRight />
-                  </button>
-                )}
               </div>
-              <div className="hold">
-                {loading
-                  ? Array.from({ length: 6 }).map((_, index) => (
-                      <ContentLoader
-                        width={120}
-                        height={120}
-                        speed={4}
-                        viewBox="0 0 120 120"
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                      >
-                        <rect
-                          x="160"
-                          y="120"
-                          rx="3"
-                          ry="3"
-                          width="100%"
-                          height="120"
-                        />
-                      </ContentLoader>
-                    ))
-                  : users?.slice(0, 6).map((x) => (
-                      <div
-                        key={x.id}
-                        className="chat"
-                        onClick={(e) => handleMenus(e, "user-Info", x.id)}
-                      >
+            )}
+            {currentSelectedData !== "products" && (
+              <div className="images">
+                <div className="top">
+                  <h4> {translations?.portfolio?.products}</h4>
+                  {products?.length > 6 && (
+                    <button onClick={() => setCurrentSelectedData("products")}>
+                      {translations?.portfolio?.see_all}{" "}
+                      {translations?.portfolio?.products} <FaAngleRight />
+                    </button>
+                  )}
+                </div>
+                <div className="hold">
+                  {loading
+                    ? Array.from({ length: 6 }).map((_, index) => (
+                        <ContentLoader
+                          width={120}
+                          height={120}
+                          speed={4}
+                          viewBox="0 0 120 120"
+                          backgroundColor="#f3f3f3"
+                          foregroundColor="#ecebeb"
+                        >
+                          <rect
+                            x="160"
+                            y="120"
+                            rx="3"
+                            ry="3"
+                            width="100%"
+                            height="120"
+                          />
+                        </ContentLoader>
+                      ))
+                    : products.slice(0, 6).map((x, index) => (
                         <Image
-                          className="rounded"
-                          src={x.img || "/users/default.svg"}
+                          key={index}
+                          src={x.images[0]}
+                          alt=""
                           fill
-                          alt={`user Image`}
+                          style={{ objectFit: "contain" }}
+                          onClick={() => {
+                            handleImageClick(x.id, index);
+                          }}
                         />
-                        <div className="name-lastmessage">
-                          <h4>{x.name}</h4>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+            {type !== "page" && currentSelectedData !== "friends" && (
+              <div className="holder friends">
+                <div className="top">
+                  <h4>
+                    {type === "user"
+                      ? translations?.sidechats?.friends
+                      : translations?.portfolio?.followers}
+                  </h4>
+                  {users?.length > 6 && (
+                    <button onClick={() => setCurrentSelectedData("friends")}>
+                      {translations?.portfolio?.see_all}{" "}
+                      {translations?.sidechats?.friends} <FaAngleRight />
+                    </button>
+                  )}
+                </div>
+                <div className="hold">
+                  {loading
+                    ? Array.from({ length: 6 }).map((_, index) => (
+                        <ContentLoader
+                          width={120}
+                          height={120}
+                          speed={4}
+                          viewBox="0 0 120 120"
+                          backgroundColor="#f3f3f3"
+                          foregroundColor="#ecebeb"
+                        >
+                          <rect
+                            x="160"
+                            y="120"
+                            rx="3"
+                            ry="3"
+                            width="100%"
+                            height="120"
+                          />
+                        </ContentLoader>
+                      ))
+                    : users?.slice(0, 6).map((x) => (
+                        <div
+                          key={x.id}
+                          className="chat"
+                          onClick={(e) => handleMenus(e, "user-Info", x.id)}
+                        >
+                          <Image
+                            className="rounded"
+                            src={x.img || "/users/default.svg"}
+                            fill
+                            alt={`user Image`}
+                          />
+                          <div className="name-lastmessage">
+                            <h4>{x.name}</h4>
+                          </div>
+                        </div>
+                      ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="bigSection">
           {currentSelectedData !== "about" && (
             <div className="actions">
@@ -535,10 +605,10 @@ export default function Portfolio({ params }) {
               <button>Sort by Time</button>
             </div>
           )}
-
           {currentSelectedData === "posts" ? (
             <PostsHolder type={type} id={id} />
-          ) : currentSelectedData === "friends" ? (
+          ) : currentSelectedData === "friends" ||
+            currentSelectedData === "followers" ? (
             <div className="friends">
               {loading
                 ? Array.from({ length: 10 }).map((_, index) => (
@@ -610,6 +680,38 @@ export default function Portfolio({ params }) {
                     />
                   ))} */}
             </div>
+          ) : currentSelectedData === "photos" ? (
+            <div className="photos">
+              {/* {loading
+                ? Array.from({ length: 10 }).map((_, index) => (
+                    <ContentLoader
+                      width={120}
+                      height={120}
+                      speed={4}
+                      viewBox="0 0 120 120"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                    >
+                      <rect
+                        x="160"
+                        y="120"
+                        rx="3"
+                        ry="3"
+                        width="100%"
+                        height="120"
+                      />
+                    </ContentLoader>
+                  ))
+                : mediaMsgs.map((x, index) => (
+                    <Image
+                      key={index}
+                      src={x.img}
+                      alt=""
+                      fill
+                      onClick={() => handleImageClick(x.id, index)}
+                    />
+                  ))} */}
+            </div>
           ) : (
             <ul className="about">
               <h4>{translations?.portfolio?.about}</h4>
@@ -618,7 +720,7 @@ export default function Portfolio({ params }) {
                 currentPortfolio?.info?.find((x) => x.key === "bio")) &&
                 (type === "page" ? (
                   <pre style={{ display: "block" }}>
-                    {currentPortfolio?.info?.find(key === "bio")?.value}
+                    {currentPortfolio?.info?.bio}
                   </pre>
                 ) : (
                   <pre style={{ display: "block" }}>
@@ -633,7 +735,7 @@ export default function Portfolio({ params }) {
                       {translations?.portfolio?.birthdate}:{" "}
                       <span>
                         {new Date(
-                          currentPortfolio.info.birthDate
+                          currentPortfolio?.info?.birthDate
                         ).toLocaleDateString("en-GB")}
                       </span>
                     </li>
@@ -642,50 +744,59 @@ export default function Portfolio({ params }) {
                   {currentPortfolio?.info?.region && (
                     <li>
                       {translations?.portfolio?.region}:{" "}
-                      <span>{currentPortfolio.info.region}</span>
+                      <span>{currentPortfolio?.info?.region}</span>
                     </li>
                   )}
 
                   {currentPortfolio?.info?.current_location && (
                     <li>
                       {translations?.portfolio?.current_location}:{" "}
-                      <span>{currentPortfolio.info.current_location}</span>
+                      <span>{currentPortfolio?.info?.current_location}</span>
                     </li>
                   )}
 
                   {currentPortfolio?.info?.work && (
                     <li>
                       {translations?.portfolio?.work}:{" "}
-                      <span>{currentPortfolio.info.work}</span>
+                      <span>{currentPortfolio?.info?.work}</span>
                     </li>
                   )}
 
                   {currentPortfolio?.info?.college && (
                     <li>
                       {translations?.portfolio?.college}:{" "}
-                      <span>{currentPortfolio.info.college}</span>
+                      <span>{currentPortfolio?.info?.college}</span>
                     </li>
                   )}
 
                   {currentPortfolio?.info?.languages && (
                     <li>
                       {translations?.portfolio?.speaking_languages}:{" "}
-                      <span>{currentPortfolio.info.languages}</span>
+                      <span>{currentPortfolio?.info?.languages}</span>
                     </li>
                   )}
                 </>
               )}
 
               {type === "page" &&
-                currentPortfolio?.info
-                  ?.filter((x) => x.key !== "bio")
-                  .map((x, index) => (
+                Object.entries(currentPortfolio?.info || {})
+                  .filter(([key]) => key !== "bio")
+                  .map(([key, value], index) => (
                     <li key={index}>
-                      {x.key}:{" "}
-                      {x.key === "website" ? (
-                        <Link href={x.value}>{x.value}</Link>
+                      {key}:{" "}
+                      {key === "website" ? (
+                        <Link
+                          href={
+                            value.startsWith("http")
+                              ? value
+                              : `https://${value}`
+                          }
+                          target="_blank"
+                        >
+                          {value}
+                        </Link>
                       ) : (
-                        <span>{x.value}</span>
+                        <span>{value}</span>
                       )}
                     </li>
                   ))}

@@ -12,6 +12,7 @@ import { useNotification } from "@/Contexts/NotificationContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { userService } from "@/services/api/userService";
+import { pageService } from "@/services/api/pageService";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/cropImage";
 import { IoClose } from "react-icons/io5";
@@ -30,6 +31,8 @@ function ImgForm() {
     useContext(MenusContext);
   const { handleMenus } = useContext(DynamicMenusContext);
   const { getUser } = useContext(ScreenContext);
+
+  console.log(openImgForm.portfolio);
 
   const imgFormMenuRef = useRef(null);
   const inputFileRef = useRef(null);
@@ -70,6 +73,8 @@ function ImgForm() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  console.log("openImgForm", openImgForm);
+
   useEffect(() => {
     if (openImgForm?.event === "edit") {
       setImageURL(openImgForm.image);
@@ -101,11 +106,14 @@ function ImgForm() {
     setLoading(true);
     try {
       if (openImgForm.event === "edit" && hasEdited) {
-        const res1 = await userService.delete_img_cover(
-          openImgForm.userId,
-          openImgForm.type
-        );
-        console.log("delete_img_cover", res1);
+        if (openImgForm.portfolio == "user") {
+          await userService.delete_img_cover(
+            openImgForm.userId,
+            openImgForm.type
+          );
+        } else {
+          await pageService.deletePage_img_cover(openImgForm.type);
+        }
       }
 
       const croppedImageBlob = await getCroppedImg(
@@ -117,13 +125,15 @@ function ImgForm() {
       const formData = new FormData();
       formData.append("img", croppedImageBlob);
 
-      const res3 = await userService.upload_img_cover(
-        openImgForm.userId,
-        openImgForm.type,
-        formData
-      );
-
-      console.log("upload_img_cover", res3);
+      if (openImgForm.portfolio == "user") {
+        await userService.upload_img_cover(
+          openImgForm.userId,
+          openImgForm.type,
+          formData
+        );
+      } else {
+        await pageService.page_img_cover(openImgForm.type, formData);
+      }
 
       addNotification({
         type: "success",
@@ -132,7 +142,7 @@ function ImgForm() {
             ? "You updated your image successfully."
             : "You added your image successfully.",
       });
-      await getUser();
+      await getUser(openImgForm.portfolio);
       setOpenImgForm(false);
     } catch (err) {
       console.log(err);
@@ -239,7 +249,8 @@ function ImgForm() {
               >
                 <FaCloudUploadAlt size={48} />
                 <p>{translations?.forms?.click_to_uploud_image_her}</p>
-              </div>
+                <h1>{translations?.forms?.click_her}</h1>
+              </div>  
             </div>
           )}
           <input
@@ -260,7 +271,12 @@ function ImgForm() {
               onClick={() => {
                 setDangerEvent({
                   type: "delete_img",
-                  message: `are you sure you want to delete your profile ${openImgForm.type}`,
+                  for: openImgForm.portfolio,
+                  message: `are you sure you want to delete your ${
+                    openImgForm.portfolio === "user"
+                      ? "profile"
+                      : openImgForm.portfolio
+                  } ${openImgForm.type}`,
                 });
               }}
             >

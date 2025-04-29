@@ -90,16 +90,14 @@ function PostsHolder(param) {
       someThingHappen?.event === "shared"
     ) {
       setPosts((prev) => {
-        const isAlreadyExist = prev.some(
-          (post) => post.id === someThingHappen.post.id
+        const filteredPosts = prev.filter(
+          (post) => post._id !== someThingHappen?.post?._id
         );
-        if (!isAlreadyExist) {
-          return [someThingHappen.post, ...prev];
-        }
-        return prev; // لا تضيفه لو كان موجود
+
+        return [someThingHappen.post, ...filteredPosts];
       });
 
-      setSomeThingHappen(""); // تنظيف بعد التحقق
+      setSomeThingHappen("");
     }
     if (someThingHappen?.type === "post" && someThingHappen?.event === "edit") {
       setPosts((prev) =>
@@ -112,6 +110,9 @@ function PostsHolder(param) {
       setSomeThingHappen("");
     }
   }, [someThingHappen.type]);
+
+  console.log("sharedId", someThingHappen?.post);
+  console.log(posts);
 
   useEffect(() => {
     const scrollHandler = () => {

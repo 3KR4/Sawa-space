@@ -17,6 +17,7 @@
     "delete_img": "حذف الصورة",
     "hide": "قم بالاخفاء",
     "report": "ارسر تقرير",
+    "save_changes": "حفظ التغيرات",
     "save_post": "حفظ المنشور",
     "un_save_post": "الغاء حفظ المنشور",
     "edit_comment": "تعديل التعليق",
@@ -34,7 +35,9 @@
     "block_page": "حظر الصفحة",
     "report_page": "ارسال تقرير عن الصفحة",
     "next": "التالي",
-    "perv": "السابق"
+    "perv": "السابق",
+    "edit_profile": "تعديل الحساب",
+    "edit_page": "تعديل الصفحة"
   },
   "placeHolders": {
     "search": "ابحث",

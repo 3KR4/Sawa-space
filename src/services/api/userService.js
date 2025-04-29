@@ -20,6 +20,11 @@ export const userService = {
   getUserData: async (userId) => {
     return apiClient.get(`/user/${userId}`);
   },
+  
+  editUserData: async (userId, body) => {
+    return apiClient.put(`/user/${userId}`, body);
+  },
+  
   upload_img_cover: async (userId, type, formData) => {
     return apiClient.post(`/user/${type}/${userId}`, formData, {
       headers: {

@@ -19,7 +19,7 @@ export const pageService = {
       },
     });
   },
-  editPageImg: async (type) => {
+  deletePage_img_cover: async (type) => {
     return apiClient.delete(`/page/${type}`);
   },
 };

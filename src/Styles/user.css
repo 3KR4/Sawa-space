@@ -56,7 +56,9 @@ body.ar {
   align-items: center;
   gap: 7px;
 }
-
+.portfolio .right-btns .main-button {
+  padding: 6px 12px !important;
+}
 .portfolio .right-btns .search-holder {
   flex: unset;
 }
@@ -225,6 +227,10 @@ body.ar .portfolio nav .top .right {
 }
 .portfolio .bottom-holder .side-menu .top button svg {
   font-size: 15px;
+  width: unset;
+  height: unset;
+  background: transparent;
+  padding: 3px;
 }
 body.ar .portfolio .bottom-holder .side-menu .top button svg {
   transform: rotate(180deg);
@@ -619,7 +625,6 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   .portfolio .bigSection .grid-products {
     grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
   }
-
 }
 @media (max-width: 768px) {
   body > main > .holder:has(.portfolio) {

@@ -18,6 +18,7 @@
 
     "hide": "hide",
     "report": "report",
+    "save_changes": "save changes",
     "save_post": "save post",
     "un_save_post": "unsave post",
     "edit_comment": "edit comment",
@@ -35,7 +36,9 @@
     "block_page": "block page",
     "report_page": "report page",
         "next":"next",
-    "perv":"perv"
+    "perv":"perv",
+    "edit_profile":"edit profile",
+    "edit_page":"edit page"
   },
   "placeHolders": {
     "search": "search",

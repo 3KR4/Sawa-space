@@ -4239,12 +4239,16 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
 /* وغير شوي الـ keyframes */
 
 .post.focused-from-link::after {
-    content: "";
-    position: absolute;
-    inset: 0px;
-    background: linear-gradient(165deg, rgb(255 115 0 / 24%) -62%, rgba(255, 142, 49, 0) 60%);
-    animation: 1.5s linear 0s 1 normal none running fadeBackground;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  inset: 0px;
+  background: linear-gradient(
+    165deg,
+    rgb(255 115 0 / 24%) -62%,
+    rgba(255, 142, 49, 0) 60%
+  );
+  animation: 1.5s linear 0s 1 normal none running fadeBackground;
+  z-index: -1;
 }
 
 @keyframes borderGrow {
