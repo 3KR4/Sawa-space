@@ -1,6 +1,6 @@
 body:has(.portfolio) {
   padding-top: 0;
-  height: fit-content;
+  height: fit-content !important;
 }
 body:has(.portfolio) header {
   margin-bottom: 0;
@@ -277,10 +277,43 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   position: relative !important;
   max-width: 100%;
   width: 100% !important;
-  object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
   aspect-ratio: 1.2 / 1;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+  scale: 1;
+  transition: 0.3s;
+}
+.portfolio .bottom-holder .side-menu .images .hold .post-imgs-hold {
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  background: var(--section-color);
+  padding: 4px !important;
+  transition: 0.3s;
+  cursor: pointer;
+  height: 100%;
+}
+.post-imgs-hold.single {
+  display: flex !important
+  ;
+}
+
+.post-imgs-hold.two {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.post-imgs-hold {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr) !important; /* default */
+}
+.portfolio .bottom-holder .side-menu .images .hold .post-imgs-hold:hover {
+  border-color: var(--main-color);
+  background: #ffc692;
+}
+.portfolio .bottom-holder .side-menu .images img:hover {
+  scale: 1.025;
 }
 .portfolio .bottom-holder .bigSection .about .friends {
   display: flex;

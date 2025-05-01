@@ -25,8 +25,10 @@ export const userService = {
     return apiClient.put(`/user/${userId}`, body);
   },
 
-  getUserImages: async (userId) => {
-    return apiClient.get(`/post/user/${userId}/imgs`);
+  getUserPhotos: async (userId, page = 1, limit = 7) => {
+    return apiClient.get(
+      `/post/user/${userId}/imgs?page=${page}&limit=${limit}`
+    );
   },
 
   upload_img_cover: async (userId, type, formData) => {

@@ -12,6 +12,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import PostsHolder from "@/components/post/PostsHolder";
 import EditProfileForm from "@/components/forms/EditProfileForm";
@@ -39,6 +40,9 @@ import { HiUsers } from "react-icons/hi2";
 import { IoInformationCircleSharp, IoSearch } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
   const { userData, userPage, screenSize } = useContext(ScreenContext);
@@ -53,38 +57,32 @@ export default function Portfolio({ params }) {
   const [currentPortfolio, setCurrentPortfolio] = useState({});
   const [currentSelectedData, setCurrentSelectedData] = useState("posts");
   const [loading, setLoading] = useState(true);
+  const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [seeAllAbout, setSeeAllAbout] = useState(false);
   const [editType, setEditType] = useState(null);
   const [productSearch, setProductSearch] = useState("");
+  const [userPhotos, setUserPhotos] = useState([]);
+
+  const fetchPortfolioPhotos = async (page, limit) => {
+    setLoadingPhotos(true);
+
+    try {
+      const { data } = await userService.getUserPhotos(id, page, limit);
+
+      setUserPhotos(data.data);
+    } catch (err) {
+      console.error("Error fetching user photos", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user photos. Please try again later.",
+      });
+    } finally {
+      setLoadingPhotos(false);
+    }
+  };
 
   useEffect(() => {
     const fetchPortfolioData = async () => {
-      try {
-        let response;
-
-        if (type === "user") {
-          response = await userService.getUserData(id);
-        } else if (type === "page") {
-          response = await pageService.getPageData(id);
-        } else if (type === "community") {
-          response = await communityService.getCommunityData(id);
-        } else {
-          console.error("Unknown portfolio type:", type);
-          setLoading(false);
-        }
-
-        setCurrentPortfolio(response.data.data);
-      } catch (err) {
-        console.error("Error fetching posts", err);
-        addNotification({
-          type: "error",
-          message: "Failed to load user data. Please try again later.",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    const fetchPortfolioPhotos = async () => {
       try {
         let response;
 
@@ -508,48 +506,69 @@ export default function Portfolio({ params }) {
               )}
               {currentSelectedData !== "photos" && (
                 <div className="images">
-                  {/* <div className="top">
-                <h4> {translations?.portfolio?.photos}</h4>
-                {mediaMsgs?.length > 6 && (
-                  <button onClick={() => setCurrentSelectedData("photos")}>
-                    {translations?.portfolio?.see_all}{" "}
-                    {translations?.portfolio?.photos} <FaAngleRight />
-                  </button>
-                )}
-              </div>
-              <div className="hold">
-                {loading
-                  ? Array.from({ length: 6 }).map((_, index) => (
-                      <ContentLoader
-                        width={120}
-                        height={120}
-                        speed={4}
-                        viewBox="0 0 120 120"
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                      >
-                        <rect
-                          x="160"
-                          y="120"
-                          rx="3"
-                          ry="3"
-                          width="100%"
-                          height="120"
-                        />
-                      </ContentLoader>
-                    ))
-                  : mediaMsgs.slice(0, 6).map((x, index) => (
-                      <Image
-                        key={index}
-                        src={x.img}
-                        alt=""
-                        fill
-                        onClick={() => {
-                          handleImageClick(x.id, index);
-                        }}
-                      />
-                    ))}
-              </div> */}
+                  <div className="top">
+                    <h4> {translations?.portfolio?.photos}</h4>
+                    {userPhotos?.length > 6 && (
+                      <button onClick={() => setCurrentSelectedData("photos")}>
+                        {translations?.portfolio?.see_all}{" "}
+                        {translations?.portfolio?.photos} <FaAngleRight />
+                      </button>
+                    )}
+                  </div>
+                  <div className="hold">
+                    {loadingPhotos
+                      ? Array.from({ length: 6 }).map((_, index) => (
+                          <ContentLoader
+                            width={120}
+                            height={120}
+                            speed={4}
+                            viewBox="0 0 120 120"
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                          >
+                            <rect
+                              x="160"
+                              y="120"
+                              rx="3"
+                              ry="3"
+                              width="100%"
+                              height="120"
+                            />
+                          </ContentLoader>
+                        ))
+                      : userPhotos?.slice(0, 6)?.map((post) => (
+                          <div
+                            className={`post-imgs-hold ${
+                              post.img.length === 1
+                                ? "single"
+                                : post.img.length === 2
+                                ? "two"
+                                : ""
+                            }`}
+                            key={post._id}
+                            onClick={() => {
+                              const current = new URLSearchParams(
+                                Array.from(searchParams.entries())
+                              );
+                              current.set("post", post._id);
+                              router.replace(
+                                `${pathname}?${current.toString()}`,
+                                undefined,
+                                { scroll: false }
+                              );
+                            }}
+                          >
+                            {post.img?.map((imgObj) => (
+                              <Image
+                                key={imgObj.newpath.publicid}
+                                src={imgObj.newpath.url}
+                                alt={imgObj.originalname}
+                                fill
+                              />
+                            ))}
+                          </div>
+                        ))}
+                  </div>
                 </div>
               )}
               {currentSelectedData !== "products" && type === "page" && (
