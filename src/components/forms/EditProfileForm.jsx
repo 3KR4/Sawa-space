@@ -35,7 +35,7 @@ import { CircleAlert } from "lucide-react";
 
 export default function EditProfileForm({ editType, setEditType }) {
   const { addNotification } = useNotification();
-  const { setUserData, userData, userPage, setUserPage } =
+  const { setUserData, userData, userPage, setUserPage, getUser } =
     useContext(ScreenContext);
 
   const { translations, locale } = useLanguage();
@@ -84,7 +84,7 @@ export default function EditProfileForm({ editType, setEditType }) {
         phone: userData.phone || "",
       });
       setBirthDate(
-        userData?.info?.birthDate ? new Date(userData?.info?.birthDate) : null
+        userData?.info?.birthdate ? new Date(userData?.info?.birthdate) : null
       );
     } else if (editType === "page" && userPage) {
       reset({
@@ -92,8 +92,6 @@ export default function EditProfileForm({ editType, setEditType }) {
       });
     }
   }, [editType, userData, userPage, reset]);
-
-  console.log("birthDate", userData?.info?.birthDate);
 
   useEffect(() => {
     const initialInfo =
@@ -143,8 +141,7 @@ export default function EditProfileForm({ editType, setEditType }) {
             firstname: data.firstname,
             lastname: data.lastname,
             phone: data.phone,
-            birthdate: birthDate,
-            info: infoObject,
+            info: { ...infoObject, birthdate: birthDate },
           }
         : {
             pagename: data.pagename,
@@ -152,15 +149,11 @@ export default function EditProfileForm({ editType, setEditType }) {
           };
 
     try {
-      const response =
-        editType === "user"
-          ? await userService.editUserData(userData._id, payload)
-          : await pageService.editPageData(userPage._id, payload);
-
       editType === "user"
-        ? setUserData(response.data.data)
-        : setUserPage(response.data.data);
-
+        ? await userService.editUserData(userData._id, payload)
+        : await pageService.editPageData(payload);
+      await getUser(editType);
+      setEditType(null);
       addNotification({
         type: "success",
         message: "Your profile has been updated.",
@@ -182,7 +175,7 @@ export default function EditProfileForm({ editType, setEditType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`focusedMsg FormMenu   ${editType ? "active" : ""}`}
+      className={`focusedMsg FormMenu ${editType ? "active" : ""}`}
     >
       <div
         className="body imgForm editProfile register-page contentLoaded"
@@ -358,7 +351,7 @@ export default function EditProfileForm({ editType, setEditType }) {
             )}
           </div>
         )}
-
+        <hr style={{ margin: "10px 0 5px" }} />
         <div className="top" style={{ margin: "10px 0 0" }}>
           <h5>{translations?.forms?.additional_info}</h5>
           <button
@@ -403,7 +396,7 @@ export default function EditProfileForm({ editType, setEditType }) {
           </span>
         )}
         <hr style={{ margin: "10px 0 5px" }} />
-        <div className="btns rowHolder">
+        <div className="btns rowHolder actions">
           <button
             type="button"
             className="main-button secondary"

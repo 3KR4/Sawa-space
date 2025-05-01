@@ -17,6 +17,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
 import { useRouter } from "next/navigation";
+import ColorThief from "color-thief-browser";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -117,7 +118,6 @@ function Post({ data, focused = false }) {
   }, [page, seeComments]);
   useEffect(() => {
     if (focused) {
-      console.log("xxxx");
       fetchComments();
     }
   }, []);
@@ -213,7 +213,9 @@ function Post({ data, focused = false }) {
           <div>
             <PiShareFat
               onClick={() => {
-                const postUrl = `${window.location.origin}?post=${currentPost._id}`;
+                const postUrl = `${window.location.origin}?type=${
+                  author ? "user" : "page"
+                }&&post=${currentPost._id}`;
                 navigator.clipboard.writeText(postUrl);
               }}
             />
@@ -346,6 +348,26 @@ function Post({ data, focused = false }) {
     </div>
   );
 
+  const imgRef = useRef(null);
+
+  const [bgColor, setBgColor] = useState("#000");
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const img = imgRef.current;
+    const handleLoad = () => {
+      const colorThief = new ColorThief();
+      const result = colorThief.getColor(img);
+      setBgColor(`rgb(${result[0]}, ${result[1]}, ${result[2]})`);
+    };
+
+    if (img.complete) {
+      handleLoad(); // image already loaded
+    } else {
+      img.addEventListener("load", handleLoad);
+      return () => img.removeEventListener("load", handleLoad);
+    }
+  }, [currentPost]);
 
   return (
     <div
@@ -408,20 +430,16 @@ function Post({ data, focused = false }) {
               <HiDotsVertical
                 className="settingDotsIco"
                 onClick={(e) => {
-                  handleMenus(
-                    e,
-                    pagee ? "settingMenu-page-posts" : "settingMenu-post",
-                    currentPost?._id,
-                    {
-                      isMyPost,
-                      isInFavorite: false,
-                      isMyFriend: false,
-                      isPostPage: false,
-                      isFollowedPage: false,
-                      isCommunity: false,
-                      isMeJoinedThisCommunity: false,
-                    }
-                  );
+                  handleMenus(e, "settingMenu-post", currentPost?._id, {
+                    isMyPost,
+                    isMyPage,
+                    isInFavorite: false,
+                    isMyFriend: false,
+                    isPostPage: currentPost.pageId ? true : false,
+                    isFollowedPage: false,
+                    isCommunity: false,
+                    isMeJoinedThisCommunity: false,
+                  });
                 }}
               />
             </div>
@@ -446,8 +464,16 @@ function Post({ data, focused = false }) {
               Array.isArray(currentPost?.img) &&
               currentPost?.img.length > 0 ? (
                 currentPost?.img.length === 1 ? (
-                  <div className="image">
+                  <div
+                    className="image"
+                    style={{
+                      backgroundColor: bgColor,
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
                     <Image
+                      ref={imgRef}
                       src={currentPost?.img[0].newpath.url}
                       alt="Post Image"
                       fill
@@ -487,7 +513,7 @@ function Post({ data, focused = false }) {
                   </div>
                 )
               ) : null}
-              {currentPost?.mentions?.length > 0 && (
+              {/* {currentPost?.mentions?.length > 0 && (
                 <div className="mentions view">
                   <h5>
                     {postOwnerData?.firstname} {""}{" "}
@@ -500,11 +526,11 @@ function Post({ data, focused = false }) {
                         handleMenus(e, "user-Info", x.author[0]?._id)
                       }
                     >
-                      @{data?.author[0]?.firstname}
+                      @{data?.author[0]?.firstname || data?.page[0]?.pagename}
                     </button>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
             {bottomAction()}
             {screenSize === "small" && (
@@ -664,22 +690,16 @@ function Post({ data, focused = false }) {
                   <HiDotsVertical
                     className="settingDotsIco"
                     onClick={(e) => {
-                      handleMenus(
-                        e,
-                        currentPost?.creator === "page"
-                          ? "settingMenu-page-posts"
-                          : "settingMenu-post",
-                        currentPost?._id,
-                        {
-                          isMyPost,
-                          isInFavorite: false,
-                          isMyFriend: false,
-                          isPostPage: false,
-                          isFollowedPage: false,
-                          isCommunity: false,
-                          isMeJoinedThisCommunity: false,
-                        }
-                      );
+                      handleMenus(e, "settingMenu-post", currentPost?._id, {
+                        isMyPost,
+                        isMyPage,
+                        isInFavorite: false,
+                        isMyFriend: false,
+                        isPostPage: currentPost.pageId ? true : false,
+                        isFollowedPage: false,
+                        isCommunity: false,
+                        isMeJoinedThisCommunity: false,
+                      });
                     }}
                   />
                   <IoClose

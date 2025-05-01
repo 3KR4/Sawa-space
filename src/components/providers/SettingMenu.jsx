@@ -53,6 +53,105 @@ function SettingMenu() {
 
   // Delete Comment
 
+
+  const postActions = [
+    {
+      show: true,
+      label: translations?.forms?.edit_post,
+      icon: <MdEdit />,
+      onClick: () => {
+        setSettingMenu(false);
+        setOpenPostForm({
+          for: selectedDev.isMyPost ? "user" : "page",
+          type: "edit",
+          postId: selectedDev.id,
+        });
+      },
+    },
+    {
+      show: !selectedDev.isInFavorite,
+      label: translations?.actions?.save_post,
+      icon: <FaBookmark />,
+      onClick: () => {
+        // handle save
+      },
+    },
+    {
+      show: !selectedDev.isMyPost && !selectedDev.isMyFriend,
+      label: translations?.actions?.add_friend,
+      icon: <HiUsers />,
+      onClick: () => {
+        // handle add friend
+      },
+    },
+    {
+      show: !selectedDev.isMyPost,
+      isSeparator: true,
+    },
+    {
+      show: !selectedDev.isMyPost,
+      label: translations?.actions?.hide,
+      icon: <BiSolidHide />,
+      className: "warning",
+      onClick: () => {
+        // handle hide
+      },
+    },
+    {
+      show: !selectedDev.isMyPost,
+      label: translations?.actions?.report,
+      icon: <MdReport />,
+      className: "warning",
+      onClick: () => {
+        // handle report
+      },
+    },
+    {
+      show: selectedDev.isInFavorite,
+      label: translations?.actions?.un_save_post,
+      icon: <GoBookmarkSlashFill />,
+      onClick: () => {
+        // handle unsave
+      },
+    },
+    {
+      show:
+        !selectedDev.isMyPost || selectedDev.isMyPost || selectedDev.isMyFriend,
+      isSeparator: true,
+    },
+    {
+      show: selectedDev.isMyFriend,
+      label: translations?.actions?.remove_friend,
+      icon: <IoPersonRemove />,
+      className: "danger",
+      onClick: () => {
+        // handle remove friend
+      },
+    },
+    {
+      show: !selectedDev.isMyPost,
+      label: translations?.actions?.block,
+      icon: <MdBlock />,
+      className: "danger",
+      onClick: () => {
+        // handle block
+      },
+    },
+    {
+      show: selectedDev.isMyPost,
+      label: translations?.actions?.remove_post,
+      icon: <FaTrashAlt />,
+      className: "danger",
+      onClick: () => {
+        setSettingMenu(null);
+        setDangerEvent({
+          type: "remove_post",
+          message: "are you sure you want to remove your post",
+        });
+      },
+    },
+  ];
+
   return (
     <div
       ref={settingsMenuRef}
@@ -64,68 +163,20 @@ function SettingMenu() {
     >
       {settingMenuType === "settingMenu-post" ? (
         <>
-          {selectedDev.isMyPost && (
-            <button
-              onClick={() => {
-                setSettingMenu(false);
-                setOpenPostForm({ type: "edit", postId: selectedDev.id });
-              }}
-            >
-              <MdEdit /> {translations?.forms?.edit_post}
-            </button>
-          )}
-          {!selectedDev.isInFavorite && (
-            <button>
-              <FaBookmark /> {translations?.actions?.save_post}
-            </button>
-          )}
-          {!selectedDev.isMyPost && !selectedDev.isMyFriend && (
-            <button>
-              <HiUsers /> {translations?.actions?.add_friend}
-            </button>
-          )}
-          {!selectedDev.isMyPost && (
-            <>
-              <hr />
-              <button className="warning">
-                <BiSolidHide /> {translations?.actions?.hide}
-              </button>
-              <button className="warning">
-                <MdReport /> {translations?.actions?.report}
-              </button>
-              {selectedDev.isInFavorite && (
-                <button>
-                  <GoBookmarkSlashFill /> {translations?.actions?.un_save_post}
+          {postActions.map((action, idx) =>
+            action.show ? (
+              action.isSeparator ? (
+                <hr key={`sep-${idx}`} />
+              ) : (
+                <button
+                  key={action.label || idx}
+                  className={action.className || ""}
+                  onClick={action.onClick}
+                >
+                  {action.icon} {action.label}
                 </button>
-              )}
-            </>
-          )}
-          {(!selectedDev.isMyPost ||
-            selectedDev.isMyPost ||
-            selectedDev.isMyFriend) && <hr />}
-          {selectedDev.isMyFriend && (
-            <button className="danger">
-              <IoPersonRemove /> {translations?.actions?.remove_friend}
-            </button>
-          )}
-          {!selectedDev.isMyPost && (
-            <button className="danger">
-              <MdBlock /> {translations?.actions?.block}
-            </button>
-          )}
-          {selectedDev.isMyPost && (
-            <button
-              className="danger"
-              onClick={() => {
-                setSettingMenu(null);
-                setDangerEvent({
-                  type: "remove_post",
-                  message: "are you sure you want to remove your post",
-                });
-              }}
-            >
-              <FaTrashAlt /> {translations?.actions?.remove_post}
-            </button>
+              )
+            ) : null
           )}
         </>
       ) : settingMenuType === "settingMenu-user" ? (
@@ -175,20 +226,6 @@ function SettingMenu() {
               <BiVolumeMute /> {translations?.story?.mute_stories_from} ahmed
             </button>
           )}
-        </>
-      ) : settingMenuType === "settingMenu-page" ? (
-        <>
-          <button>
-            <RiShareForwardFill /> {translations?.portfolio?.share_page}
-          </button>
-          <hr />
-          <button className="danger">
-            <IoLogOut style={{ transform: "rotate(180deg)" }} />{" "}
-            {translations?.portfolio?.unfollowing_page}
-          </button>
-          <button className="danger">
-            <MdReport /> {translations?.actions?.report_page}
-          </button>
         </>
       ) : settingMenuType === "settingMenu-page-posts" ? (
         <>

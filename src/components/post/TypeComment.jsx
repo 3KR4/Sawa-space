@@ -35,7 +35,15 @@ function TypeComment({
   const inputFileRef = useRef(null);
 
   const [uploadedImg, setUploadedImg] = useState();
+  const [originalImg, setOriginalImg] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (someThingHappen?.comment?.data?.img) {
+      setUploadedImg(someThingHappen.comment.data.img.url);
+      setOriginalImg(someThingHappen.comment.data.img.url);
+    }
+  }, [someThingHappen?.comment]);
 
   const handleUploadImg = (e) => {
     const file = e.target.files[0]; // Get the first file only
@@ -48,28 +56,49 @@ function TypeComment({
     setLoading(true);
 
     if (someThingHappen.comment && someThingHappen.comment.event == "edit") {
+      const commentId = someThingHappen.comment.data._id;
+
       const commentBody = {
         paragraph: messageText,
       };
+
       try {
-        await postService.editComment(
-          someThingHappen.comment.data._id,
-          commentBody
-        );
-        const ubdatedComment = {
+        await postService.editComment(commentId, commentBody);
+
+        // 🟡 CASE: Remove image if user deleted it during edit
+        if (!uploadedImg && originalImg) {
+          await postService.deleteCommentImg(commentId);
+        }
+
+        // 🟢 CASE: Upload new image if user added or changed it
+        if (uploadedImg && uploadedImg instanceof File) {
+          const formData = new FormData();
+          formData.append("img", uploadedImg);
+          await postService.uploadCommentImg(commentId, formData);
+        }
+
+        const updatedComment = {
           ...someThingHappen.comment.data,
           paragraph: messageText,
+          img: {
+            url:
+              uploadedImg && !(uploadedImg instanceof File)
+                ? uploadedImg
+                : uploadedImg instanceof File
+                ? URL.createObjectURL(uploadedImg)
+                : null,
+          },
         };
+
         addNotification({
           type: "success",
           message: `Your comment has been updated successfully`,
         });
+
         if (someThingHappen.comment.level == 0) {
           setComments((prev) =>
             prev.map((comment) =>
-              comment._id === someThingHappen.comment.data._id
-                ? ubdatedComment
-                : comment
+              comment._id === commentId ? updatedComment : comment
             )
           );
           setSomeThingHappen("");
@@ -77,13 +106,15 @@ function TypeComment({
           setSomeThingHappen({
             type: "nested_comment",
             event: "edit",
-            data: ubdatedComment,
+            data: updatedComment,
           });
         }
 
         setMessageText("");
+        setUploadedImg(null);
+        setOriginalImg(null);
       } catch (err) {
-        console.error("Error fetching comments", err);
+        console.error("Error updating comment", err);
         addNotification({
           type: "error",
           message: "Failed to update your comment",
@@ -96,12 +127,29 @@ function TypeComment({
         paragraph: messageText,
         replay: replyTo?.commentId || null,
       };
+
       try {
         const { data } = await postService.createComment(id, commentData);
+        const commentId = data.data._id;
+
+        // ✅ Upload image if exists
+        if (uploadedImg instanceof File) {
+          const formData = new FormData();
+          formData.append("img", uploadedImg);
+          await postService.uploadCommentImg(commentId, formData);
+        }
+
         const commentBody = {
           ...data.data,
           author: [userData],
+          img: {
+            url:
+              uploadedImg instanceof File
+                ? URL.createObjectURL(uploadedImg)
+                : uploadedImg || null,
+          },
         };
+
         if (replyTo?.commentId) {
           addNotification({
             type: "success",
@@ -127,11 +175,14 @@ function TypeComment({
             message: "Your comment has been posted successfully.",
           });
         }
+
         setCommentsCount((prev) => prev + 1);
         setMessageText("");
         setReplyTo({});
+        setUploadedImg(null);
+        setOriginalImg(null);
       } catch (err) {
-        console.error("Error fetching comments", err);
+        console.error("Error creating comment", err);
         addNotification({
           type: "error",
           message: "Failed to post Your Comment",

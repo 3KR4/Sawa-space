@@ -4,12 +4,19 @@ export const pageService = {
   createPage: async (body) => {
     return apiClient.post(`/page/create/`, body);
   },
-  editPage: (id, data) => {
-    return apiClient.put(`/page/${id}`, data);
+  editPageData: (data) => {
+    return apiClient.put(`/page/data`, data);
   },
 
   getPageData: async (id) => {
     return apiClient.get(`/page/${id}`);
+  },
+
+  getCategories: async (id) => {
+    return apiClient.get(`/page/${id}/category`);
+  },
+  updateCategories: async (body) => {
+    return apiClient.put(`/page/category`, body);
   },
 
   page_img_cover: async (type, formData) => {

@@ -37,15 +37,6 @@ function Comment({
   const [replies, setReplies] = useState([]);
   const [repliesLoaded, setRepliesLoaded] = useState(false);
 
-  // const handleImageClick = (id, index) => {
-  //   setDataSwiperType("comment");
-  //   setImgFocus(id);
-  //   setDataForSwiper(data);
-  //   if (index !== "") {
-  //     setImgIndex(index);
-  //   }
-  // };
-
   const fetchingReplyies = async () => {
     try {
       const responce = await postService.getReplys(data?.postid, data?._id);
@@ -147,12 +138,10 @@ function Comment({
             )}
           </div>
           <p>{data?.paragraph}</p>
-          {/* <Image
-            src={data?.img || "/chat7.png"}
-            alt={"comment image"}
-            fill
-            onClick={() => handleImageClick(data)}
-          /> */}
+          {data?.img?.url && (
+            <Image src={data?.img?.url} alt={"comment image"} fill />
+          )}
+
           <div className="react-reply-div">
             {!focused && (
               <div style={{ display: "flex", position: "relative" }}>

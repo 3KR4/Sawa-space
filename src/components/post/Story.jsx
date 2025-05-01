@@ -134,11 +134,11 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
               left: `50%`,
               top: `50%`,
               transform: `translate(calc(-50% + ${adjustSize(
-                data?.info?.settings.images[index].x
+                data?.info?.settings?.images[index]?.x
               )}px), calc(-50% + ${adjustSize(
-                data?.info?.settings.images[index].y
+                data?.info?.settings?.images[index]?.y
               )}px))`,
-              width: `${data?.info?.settings.images[index].width}%`,
+              width: `${data?.info?.settings?.images[index]?.width}%`,
             }}
           >
             <img src={image.newpath.url} width={`100%`} />

@@ -52,8 +52,6 @@ export const ScreenProvider = ({ children }) => {
     return null;
   });
 
-  console.log(userData);
-
   useEffect(() => {
     if (userData) {
       localStorage.setItem("user", JSON.stringify(userData));
@@ -136,13 +134,13 @@ export const ScreenProvider = ({ children }) => {
   }, [someThingHappen.stories, someThingHappen.type, userData]);
 
   const searchParams = useSearchParams();
+  const type = searchParams.get("type");
   const postId = searchParams.get("post");
-  const index = parseInt(searchParams.get("index") || "0", 10);
 
   useEffect(() => {
     const getSinglePost = async () => {
       try {
-        const { data } = await postService.getSinglePost(postId);
+        const { data } = await postService.getSinglePost(type, postId);
 
         const post = data?.data?.[0];
         if (post) {
@@ -150,7 +148,6 @@ export const ScreenProvider = ({ children }) => {
             setSingleProvider({
               type: "post",
               sharing_data: post,
-              focused_img_index: index,
             });
           } else {
             setSomeThingHappen({
@@ -176,7 +173,7 @@ export const ScreenProvider = ({ children }) => {
     if (postId) {
       getSinglePost();
     }
-  }, [postId, index]);
+  }, [postId, type]);
 
   return (
     <ScreenContext.Provider

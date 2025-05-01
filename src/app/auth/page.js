@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { MdModeEditOutline } from "react-icons/md";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { userService } from "@/services/api/userService";
+import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
 
 import {
@@ -32,7 +33,7 @@ import { IoEarthOutline } from "react-icons/io5";
 
 export default function Auth() {
   const { addNotification } = useNotification();
-  const { setUserData } = useContext(ScreenContext);
+  const { setUserData, setUserPage } = useContext(ScreenContext);
 
   const { translations, locale } = useLanguage();
   const router = useRouter();
@@ -66,23 +67,53 @@ export default function Auth() {
     if (isLoginPage) {
       setLoadingSpinner(true);
       try {
+        // 1. Login user
         const userResponse = await userService.loginUser(data);
+        const { token, test: userData } = userResponse.data;
 
-        const userData = userResponse.data.test;
-        localStorage.setItem("authToken", userResponse.data.token);
+        // 2. Store auth token and user data
+        localStorage.setItem("authToken", token);
         localStorage.setItem("user", JSON.stringify(userData));
         setUserData(userData);
+
+        // 3. Check and handle page data if exists
+        const pageId = userData?.pageid;
+        if (pageId) {
+          try {
+            const pageResponse = await pageService.getPageData(pageId);
+            const pageData = pageResponse.data.data;
+
+            // Store page data
+            localStorage.setItem("page", JSON.stringify(pageData));
+
+            // You might want to merge user and page data or keep separate
+            setUserPage(
+              pageData // or keep them separate: page: pageData
+            );
+          } catch (pageError) {
+            console.error("Failed to fetch page data:", pageError);
+            // Optional: notify user but don't block navigation
+            addNotification({
+              type: "warning",
+              message: "Logged in successfully, but couldn't load page data",
+            });
+          }
+        }
+
+        // 4. Redirect
         router.push("/");
         addNotification({
           type: "success",
-          message: "Welcome back! 🎉 You’ve successfully logged in.",
+          message: "Welcome back! 🎉 You've successfully logged in.",
         });
       } catch (err) {
-        setLoadingSpinner(false);
         addNotification({
           type: "warning",
-          message: err.response.data.message,
+          message:
+            err.response?.data?.message || "Login failed. Please try again.",
         });
+      } finally {
+        setLoadingSpinner(false);
       }
     } else {
       setFormData(data);

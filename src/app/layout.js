@@ -19,7 +19,9 @@ export default function RootLayout({ children }) {
           <MenuProvider>
             <MenusProvider>
               <ScreenProvider>
+                
                 <LayoutContent>{children}</LayoutContent>
+
               </ScreenProvider>
             </MenusProvider>
           </MenuProvider>

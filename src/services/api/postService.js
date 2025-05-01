@@ -8,28 +8,32 @@ export const postService = {
         ? `/page/page/${id}?page=${page}&limit=4`
         : type === "user"
         ? `/post/user/${id}?page=${page}&limit=4`
-        : `/post/?page=${page}&limit=4`;
+        : `/post/?page=${page}&limit=${page === 1 ? 7 : 4}`;
     return apiClient.get(url);
   },
-  getSinglePost: (id) => {
-    return apiClient.get(`/post/${id}`);
+  getSinglePost: (type, id) => {
+    return apiClient.get(`/${type == "page" ? "page/onepost" : "post"}/${id}`);
   },
-  createPost: (data) => {
-    return apiClient.post(`/post`, data);
+  createPost: (type, data) => {
+    const url = type === "page" ? "/page/create/post" : "/post";
+    return apiClient.post(url, data);
   },
-  editPost: (id, data) => {
-    return apiClient.put(`/post/${id}`, data);
+  editPost: (type, id, data) => {
+    const url = type === "page" ? "/page/update/" : "/post/";
+    return apiClient.put(`${url}${id}`, data);
   },
-  uploadPostImages: async (postId, imageFiles) => {
-    return apiClient.post(`/post/img/${postId}`, imageFiles, {
+  uploadPostImages: async (type, postId, imageFiles) => {
+    const url = type === "page" ? "/page/post/" : "/post/";
+    return apiClient.post(`${url}img/${postId}`, imageFiles, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
-  deleteImg: (postId, publicid) => {
+  deleteImg: (type, postId, publicid) => {
     let body = { publicid };
-    return apiClient.put(`/post/pull/img/${postId}`, body);
+    const url = type === "page" ? "/page/" : "/post/";
+    return apiClient.put(`${url}/pull/img/${postId}`, body);
   },
   //! Comments
   createComment: (postId, data) => {
@@ -48,6 +52,16 @@ export const postService = {
   },
   getReplys: (postId, commentId) => {
     return apiClient.get(`/comment/post/${postId}/replay/${commentId}`);
+  },
+  uploadCommentImg: async (id, imageFile) => {
+    return apiClient.post(`/comment/${id}/img`, imageFile, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+  deleteCommentImg: (id) => {
+    return apiClient.delete(`/comment/${id}/img`);
   },
   //! React
   makeReact: (postId, react) => {

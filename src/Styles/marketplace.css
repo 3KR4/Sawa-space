@@ -80,21 +80,68 @@ body:has(.marketplace) header {
   transition: 0.3s;
 }
 .sideSection .Filter-Holder li svg {
-  font-size: 17px;
+  border: 1px solid var(--second-section-color);
+  width: 29px;
+  height: 29px;
+  padding: 6px;
+  border-radius: 5px;
 }
-.sideSection .Filter-Holder li:hover,
-.sideSection .Filter-Holder li.active {
+.sideSection .Filter-Holder li svg:hover {
+  color: white;
+  background: var(--red-color);
+  border-color: transparent;
+  padding: 7px;
+}
+.sideSection .Filter-Holder li input {
+  flex: 1;
+  border: 1px solid var(--second-section-color);
+  padding: 6px 8px;
+}
+.sideSection .Filter-Holder.cats li {
+  padding: 6px 10px;
+}
+.sideSection .Filter-Holder ul:has(input[type="text"]) {
+  gap: 0;
+}
+.sideSection .Filter-Holder:has(input[type="text"]) .btns.rowHolder.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 0;
+}
+.sideSection
+  .Filter-Holder:has(input[type="text"])
+  .btns.rowHolder.actions
+  .main-button {
+  padding: 7px 12px !important;
+}
+.sideSection
+  .Filter-Holder:has(input[type="text"])
+  .btns.rowHolder.actions
+  span {
+  font-size: 13px;
+}
+.sideSection .Filter-Holder li:not(:has(input[type="text"])):hover,
+.sideSection .Filter-Holder li:not(:has(input[type="text"])).active {
   background: var(--section-color);
 }
-
+.sideSection .Filter-Holder li:has(input[type="text"]) {
+    padding: 2px 3px;
+}
 .sideSection .Filter-Holder li label.checkbox {
   width: 0px !important;
   opacity: 0 !important;
   margin-left: -3px !important;
   transition: 0.3s !important;
 }
-.sideSection .Filter-Holder li:hover label.checkbox,
-.sideSection .Filter-Holder li.active label.checkbox {
+.sideSection
+  .Filter-Holder
+  li:not(:has(input[type="text"])):hover
+  label.checkbox,
+.sideSection
+  .Filter-Holder
+  li:not(:has(input[type="text"])).active
+  label.checkbox {
   width: 17px !important;
   opacity: 1 !important;
   margin-left: 0 !important;
@@ -145,7 +192,6 @@ body:has(.marketplace) header {
   display: block;
   color: var(--title-color);
 }
-
 
 .swiper {
   width: 100% !important;

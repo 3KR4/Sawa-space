@@ -1,5 +1,6 @@
 body:has(.portfolio) {
   padding-top: 0;
+  height: fit-content;
 }
 body:has(.portfolio) header {
   margin-bottom: 0;
@@ -11,7 +12,7 @@ body:has(.portfolio) > main {
 }
 .portfolio {
   width: 70%;
-  margin: auto;
+  margin: 0 auto 0;
 }
 .portfolio > .top {
   gap: 8px;
@@ -190,6 +191,10 @@ body.ar .portfolio nav .top .right {
 }
 .portfolio .sideSection .Filter-Holder.forCat .filter-title {
   padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
 }
 .portfolio .bottom-holder .side-menu > * {
   background: var(--body-color);
@@ -205,6 +210,7 @@ body.ar .portfolio nav .top .right {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 6px;
+  padding-bottom: 0;
 }
 .portfolio .bottom-holder .side-menu .about .top {
   margin-bottom: -2px;
@@ -252,6 +258,8 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   display: flex;
   align-items: center;
   gap: 7px;
+  overflow-wrap: anywhere;
+  flex-wrap: wrap;
 }
 .portfolio .bottom-holder .side-menu .about li span {
   font-weight: 500;
@@ -502,12 +510,16 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
 .portfolio .focusedMsg.FormMenu .add-btn {
   padding: 7px 12px !important;
   font-size: 13px;
+  margin: 0;
 }
 .portfolio .focusedMsg.FormMenu .add-btn svg {
   width: unset;
   height: unset;
   padding: 0;
   background: transparent;
+}
+.portfolio .sideSection .Filter-Holder.cats .main-button.add-btn {
+  padding: 6px 10px !important;
 }
 
 @media (min-width: 1700px) {

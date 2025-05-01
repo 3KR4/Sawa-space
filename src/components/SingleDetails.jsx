@@ -415,56 +415,6 @@ function SingleDetails() {
     >
       {singleProvider.type === "post" ? (
         <Post data={singleProvider?.sharing_data} focused={true} />
-      ) : dataSwiperType === "msg" ? (
-        <>
-          <div className="hold">
-            {imgFocus && (
-              <IoClose
-                className="close closeMenu"
-                onClick={() => setImgFocus(null)}
-              />
-            )}
-            {data?.user !== "Bob" && <h5>{data?.user}</h5>}
-            {data?.img && (
-              <img
-                src={data?.img}
-                alt={data?.user ? `${data?.user}'s image` : "User image"}
-              />
-            )}
-            {data?.message && <p>{data?.message}</p>}
-          </div>
-          {dataForSwiper?.length > 1 && (
-            <Swiper
-              className={`previewSmallImages`}
-              dir={direction}
-              onSwiper={setSwiperRef}
-              spaceBetween={5}
-              slidesPerView={"auto"}
-              centeredSlides={true}
-              loop={false}
-            >
-              {dataForSwiper.map((x, index) => (
-                <SwiperSlide
-                  key={index}
-                  onClick={() => handleImageClick(x.id, index)}
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
-                  <img
-                    src={x.img}
-                    alt={`Slide ${index}`}
-                    className={`${imgFocus == x.id ? "active" : ""}`}
-                    style={{
-                      maxWidth: "90%",
-                      maxHeight: "90%",
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </>
       ) : dataSwiperType === "comment" ? (
         <div className="hold OneImg">
           {imgFocus && (

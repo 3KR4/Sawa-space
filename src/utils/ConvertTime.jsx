@@ -100,7 +100,8 @@ const formatDate = (date, locale, withYear = false) => {
 const timeAgo = (value, unit, lang) => {
   const t = timeUnits[lang];
 
-  if (value === 0) {
+  if (value <= 0) {
+    // Changed from value === 0 to value <= 0
     return lang === "ar" ? "الآن" : "now";
   }
 
@@ -115,7 +116,6 @@ const timeAgo = (value, unit, lang) => {
       return `${t.since} ${value} ${unit[2]}`;
     }
   } else {
-    // الإنجليزية (ابق كما هي)
     return `${t.since} ${value} ${value === 1 ? unit[0] : unit[1]}`;
   }
 };
@@ -139,8 +139,6 @@ export default function ConvertTime(
   const diffInMonths = Math.floor(diffInDays / 30);
   const diffInYears = Math.floor(diffInDays / 365);
 
-  // Common time ago formatter
-
   switch (type) {
     case "product":
       if (diffInSeconds < 60) return timeAgo(diffInSeconds, t.second, lang);
@@ -152,28 +150,62 @@ export default function ConvertTime(
       return timeAgo(diffInYears, t.year, lang);
 
     case "post":
+      // Just now (less than 30 seconds)
+      if (diffInSeconds < 30) {
+        return lang === "ar" ? "الآن" : "now";
+      }
+      // Minutes ago (up to 59 minutes)
+      if (diffInMinutes < 60) {
+        return lang === "ar"
+          ? `منذ ${diffInMinutes} ${
+              diffInMinutes === 1
+                ? t.minute[0]
+                : diffInMinutes === 2
+                ? t.minute[1]
+                : t.minute[2]
+            }`
+          : `${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"} ago`;
+      }
+      // Hours ago (up to 23 hours)
       if (diffInHours < 24) {
-        if (diffInMinutes < 60) {
-          return timeAgo(diffInMinutes, t.minute, lang);
-        }
-        return timeAgo(diffInHours, t.hour, lang);
+        return lang === "ar"
+          ? `منذ ${diffInHours} ${
+              diffInHours === 1
+                ? t.hour[0]
+                : diffInHours === 2
+                ? t.hour[1]
+                : t.hour[2]
+            }`
+          : `${diffInHours} hour${diffInHours === 1 ? "" : "s"} ago`;
       }
+      // Yesterday
       if (diffInDays === 1) {
-        return `${t.yesterday} ${t.at} ${formatTime(past, lang)}`;
+        return lang === "ar"
+          ? `${t.yesterday} ${t.at} ${formatTime(past, lang)}`
+          : `yesterday at ${formatTime(past, lang)}`;
       }
+      // This week (show day name)
       if (diffInDays < 7) {
         const dayName = past.toLocaleDateString("en-US", { weekday: "long" });
-        const day = lang === "ar" ? arabicDays[dayName] : englishDays[dayName];
-        return `${day} ${t.at} ${formatTime(past, lang)}`;
+        const day = lang === "ar" ? arabicDays[dayName] : dayName;
+        return lang === "ar"
+          ? `${day} ${t.at} ${formatTime(past, lang)}`
+          : `${day} at ${formatTime(past, lang)}`;
       }
+      // This year (show date without year)
       if (diffInYears < 1) {
-        return `${formatDate(past, lang)} ${t.at} ${formatTime(past, lang)}`;
+        const formattedDate = formatDate(past, lang, false);
+        return lang === "ar"
+          ? `${formattedDate} ${t.at} ${formatTime(past, lang)}`
+          : `${formattedDate} at ${formatTime(past, lang)}`;
       }
-      return `${formatDate(past, lang, true)} ${t.at} ${formatTime(
-        past,
-        lang
-      )}`;
+      // Older than a year (show full date)
+      const formattedDate = formatDate(past, lang, true);
+      return lang === "ar"
+        ? `${formattedDate} ${t.at} ${formatTime(past, lang)}`
+        : `${formattedDate} at ${formatTime(past, lang)}`;
 
+    // ... rest of your cases remain the same
     case "general":
       const dayName = past.toLocaleDateString("en-US", { weekday: "long" });
       const day = lang === "ar" ? arabicDays[dayName] : englishDays[dayName];

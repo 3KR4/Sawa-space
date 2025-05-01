@@ -62,12 +62,10 @@ body {
   display: flex;
   font-family: "Rubik", sans-serif;
   background-color: #f4f4f4;
-  height: 100vh;
 }
 body:has(.posts-holder) {
   overflow: scroll;
   overflow-x: hidden;
-  height: unset;
   min-height: 100vh;
 }
 ::-webkit-scrollbar {
@@ -552,7 +550,6 @@ body > main {
 }
 
 body > main > .holder:has(.register-page) {
-  align-items: center;
   display: flex;
 }
 body > main:has(.emoji-holder.active) > .holder {
@@ -1858,7 +1855,6 @@ body.ar .post .comments {
 }
 .post .comments > .holder .comment .content img {
   border-radius: 10px;
-  cursor: pointer;
   position: relative !important;
   max-height: 110px;
   width: fit-content !important;

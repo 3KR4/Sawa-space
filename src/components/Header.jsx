@@ -186,12 +186,15 @@ export default function Header() {
         </Link>
 
         <ul>
-          <button>
-            <Link href={`/portfolio/page/${userPage?._id}`} className="title">
-              <FaPager style={{ fontSize: "22px" }} />{" "}
-              <span className="ellipsisText">{userPage?.pagename}</span>
-            </Link>
-          </button>
+          {userPage && (
+            <button>
+              <Link href={`/portfolio/page/${userPage?._id}`} className="title">
+                <FaPager style={{ fontSize: "22px" }} />{" "}
+                <span className="ellipsisText">{userPage?.pagename}</span>
+              </Link>
+            </button>
+          )}
+
           <button>
             <IoMdSettings /> {translations?.header?.settings_and_privacy}
           </button>
@@ -210,6 +213,7 @@ export default function Header() {
             onClick={() => {
               setUserData(null);
               localStorage.removeItem("user");
+              localStorage.removeItem("page");
               localStorage.removeItem("authToken");
               window.location.reload();
             }}

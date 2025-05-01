@@ -50,14 +50,15 @@ function PostsHolder(param) {
     setPostsLoading(true);
     timeoutId = setTimeout(async () => {
       try {
-        const { data } = await postService.getPosts(page, param.type, param.id);
+        const res = await postService.getPosts(page, param.type, param.id);
+        console.log("res", res);
         if (isMounted) {
           setPosts((prev) => {
-            const newPosts = [...prev, ...data.data];
+            const newPosts = [...prev, ...res.data.data];
             // إذا تجاوزت المنشورات 30، نحتفظ بأحدث 30 فقط
             return newPosts.length > 30 ? newPosts.slice(-25) : newPosts;
           });
-          setHasMore(page < data.last_page);
+          setHasMore(page < res.data.last_page);
         }
       } catch (err) {
         console.error("Error fetching posts", err);

@@ -178,7 +178,7 @@ function StoryForm() {
 
   const [loadingContent, setLoadingContent] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [prevImagesLength, setPrevImagesLength] = useState(0);
   const [selectedBackground, setSelectedBackground] = useState(
     backgroundColors[0]
   );
@@ -461,6 +461,7 @@ function StoryForm() {
           },
         });
         setLoadingContent(true);
+        setPrevImagesLength(story.img?.length || 0);
       }
     } else {
       setStoryData({
@@ -486,6 +487,7 @@ function StoryForm() {
           backGround: "",
         },
       });
+      setPrevImagesLength(0);
     }
   }, [openStoryForm]);
 
@@ -504,35 +506,53 @@ function StoryForm() {
       },
     };
 
-    console.log("storyContent", storyContent);
-
     try {
       let storyId;
 
       if (openStoryForm.type === "edit") {
         storyId = openStoryForm.story._id;
+
+        // Check if images have changed
+        const originalImages = openStoryForm.story.img || [];
+        const currentImages = storyData.images;
+
+        // Check if images were added, removed, or changed
+        const imagesChanged =
+          originalImages.length !== currentImages.length ||
+          currentImages.some((img) => !img.url); // has new images
+
+        // First update the story content
         const res = await storyService.editStory(storyId, storyContent);
         console.log("res", res);
+
+        // Then handle images if they changed
+        if (imagesChanged) {
+          const newImages = currentImages.filter((img) => !img.url);
+          const formData = new FormData();
+
+          // If we have new images to upload
+          if (newImages.length > 0) {
+            newImages.forEach((img) => formData.append("imgs", img));
+          }
+
+          // Always send all current images to the endpoint
+          // (the backend should handle updates/deletions)
+          await storyService.updateStoryImages(storyId, formData);
+        }
       } else {
+        // Create new story flow remains the same
         const storyResponse = await storyService.createStory(storyContent);
         storyId = storyResponse?.data.storyId;
         if (!storyId) throw new Error("Post ID not returned from backend");
-      }
 
-      const newImages = storyData.images.filter((img) => !img.url);
-      if (newImages.length > 0) {
-        const formData = new FormData();
-        newImages.forEach((img) => formData.append("imgs", img));
-        const imgRes = await storyService.uploadStoryImages(storyId, formData);
-      }
-
-      if (removedImages.length > 0 && openStoryForm.type === "edit") {
-        for (const publicid of removedImages) {
-          try {
-            await storyService.deleteImg(storyId, publicid);
-          } catch (err) {
-            console.warn(`Failed to delete image ${publicid}:`, err);
-          }
+        const newImages = storyData.images.filter((img) => !img.url);
+        if (newImages.length > 0) {
+          const formData = new FormData();
+          newImages.forEach((img) => formData.append("imgs", img));
+          const imgRes = await storyService.uploadStoryImages(
+            storyId,
+            formData
+          );
         }
       }
 
@@ -544,7 +564,7 @@ function StoryForm() {
         type: "success",
         message:
           openStoryForm.type === "edit"
-            ? "your story has updated successfully."
+            ? "Your story has been updated successfully."
             : "Your story has been created successfully.",
       });
 
@@ -560,7 +580,7 @@ function StoryForm() {
             x: 0,
             y: 0,
             size: 16,
-            family: `Rubik`,
+            family: Rubik,
             color: "454545",
             background: "ffffff",
           },
@@ -569,7 +589,7 @@ function StoryForm() {
             y: 0,
             size: 16,
           },
-          images: [], // Image settings
+          images: [],
           backGround: "",
         },
       });

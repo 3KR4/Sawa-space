@@ -153,6 +153,7 @@ body.ar .FormMenu .inputHolder .reactBtn {
   right: unset;
   left: 7px;
 }
+
 .inputHolder .holder > svg.eye {
   left: unset;
   right: 14px;
@@ -331,6 +332,35 @@ body:has(.register-page) .chape {
     transform: rotate(360deg) translateX(15px) translateY(25px) rotate(-360deg);
   }
 }
+.FormMenu .select-holder {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 5px;
+}
+.FormMenu .select-holder span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.FormMenu .select-holder span.active {
+  background: #ffc692;
+  border: 1px solid var(--main-color);
+  padding: 4px;
+  border-radius: 6px;
+}
+.FormMenu .select-holder label.checkbox {
+  min-width: 15px;
+  min-height: 15px;
+}
+.FormMenu .select-holder .custom-checkbox::after {
+  top: 2px;
+  left: 2px;
+}
+
 .register-page {
   position: relative;
   border-radius: 8px;
@@ -338,6 +368,8 @@ body:has(.register-page) .chape {
   width: 34% !important;
   min-width: 400px;
   max-width: 92%;
+  height: fit-content;
+  margin: auto;
   box-shadow: 0 0 6px 0px var(--main-color);
 }
 .register-page * {
@@ -1706,6 +1738,9 @@ body.ar .imgForm .actions .row {
   body .sideSection + div {
     width: 100%;
   }
+  .FormMenu .select-holder span.active {
+    padding: 3px 4px;
+  }
 }
 @media (max-width: 768px) {
   .register-page {
@@ -1726,6 +1761,9 @@ body.ar .imgForm .actions .row {
   }
   form .rowHolder {
     flex-direction: column !important;
+  }
+  form .rowHolder.actions {
+    flex-direction: row !important;
   }
   .register-page .btns .main-button {
     height: 40px;

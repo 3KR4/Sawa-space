@@ -16,14 +16,17 @@ import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { GoMention } from "react-icons/go";
 import { IoMdImages } from "react-icons/io";
-import { MdOutlineAddReaction } from "react-icons/md";
+import {
+  MdOutlineAddReaction,
+  MdOutlineKeyboardArrowDown,
+} from "react-icons/md";
 import { VscMention } from "react-icons/vsc";
 import { CircleAlert } from "lucide-react";
 
 function PostForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData } = useContext(ScreenContext);
+  const { userData, userPage } = useContext(ScreenContext);
 
   const {
     selectedUsers,
@@ -37,7 +40,7 @@ function PostForm() {
     setSomeThingHappen,
   } = useContext(MenusContext);
 
-  const { handleMenus } = useContext(DynamicMenusContext);
+  const { handleMenus, selectedDev } = useContext(DynamicMenusContext);
   const { messageText, setMessageText, InputRef, emojiHolderRef } =
     useContext(InputActionsContext);
 
@@ -63,6 +66,23 @@ function PostForm() {
   const [addHashtag, setAddHashtag] = useState(false);
   const [addLink, setAddLink] = useState(false);
   const [addImages, setAddImages] = useState(false);
+
+  // Tags & Links
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [tagError, setTagError] = useState("");
+
+  const [links, setLinks] = useState([]);
+  const [linkInput, setLinkInput] = useState("");
+  const [linkError, setLinkError] = useState("");
+
+  const [curentOpendSelectHolder, setCurentOpendSelectHolder] = useState();
+
+  const [postType, setPostType] = useState(openPostForm?.for || "user");
+
+
+
+  const isDisabled = !images.length && !links.length && messageText.length < 3;
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -98,17 +118,6 @@ function PostForm() {
       return updatedImages;
     });
   };
-
-  // Tags & Links
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
-  const [tagError, setTagError] = useState("");
-
-  const [links, setLinks] = useState([]);
-  const [linkInput, setLinkInput] = useState("");
-  const [linkError, setLinkError] = useState("");
-
-  const isDisabled = !images.length && !links.length && messageText.length < 3;
 
   const add_Tag_Link = async (e, type) => {
     e.preventDefault();
@@ -208,7 +217,10 @@ function PostForm() {
       setLoadingContent(false);
       const fetchPost = async () => {
         try {
-          const response = await postService.getSinglePost(openPostForm.postId);
+          const response = await postService.getSinglePost(
+            postType,
+            openPostForm.postId
+          );
           const post = response?.data?.data?.[0];
 
           if (post) {
@@ -262,63 +274,81 @@ function PostForm() {
     };
 
     try {
-      let postId;
+      const postIds = [];
 
       if (openPostForm.type === "edit") {
-        // 🛠 Edit Post
-        postId = openPostForm.postId;
-        await postService.editPost(postId, postData);
+        // Editing a single post
+        const postId = openPostForm.postId;
+        await postService.editPost(postType, postId, postData);
+        postIds.push({ type: postType, id: postId });
       } else {
-        // ✨ Create New Post
-        const postResponse = await postService.createPost(postData);
-        postId = postResponse?.data?.postId;
-        if (!postId) throw new Error("Post ID not returned from backend");
-      }
+        // Creating new posts
+        if (postType === "user" || postType === "together") {
+          const userRes = await postService.createPost("user", postData);
+          const userPostId = userRes?.data?.postId;
+          if (!userPostId) throw new Error("User post ID not returned");
+          postIds.push({ type: "user", id: userPostId });
+        }
 
-      // 📤 Upload New Images
-      const newImages = images.filter((img) => !img.url); // only files
-      if (newImages.length > 0) {
-        const formData = new FormData();
-        newImages.forEach((img) => formData.append("imgs", img));
-        await postService.uploadPostImages(postId, formData);
-      }
-
-      // 🗑️ Delete Removed Images (Only on Edit)
-      if (removedImages.length > 0 && openPostForm.type === "edit") {
-        for (const publicid of removedImages) {
-          try {
-            await postService.deleteImg(postId, publicid);
-          } catch (err) {
-            console.warn(`Failed to delete image ${publicid}:`, err);
-          }
+        if (postType === "page" || postType === "together") {
+          const pageRes = await postService.createPost("page", postData);
+          const pagePostId = pageRes?.data?.postId;
+          if (!pagePostId) throw new Error("Page post ID not returned");
+          postIds.push({ type: "page", id: pagePostId });
         }
       }
 
-      // 📦 Fetch Final Post
-      const post = await postService.getSinglePost(postId);
-      if (post) {
-        setSomeThingHappen({
-          event: openPostForm.type === "edit" ? "edit" : "create",
-          type: "post",
-          post: post.data.data[0],
-        });
-        addNotification({
-          type: "success",
-          message:
-            openPostForm.type === "edit"
-              ? "Post updated successfully."
-              : "Your post has been created successfully.",
-        });
+      // Handle images for each created/edited post
+      for (const { type, id } of postIds) {
+        // Upload new images
+        const newImages = images.filter((img) => !img.url);
+        if (newImages.length > 0) {
+          const formData = new FormData();
+          newImages.forEach((img) => formData.append("imgs", img));
+          await postService.uploadPostImages(type, id, formData);
+        }
 
-        // 🔁 Reset Form State
-        setOpenPostForm(false);
-        setMessageText("");
-        setLinks([]);
-        setTags([]);
-        setImages([]);
-        setSelectedUsers([]);
-        setRemovedImages([]);
+        // Delete removed images (only when editing)
+        if (openPostForm.type === "edit" && removedImages.length > 0) {
+          for (const publicid of removedImages) {
+            try {
+              await postService.deleteImg(type, id, publicid);
+            } catch (err) {
+              console.warn(`Failed to delete image ${publicid}:`, err);
+            }
+          }
+        }
+
+        // Fetch post and emit it
+        const post = await postService.getSinglePost(type, id);
+        if (post?.data?.data?.[0]) {
+          setSomeThingHappen({
+            event: openPostForm.type === "edit" ? "edit" : "create",
+            type: "post",
+            post: post.data.data[0],
+          });
+        }
       }
+
+      // Notify
+      addNotification({
+        type: "success",
+        message:
+          openPostForm.type === "edit"
+            ? "Post updated successfully."
+            : postType === "together"
+            ? "Posts created successfully for both user and page."
+            : "Your post has been created successfully.",
+      });
+
+      // Reset form state
+      setOpenPostForm(false);
+      setMessageText("");
+      setLinks([]);
+      setTags([]);
+      setImages([]);
+      setSelectedUsers([]);
+      setRemovedImages([]);
     } catch (err) {
       addNotification({
         type: "error",
@@ -350,7 +380,9 @@ function PostForm() {
               ? translations?.forms?.edit_post
               : translations?.forms?.create_post}
           </h4>
-          <IoClose className="close" onClick={() => setOpenPostForm(false)} />
+          <div>
+            <IoClose className="close" onClick={() => setOpenPostForm(false)} />
+          </div>
         </div>
         <div
           style={{
@@ -614,6 +646,64 @@ function PostForm() {
               />
             </div>
           </div>
+          {userPage && openPostForm.type !== "edit" && (
+            <div
+              className="select-holder"
+              onClick={() => setCurentOpendSelectHolder((prev) => !prev)}
+            >
+              <h4>create as:</h4>
+
+              <span
+                className={
+                  postType === "user" || postType === "together" ? "active" : ""
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPostType((prev) => {
+                    if (prev === "user") return "";
+                    if (prev === "page") return "together";
+                    if (prev === "together") return "page";
+                    return "user";
+                  });
+                }}
+              >
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    className="input"
+                    checked={postType === "user" || postType === "together"}
+                  />
+                  <span className="custom-checkbox"></span>
+                </label>
+                {userData?.firstname} {userData?.lastname}
+              </span>
+
+              <span
+                className={
+                  postType === "page" || postType === "together" ? "active" : ""
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPostType((prev) => {
+                    if (prev === "page") return "";
+                    if (prev === "user") return "together";
+                    if (prev === "together") return "user";
+                    return "page";
+                  });
+                }}
+              >
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    className="input"
+                    checked={postType === "page" || postType === "together"}
+                  />
+                  <span className="custom-checkbox"></span>
+                </label>
+                {userPage?.pagename}
+              </span>
+            </div>
+          )}
           <button
             type="submit"
             className={`main-button ${loading ? "loading" : ""}`}
