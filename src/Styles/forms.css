@@ -29,11 +29,14 @@ pre.placeHolder {
   position: absolute;
   z-index: 1;
   left: 19px;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 14px;
   font-size: 13px;
   font-weight: 400;
   transition: 0.3s;
   color: var(--paragraph-color);
+  cursor: pointer;
 }
 body.ar .placeHolder {
   left: unset;
@@ -1711,6 +1714,9 @@ body.ar .imgForm .actions .row {
   align-items: flex-start;
   border-bottom: 1px solid #bfbfbf;
   padding: 5px 0;
+}
+.FormMenu .about-group .about-item:first-child {
+  padding: 0px 0 5px;
 }
 .FormMenu .about-group .about-item:last-child {
   border: none;

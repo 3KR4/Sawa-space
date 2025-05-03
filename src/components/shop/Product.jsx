@@ -17,6 +17,10 @@ function Product({ data, viewOwner }) {
   return (
     <div className="Product">
       <div className="image-holder">
+        <div className="backimg">
+          <Image src={activeImg?.newpath?.url} alt={data?.name} fill />
+        </div>
+
         <Image
           className="mainImg"
           src={activeImg?.newpath?.url}
@@ -35,20 +39,15 @@ function Product({ data, viewOwner }) {
       </div>
 
       <div className="content">
-        <div className="row" style={{ marginBottom: "-6px" }}>
-          <h4 className="title">{data?.name}</h4>
-          {data?.sale && data?.sale !== 0 && (
-            <span className="salePercentage">
-              -{data?.sale < 10 ? `0${data.sale}` : data.sale}% off
-            </span>
-          )}
-        </div>
+        <h4 className="title ellipsisText">{data?.name}</h4>
+
         <div>
           <div className="row">
             <div className="price">
               {data?.sale && data?.sale !== 0 ? (
                 <>
                   <span className="originalPrice">${data?.Price}</span>
+                  {`-`}
                   <span className="currentPrice">
                     ${data?.Price - (data?.Price * data?.sale) / 100}
                   </span>
@@ -57,7 +56,9 @@ function Product({ data, viewOwner }) {
                 <span className="currentPrice">${data?.Price}</span>
               )}
             </div>
-            {data?.category && <h5 className="category">{data?.category}</h5>}
+            {data?.category && (
+              <h5 className="category ellipsisText">{data?.category}</h5>
+            )}
           </div>
         </div>
         {viewOwner && (
@@ -73,6 +74,11 @@ function Product({ data, viewOwner }) {
                 />
                 <h4>{data?.pageDetails[0]?.pagename}</h4>
               </div>
+              {data?.sale && data?.sale !== 0 && (
+                <span className="salePercentage">
+                  -{data?.sale < 10 ? `0${data.sale}` : data.sale}% off
+                </span>
+              )}
             </div>
           </>
         )}

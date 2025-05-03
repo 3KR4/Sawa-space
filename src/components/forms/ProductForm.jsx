@@ -136,7 +136,9 @@ function ProductForm() {
 
       // Skip if clicked inside any MUI popper
       if (
-        document.querySelector('[role="presentation"]')?.contains(event.target)
+        event.target.closest(".MuiPopover-root") ||
+        event.target.closest(".MuiSelect-root") ||
+        event.target.closest(".MuiMenu-paper") // covers MUI menu open dropdown
       ) {
         return;
       }
@@ -348,8 +350,14 @@ function ProductForm() {
         >
           <div className="inputHolder">
             <div className="holder">
-              <h6 className="placeHolder">product name</h6>
+              <h6
+                className="placeHolder"
+                onClick={() => document.getElementById("nameInput")?.focus()}
+              >
+                product name
+              </h6>
               <input
+                id="nameInput"
                 type="text"
                 {...register("name", {
                   required:
@@ -378,8 +386,14 @@ function ProductForm() {
           <div className="rowHolder">
             <div className="inputHolder">
               <div className="holder">
-                <h6 className="placeHolder">price</h6>
+                <h6
+                  className="placeHolder"
+                  onClick={() => document.getElementById("priceInput")?.focus()}
+                >
+                  price
+                </h6>
                 <input
+                  id="priceInput"
                   type="number"
                   {...register("price", {
                     required:
@@ -402,8 +416,14 @@ function ProductForm() {
 
             <div className="inputHolder">
               <div className="holder">
-                <h6 className="placeHolder">sale</h6>
+                <h6
+                  className="placeHolder"
+                  onClick={() => document.getElementById("saleInput")?.focus()}
+                >
+                  sale
+                </h6>
                 <input
+                  id="saleInput"
                   type="number"
                   {...register("sale", {
                     min: { value: 0, message: "Sale must be positive" },
@@ -425,8 +445,14 @@ function ProductForm() {
 
             <div className="inputHolder">
               <div className="holder">
-                <h6 className="placeHolder">stock</h6>
+                <h6
+                  className="placeHolder"
+                  onClick={() => document.getElementById("stockInput")?.focus()}
+                >
+                  stock
+                </h6>
                 <input
+                  id="stockInput"
                   type="number"
                   {...register("stock", {
                     required: "Stock is required",

@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-
+import ContentLoader from "react-content-loader";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 
 import Product from "@/components/shop/Product";
@@ -63,7 +63,7 @@ export default function ProductsSection({ render }) {
     }
   };
 
-  return (
+  return products.length ? (
     <div className="productSection">
       <div className="top">
         <h4 className="left-title">
@@ -98,8 +98,39 @@ export default function ProductsSection({ render }) {
               <Product data={item} viewOwner={true} />
             </SwiperSlide>
           ))}
+          <SwiperSlide>
+            {" "}
+            <ContentLoader
+              speed={1}
+              width="100%"
+              height="100%"
+              viewBox="0 0 300 300"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#ecebeb"
+            >
+              {/* Image Placeholder */}
+              <rect x="0" y="0" rx="8" ry="8" width="100%" height="68%" />
+
+              {/* Name Placeholder */}
+              <rect x="5" y="212" rx="2" ry="2" width="100%" height="15" />
+
+              {/* Price Placeholder */}
+              <rect x="5" y="235" rx="4" ry="2" width="150" height="10" />
+              <rect x="195" y="235" rx="4" ry="2" width="100" height="10" />
+
+              {/* User Info Placeholder */}
+              <circle cx="22" cy="280" r="20" />
+              <rect x="50" y="267" rx="2" ry="2" width="100" height="10" />
+              <rect x="50" y="285" rx="2" ry="2" width="50" height="10" />
+
+              {/* Social Icons Placeholder */}
+
+              {/* Discount Placeholder */}
+              <rect x="250" y="280" rx="2" ry="2" width="50" height="10" />
+            </ContentLoader>
+          </SwiperSlide>
         </Swiper>
       </div>
     </div>
-  );
+  ) : null;
 }
