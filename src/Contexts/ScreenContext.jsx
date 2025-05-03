@@ -133,9 +133,9 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [someThingHappen.stories, someThingHappen.type, userData]);
 
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type");
-  const postId = searchParams.get("post");
+  // const searchParams = useSearchParams();
+  // const type = searchParams.get("type");
+  // const postId = searchParams.get("post");
 
   useEffect(() => {
     const getSinglePost = async () => {

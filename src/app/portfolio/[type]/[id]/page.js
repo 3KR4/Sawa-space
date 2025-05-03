@@ -43,7 +43,7 @@ import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 export default function Portfolio({ params }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
   const { userData, userPage, screenSize, actionLoading, setActionLoading } =
@@ -709,17 +709,17 @@ export default function Portfolio({ params }) {
                                   : ""
                               }`}
                               key={post._id}
-                              onClick={() => {
-                                const current = new URLSearchParams(
-                                  Array.from(searchParams.entries())
-                                );
-                                current.set("post", post._id);
-                                router.replace(
-                                  `${pathname}?${current.toString()}`,
-                                  undefined,
-                                  { scroll: false }
-                                );
-                              }}
+                              // onClick={() => {
+                              //   const current = new URLSearchParams(
+                              //     Array.from(searchParams.entries())
+                              //   );
+                              //   current.set("post", post._id);
+                              //   router.replace(
+                              //     `${pathname}?${current.toString()}`,
+                              //     undefined,
+                              //     { scroll: false }
+                              //   );
+                              // }}
                             >
                               {post.img?.slice(0, 4)?.map((imgObj) => (
                                 <div className="img-and-morecounter-div">
