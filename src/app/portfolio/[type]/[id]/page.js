@@ -40,7 +40,7 @@ import { HiUsers } from "react-icons/hi2";
 import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
-  const { setUserData } = useContext(ScreenContext);
+  const { getUser } = useContext(ScreenContext);
   const router = useRouter();
   const pathname = usePathname();
   // const searchParams = useSearchParams();
@@ -264,10 +264,7 @@ export default function Portfolio({ params }) {
         ...prev,
         category: cleanedCategories, // update state without empty strings
       }));
-      setUserPage((prev) => ({
-        ...prev,
-        category: cleanedCategories, // update state without empty strings
-      }));
+      await getUser("page");
 
       addNotification({
         type: "success",
