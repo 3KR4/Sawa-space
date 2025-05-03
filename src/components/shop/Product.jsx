@@ -11,7 +11,7 @@ function Product({ data, viewOwner }) {
   const { setOpenPostForm } = useContext(MenusContext);
   const { locale, translations, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
-  const [activeImg, setActiveImg] = useState(data?.img[0]);
+  const [activeImg, setActiveImg] = useState(data?.img?.[0] || null);
 
   console.log(activeImg);
   return (

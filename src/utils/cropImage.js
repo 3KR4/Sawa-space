@@ -46,3 +46,5 @@ export const getCroppedImg = (imageSrc, croppedAreaPixels, rotation = 0) => {
     }, "image/jpeg");
   });
 };
+
+
