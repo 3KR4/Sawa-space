@@ -23,7 +23,7 @@ body:has(.portfolio) > main {
   position: relative;
   border-radius: 0 0 25px 25px;
   overflow: hidden;
-  background: var(--back-grident);
+  background: var(--third-color);
   min-height: 100px;
 }
 .portfolio .top .cover img {
@@ -164,7 +164,7 @@ body.ar .portfolio nav .top .right {
 .portfolio .bottom-holder .side-menu {
   height: fit-content;
   position: sticky;
-  top: 10px;
+  top: 73px;
   max-width: 32%;
   min-width: 32%;
   padding: 0;
@@ -294,10 +294,30 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   transition: 0.3s;
   cursor: pointer;
   height: 100%;
+  position: relative;
 }
 .post-imgs-hold.single {
   display: flex !important
   ;
+}
+.portfolio
+  .bottom-holder
+  .side-menu
+  .images
+  .hold
+  .post-imgs-hold
+  span.hasMoreImgs {
+  color: var(--title-color);
+  background: #d5d5d5;
+  position: absolute;
+  z-index: 1;
+  padding: 5px;
+  border-radius: 5px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 29px;
+  text-align: center;
 }
 
 .post-imgs-hold.two {
@@ -310,7 +330,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 }
 .portfolio .bottom-holder .side-menu .images .hold .post-imgs-hold:hover {
   border-color: var(--main-color);
-  background: #ffc692;
+  background: var(--third-color);
 }
 .portfolio .bottom-holder .side-menu .images img:hover {
   scale: 1.025;
@@ -378,16 +398,16 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 }
 .portfolio .bottom-holder .friends .chat.owner,
 .portfolio .bottom-holder .friends .chat:hover {
-  background: #ffa55b;
+  background: var(--third-color);
 }
 .portfolio .bottom-holder .friends .chat.owner:hover {
-  background: #ffa55b !important;
+  background: var(--third-color) !important;
 }
 .portfolio .bottom-holder .friends:has(.chat:hover) .owner {
   background: var(--border-color);
 }
-.portfolio .bottom-holder .friends:has(.chat:hover) .owner h4 {
-  color: var(--title-color);
+.portfolio .bottom-holder .friends:has(.chat:hover) h4 {
+  color: var(--title-color) !important;
 }
 .portfolio .bottom-holder .friends .chat:hover .name-lastmessage h4,
 .portfolio .bottom-holder .friends .chat.owner h4 {
@@ -405,6 +425,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   font-size: 13px;
   text-align: center;
   transition: 0.3s;
+  max-width: 113px;
 }
 .portfolio .bottom-holder .friends .name-lastmessage p {
   font-size: 13px;
@@ -427,6 +448,9 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.portfolio .bottom-holder .bigSection:has(.friends) .actions {
+  background: var(--third-color);
 }
 .portfolio .bottom-holder .bigSection:has(.grid-products) > .actions {
   padding: 14px;
@@ -459,21 +483,30 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 }
 .portfolio .bigSection .friends > div {
   background: var(--body-color);
-  border-radius: 6px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 7px;
+  padding: 7px 9px;
   cursor: pointer;
+  transition: 0.3s;
+  justify-content: space-between;
+  border: 2px solid var(--border-color);
 }
+
 .portfolio .bigSection .friends > div img {
   position: relative !important;
-  width: 50px !important;
-  height: 50px !important;
+  width: 60px !important;
+  height: 60px !important;
+}
+.portfolio .bigSection .friends.small > div img {
+  width: 48px !important;
+  height: 48px !important;
 }
 .portfolio .bigSection .friends > div div {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 .portfolio .bigSection .about .friends > div div {
   flex-direction: row;
@@ -487,6 +520,31 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 .portfolio .bigSection .friends > div p {
   font-size: 14px;
 }
+.portfolio .bigSection .friends > div .btns-hold {
+  flex-direction: row;
+  gap: 5px;
+}
+
+.portfolio .bigSection .friends > div .main-button {
+  font-size: 13px;
+  background: var(--section-color);
+  border: 1px solid var(--border-color);
+  margin: 0;
+  padding: 4px 12px !important;
+}
+.portfolio .bigSection .friends > div .main-button:hover {
+  background: var(--third-color);
+  border-color: var(--main-color);
+}
+
+.portfolio .bigSection .friends > div .btns-hold svg {
+  font-size: 17px;
+}
+.portfolio .bigSection .friends > div .main-button:hover svg {
+  scale: 1.1;
+  color: var(--title-color);
+}
+
 .portfolio .bigSection .photos {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -504,6 +562,41 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   object-fit: cover;
   border-radius: 9px;
   cursor: pointer;
+}
+
+.MuiMasonry-root .post-imgs-hold {
+  cursor: pointer;
+  display: flex;
+  border-radius: 7px;
+  border: 1px solid var(--second-section-color);
+  background: var(--third-color);
+  transition: 0.3s;
+}
+.MuiMasonry-root .post-imgs-hold:hover {
+  background-color: var(--third-color);
+}
+.MuiMasonry-root .post-imgs-hold img {
+  width: 100%;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+.MuiMasonry-root .post-imgs-hold:hover img {
+  scale: 0.95;
+}
+.bigSection .hold-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.bigSection .hold-photos > div {
+  border-radius: 7px;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  width: 100%;
+}
+.bigSection .hold-photos > div svg {
+  background-color: var(--section-color);
+  border-radius: 7px;
 }
 .portfolio .bigSection .about {
   display: flex;
@@ -580,8 +673,9 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
   .portfolio .bottom-holder .side-menu {
     min-width: 42%;
   }
-  body:has(.chats.active) .portfolio {
-    width: 95%;
+
+  .portfolio {
+    width: 80%;
   }
 }
 
@@ -591,6 +685,9 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
   }
   .portfolio .bottom-holder .friends .name-lastmessage h4 {
     font-size: 12px;
+  }
+  .portfolio {
+    width: 90%;
   }
 }
 
@@ -688,6 +785,9 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
   }
   .portfolio .bigSection .grid-products {
     grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+  }
+  .bigSection .hold-photos {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 768px) {

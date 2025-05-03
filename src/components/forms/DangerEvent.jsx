@@ -95,7 +95,6 @@ function DangerEvent() {
       setDangerEvent(null);
     }
   };
-  console.log(dangerEvent);
   const deleteImg = async () => {
     setLoading(true);
     try {

@@ -14,6 +14,7 @@ export const MenusProvider = ({ children }) => {
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openStoryForm, setOpenStoryForm] = useState(false);
   const [openImgForm, setOpenImgForm] = useState(false);
+  const [openProductForm, setOpenProductForm] = useState(false);
   const [dangerEvent, setDangerEvent] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUsersNames, setSelectedUsersNames] = useState([]);
@@ -48,6 +49,8 @@ export const MenusProvider = ({ children }) => {
         setOpenStoryForm,
         openImgForm,
         setOpenImgForm,
+        openProductForm,
+        setOpenProductForm,
         setUsersSelectionSearch,
         usersSelectionRef,
         usersreactMenuRef,

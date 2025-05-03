@@ -13,6 +13,7 @@ import Post from "@/components/post/Post";
 import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import Masonry from "@mui/lab/Masonry";
 
 import PostsHolder from "@/components/post/PostsHolder";
 import EditProfileForm from "@/components/forms/EditProfileForm";
@@ -37,7 +38,7 @@ import { IoMdPersonAdd, IoMdPhotos } from "react-icons/io";
 import { AiFillMessage } from "react-icons/ai";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
-import { IoInformationCircleSharp, IoSearch } from "react-icons/io5";
+import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
   const router = useRouter();
@@ -45,7 +46,8 @@ export default function Portfolio({ params }) {
   const searchParams = useSearchParams();
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage, screenSize } = useContext(ScreenContext);
+  const { userData, userPage, screenSize, actionLoading, setActionLoading } =
+    useContext(ScreenContext);
   const { setOpenImgForm } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -56,20 +58,38 @@ export default function Portfolio({ params }) {
 
   const [currentPortfolio, setCurrentPortfolio] = useState({});
   const [currentSelectedData, setCurrentSelectedData] = useState("posts");
-  const [loading, setLoading] = useState(true);
-  const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [seeAllAbout, setSeeAllAbout] = useState(false);
   const [editType, setEditType] = useState(null);
   const [productSearch, setProductSearch] = useState("");
   const [userPhotos, setUserPhotos] = useState([]);
+  const [userAllPhotos, setUserAllPhotos] = useState([]);
+  const [pagePhotos, setPagePhotos] = useState(1);
 
-  const fetchPortfolioPhotos = async (page, limit) => {
-    setLoadingPhotos(true);
+  const [userFriends, setUserFriends] = useState([]);
+  const [userSendedReqs, setUserSendedReqs] = useState([]);
+  const [userReceivedReqs, setUserReceivedReqs] = useState([]);
+
+  const [originalCats, setOriginalCats] = useState([]);
+  const [productsSmallView, setProductsSmallView] = useState([]);
+
+  const fetch_portfolio_photos = async (type, page, limit) => {
+    setActionLoading((prev) => [...prev, "profile-photos"]);
 
     try {
       const { data } = await userService.getUserPhotos(id, page, limit);
 
-      setUserPhotos(data.data);
+      if (type === "side-photos") {
+        setUserPhotos(data.data);
+      } else {
+        const formattedPhotos = data.data.flatMap((post) =>
+          post.img.map((image) => ({
+            postId: post._id,
+            url: image.newpath.url,
+          }))
+        );
+
+        setUserAllPhotos(formattedPhotos);
+      }
     } catch (err) {
       console.error("Error fetching user photos", err);
       addNotification({
@@ -77,12 +97,71 @@ export default function Portfolio({ params }) {
         message: "Failed to load user photos. Please try again later.",
       });
     } finally {
-      setLoadingPhotos(false);
+      setActionLoading((prev) => prev.filter((x) => x !== "profile-photos"));
+    }
+  };
+  const fetch_user_friends = async (id) => {
+    setActionLoading((prev) => [...prev, "profile-friends"]);
+
+    try {
+      const { data } = await userService.getUserFriends(id);
+
+      setUserFriends(data.data);
+    } catch (err) {
+      console.error("Error fetching user friends", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user friends. Please try again later.",
+      });
+    } finally {
+      setActionLoading((prev) => prev.filter((x) => x !== "profile-friends"));
+    }
+  };
+  const user_sended_Request = async () => {
+    setActionLoading((prev) => [...prev, "profile-sended-friends-req"]);
+
+    try {
+      const { data } = await userService.getUserSendedRequests();
+
+      setUserSendedReqs(data.data);
+    } catch (err) {
+      console.error("Error fetching your sended friends requests", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load your sended friends requests",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "profile-sended-friends-req")
+      );
+    }
+  };
+  const user_received_Request = async () => {
+    setActionLoading((prev) => [...prev, "profile-received-friends-req"]);
+
+    try {
+      const { data } = await userService.getUserReceivedRequests();
+
+      setUserReceivedReqs(data.data);
+    } catch (err) {
+      console.error("Error fetching your received friends requests", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load your received friends requests",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "profile-received-friends-req")
+      );
     }
   };
 
   useEffect(() => {
+    fetch_user_friends(id);
+  }, []);
+  useEffect(() => {
     const fetchPortfolioData = async () => {
+      setActionLoading((prev) => [...prev, "profile-data"]);
       try {
         let response;
 
@@ -94,7 +173,7 @@ export default function Portfolio({ params }) {
           response = await communityService.getCommunityData(id);
         } else {
           console.error("Unknown portfolio type:", type);
-          setLoading(false);
+          setActionLoading((prev) => prev.filter((x) => x !== "profile-data"));
         }
 
         setCurrentPortfolio(response.data.data);
@@ -105,13 +184,23 @@ export default function Portfolio({ params }) {
           message: "Failed to load user data. Please try again later.",
         });
       } finally {
-        setLoading(false);
+        setActionLoading((prev) => prev.filter((x) => x !== "profile-data"));
       }
     };
 
-    fetchPortfolioPhotos();
+    fetch_portfolio_photos("side-photos", 1, 7);
     fetchPortfolioData();
   }, [id, type]);
+
+  useEffect(() => {
+    if (currentSelectedData === "photos") {
+      fetch_portfolio_photos("all", 1, 1000000);
+    } else if (currentSelectedData === "friends") {
+      fetch_user_friends(id);
+      user_sended_Request();
+      user_received_Request();
+    }
+  }, [currentSelectedData]);
 
   const activePortfolio =
     type === "page"
@@ -134,15 +223,12 @@ export default function Portfolio({ params }) {
     ],
     [12, 24, 48, 96],
   ];
-
   const [selectedCat, setSelectedCat] = useState([]);
   const [availability, setAvailability] = useState("");
   const [sortType, setSortType] = useState("default");
   const [pageSize, setPageSize] = useState(12);
   const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
   const [startEditCats, setStartEditCats] = useState(false);
-  const [loadingCategory, setLoadingCategory] = useState(false);
-  const [originalCats, setOriginalCats] = useState([]);
 
   const handleAddMoreCats = () => {
     const allFilled = currentPortfolio.category?.every(
@@ -158,7 +244,7 @@ export default function Portfolio({ params }) {
 
   const handleUpdateCategory = async () => {
     try {
-      setLoadingCategory(true);
+      setActionLoading((prev) => [...prev, "category"]);
 
       const cleanedCategories = currentPortfolio.category.filter(
         (cat) => cat.trim() !== ""
@@ -186,7 +272,71 @@ export default function Portfolio({ params }) {
         message: "Failed to update categories. Try again.",
       });
     } finally {
-      setLoadingCategory(false);
+      setActionLoading((prev) => prev.filter((x) => x !== "category"));
+    }
+  };
+
+  const sendFriendRequest = async (id) => {
+    try {
+      setActionLoading((prev) => [...prev, `send-friend-request-${id}`]);
+
+      await userService.makeFriendRequest(id);
+
+      setUserFriends((prev) =>
+        prev.map((friend) =>
+          friend._id === id
+            ? {
+                ...friend,
+                friendRequests: {
+                  ...friend.friendRequests,
+                  received: [
+                    ...(friend.friendRequests?.received || []),
+                    userData?._id,
+                  ],
+                },
+              }
+            : friend
+        )
+      );
+
+      addNotification({
+        type: "success",
+        message: "Friend request sent successfully.",
+      });
+    } catch (err) {
+      console.error("Failed to send friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to send friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== `send-friend-request-${id}`)
+      );
+    }
+  };
+  const confirm_remove_friend_request = async (id, action) => {
+    try {
+      setActionLoading((prev) => [
+        ...prev,
+        `${action ? "confirm" : "remove"}-friend-request-${id}`,
+      ]);
+
+      await userService.interactWithFriendReq(id, action);
+
+      setUserReceivedReqs((prev) => prev.filter((x) => x._id !== id));
+    } catch (err) {
+      console.error("Failed to interact with this friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to interact with this friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter(
+          (x) => x !== `${action ? "confirm" : "remove"}-friend-request-${id}`
+        )
+      );
     }
   };
 
@@ -291,14 +441,18 @@ export default function Portfolio({ params }) {
                         currentPortfolio?.lastname || ""
                       }`}
                 </h4>
-                {type === "user" ? (
-                  <h5>
-                    46 {translations?.portfolio?.friends} - 10{" "}
-                    {translations?.portfolio?.mutual}
-                  </h5>
-                ) : (
-                  <h5>46K {translations?.portfolio?.followers}</h5>
-                )}
+                {(currentPortfolio?.friends?.length ||
+                  currentPortfolio?.followers?.length) &&
+                  (type === "user" ? (
+                    <h5>
+                      {currentPortfolio?.friends?.length}{" "}
+                      {translations?.portfolio?.friends}
+                      {/* - 10{" "}
+                    {translations?.portfolio?.mutual} */}
+                    </h5>
+                  ) : (
+                    <h5>46K {translations?.portfolio?.followers}</h5>
+                  ))}
               </div>
               <div className="right-btns">
                 {isMyPage || isMyProfile ? (
@@ -331,7 +485,7 @@ export default function Portfolio({ params }) {
               </div>
             </div>
           </div>
-          {type === "page" && (
+          {/* {type === "page" && (
             <div className="small-followers">
               {loading
                 ? Array.from({ length: 5 }).map((_, index) => (
@@ -360,7 +514,7 @@ export default function Portfolio({ params }) {
                       />
                     ))}
             </div>
-          )}
+          )} */}
           <div className="bottom">
             <div>
               <button
@@ -504,178 +658,212 @@ export default function Portfolio({ params }) {
                   )}
                 </ul>
               )}
-              {currentSelectedData !== "photos" && (
-                <div className="images">
-                  <div className="top">
-                    <h4> {translations?.portfolio?.photos}</h4>
-                    {userPhotos?.length > 6 && (
-                      <button onClick={() => setCurrentSelectedData("photos")}>
-                        {translations?.portfolio?.see_all}{" "}
-                        {translations?.portfolio?.photos} <FaAngleRight />
-                      </button>
-                    )}
-                  </div>
-                  <div className="hold">
-                    {loadingPhotos
-                      ? Array.from({ length: 6 }).map((_, index) => (
-                          <ContentLoader
-                            width={120}
-                            height={120}
-                            speed={4}
-                            viewBox="0 0 120 120"
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
+              {type !== "page" &&
+                currentSelectedData !== "photos" &&
+                (userPhotos?.length ||
+                  actionLoading.includes("profile-photos")) && (
+                  <div className="images">
+                    {userPhotos?.length ? (
+                      <div className="top">
+                        <h4> {translations?.portfolio?.photos}</h4>
+                        {userPhotos?.length > 6 && (
+                          <button
+                            onClick={() => setCurrentSelectedData("photos")}
                           >
-                            <rect
-                              x="160"
-                              y="120"
-                              rx="3"
-                              ry="3"
-                              width="100%"
-                              height="120"
-                            />
-                          </ContentLoader>
-                        ))
-                      : userPhotos?.slice(0, 6)?.map((post) => (
-                          <div
-                            className={`post-imgs-hold ${
-                              post.img.length === 1
-                                ? "single"
-                                : post.img.length === 2
-                                ? "two"
-                                : ""
-                            }`}
-                            key={post._id}
-                            onClick={() => {
-                              const current = new URLSearchParams(
-                                Array.from(searchParams.entries())
-                              );
-                              current.set("post", post._id);
-                              router.replace(
-                                `${pathname}?${current.toString()}`,
-                                undefined,
-                                { scroll: false }
-                              );
-                            }}
-                          >
-                            {post.img?.map((imgObj) => (
-                              <Image
-                                key={imgObj.newpath.publicid}
-                                src={imgObj.newpath.url}
-                                alt={imgObj.originalname}
-                                fill
+                            {translations?.portfolio?.see_all}{" "}
+                            {translations?.portfolio?.photos} <FaAngleRight />
+                          </button>
+                        )}
+                      </div>
+                    ) : null}
+
+                    <div className="hold">
+                      {actionLoading.includes("profile-photos")
+                        ? Array.from({ length: 6 }).map((_, index) => (
+                            <ContentLoader
+                              width={`100%`}
+                              height={`100%`}
+                              speed={2}
+                              viewBox="0 0 120 110"
+                              backgroundColor="#f3f3f3"
+                              foregroundColor="#ecebeb"
+                            >
+                              {/* Rounded rectangle for the image placeholder */}
+                              <rect
+                                x="0"
+                                y="0"
+                                rx="10"
+                                ry="10"
+                                width="120"
+                                height="110"
                               />
-                            ))}
-                          </div>
-                        ))}
-                  </div>
-                </div>
-              )}
-              {currentSelectedData !== "products" && type === "page" && (
-                <div className="images">
-                  <div className="top">
-                    <h4> {translations?.portfolio?.products}</h4>
-                    {products?.length > 6 && (
-                      <button
-                        onClick={() => setCurrentSelectedData("products")}
-                      >
-                        {translations?.portfolio?.see_all}{" "}
-                        {translations?.portfolio?.products} <FaAngleRight />
-                      </button>
-                    )}
-                  </div>
-                  <div className="hold">
-                    {loading
-                      ? Array.from({ length: 6 }).map((_, index) => (
-                          <ContentLoader
-                            width={120}
-                            height={120}
-                            speed={4}
-                            viewBox="0 0 120 120"
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                          >
-                            <rect
-                              x="160"
-                              y="120"
-                              rx="3"
-                              ry="3"
-                              width="100%"
-                              height="120"
-                            />
-                          </ContentLoader>
-                        ))
-                      : products.slice(0, 6).map((x, index) => (
-                          <Image
-                            key={index}
-                            src={x.images[0]}
-                            alt=""
-                            fill
-                            style={{ objectFit: "contain" }}
-                            onClick={() => {
-                              handleImageClick(x.id, index);
-                            }}
-                          />
-                        ))}
-                  </div>
-                </div>
-              )}
-              {type !== "page" && currentSelectedData !== "friends" && (
-                <div className="holder friends">
-                  <div className="top">
-                    <h4>
-                      {type === "user"
-                        ? translations?.sidechats?.friends
-                        : translations?.portfolio?.followers}
-                    </h4>
-                    {users?.length > 6 && (
-                      <button onClick={() => setCurrentSelectedData("friends")}>
-                        {translations?.portfolio?.see_all}{" "}
-                        {translations?.sidechats?.friends} <FaAngleRight />
-                      </button>
-                    )}
-                  </div>
-                  <div className="hold">
-                    {loading
-                      ? Array.from({ length: 6 }).map((_, index) => (
-                          <ContentLoader
-                            width={120}
-                            height={120}
-                            speed={4}
-                            viewBox="0 0 120 120"
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                          >
-                            <rect
-                              x="160"
-                              y="120"
-                              rx="3"
-                              ry="3"
-                              width="100%"
-                              height="120"
-                            />
-                          </ContentLoader>
-                        ))
-                      : users?.slice(0, 6).map((x) => (
-                          <div
-                            key={x.id}
-                            className="chat"
-                            onClick={(e) => handleMenus(e, "user-Info", x.id)}
-                          >
-                            <Image
-                              className="rounded"
-                              src={x.img || "/users/default.svg"}
-                              fill
-                              alt={`user Image`}
-                            />
-                            <div className="name-lastmessage">
-                              <h4>{x.name}</h4>
+                            </ContentLoader>
+                          ))
+                        : userPhotos?.slice(0, 6)?.map((post) => (
+                            <div
+                              className={`post-imgs-hold ${
+                                post.img.length === 1
+                                  ? "single"
+                                  : post.img.length === 2
+                                  ? "two"
+                                  : ""
+                              }`}
+                              key={post._id}
+                              onClick={() => {
+                                const current = new URLSearchParams(
+                                  Array.from(searchParams.entries())
+                                );
+                                current.set("post", post._id);
+                                router.replace(
+                                  `${pathname}?${current.toString()}`,
+                                  undefined,
+                                  { scroll: false }
+                                );
+                              }}
+                            >
+                              {post.img?.slice(0, 4)?.map((imgObj) => (
+                                <div className="img-and-morecounter-div">
+                                  {post.img.length > 4 && (
+                                    <span className="hasMoreImgs">
+                                      +{post.img.length - 4}
+                                    </span>
+                                  )}
+                                  <Image
+                                    key={imgObj.newpath.publicid}
+                                    src={imgObj.newpath.url}
+                                    alt={imgObj.originalname}
+                                    fill
+                                  />
+                                </div>
+                              ))}
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              {currentSelectedData !== "products" &&
+                type === "page" &&
+                (productsSmallView?.length ||
+                  actionLoading.includes("page-products")) && (
+                  <div className="images">
+                    {productsSmallView?.length && (
+                      <div className="top">
+                        <h4> {translations?.portfolio?.products}</h4>
+                        {products?.length > 6 && (
+                          <button
+                            onClick={() => setCurrentSelectedData("products")}
+                          >
+                            {translations?.portfolio?.see_all}{" "}
+                            {translations?.portfolio?.products} <FaAngleRight />
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="hold">
+                      {loading
+                        ? Array.from({ length: 6 }).map((_, index) => (
+                            <ContentLoader
+                              width={120}
+                              height={120}
+                              speed={4}
+                              viewBox="0 0 120 120"
+                              backgroundColor="#f3f3f3"
+                              foregroundColor="#ecebeb"
+                            >
+                              <rect
+                                x="160"
+                                y="120"
+                                rx="3"
+                                ry="3"
+                                width="100%"
+                                height="120"
+                              />
+                            </ContentLoader>
+                          ))
+                        : products.slice(0, 6).map((x, index) => (
+                            <Image
+                              key={index}
+                              src={x.images[0]}
+                              alt=""
+                              fill
+                              style={{ objectFit: "contain" }}
+                              onClick={() => {
+                                handleImageClick(x.id, index);
+                              }}
+                            />
+                          ))}
+                    </div>
+                  </div>
+                )}
+              {type !== "page" &&
+                currentSelectedData !== "friends" &&
+                (userFriends?.length ||
+                  actionLoading.includes("profile-friends")) && (
+                  <div className="holder friends">
+                    {userFriends?.length ? (
+                      <div className="top">
+                        <h4>
+                          {type === "user"
+                            ? translations?.sidechats?.friends
+                            : translations?.portfolio?.followers}
+                        </h4>
+                        {userFriends?.length > 6 && (
+                          <button
+                            onClick={() => setCurrentSelectedData("friends")}
+                          >
+                            {translations?.portfolio?.see_all}{" "}
+                            {translations?.sidechats?.friends} <FaAngleRight />
+                          </button>
+                        )}
+                      </div>
+                    ) : null}
+                    <div className="hold">
+                      {actionLoading.includes("profile-friends")
+                        ? Array.from({ length: 6 }).map((_, index) => (
+                            <ContentLoader
+                              width={`100%`}
+                              height={`100%`}
+                              speed={2}
+                              viewBox="0 0 120 120"
+                              backgroundColor="#f3f3f3"
+                              foregroundColor="#ecebeb"
+                            >
+                              {/* Rounded rectangle for the image placeholder */}
+                              <rect
+                                x="0"
+                                y="0"
+                                rx="10"
+                                ry="10"
+                                width="120"
+                                height="120"
+                              />
+                            </ContentLoader>
+                          ))
+                        : userFriends?.slice(0, 6).map((x) => (
+                            <div
+                              key={x._id}
+                              className="chat"
+                              onClick={(e) =>
+                                handleMenus(e, "user-Info", null, x)
+                              }
+                            >
+                              <Image
+                                className="rounded"
+                                src={x?.img?.url || "/users/default.svg"}
+                                fill
+                                alt={`user Image`}
+                              />
+                              <div className="name-lastmessage">
+                                <h4 className="ellipsisText">
+                                  {x?.firstname} {""} {x?.lastname}
+                                </h4>
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                )}
             </>
           ) : (
             <>
@@ -866,7 +1054,7 @@ export default function Portfolio({ params }) {
 
                     <button
                       className={`main-button ${
-                        loadingCategory ? "loading" : ""
+                        actionLoading.includes("category") ? "loading" : ""
                       }`}
                       onClick={handleUpdateCategory}
                     >
@@ -881,208 +1069,426 @@ export default function Portfolio({ params }) {
         </div>
 
         <div className="bigSection">
-          {currentSelectedData !== "about" &&
-            (currentSelectedData !== "products" ? (
-              <div className="actions">
-                <h4>
-                  {translations?.portfolio?.all}
-                  {` `}
-                  {currentSelectedData === "friends"
-                    ? translations?.sidechats?.[currentSelectedData]
-                    : translations?.portfolio?.[currentSelectedData] || ""}
-                </h4>
-                <button>Sort by Time</button>
-              </div>
-            ) : (
-              <div className="actions">
-                <div
-                  className="search-holderr"
-                  style={{
-                    padding:
-                      productSearch.length !== 0 ? "0 0 0 10px" : "0 10px",
-                  }}
-                >
-                  <IoSearch
-                    className="searchIco"
+          {currentSelectedData === "photos" ||
+          currentSelectedData === "posts" ? (
+            <div className="actions">
+              <h4>
+                {translations?.portfolio?.all}
+                {translations?.portfolio?.[currentSelectedData] || ""}
+              </h4>
+              <button>Sort by Time</button>
+            </div>
+          ) : currentSelectedData === "products" ? (
+            <div className="actions">
+              <div
+                className="search-holderr"
+                style={{
+                  padding: productSearch.length !== 0 ? "0 0 0 10px" : "0 10px",
+                }}
+              >
+                <IoSearch
+                  className="searchIco"
+                  onClick={() =>
+                    document.getElementById("searchInProductsInput").focus()
+                  }
+                />
+                <div className="middle">
+                  <h4
+                    style={{
+                      opacity: productSearch.length !== 0 ? "0" : "1",
+                    }}
                     onClick={() =>
                       document.getElementById("searchInProductsInput").focus()
                     }
+                  >
+                    {translations?.placeHolders?.search_in_products}
+                  </h4>
+                  <input
+                    id="searchInProductsInput"
+                    type="text"
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
                   />
-                  <div className="middle">
-                    <h4
-                      style={{
-                        opacity: productSearch.length !== 0 ? "0" : "1",
-                      }}
-                      onClick={() =>
-                        document.getElementById("searchInProductsInput").focus()
-                      }
-                    >
-                      {translations?.placeHolders?.search_in_products}
-                    </h4>
-                    <input
-                      id="searchInProductsInput"
-                      type="text"
-                      value={productSearch}
-                      onChange={(e) => setProductSearch(e.target.value)}
-                    />
-                  </div>
-                  {productSearch.length > 0 && (
-                    <IoClose
-                      className="delete"
-                      onClick={() => setProductSearch("")}
-                    />
-                  )}
                 </div>
-                <div className="row sorts-holder">
-                  <div
-                    className="select-holder"
-                    onClick={() =>
-                      setCurentOpendSelectHolder((prev) =>
-                        prev == 1 ? null : 1
-                      )
-                    }
+                {productSearch.length > 0 && (
+                  <IoClose
+                    className="delete"
+                    onClick={() => setProductSearch("")}
+                  />
+                )}
+              </div>
+              <div className="row sorts-holder">
+                <div
+                  className="select-holder"
+                  onClick={() =>
+                    setCurentOpendSelectHolder((prev) => (prev == 1 ? null : 1))
+                  }
+                >
+                  <h4>Sort by:</h4>
+                  <span>
+                    {sortType}{" "}
+                    <MdOutlineKeyboardArrowDown
+                      className={curentOpendSelectHolder == 1 && "open"}
+                    />
+                  </span>
+                  <ul
+                    className={`list ${
+                      curentOpendSelectHolder == 1 ? "active" : ""
+                    }`}
                   >
-                    <h4>Sort by:</h4>
-                    <span>
-                      {sortType}{" "}
-                      <MdOutlineKeyboardArrowDown
-                        className={curentOpendSelectHolder == 1 && "open"}
-                      />
-                    </span>
-                    <ul
-                      className={`list ${
-                        curentOpendSelectHolder == 1 ? "active" : ""
-                      }`}
-                    >
-                      {sort[0].map((x) => (
-                        <li
-                          className={sortType == x ? "active" : ""}
-                          key={x}
-                          onClick={() => {
-                            setSortType(x);
-                          }}
-                        >
-                          {x}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div
-                    className="select-holder"
-                    onClick={() =>
-                      setCurentOpendSelectHolder((prev) =>
-                        prev == 2 ? null : 2
-                      )
-                    }
+                    {sort[0].map((x) => (
+                      <li
+                        className={sortType == x ? "active" : ""}
+                        key={x}
+                        onClick={() => {
+                          setSortType(x);
+                        }}
+                      >
+                        {x}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div
+                  className="select-holder"
+                  onClick={() =>
+                    setCurentOpendSelectHolder((prev) => (prev == 2 ? null : 2))
+                  }
+                >
+                  <h4>Show:</h4>
+                  <span>
+                    {pageSize} Products{" "}
+                    <MdOutlineKeyboardArrowDown
+                      className={curentOpendSelectHolder == 2 && "open"}
+                    />
+                  </span>
+                  <ul
+                    className={`list ${
+                      curentOpendSelectHolder == 2 ? "active" : ""
+                    }`}
                   >
-                    <h4>Show:</h4>
-                    <span>
-                      {pageSize} Products{" "}
-                      <MdOutlineKeyboardArrowDown
-                        className={curentOpendSelectHolder == 2 && "open"}
-                      />
-                    </span>
-                    <ul
-                      className={`list ${
-                        curentOpendSelectHolder == 2 ? "active" : ""
-                      }`}
-                    >
-                      {sort[1].map((x) => (
-                        <li
-                          className={pageSize == x ? "active" : ""}
-                          key={x}
-                          onClick={() => {
-                            setPageSize(x);
-                          }}
-                        >
-                          {x} Product
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    {sort[1].map((x) => (
+                      <li
+                        className={pageSize == x ? "active" : ""}
+                        key={x}
+                        onClick={() => {
+                          setPageSize(x);
+                        }}
+                      >
+                        {x} Product
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            ))}
+            </div>
+          ) : null}
 
           {currentSelectedData === "posts" ? (
             <PostsHolder type={type} id={id} />
           ) : currentSelectedData === "friends" ||
             currentSelectedData === "followers" ? (
-            <div className="friends">
-              {loading
-                ? Array.from({ length: 10 }).map((_, index) => (
-                    <ContentLoader
-                      width={120}
-                      height={120}
-                      speed={4}
-                      viewBox="0 0 120 120"
-                      backgroundColor="#f3f3f3"
-                      foregroundColor="#ecebeb"
-                    >
-                      <rect
-                        x="160"
-                        y="120"
-                        rx="3"
-                        ry="3"
-                        width="100%"
-                        height="120"
-                      />
-                    </ContentLoader>
-                  ))
-                : users?.map((x) => (
-                    <div
-                      key={x.id}
-                      onClick={(e) => handleMenus(e, "user-Info", x.id)}
-                    >
-                      <Image
-                        className="rounded"
-                        src={x.img || "/users/default.svg"}
-                        fill
-                        alt={`user Image`}
-                      />
-                      <div>
-                        <h4>{x.name}</h4>
-                        <p>{x.bio}</p>
-                      </div>
-                    </div>
-                  ))}
-            </div>
+            <>
+              {(userReceivedReqs?.length ||
+                actionLoading.includes("profile-received-friends-req")) && (
+                <>
+                  <div className="actions">
+                    <h4>
+                      {translations?.portfolio?.all}
+                      {` `}
+                      {translations?.auth?.friend_requests}
+                    </h4>
+                  </div>
+                  <div className="friends small">
+                    {actionLoading.includes("profile-received-friends-req")
+                      ? Array.from({ length: 4 }).map((_, index) => (
+                          <ContentLoader
+                            width={120}
+                            height={120}
+                            speed={4}
+                            viewBox="0 0 120 120"
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                          >
+                            <rect
+                              x="160"
+                              y="120"
+                              rx="3"
+                              ry="3"
+                              width="100%"
+                              height="120"
+                            />
+                          </ContentLoader>
+                        ))
+                      : userReceivedReqs?.map((x) => (
+                          <div
+                            key={`${x._id}-${Date.now()}`}
+                            onClick={(e) =>
+                              handleMenus(e, "user-Info", null, x)
+                            }
+                          >
+                            <div>
+                              <Image
+                                className="rounded"
+                                src={x?.img?.url || "/users/default.svg"}
+                                fill
+                                alt={`user Image`}
+                              />
+                              <h4>
+                                {x?.firstname} {""} {x?.lastname}
+                              </h4>
+                            </div>
+                            <div className="btns-hold">
+                              <button
+                                className={`main-button  ${
+                                  actionLoading.includes(
+                                    `remove-friend-request-${x._id}`
+                                  )
+                                    ? "loading"
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  confirm_remove_friend_request(x._id, false);
+                                }}
+                              >
+                                <span>remove</span>
+                                <div className="lds-dual-ring"></div>
+                              </button>
+                              <button
+                                className={`main-button  ${
+                                  actionLoading.includes(
+                                    `confirm-friend-request-${x._id}`
+                                  )
+                                    ? "loading"
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  confirm_remove_friend_request(x._id, true);
+                                }}
+                              >
+                                <span>confirm</span>
+                                <div className="lds-dual-ring"></div>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                  </div>
+                </>
+              )}
+              {(userSendedReqs?.length ||
+                actionLoading.includes("profile-sended-friends-req")) && (
+                <>
+                  <div className="actions">
+                    <h4>
+                      {translations?.portfolio?.all}
+                      {` `}
+                      {translations?.auth?.sent_requests}
+                    </h4>
+                  </div>
+                  <div className="friends small">
+                    {actionLoading.includes("profile-sended-friends-req")
+                      ? Array.from({ length: 2 }).map((_, index) => (
+                          <ContentLoader
+                            width={120}
+                            height={120}
+                            speed={4}
+                            viewBox="0 0 120 120"
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                          >
+                            <rect
+                              x="160"
+                              y="120"
+                              rx="3"
+                              ry="3"
+                              width="100%"
+                              height="120"
+                            />
+                          </ContentLoader>
+                        ))
+                      : userReceivedReqs?.map((x) => (
+                          <div
+                            key={`${x._id}-${Date.now()}`}
+                            onClick={(e) =>
+                              handleMenus(e, "user-Info", null, x)
+                            }
+                          >
+                            <div>
+                              <Image
+                                className="rounded"
+                                src={x?.img?.url || "/users/default.svg"}
+                                fill
+                                alt={`user Image`}
+                              />
+                              <h4>
+                                {x?.firstname} {""} {x?.lastname}
+                              </h4>
+                            </div>
+                            <div className="btns-hold">
+                              <button
+                                className={`main-button`}
+                                onClick={() => {
+                                  // confirm_remove_friend_request(x._id, false);
+                                }}
+                              >
+                                <span>waiting accept</span>
+                                <div className="lds-dual-ring"></div>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                  </div>
+                </>
+              )}
+              {(userFriends?.length ||
+                actionLoading.includes("profile-friends")) && (
+                <>
+                  <div className="actions">
+                    <h4>
+                      {translations?.portfolio?.all}
+                      {` `}
+                      {translations?.sidechats?.friends}
+                    </h4>
+                  </div>
+                  <div className="friends">
+                    {actionLoading.includes("profile-friends")
+                      ? Array.from({ length: 10 }).map((_, index) => (
+                          <ContentLoader
+                            width={120}
+                            height={120}
+                            speed={4}
+                            viewBox="0 0 120 120"
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                          >
+                            <rect
+                              x="160"
+                              y="120"
+                              rx="3"
+                              ry="3"
+                              width="100%"
+                              height="120"
+                            />
+                          </ContentLoader>
+                        ))
+                      : userFriends?.map((x) => (
+                          <div
+                            key={`${x._id}-${Date.now()}`}
+                            onClick={(e) =>
+                              handleMenus(e, "user-Info", null, x)
+                            }
+                          >
+                            <div>
+                              <Image
+                                className="rounded"
+                                src={x?.img?.url || "/users/default.svg"}
+                                fill
+                                alt={`user Image`}
+                              />
+                              <h4>
+                                {x?.firstname} {""} {x?.lastname}
+                              </h4>
+                            </div>
+                            <div className="btns-hold">
+                              {!isMyProfile &&
+                                userData?._id !==
+                                  x._id(
+                                    <button
+                                      className={`main-button  ${
+                                        actionLoading.includes(
+                                          `send-friend-request-${x._id}`
+                                        )
+                                          ? "loading"
+                                          : ""
+                                      }`}
+                                      onClick={() => {
+                                        if (
+                                          x?._id &&
+                                          userData?._id &&
+                                          !x?.friendRequests?.received?.includes(
+                                            userData._id
+                                          )
+                                        ) {
+                                          sendFriendRequest(x._id);
+                                        }
+                                      }}
+                                    >
+                                      {x?.friendRequests?.received?.includes(
+                                        userData?._id
+                                      ) ? (
+                                        <span>{"waiting accept"}</span>
+                                      ) : (
+                                        <IoMdPersonAdd />
+                                      )}
+
+                                      <div className="lds-dual-ring"></div>
+                                    </button>
+                                  )}
+                            </div>
+                          </div>
+                        ))}
+                  </div>
+                </>
+              )}
+            </>
           ) : currentSelectedData === "photos" ? (
-            <div className="photos">
-              {/* {loading
-                ? Array.from({ length: 10 }).map((_, index) => (
+            actionLoading.includes("profile-photos") ? (
+              <div className="hold-photos">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div style={{ backgroundColor: "#ffffff", padding: "10px" }}>
                     <ContentLoader
-                      width={120}
-                      height={120}
-                      speed={4}
+                      width={`100%`}
+                      height={`100%`}
+                      speed={2}
                       viewBox="0 0 120 120"
                       backgroundColor="#f3f3f3"
                       foregroundColor="#ecebeb"
                     >
+                      {/* Rounded rectangle for the image placeholder */}
                       <rect
-                        x="160"
-                        y="120"
-                        rx="3"
-                        ry="3"
-                        width="100%"
+                        x="0"
+                        y="0"
+                        rx="10"
+                        ry="10"
+                        width="120"
                         height="120"
                       />
                     </ContentLoader>
-                  ))
-                : mediaMsgs.map((x, index) => (
-                    <Image
-                      key={index}
-                      src={x.img}
-                      alt=""
-                      fill
-                      onClick={() => handleImageClick(x.id, index)}
-                    />
-                  ))} */}
-            </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Masonry
+                columns={
+                  screenSize === "large" ? 3 : screenSize === "small" ? 1 : 2
+                }
+                spacing={1}
+              >
+                {userAllPhotos?.map((photo, index) => (
+                  <div
+                    className="post-imgs-hold"
+                    key={index}
+                    onClick={() => {
+                      const current = new URLSearchParams(
+                        Array.from(searchParams.entries())
+                      );
+                      current.set("post", photo.postId);
+                      router.replace(
+                        `${pathname}?${current.toString()}`,
+                        undefined,
+                        { scroll: false }
+                      );
+                    }}
+                  >
+                    <img key={index} src={photo.url} alt="" />
+                  </div>
+                ))}
+              </Masonry>
+            )
           ) : currentSelectedData === "products" ? (
             <>
               <div className="photos grid-products">
-                {loading
+                {actionLoading.includes("page-products")
                   ? Array.from({ length: 10 }).map((_, index) => (
                       <ContentLoader
                         width={120}

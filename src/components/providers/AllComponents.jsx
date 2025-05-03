@@ -14,6 +14,7 @@ import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/providers/SettingMenu";
 import UsersReact from "@/components/UsersReact";
 import StoryForm from "@/components/forms/StoryForm";
+import ProductForm from "@/components/forms/ProductForm";
 import Notification from "@/components/Notification";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
@@ -22,6 +23,7 @@ function AllComponents() {
   const {
     openPostForm,
     openStoryForm,
+    openProductForm,
     openImgForm,
     dangerEvent,
     singleProvider,
@@ -60,6 +62,7 @@ function AllComponents() {
       {infoMenu && <UserInfo />}
       {openPostForm && <PostForm />}
       {openStoryForm && <StoryForm />}
+      {openProductForm && <ProductForm />}
       {openImgForm && <ImgForm />}
       {dangerEvent && <DangerEvent />}
       {openUsersReact && <UsersReact />}

@@ -103,7 +103,11 @@ function SingleDetails() {
       const reactsHolderElement = document.querySelector(
         ".reactsHolder.sideMenu"
       );
+      const storyFormBody = document.querySelector(
+        ".focusedMsg.FormMenu.story-form"
+      );
       const isInsideReactsHolder = reactsHolderElement?.contains(event.target);
+      const isInsideStoryForm = storyFormBody?.contains(event.target);
 
       const isInsideAllowedRef = allowedRefs.some(
         (ref) => ref.current && ref.current.contains(event.target)
@@ -113,9 +117,10 @@ function SingleDetails() {
         closeImgHolderRef.current &&
         !closeImgHolderRef.current.contains(event.target) &&
         !isInsideAllowedRef &&
-        !isInsideReactsHolder
+        !isInsideReactsHolder &&
+        !isInsideStoryForm
       ) {
-        setImgFocus(false);
+        setSingleProvider(false);
       }
     };
 
@@ -397,10 +402,6 @@ function SingleDetails() {
       setSingleProvider(null);
     } catch (err) {
       console.error("Page creation failed:", err);
-      addNotification({
-        type: "warning",
-        message: err?.response?.data?.message || "Something went wrong.",
-      });
     } finally {
       setPageLoading(false);
     }
@@ -420,7 +421,7 @@ function SingleDetails() {
           {imgFocus && (
             <IoClose
               className="close closeMenu"
-              onClick={() => setImgFocus(null)}
+              onClick={() => setSingleProvider(null)}
             />
           )}
           {imgFocus?.name !== "Bob" && <h5>{imgFocus?.name}</h5>}

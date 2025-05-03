@@ -64,6 +64,8 @@
     "create": "قم بأنشاء",
     "createpost": "إنشاء منشور",
     "createstory": "إنشاء قصة صغيرة",
+    "createProduct": "انشاء منتج",
+
     "creategroup": "تكوين مجموعة",
     "createpage": "إنشاء صفحة",
     "createcommunity": "تكوين مجتمع"
@@ -162,7 +164,11 @@
     "beauty": "الجمال",
     "vehicles": "المركبات",
     "pet_supplies": "ادوات الحيوانات الأليفة",
-    "grocery": "البقالة"
+    "grocery": "البقالة",
+    "create_product": "إنشاء منتج",
+    "edit_product": "تعديل المنتج",
+    "department": "القسم",
+    "category": "الفئة"
   },
   "chats": {
     "Explore_your_chats": "قم بأختيار محادثة لبدأ الدردشة",
@@ -308,6 +314,8 @@
     "college": "الكلية",
     "speaking_languages": "اللغات المتحدث بها",
     "go_back": "رجوع للخلف",
-    "finish": "إنهاء"
+    "finish": "إنهاء",
+    "friend_requests": "طلبات الصداقة",
+    "sent_requests": "الطلبات المرسلة"
   }
 }

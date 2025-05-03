@@ -23,11 +23,12 @@ body:has(.marketplace) header {
   max-width: 100%;
   height: fit-content;
   position: sticky;
-  top: 10px;
+    top: 80px;
 }
 .sideSection hr {
   background: #e0e0e0;
   height: 2px;
+  padding: 0;
 }
 .sideSection .main-title {
   margin-bottom: 5px;
@@ -79,14 +80,14 @@ body:has(.marketplace) header {
   color: var(--paragraph-color);
   transition: 0.3s;
 }
-.sideSection .Filter-Holder li svg {
+.portfolio .sideSection .Filter-Holder li svg {
   border: 1px solid var(--second-section-color);
   width: 29px;
   height: 29px;
   padding: 6px;
   border-radius: 5px;
 }
-.sideSection .Filter-Holder li svg:hover {
+.portfolio .sideSection .Filter-Holder li svg:hover {
   color: white;
   background: var(--red-color);
   border-color: transparent;
@@ -126,7 +127,7 @@ body:has(.marketplace) header {
   background: var(--section-color);
 }
 .sideSection .Filter-Holder li:has(input[type="text"]) {
-    padding: 2px 3px;
+  padding: 2px 3px;
 }
 .sideSection .Filter-Holder li label.checkbox {
   width: 0px !important;

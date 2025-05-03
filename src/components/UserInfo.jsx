@@ -52,13 +52,15 @@ function UserInfo() {
         <Image
           className={`rounded`}
           src={currentUserData?.img?.url || "/user/default.svg"}
-          alt={currentUserData?.firstname}
+          alt={currentUserData?.firstname || currentUserData?.pagename}
           fill
         />
         <div className="info">
           <div className="top">
             <h4>
-              {currentUserData?.firstname} {currentUserData?.lastname}
+              {currentUserData?.pagename
+                ? currentUserData?.pagename
+                : `${currentUserData?.firstname} ${currentUserData?.lastname}`}
             </h4>
             <IoClose
               onClick={() => {
@@ -108,15 +110,14 @@ function UserInfo() {
           </button>
         )} */}
 
-        {true ? (
-          <Link href={`/user/${currentUserData?._id}`} className="main-button">
-            <FaEye /> See Profile
-          </Link>
-        ) : (
-          <button className="main-button">
-            <FaEye /> visit Page
-          </button>
-        )}
+        <Link
+          href={`/portfolio/${currentUserData?.pagename ? "page" : "user"}/${
+            currentUserData?._id
+          }`}
+          className="main-button"
+        >
+          <FaEye /> {currentUserData?.pagename ? "see profile" : "visit Page"}
+        </Link>
       </div>
     </div>
   );

@@ -65,6 +65,7 @@
     "create": "create",
     "createpost": "create post",
     "createstory": "create story",
+    "createProduct": "create product",
     "creategroup": "create group",
     "createpage": "create page",
     "createcommunity": "create community"
@@ -162,7 +163,11 @@
     "beauty": "beauty",
     "vehicles": "vehicles",
     "pet_supplies": "pet supplies",
-    "grocery": "grocery"
+    "grocery": "grocery",
+    "create_product": "create product",
+    "edit_product": "edit product",
+    "department": "department",
+    "category": "category"
   },
   "chats": {
     "Explore_your_chats": "Explore your chats",
@@ -242,6 +247,7 @@
     "drop_her": "drop her!!",
     "Mentiond_People": "Mentiond People",
     "add_links": "add links",
+    "add_hashtags": "add hashtags",
     "edit_profile_img": "edit profile img",
     "add_profile_img": "add profile img",
     "edit_profile_cover": "edit profile cover",
@@ -305,6 +311,8 @@
     "work": "Work",
     "college": "College",
     "go_back": "Go Back",
-    "finish": "Finish"
+    "finish": "Finish",
+    "friend_requests":"friend requests",
+    "sent_requests":"sent requests"
   }
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { useState } from "react";
 import Slider from "@mui/material/Slider";
 import { useLanguage } from "@/Contexts/LanguageContext";
+import { departements } from "@/utils/Data";
 
 import {
   IoPhonePortrait,
@@ -29,23 +30,6 @@ function MarketSideSection() {
   const { locale, translations } = useLanguage();
 
   const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
-const Sections = [
-  { id: 5, name: "home_related", icon: IoHome },
-  { id: 3, name: "phones", icon: IoPhonePortrait },
-  { id: 2, name: "hardware", icon: IoHardwareChip },
-  { id: 7, name: "accessories", icon: TbTools },
-  { id: 6, name: "computers", icon: FaLaptopCode },
-  { id: 4, name: "consoles", icon: TbDeviceGamepad3Filled },
-  { id: 1, name: "toys_and_games", icon: IoGameController },
-  { id: 8, name: "sports_equipment", icon: FaBasketballBall },
-  { id: 9, name: "fashion", icon: GiRolledCloth },
-  { id: 10, name: "health", icon: FaHeart },
-  { id: 11, name: "beauty", icon: CgGirl },
-  { id: 12, name: "vehicles", icon: FaCar },
-  { id: 13, name: "pet_supplies", icon: MdOutlinePets },
-  { id: 14, name: "grocery", icon: MdLocalGroceryStore },
-];
-
   return (
     <>
       <div className="Filter-Holder main-btns">
@@ -53,20 +37,16 @@ const Sections = [
           {translations?.market_place?.market_place}
         </h4>
         <ul>
-          <li
-            className="active"
-          >
+          <li className="active">
             <FaShoppingBasket />
             {translations?.market_place?.browse_all}
           </li>
-          <li
-          >
+          <li>
             <FaHeartCircleBolt />
             {translations?.market_place?.following_pages}
           </li>
         </ul>
       </div>
-      <hr />
 
       <div className="Filter-Holder forPrice">
         <h4 className="filter-title">
@@ -104,20 +84,17 @@ const Sections = [
           }}
         />
       </div>
-      <hr />
       <div className="Filter-Holder forCat">
         <h4 className="filter-title">
           {translations?.market_place?.filter_by_categories}
         </h4>
         <ul>
-          {Sections.map((x, index) => {
+          {departements.map((x, index) => {
             const IconComponent = x.icon;
             return (
-              <li
-                key={index}
-              >
+              <li key={index}>
                 <IconComponent key={x.id} />
-                {translations?.market_place?.[x.name]}
+                {translations?.market_place?.[x.name.replace(/\s+/g, "_")]}
               </li>
             );
           })}

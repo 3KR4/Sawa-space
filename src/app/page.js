@@ -108,7 +108,7 @@ export default function Home() {
             }}
           >
             {storyloading ? (
-              Array.from({ length: 3 }).map((_, index) => (
+              Array.from({ length: 2 }).map((_, index) => (
                 <ContentLoader
                   speed={2}
                   width={"100%"}
@@ -179,7 +179,6 @@ export default function Home() {
         </div>
       )}
       <PostsHolder />
-      
     </div>
   );
 }

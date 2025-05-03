@@ -51,7 +51,6 @@ function PostsHolder(param) {
     timeoutId = setTimeout(async () => {
       try {
         const res = await postService.getPosts(page, param.type, param.id);
-        console.log("res", res);
         if (isMounted) {
           setPosts((prev) => {
             const newPosts = [...prev, ...res.data.data];
@@ -112,8 +111,6 @@ function PostsHolder(param) {
     }
   }, [someThingHappen.type]);
 
-  console.log("sharedId", someThingHappen?.post);
-  console.log(posts);
 
   useEffect(() => {
     const scrollHandler = () => {

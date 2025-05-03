@@ -357,8 +357,14 @@ function Post({ data, focused = false }) {
     const img = imgRef.current;
     const handleLoad = () => {
       const colorThief = new ColorThief();
-      const result = colorThief.getColor(img);
-      setBgColor(`rgb(${result[0]}, ${result[1]}, ${result[2]})`);
+      try {
+        const result = colorThief.getColor(img);
+        if (result && result.length === 3) {
+          setBgColor(`rgb(${result[0]}, ${result[1]}, ${result[2]})`);
+        }
+      } catch (err) {
+        console.warn("ColorThief error:", err);
+      }
     };
 
     if (img.complete) {
@@ -784,7 +790,7 @@ function Post({ data, focused = false }) {
                   </div>
                 )}
                 {currentPost?.paragraph && <p>{currentPost?.paragraph}</p>}
-
+                {/* 
                 {currentPost?.mentions?.length > 0 && (
                   <div className="mentions view">
                     <h5>
@@ -801,7 +807,7 @@ function Post({ data, focused = false }) {
                       </button>
                     ))}
                   </div>
-                )}
+                )} */}
                 {screenSize === "small" && bottomAction()}
 
                 {screenSize === "small" && (

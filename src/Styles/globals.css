@@ -33,7 +33,7 @@ main {
   --body-color: #ffffff;
   --main-color: #ff8e31;
   --second-color: #ccebff;
-  --third-color: #ffa551;
+  --third-color: #ffc692;
   --title-color: #454545;
   --second-section-color: #d5d5d5;
   --paragraph-color: #858585;
@@ -677,8 +677,8 @@ body.ar .chats > .top div {
   font-weight: 400;
   font-size: 16px;
   padding: 6px 12px !important;
-  background: var(--third-color);
   z-index: 2;
+  background: #ffa95a;
 }
 .chats .no-friend-yet-svg a:hover {
   background: var(--main-color);
@@ -3345,12 +3345,38 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
   background: var(--body-color);
   border-radius: 15px 15px 10px 10px;
 }
-.Product .mainImg {
+.Product .image-holder {
+  position: relative;
+  display: flex;
+  cursor: pointer;
+}
+.Product .image-holder .mainImg {
   object-fit: cover;
   position: relative !important;
   height: 220px !important;
   border-radius: 20px 20px 0 0;
 }
+.Product .image-holder .counter-viewer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 3px;
+}
+.Product .image-holder .counter-viewer span {
+  position: relative;
+  flex: 1;
+  border-bottom: 4px solid var(--paragraph-color);
+  transition: 0.3s;
+}
+.Product .image-holder .counter-viewer span:hover {
+  border-bottom: 4px solid var(--main-color);
+}
+.Product .image-holder .counter-viewer span.action {
+  border-bottom: 4px solid var(--main-color);
+}
+
 .Product .content {
   padding-top: 4px;
 }

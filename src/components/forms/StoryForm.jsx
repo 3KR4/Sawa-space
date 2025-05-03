@@ -171,7 +171,6 @@ function StoryForm() {
   // States
 
   const [addText, setAddText] = useState(true);
-  const [images, setImages] = useState([]);
   const [removedImages, setRemovedImages] = useState([]);
   const [addLink, setAddLink] = useState(false);
   const [linkValue, setLinkValue] = useState("");
@@ -212,9 +211,6 @@ function StoryForm() {
   const isDisabled =
     !storyData.images.length && !storyData.link && messageText.length === 0;
 
-  console.log("storyData", storyData);
-  console.log("story", openStoryForm?.story);
-
   useEffect(() => {
     setStoryData((prev) => ({
       ...prev,
@@ -232,15 +228,31 @@ function StoryForm() {
   const inputFileRef = useRef(null);
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setStoryData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index), // Correctly update the images array
-      settings: {
-        ...prev.settings,
-        images: prev.settings.images.filter((_, i) => i !== index), // Correctly update the image settings
-      },
-    }));
+    setStoryData((prev) => {
+      const removed = prev.images[index];
+
+      // Track removed image only in edit mode if it has a publicid
+      if (removed?.newpath?.publicid && openStoryForm.type === "edit") {
+        setRemovedImages((prevRemoved) => [
+          ...prevRemoved,
+          removed.newpath.publicid,
+        ]);
+      }
+
+      const updatedImages = prev.images.filter((_, i) => i !== index);
+      const updatedSettingsImages = prev.settings.images.filter(
+        (_, i) => i !== index
+      );
+
+      return {
+        ...prev,
+        images: updatedImages,
+        settings: {
+          ...prev.settings,
+          images: updatedSettingsImages,
+        },
+      };
+    });
   };
 
   useEffect(() => {
@@ -433,7 +445,6 @@ function StoryForm() {
 
       if (story) {
         const info = story.info;
-        console.log("info", info);
         setMessageText(info?.body || "");
         setLinkValue(info?.link || "");
         setSelectedBackground(info?.settings?.backGround || "");
@@ -483,7 +494,7 @@ function StoryForm() {
             y: 0,
             size: 16,
           },
-          images: [], // Image settings
+          images: [],
           backGround: "",
         },
       });
@@ -493,12 +504,6 @@ function StoryForm() {
 
   const onSubmit = async () => {
     setLoading(true);
-
-    const fallbackMentions = [
-      "67f6387225982aee32da9c68",
-      "67cfd61617bff9683742fdd9",
-      "67cfa8b8e0b8a8ebeff2f875",
-    ];
 
     const storyContent = {
       info: {
@@ -512,53 +517,35 @@ function StoryForm() {
       if (openStoryForm.type === "edit") {
         storyId = openStoryForm.story._id;
 
-        // Check if images have changed
-        const originalImages = openStoryForm.story.img || [];
-        const currentImages = storyData.images;
-
-        // Check if images were added, removed, or changed
-        const imagesChanged =
-          originalImages.length !== currentImages.length ||
-          currentImages.some((img) => !img.url); // has new images
-
-        // First update the story content
         const res = await storyService.editStory(storyId, storyContent);
-        console.log("res", res);
 
-        // Then handle images if they changed
-        if (imagesChanged) {
-          const newImages = currentImages.filter((img) => !img.url);
+        // Upload new images
+        const newImages = storyData.images.filter((img) => !img.url);
+        if (newImages.length > 0) {
           const formData = new FormData();
+          newImages.forEach((img) => formData.append("imgs", img));
+          await storyService.uploadStoryImages(storyId, formData);
+        }
 
-          // If we have new images to upload
-          if (newImages.length > 0) {
-            newImages.forEach((img) => formData.append("imgs", img));
-          }
-
-          // Always send all current images to the endpoint
-          // (the backend should handle updates/deletions)
-          await storyService.updateStoryImages(storyId, formData);
+        // Remove only the tracked removed images
+        for (const publicid of removedImages) {
+          console.log("Removing image with publicid:", publicid);
+          await storyService.updateStoryImages(storyId, publicid);
         }
       } else {
-        // Create new story flow remains the same
         const storyResponse = await storyService.createStory(storyContent);
         storyId = storyResponse?.data.storyId;
-        if (!storyId) throw new Error("Post ID not returned from backend");
+        if (!storyId) throw new Error("Story ID not returned from backend");
 
         const newImages = storyData.images.filter((img) => !img.url);
         if (newImages.length > 0) {
           const formData = new FormData();
           newImages.forEach((img) => formData.append("imgs", img));
-          const imgRes = await storyService.uploadStoryImages(
-            storyId,
-            formData
-          );
+          await storyService.uploadStoryImages(storyId, formData);
         }
       }
 
-      setSomeThingHappen({
-        stories: true,
-      });
+      setSomeThingHappen({ stories: true });
 
       addNotification({
         type: "success",
@@ -568,6 +555,8 @@ function StoryForm() {
             : "Your story has been created successfully.",
       });
 
+      // Reset form
+      setRemovedImages([]);
       setOpenStoryForm(false);
       setMessageText("");
       setStoryData({
@@ -580,7 +569,7 @@ function StoryForm() {
             x: 0,
             y: 0,
             size: 16,
-            family: Rubik,
+            family: `Rubik`,
             color: "454545",
             background: "ffffff",
           },
@@ -607,7 +596,9 @@ function StoryForm() {
     <DndContext onDragEnd={handleDragEnd}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`focusedMsg FormMenu ${openStoryForm ? "active" : ""}`}
+        className={`focusedMsg FormMenu story-form ${
+          openStoryForm ? "active" : ""
+        }`}
       >
         <div
           className={`body storyForm ${
@@ -634,7 +625,7 @@ function StoryForm() {
                 />
                 <IoMdImages
                   onClick={() => inputFileRef.current.click()}
-                  className={`${images.length > 0 ? "active" : ""}`}
+                  className={`${storyData?.images.length > 0 ? "active" : ""}`}
                 />
                 <FaLink
                   onClick={() => setAddLink((prev) => !prev)}
@@ -1093,8 +1084,8 @@ function StoryForm() {
                   </div>
                 </div>
               )}
-              {images.length > 0 && <hr className="beforeImages" />}
-              {storyData.images.map((image, index) => (
+              {storyData?.images.length > 0 && <hr className="beforeImages" />}
+              {storyData?.images.map((image, index) => (
                 <div className="setting-holder" key={index}>
                   <h5 className="main-title">
                     {locale === "ar"

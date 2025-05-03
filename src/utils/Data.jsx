@@ -1,3 +1,41 @@
+import {
+  FaLaptopCode,
+  FaBasketballBall,
+  FaHeart,
+  FaCar,
+} from "react-icons/fa";
+
+import {
+  MdLocalGroceryStore,
+  MdOutlinePets,
+} from "react-icons/md";
+import {
+  IoHome,
+  IoPhonePortrait,
+  IoHardwareChip,
+  IoGameController,
+} from "react-icons/io5";
+import { TbTools, TbDeviceGamepad3Filled } from "react-icons/tb";
+import { GiRolledCloth } from "react-icons/gi";
+import { CgGirl } from "react-icons/cg";
+
+  export const departements = [
+    { name: "home related", icon: IoHome },
+    { name: "phones", icon: IoPhonePortrait },
+    { name: "hardware", icon: IoHardwareChip },
+    { name: "accessories", icon: TbTools },
+    { name: "computers", icon: FaLaptopCode },
+    { name: "consoles", icon: TbDeviceGamepad3Filled },
+    { name: "toys and games", icon: IoGameController },
+    { name: "sports equipment", icon: FaBasketballBall },
+    { name: "fashion", icon: GiRolledCloth },
+    { name: "health", icon: FaHeart },
+    { name: "beauty", icon: CgGirl },
+    { name: "vehicles", icon: FaCar },
+    { name: "pet supplies", icon: MdOutlinePets },
+    { name: "grocery", icon: MdLocalGroceryStore },
+  ];
+
 export const users = [
   {
     id: 1,

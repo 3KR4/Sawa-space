@@ -175,6 +175,8 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [postId, type]);
 
+  const [actionLoading, setActionLoading] = useState([]);
+
   return (
     <ScreenContext.Provider
       value={{
@@ -192,6 +194,8 @@ export const ScreenProvider = ({ children }) => {
         getUser,
         userPage,
         setUserPage,
+        actionLoading,
+        setActionLoading,
       }}
     >
       {children}

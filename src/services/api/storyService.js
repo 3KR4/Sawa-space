@@ -20,12 +20,9 @@ export const storyService = {
       },
     });
   },
-  updateStoryImages: async (id, imageFiles) => {
-    return apiClient.put(`/story/${id}/pull/img`, imageFiles, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  updateStoryImages: async (id, imgId) => {
+    const body = { publicid: imgId };
+    return apiClient.put(`/story/${id}/pull/img`, body);
   },
   deleteStory: (id) => {
     return apiClient.delete(`/story/${id}`);

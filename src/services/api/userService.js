@@ -31,6 +31,25 @@ export const userService = {
     );
   },
 
+  makeFriendRequest: async (id) => {
+    const body = { userid: id };
+    return apiClient.post(`/user/send/friend`, body);
+  },
+  interactWithFriendReq: async (id, action) => {
+    const body = { userid: id, accept: action };
+    return apiClient.post(`/user/friend`, body);
+  },
+
+  getUserSendedRequests: async () => {
+    return apiClient.post(`/user/get/friendsend`);
+  },
+  getUserReceivedRequests: async () => {
+    return apiClient.post(`/user/get/friendreceived`);
+  },
+  getUserFriends: async (userId) => {
+    return apiClient.post(`/user/get/friend/${userId}`);
+  },
+
   upload_img_cover: async (userId, type, formData) => {
     return apiClient.post(`/user/${type}/${userId}`, formData, {
       headers: {

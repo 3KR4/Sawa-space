@@ -80,8 +80,6 @@ function PostForm() {
 
   const [postType, setPostType] = useState(openPostForm?.for || "user");
 
-
-
   const isDisabled = !images.length && !links.length && messageText.length < 3;
 
   const handleDrop = (e) => {
@@ -654,6 +652,7 @@ function PostForm() {
               <h4>create as:</h4>
 
               <span
+                style={{ justifyContent: "unset" }}
                 className={
                   postType === "user" || postType === "together" ? "active" : ""
                 }
@@ -679,6 +678,7 @@ function PostForm() {
               </span>
 
               <span
+                style={{ justifyContent: "unset" }}
                 className={
                   postType === "page" || postType === "together" ? "active" : ""
                 }

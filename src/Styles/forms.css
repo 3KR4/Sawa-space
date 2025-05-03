@@ -28,8 +28,8 @@ pre.placeHolder {
 .placeHolder {
   position: absolute;
   z-index: 1;
-  top: 16px;
   left: 19px;
+  font-size: 14px;
   font-size: 13px;
   font-weight: 400;
   transition: 0.3s;
@@ -84,7 +84,7 @@ input::placeholder {
 .inputHolder:has(textarea:not(:placeholder-shown)) h6.placeHolder {
   top: 7px;
   font-size: 12px;
-  color: var(--paragraph);
+  color: var(--paragraph-color);
 }
 .inputHolder.notvalid:has(input:focus) h6.placeHolder,
 .inputHolder.notvalid:has(textarea:focus) h6.placeHolder {
@@ -94,7 +94,7 @@ input::placeholder {
 }
 .inputHolder input::placeholder,
 .inputHolder textarea::placeholder {
-  color: var(--paragraph);
+  color: var(--paragraph-color);
 }
 .inputHolder span svg,
 .selectHolder .error svg,
@@ -125,7 +125,7 @@ body.ar .tags .holder {
   border-radius: 50px 7px 7px 50px;
 }
 .inputHolder .holder > svg {
-  color: var(--paragraph);
+  color: var(--paragraph-color);
   position: absolute;
   z-index: 1;
   top: 50%;
@@ -176,7 +176,7 @@ body.ar .FormMenu .inputHolder .reactBtn {
   resize: none;
   border: none;
   color: var(--title-color);
-  font-size: 15px;
+  font-size: 14px;
   transition: padding 0.3s;
   border-radius: 7px !important;
 }
@@ -1671,6 +1671,66 @@ body.ar .imgForm .actions .row {
 .create-page .inputHolder .holder textarea {
   color: var(--paragraph-color);
   font-weight: 400;
+}
+
+.FormMenu {
+}
+.FormMenu .about-group {
+}
+.FormMenu .about-group .top {
+  margin-bottom: 2px;
+}
+.FormMenu .about-group .top h5 {
+  font-size: 15px;
+}
+.FormMenu .about-group .top .main-button {
+  padding: 5px 12px !important;
+  font-size: 14px !important;
+}
+.FormMenu .about-group input {
+  flex: 1;
+  background: var(--section-color);
+  padding: 11.5px;
+}
+.FormMenu .about-group input::placeholder {
+  font-size: 14px !important;
+}
+.FormMenu .about-group .about-items {
+  background: var(--section-color);
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.FormMenu .about-group .about-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: flex-start;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 5px 0;
+}
+.FormMenu .about-group .about-item:last-child {
+  border: none;
+  padding-bottom: unset;
+}
+.FormMenu .about-group span {
+  color: var(--paragraph-color);
+  font-size: 14px;
+}
+.FormMenu .about-group strong {
+  color: var(--title-color);
+  font-size: 13px;
+}
+.FormMenu .about-group svg {
+  min-width: 23px;
+  max-width: 23px;
+  height: 23px;
+  padding: 4px !important;
+  background: var(--second-section-color);
+  border-radius: 5px !important;
 }
 
 @media (max-width: 1600px) {

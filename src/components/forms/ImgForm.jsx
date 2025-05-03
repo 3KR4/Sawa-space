@@ -32,7 +32,6 @@ function ImgForm() {
   const { handleMenus } = useContext(DynamicMenusContext);
   const { getUser } = useContext(ScreenContext);
 
-  console.log(openImgForm.portfolio);
 
   const imgFormMenuRef = useRef(null);
   const inputFileRef = useRef(null);
@@ -73,7 +72,6 @@ function ImgForm() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  console.log("openImgForm", openImgForm);
 
   useEffect(() => {
     if (openImgForm?.event === "edit") {

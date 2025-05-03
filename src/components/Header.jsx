@@ -19,6 +19,7 @@ import {
   FaPager,
   FaHistory,
   FaStar,
+  FaShoppingBasket,
 } from "react-icons/fa";
 import { MdNotificationsActive, MdOutlineExplore } from "react-icons/md";
 import { TbLogout2 } from "react-icons/tb";
@@ -34,8 +35,12 @@ import { HiUsers } from "react-icons/hi2";
 import { useDefaultReduceAnimations } from "@mui/x-date-pickers/internals";
 
 export default function Header() {
-  const { setOpenPostForm, setOpenStoryForm, setSingleProvider } =
-    useContext(MenusContext);
+  const {
+    setOpenPostForm,
+    setOpenStoryForm,
+    setSingleProvider,
+    setOpenProductForm,
+  } = useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
   const { pathname, screenSize, userData, userPage, setUserData } =
     useContext(ScreenContext);
@@ -141,6 +146,12 @@ export default function Header() {
           <button onClick={() => setOpenStoryForm(true)}>
             <FaHistory /> {translations?.header?.createstory}
           </button>
+          {userPage && (
+            <button onClick={() => setOpenProductForm(true)}>
+              <FaShoppingBasket /> {translations?.header?.createProduct}
+            </button>
+          )}
+
           <button>
             <HiUsers /> {translations?.header?.creategroup}
           </button>
