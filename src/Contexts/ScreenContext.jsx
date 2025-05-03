@@ -137,43 +137,43 @@ export const ScreenProvider = ({ children }) => {
   // const type = searchParams.get("type");
   // const postId = searchParams.get("post");
 
-  useEffect(() => {
-    const getSinglePost = async () => {
-      try {
-        const { data } = await postService.getSinglePost(type, postId);
+  // useEffect(() => {
+  //   const getSinglePost = async () => {
+  //     try {
+  //       const { data } = await postService.getSinglePost(type, postId);
 
-        const post = data?.data?.[0];
-        if (post) {
-          if (post.img.length > 0) {
-            setSingleProvider({
-              type: "post",
-              sharing_data: post,
-            });
-          } else {
-            setSomeThingHappen({
-              type: "post",
-              event: "shared",
-              post: { ...post, isShared: true },
-            });
-          }
-        } else {
-          addNotification({
-            type: "warning",
-            message: "Post not found",
-          });
-        }
-      } catch (error) {
-        addNotification({
-          type: "error",
-          message: "something went wrong while fetching post",
-        });
-      }
-    };
+  //       const post = data?.data?.[0];
+  //       if (post) {
+  //         if (post.img.length > 0) {
+  //           setSingleProvider({
+  //             type: "post",
+  //             sharing_data: post,
+  //           });
+  //         } else {
+  //           setSomeThingHappen({
+  //             type: "post",
+  //             event: "shared",
+  //             post: { ...post, isShared: true },
+  //           });
+  //         }
+  //       } else {
+  //         addNotification({
+  //           type: "warning",
+  //           message: "Post not found",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       addNotification({
+  //         type: "error",
+  //         message: "something went wrong while fetching post",
+  //       });
+  //     }
+  //   };
 
-    if (postId) {
-      getSinglePost();
-    }
-  }, [postId, type]);
+  //   if (postId) {
+  //     getSinglePost();
+  //   }
+  // }, [postId, type]);
 
   const [actionLoading, setActionLoading] = useState([]);
 
