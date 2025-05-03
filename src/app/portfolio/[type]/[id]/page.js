@@ -14,7 +14,6 @@ import ContentLoader from "react-content-loader";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Masonry from "@mui/lab/Masonry";
-
 import PostsHolder from "@/components/post/PostsHolder";
 import EditProfileForm from "@/components/forms/EditProfileForm";
 import { ScreenContext } from "@/Contexts/ScreenContext";
@@ -41,13 +40,20 @@ import { HiUsers } from "react-icons/hi2";
 import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
+  const { setUserData } = useContext(ScreenContext);
   const router = useRouter();
   const pathname = usePathname();
   // const searchParams = useSearchParams();
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage, screenSize, actionLoading, setActionLoading } =
-    useContext(ScreenContext);
+  const {
+    userData,
+    userPage,
+    setUserPage,
+    screenSize,
+    actionLoading,
+    setActionLoading,
+  } = useContext(ScreenContext);
   const { setOpenImgForm } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -255,6 +261,10 @@ export default function Portfolio({ params }) {
       });
 
       setCurrentPortfolio((prev) => ({
+        ...prev,
+        category: cleanedCategories, // update state without empty strings
+      }));
+      setUserPage((prev) => ({
         ...prev,
         category: cleanedCategories, // update state without empty strings
       }));
