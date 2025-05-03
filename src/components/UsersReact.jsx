@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
-import { messages, posts } from "@/utils/Data";
+import { messages } from "@/utils/Data";
 
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
@@ -59,7 +59,7 @@ function UsersReact() {
         left: `${menuPosition.left}px`,
       }}
     >
-      <div className="topFilter">
+      {/* <div className="topFilter">
         {openUsersReact === "message" ? (
           <h1>All Emojis</h1>
         ) : (
@@ -117,7 +117,7 @@ function UsersReact() {
               </div>
             ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
