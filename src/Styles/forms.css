@@ -1801,9 +1801,7 @@ body.ar .imgForm .actions .row {
   .create-page .portfolio {
     overflow: unset;
   }
-  body .sideSection + div {
-    width: 100%;
-  }
+
   .FormMenu .select-holder span.active {
     padding: 3px 4px;
   }

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Slider from "@mui/material/Slider";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { departements } from "@/utils/Data";
-
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   IoPhonePortrait,
   IoHome,
@@ -26,10 +26,34 @@ import { MdOutlinePets, MdLocalGroceryStore } from "react-icons/md";
 import { CgGirl } from "react-icons/cg";
 import { FaHeartCircleBolt } from "react-icons/fa6";
 
-function MarketSideSection() {
+function MarketSideSection({
+  heighstPrice,
+  onFilterChange,
+  currentFilters,
+  clearFilters,
+}) {
   const { locale, translations } = useLanguage();
 
-  const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
+  const handleDepartmentClick = (newDep) => {
+    clearFilters();
+    onFilterChange({ dep: newDep });
+  };
+
+  const [priceRangeValue, setPriceRangeValue] = useState([
+    currentFilters.minP || 0,
+    currentFilters.maxP || heighstPrice,
+  ]);
+
+  const handlePriceRangeChange = (_, newValue) => {
+    setPriceRangeValue(newValue);
+    onFilterChange({
+      minP: newValue[0],
+      maxP: newValue[1],
+    });
+  };
+
+  const heighstPricee = heighstPrice;
+
   return (
     <>
       <div className="Filter-Holder main-btns">
@@ -58,21 +82,22 @@ function MarketSideSection() {
         <div className="price-input">
           <div className="field">
             <span>{translations?.market_place?.min}</span>
-            <h3>{priceRangevalue[0]}</h3>
+            <h3>{currentFilters.minP || 0}</h3>
           </div>
           <div className="separator">-</div>
           <div className="field">
-            <h3>{priceRangevalue[1]}</h3>
+            <h3>{currentFilters.maxP || heighstPrice || "∞"}</h3>
             <span>{translations?.market_place?.max}</span>
           </div>
         </div>
         <Slider
+          value={priceRangeValue}
+          onChange={(_, newValue) => setPriceRangeValue(newValue)}
+          onChangeCommitted={handlePriceRangeChange}
+          min={0}
+          max={heighstPricee}
           className="priceSlider"
           getAriaLabel={() => "Minimum distance shift"}
-          value={priceRangevalue}
-          // onChange={handlePriceRangeChange}
-          min={10}
-          max={10000}
           sx={{
             "& .MuiSlider-thumb": {
               width: 15,
@@ -92,7 +117,7 @@ function MarketSideSection() {
           {departements.map((x, index) => {
             const IconComponent = x.icon;
             return (
-              <li key={index}>
+              <li key={index} onClick={() => handleDepartmentClick(x.name)}>
                 <IconComponent key={x.id} />
                 {translations?.market_place?.[x.name.replace(/\s+/g, "_")]}
               </li>

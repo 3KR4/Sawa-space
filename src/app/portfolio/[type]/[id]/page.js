@@ -203,8 +203,10 @@ export default function Portfolio({ params }) {
       fetch_portfolio_photos("all", 1, 1000000);
     } else if (currentSelectedData === "friends") {
       fetch_user_friends(id);
-      user_sended_Request();
-      user_received_Request();
+      if (isMyProfile) {
+        user_sended_Request();
+        user_received_Request();
+      }
     }
   }, [currentSelectedData]);
 
@@ -310,6 +312,42 @@ export default function Portfolio({ params }) {
         type: "success",
         message: "Friend request sent successfully.",
       });
+    } catch (err) {
+      console.error("Failed to send friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to send friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== `send-friend-request-${id}`)
+      );
+    }
+  };
+  const cancelFriendRequest = async (id) => {
+    try {
+      setActionLoading((prev) => [...prev, `send-friend-request-${id}`]);
+
+      await userService.cancelRequest(id);
+
+      setUserSendedReqs((prev) => prev.filter((x) => x._id !== id));
+      setUserFriends((prev) =>
+        prev.map((friend) =>
+          friend._id === id
+            ? {
+                ...friend,
+                friendRequests: {
+                  ...friend.friendRequests,
+                  received: [
+                    ...(friend.friendRequests?.received.filter(
+                      (x) => x !== userData?._id
+                    ) || []),
+                  ],
+                },
+              }
+            : friend
+        )
+      );
     } catch (err) {
       console.error("Failed to send friend request", err);
       addNotification({
@@ -534,17 +572,7 @@ export default function Portfolio({ params }) {
                 {translations?.portfolio?.posts}
               </button>
 
-              {type === "page" ? (
-                <button
-                  className={`main-button ${
-                    currentSelectedData == "followers" ? "active" : ""
-                  }`}
-                  onClick={() => setCurrentSelectedData("followers")}
-                >
-                  <HiUsers />
-                  {translations?.portfolio?.followers}
-                </button>
-              ) : (
+              {type === "user" && (
                 <button
                   className={`main-button ${
                     currentSelectedData == "friends" ? "active" : ""
@@ -555,15 +583,17 @@ export default function Portfolio({ params }) {
                   {translations?.sidechats?.friends}
                 </button>
               )}
-              <button
-                className={`main-button ${
-                  currentSelectedData == "products" ? "active" : ""
-                }`}
-                onClick={() => setCurrentSelectedData("products")}
-              >
-                <FaShoppingCart />
-                {translations?.portfolio?.products}
-              </button>
+              {type === "page" && (
+                <button
+                  className={`main-button ${
+                    currentSelectedData == "products" ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentSelectedData("products")}
+                >
+                  <FaShoppingCart />
+                  {translations?.portfolio?.products}
+                </button>
+              )}
 
               <button
                 className={`main-button ${
@@ -1080,10 +1110,9 @@ export default function Portfolio({ params }) {
           currentSelectedData === "posts" ? (
             <div className="actions">
               <h4>
-                {translations?.portfolio?.all}
+                {translations?.portfolio?.all} {``}
                 {translations?.portfolio?.[currentSelectedData] || ""}
               </h4>
-              <button>Sort by Time</button>
             </div>
           ) : currentSelectedData === "products" ? (
             <div className="actions">
@@ -1193,160 +1222,169 @@ export default function Portfolio({ params }) {
 
           {currentSelectedData === "posts" ? (
             <PostsHolder type={type} id={id} />
-          ) : currentSelectedData === "friends" ||
-            currentSelectedData === "followers" ? (
+          ) : currentSelectedData === "friends" ? (
             <>
-              {(userReceivedReqs?.length ||
-                actionLoading.includes("profile-received-friends-req")) && (
-                <>
-                  <div className="actions">
-                    <h4>
-                      {translations?.portfolio?.all}
-                      {` `}
-                      {translations?.auth?.friend_requests}
-                    </h4>
-                  </div>
-                  <div className="friends small">
-                    {actionLoading.includes("profile-received-friends-req")
-                      ? Array.from({ length: 4 }).map((_, index) => (
-                          <ContentLoader
-                            width={120}
-                            height={120}
-                            speed={4}
-                            viewBox="0 0 120 120"
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                          >
-                            <rect
-                              x="160"
-                              y="120"
-                              rx="3"
-                              ry="3"
-                              width="100%"
-                              height="120"
-                            />
-                          </ContentLoader>
-                        ))
-                      : userReceivedReqs?.map((x) => (
-                          <div
-                            key={`${x._id}-${Date.now()}`}
-                            onClick={(e) =>
-                              handleMenus(e, "user-Info", null, x)
-                            }
-                          >
-                            <div>
-                              <Image
-                                className="rounded"
-                                src={x?.img?.url || "/users/default.svg"}
-                                fill
-                                alt={`user Image`}
+              {isMyProfile &&
+                (userReceivedReqs?.length ||
+                  actionLoading.includes("profile-received-friends-req")) && (
+                  <>
+                    <div className="actions">
+                      <h4>
+                        {translations?.portfolio?.all}
+                        {` `}
+                        {translations?.auth?.friend_requests}
+                      </h4>
+                    </div>
+                    <div className="friends small">
+                      {actionLoading.includes("profile-received-friends-req")
+                        ? Array.from({ length: 4 }).map((_, index) => (
+                            <ContentLoader
+                              width={120}
+                              height={120}
+                              speed={4}
+                              viewBox="0 0 120 120"
+                              backgroundColor="#f3f3f3"
+                              foregroundColor="#ecebeb"
+                            >
+                              <rect
+                                x="160"
+                                y="120"
+                                rx="3"
+                                ry="3"
+                                width="100%"
+                                height="120"
                               />
-                              <h4>
-                                {x?.firstname} {""} {x?.lastname}
-                              </h4>
+                            </ContentLoader>
+                          ))
+                        : userReceivedReqs?.map((x) => (
+                            <div
+                              key={`${x._id}-${Date.now()}`}
+                              onClick={(e) =>
+                                handleMenus(e, "user-Info", x._id)
+                              }
+                            >
+                              <div>
+                                <Image
+                                  className="rounded"
+                                  src={x?.img?.url || "/users/default.svg"}
+                                  fill
+                                  alt={`user Image`}
+                                />
+                                <h4>
+                                  {x?.firstname} {""} {x?.lastname}
+                                </h4>
+                              </div>
+                              <div className="btns-hold">
+                                <button
+                                  className={`main-button  ${
+                                    actionLoading.includes(
+                                      `remove-friend-request-${x._id}`
+                                    )
+                                      ? "loading"
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    confirm_remove_friend_request(x._id, false);
+                                  }}
+                                >
+                                  <span>remove</span>
+                                  <div className="lds-dual-ring"></div>
+                                </button>
+                                <button
+                                  className={`main-button  ${
+                                    actionLoading.includes(
+                                      `confirm-friend-request-${x._id}`
+                                    )
+                                      ? "loading"
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    confirm_remove_friend_request(x._id, true);
+                                  }}
+                                >
+                                  <span>confirm</span>
+                                  <div className="lds-dual-ring"></div>
+                                </button>
+                              </div>
                             </div>
-                            <div className="btns-hold">
-                              <button
-                                className={`main-button  ${
-                                  actionLoading.includes(
-                                    `remove-friend-request-${x._id}`
-                                  )
-                                    ? "loading"
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  confirm_remove_friend_request(x._id, false);
-                                }}
-                              >
-                                <span>remove</span>
-                                <div className="lds-dual-ring"></div>
-                              </button>
-                              <button
-                                className={`main-button  ${
-                                  actionLoading.includes(
-                                    `confirm-friend-request-${x._id}`
-                                  )
-                                    ? "loading"
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  confirm_remove_friend_request(x._id, true);
-                                }}
-                              >
-                                <span>confirm</span>
-                                <div className="lds-dual-ring"></div>
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                  </div>
-                </>
-              )}
-              {(userSendedReqs?.length ||
-                actionLoading.includes("profile-sended-friends-req")) && (
-                <>
-                  <div className="actions">
-                    <h4>
-                      {translations?.portfolio?.all}
-                      {` `}
-                      {translations?.auth?.sent_requests}
-                    </h4>
-                  </div>
-                  <div className="friends small">
-                    {actionLoading.includes("profile-sended-friends-req")
-                      ? Array.from({ length: 2 }).map((_, index) => (
-                          <ContentLoader
-                            width={120}
-                            height={120}
-                            speed={4}
-                            viewBox="0 0 120 120"
-                            backgroundColor="#f3f3f3"
-                            foregroundColor="#ecebeb"
-                          >
-                            <rect
-                              x="160"
-                              y="120"
-                              rx="3"
-                              ry="3"
-                              width="100%"
-                              height="120"
-                            />
-                          </ContentLoader>
-                        ))
-                      : userReceivedReqs?.map((x) => (
-                          <div
-                            key={`${x._id}-${Date.now()}`}
-                            onClick={(e) =>
-                              handleMenus(e, "user-Info", null, x)
-                            }
-                          >
-                            <div>
-                              <Image
-                                className="rounded"
-                                src={x?.img?.url || "/users/default.svg"}
-                                fill
-                                alt={`user Image`}
+                          ))}
+                    </div>
+                  </>
+                )}
+              {isMyProfile &&
+                (userSendedReqs?.length ||
+                  actionLoading.includes("profile-sended-friends-req")) && (
+                  <>
+                    <div className="actions">
+                      <h4>
+                        {translations?.portfolio?.all}
+                        {` `}
+                        {translations?.auth?.sent_requests}
+                      </h4>
+                    </div>
+                    <div className="friends small">
+                      {actionLoading.includes("profile-sended-friends-req")
+                        ? Array.from({ length: 2 }).map((_, index) => (
+                            <ContentLoader
+                              width={120}
+                              height={120}
+                              speed={4}
+                              viewBox="0 0 120 120"
+                              backgroundColor="#f3f3f3"
+                              foregroundColor="#ecebeb"
+                            >
+                              <rect
+                                x="160"
+                                y="120"
+                                rx="3"
+                                ry="3"
+                                width="100%"
+                                height="120"
                               />
-                              <h4>
-                                {x?.firstname} {""} {x?.lastname}
-                              </h4>
+                            </ContentLoader>
+                          ))
+                        : userSendedReqs?.map((x) => (
+                            <div
+                              key={`${x._id}-${Date.now()}`}
+                              onClick={(e) =>
+                                handleMenus(e, "user-Info", x._id)
+                              }
+                            >
+                              <div>
+                                <Image
+                                  className="rounded"
+                                  src={x?.img?.url || "/users/default.svg"}
+                                  fill
+                                  alt={`user Image`}
+                                />
+                                <h4>
+                                  {x?.firstname} {""} {x?.lastname}
+                                </h4>
+                              </div>
+                              <div className="btns-hold">
+                                <button
+                                  className={`main-button  ${
+                                    actionLoading.includes(
+                                      `send-friend-request-${x._id}`
+                                    )
+                                      ? "loading"
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    const targetId = x?._id;
+                                    cancelFriendRequest(targetId);
+                                  }}
+                                >
+                                  <span>{"cancel request"}</span>
+
+                                  <div className="lds-dual-ring"></div>
+                                </button>
+                              </div>
                             </div>
-                            <div className="btns-hold">
-                              <button
-                                className={`main-button`}
-                                onClick={() => {
-                                  // confirm_remove_friend_request(x._id, false);
-                                }}
-                              >
-                                <span>waiting accept</span>
-                                <div className="lds-dual-ring"></div>
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                  </div>
-                </>
-              )}
+                          ))}
+                    </div>
+                  </>
+                )}
               {(userFriends?.length ||
                 actionLoading.includes("profile-friends")) && (
                 <>
@@ -1398,39 +1436,42 @@ export default function Portfolio({ params }) {
                             </div>
                             <div className="btns-hold">
                               {!isMyProfile &&
-                                userData?._id !==
-                                  x._id(
-                                    <button
-                                      className={`main-button  ${
-                                        actionLoading.includes(
-                                          `send-friend-request-${x._id}`
-                                        )
-                                          ? "loading"
-                                          : ""
-                                      }`}
-                                      onClick={() => {
-                                        if (
-                                          x?._id &&
-                                          userData?._id &&
-                                          !x?.friendRequests?.received?.includes(
-                                            userData._id
-                                          )
-                                        ) {
-                                          sendFriendRequest(x._id);
-                                        }
-                                      }}
-                                    >
-                                      {x?.friendRequests?.received?.includes(
-                                        userData?._id
-                                      ) ? (
-                                        <span>{"waiting accept"}</span>
-                                      ) : (
-                                        <IoMdPersonAdd />
-                                      )}
+                                userData &&
+                                userData?._id !== x._id && (
+                                  <button
+                                    className={`main-button  ${
+                                      actionLoading.includes(
+                                        `send-friend-request-${x._id}`
+                                      )
+                                        ? "loading"
+                                        : ""
+                                    }`}
+                                    onClick={() => {
+                                      const userId = userData?._id;
+                                      const targetId = x?._id;
+                                      const receivedRequests =
+                                        x?.friendRequests?.received || [];
 
-                                      <div className="lds-dual-ring"></div>
-                                    </button>
-                                  )}
+                                      if (!userId || !targetId) return;
+
+                                      if (!receivedRequests.includes(userId)) {
+                                        sendFriendRequest(targetId);
+                                      } else {
+                                        cancelFriendRequest(targetId);
+                                      }
+                                    }}
+                                  >
+                                    {x?.friendRequests?.received?.includes(
+                                      userData?._id
+                                    ) ? (
+                                      <span>{"waiting accept"}</span>
+                                    ) : (
+                                      <IoMdPersonAdd />
+                                    )}
+
+                                    <div className="lds-dual-ring"></div>
+                                  </button>
+                                )}
                             </div>
                           </div>
                         ))}

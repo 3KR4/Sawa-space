@@ -376,7 +376,7 @@ function ProductForm() {
               />
             </div>
             {errors.name && (
-              <span>
+              <span className="error">
                 <CircleAlert />
                 {errors.name.message}
               </span>
@@ -407,7 +407,7 @@ function ProductForm() {
                 />
               </div>
               {errors.price && (
-                <span>
+                <span className="error">
                   <CircleAlert />
                   {errors.price.message}
                 </span>
@@ -436,7 +436,7 @@ function ProductForm() {
                 />
               </div>
               {errors.sale && (
-                <span>
+                <span className="error">
                   <CircleAlert />
                   {errors.sale.message}
                 </span>
@@ -460,14 +460,14 @@ function ProductForm() {
                   })}
                   placeholder={``}
                   style={{
-                    borderColor: errors.Stock ? "red" : "black",
+                    borderColor: errors.stock ? "red" : "black",
                   }}
                 />
               </div>
-              {errors.Stock && (
-                <span>
+              {errors.stock && (
+                <span className="error">
                   <CircleAlert />
-                  {errors.Stock.message}
+                  {errors.stock.message}
                 </span>
               )}
             </div>
@@ -599,7 +599,6 @@ function ProductForm() {
                 value={category}
                 label="Department"
                 onChange={(e) => setCategory(e.target.value)}
-                required
                 sx={{
                   padding: "0px",
                   borderRadius: "8px",
@@ -794,7 +793,7 @@ function ProductForm() {
             type="submit"
             className={`main-button ${loading ? "loading" : ""}`}
             onClick={() => setisSubmited(true)}
-            disabled={loading}
+            disabled={loading || (images?.length < 1 && isSubmited)}
           >
             <span>
               {openProductForm.type === "edit"

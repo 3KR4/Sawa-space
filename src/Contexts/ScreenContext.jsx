@@ -53,7 +53,10 @@ export const ScreenProvider = ({ children }) => {
   });
 
   useEffect(() => {
+    console.log("test settingLocalStorage");
+
     if (userData) {
+      console.log("settingLocalStorage");
       localStorage.setItem("user", JSON.stringify(userData));
     }
   }, [userData]);
@@ -131,7 +134,7 @@ export const ScreenProvider = ({ children }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, [someThingHappen.stories, someThingHappen.type, userData]);
+  }, [someThingHappen.stories, someThingHappen.type]);
 
   // const searchParams = useSearchParams();
   // const type = searchParams.get("type");

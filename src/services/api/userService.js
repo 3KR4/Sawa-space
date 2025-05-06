@@ -49,6 +49,10 @@ export const userService = {
   getUserFriends: async (userId) => {
     return apiClient.post(`/user/get/friend/${userId}`);
   },
+  cancelRequest: async (id) => {
+    const userId = { userid: id };
+    return apiClient.put(`/user/remove/send`, userId);
+  },
 
   upload_img_cover: async (userId, type, formData) => {
     return apiClient.post(`/user/${type}/${userId}`, formData, {

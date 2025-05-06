@@ -3339,6 +3339,9 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
   cursor: not-allowed;
   pointer-events: none;
 }
+.postForm .placeHolder {
+  top: 23px;
+}
 
 .Product {
   border: 2px solid var(--border-color);

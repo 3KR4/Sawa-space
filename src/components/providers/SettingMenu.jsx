@@ -6,7 +6,8 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { postService } from "@/services/api/postService";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
-
+import { userService } from "@/services/api/userService";
+import { useNotification } from "@/Contexts/NotificationContext";
 import { MdBlock, MdReport, MdContentCopy, MdEdit } from "react-icons/md";
 import { IoPersonRemove, IoPersonRemoveSharp, IoLogOut } from "react-icons/io5";
 import { BiSolidHide, BiVolumeMute } from "react-icons/bi";
@@ -18,7 +19,8 @@ import { RiShareForwardFill } from "react-icons/ri";
 
 function SettingMenu() {
   const { translations } = useLanguage();
-  const { userData } = useContext(ScreenContext);
+  const { addNotification } = useNotification();
+  const { userData, setActionLoading, setUserData } = useContext(ScreenContext);
 
   const {
     settingsMenuRef,
@@ -51,12 +53,100 @@ function SettingMenu() {
     };
   }, [setSettingMenu]);
 
-  // Delete Comment
+  const sendFriendRequest = async () => {
+    try {
+      setActionLoading((prev) => [...prev, `send-friend-request`]);
 
+      await userService.makeFriendRequest(selectedDev?.postOwner);
+      setSettingMenu(false);
+      setUserData((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev?.friendRequests,
+          sent: [...(prev?.friendRequests?.sent || []), selectedDev?.postOwner],
+        },
+      }));
+      selectedDev.setCurrentPost((prev) => ({
+        ...prev,
+        author: {
+          ...prev.author,
+          friendRequests: {
+            ...prev.author[0]?.friendRequests,
+            received: [
+              ...(prev.author[0]?.friendRequests?.received || []),
+              userData?._id,
+            ],
+          },
+        },
+      }));
+
+      addNotification({
+        type: "success",
+        message: "Friend request sent successfully.",
+      });
+    } catch (err) {
+      console.error("Failed to send friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to send friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== `send-friend-request`)
+      );
+    }
+  };
+
+  const cancelFriendRequest = async () => {
+    try {
+      setActionLoading((prev) => [...prev, `send-friend-request`]);
+
+      await userService.cancelRequest(selectedDev?.postOwner);
+      setSettingMenu(false);
+      setUserData((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev?.friendRequests,
+          sent: [
+            ...(prev.friendRequests?.sent.filter(
+              (x) => x !== selectedDev?.postOwner
+            ) || []),
+          ],
+        },
+      }));
+
+      selectedDev.setCurrentPost((prev) => ({
+        ...prev,
+        author: {
+          ...prev.author,
+          friendRequests: {
+            ...prev.author[0]?.friendRequests,
+            received: [
+              ...(prev.friendRequests?.received.filter(
+                (x) => x !== userData?._id
+              ) || []),
+            ],
+          },
+        },
+      }));
+    } catch (err) {
+      console.error("Failed to send friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to send friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== `send-friend-request`)
+      );
+    }
+  };
+
+  console.log(selectedDev.isThereFriendRequest);
 
   const postActions = [
     {
-      show: true,
+      show: selectedDev.isMyPost,
       label: translations?.forms?.edit_post,
       icon: <MdEdit />,
       onClick: () => {
@@ -77,12 +167,24 @@ function SettingMenu() {
       },
     },
     {
-      show: !selectedDev.isMyPost && !selectedDev.isMyFriend,
+      show:
+        !selectedDev.isPostPage &&
+        !selectedDev.isMyPost &&
+        !selectedDev.isThereFriendRequest &&
+        !selectedDev.isMyFriend,
       label: translations?.actions?.add_friend,
       icon: <HiUsers />,
-      onClick: () => {
-        // handle add friend
-      },
+      onClick: sendFriendRequest,
+    },
+    {
+      show:
+        !selectedDev.isPostPage &&
+        !selectedDev.isMyPost &&
+        selectedDev.isThereFriendRequest,
+      label:
+        translations?.actions?.cancel_friend_request || "cancel friend request",
+      icon: <HiUsers />,
+      onClick: cancelFriendRequest,
     },
     {
       show: !selectedDev.isMyPost,
@@ -124,9 +226,7 @@ function SettingMenu() {
       label: translations?.actions?.remove_friend,
       icon: <IoPersonRemove />,
       className: "danger",
-      onClick: () => {
-        // handle remove friend
-      },
+      onClick: sendFriendRequest,
     },
     {
       show: !selectedDev.isMyPost,

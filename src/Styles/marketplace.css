@@ -252,6 +252,11 @@ body:has(.marketplace) header {
 .productSection .swiper-slide:has(svg) {
   height: 333px;
 }
+.productSection .swiper-slide:has(svg) svg {
+  background: var(--body-color);
+  border-radius: 15px 15px 7px 7px;
+  padding: 0 12px;
+}
 .sorts-holder {
   gap: 7px;
 }
@@ -296,6 +301,10 @@ body:has(.marketplace) header {
   height: 18px;
   background-color: var(--main-color);
 }
+.postForm .select-holder span::before {
+  display: none;
+}
+
 .select-holder .list {
   position: absolute;
   top: 45px;
@@ -344,4 +353,28 @@ body:has(.marketplace) header {
 }
 .select-holder .list li:hover {
   margin-left: 5px;
+}
+
+.marketplace .grid-products {
+  gap: 7px;
+  padding: 0 15px 0 0;
+}
+.marketplace .grid-products .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.marketplace .grid-products .top button {
+}
+.marketplace .grid-products .top span {
+  border: 1px solid var(--main-color);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-weight: 500;
+  color: var(--paragraph-color);
+}
+.marketplace .grid-products .products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 7px;
 }

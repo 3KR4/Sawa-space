@@ -35,7 +35,11 @@ import { IoIosClose } from "react-icons/io";
 import { FaRegComments, FaPager } from "react-icons/fa6";
 import { BsEmojiSmile } from "react-icons/bs";
 
-function Post({ data, focused = false }) {
+function Post({ data = {}, focused = false }) {
+  const normalizedData = {
+    ...data,
+    userreact: data?.userreact ?? null,
+  };
   //! post
   const router = useRouter();
   const { translations, locale } = useLanguage();
@@ -54,11 +58,15 @@ function Post({ data, focused = false }) {
   const { setMessageText } = useContext(InputActionsContext);
   const { screenSize, userData, userPage } = useContext(ScreenContext);
 
-  const postId = data?._id;
-  const isAuthorArray = Array.isArray(data?.author);
-  const author = isAuthorArray && data.author[0] ? data.author[0] : null;
-  const isPageArray = Array.isArray(data?.page);
-  const pagee = isPageArray && data.page[0] ? data.page[0] : null;
+  const postId = normalizedData?._id;
+  const isAuthorArray = Array.isArray(normalizedData?.author);
+  const author =
+    isAuthorArray && normalizedData?.author[0]
+      ? normalizedData.author[0]
+      : null;
+  const isPageArray = Array.isArray(normalizedData?.page);
+  const pagee =
+    isPageArray && normalizedData.page[0] ? normalizedData.page[0] : null;
 
   const isMyPost = author && author._id === userData?._id;
   const isMyPage = pagee && pagee._id === userPage?._id;
@@ -66,7 +74,7 @@ function Post({ data, focused = false }) {
   // Determine post owner data (prioritize page over author)
   const postOwnerData = pagee || author;
 
-  const [currentPost, setCurrentPost] = useState(data || {});
+  const [currentPost, setCurrentPost] = useState(normalizedData);
   const [swiperRef, setSwiperRef] = useState(null);
 
   const [seeComments, setSeeComments] = useState(false);
@@ -440,11 +448,19 @@ function Post({ data, focused = false }) {
                     isMyPost,
                     isMyPage,
                     isInFavorite: false,
-                    isMyFriend: false,
+                    postOwner: postOwnerData?._id,
+                    isMyFriend: userData?.friends?.includes(
+                      currentPost?.author[0]?._id
+                    ),
+                    isThereFriendRequest:
+                      userData?.friendRequests?.sent?.includes(
+                        currentPost?.author[0]?._id
+                      ),
                     isPostPage: currentPost.pageId ? true : false,
                     isFollowedPage: false,
                     isCommunity: false,
                     isMeJoinedThisCommunity: false,
+                    setCurrentPost,
                   });
                 }}
               />
@@ -700,11 +716,19 @@ function Post({ data, focused = false }) {
                         isMyPost,
                         isMyPage,
                         isInFavorite: false,
-                        isMyFriend: false,
+                        postOwner: postOwnerData?._id,
+                        isMyFriend: userData?.friends?.includes(
+                          currentPost?.author[0]?._id
+                        ),
+                        isThereFriendRequest:
+                          userData?.friendRequests?.sent?.includes(
+                            currentPost?.author[0]?._id
+                          ),
                         isPostPage: currentPost.pageId ? true : false,
                         isFollowedPage: false,
                         isCommunity: false,
                         isMeJoinedThisCommunity: false,
+                        setCurrentPost,
                       });
                     }}
                   />

@@ -13,7 +13,6 @@ function Product({ data, viewOwner }) {
   const { pathname, screenSize } = useContext(ScreenContext);
   const [activeImg, setActiveImg] = useState(data?.img?.[0] || null);
 
-  console.log(activeImg);
   return (
     <div className="Product">
       <div className="image-holder">
@@ -74,11 +73,11 @@ function Product({ data, viewOwner }) {
                 />
                 <h4>{data?.pageDetails[0]?.pagename}</h4>
               </div>
-              {data?.sale && data?.sale !== 0 && (
+              {data?.sale && data?.sale !== 0 ? (
                 <span className="salePercentage">
                   -{data?.sale < 10 ? `0${data.sale}` : data.sale}% off
                 </span>
-              )}
+              ) : null}
             </div>
           </>
         )}

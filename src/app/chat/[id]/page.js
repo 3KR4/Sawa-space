@@ -116,10 +116,6 @@ export default function Chat({ params }) {
   const mentionRef = useRef(null);
   const overviewRef = useRef(null);
 
-  useEffect(() => {
-    setDataForSwiper(mediaMsgs);
-  }, [imgFocus, messages]);
-
   const currentReplyMsg = replyingOnMsg
     ? messages.find((msg) => msg.id === replyingOnMsg)
     : null;

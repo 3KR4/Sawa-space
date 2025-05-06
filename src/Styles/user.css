@@ -449,14 +449,15 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   align-items: center;
   justify-content: space-between;
 }
-.portfolio .bottom-holder .bigSection:has(.friends) .actions {
-  background: var(--third-color);
+.portfolio .bottom-holder .bigSection > .actions {
+  border-left: 4px solid var(--main-color);
 }
 .portfolio .bottom-holder .bigSection:has(.grid-products) > .actions {
   padding: 14px;
 }
 .portfolio .bottom-holder .bigSection > .actions h4 {
   text-transform: capitalize;
+  color: var(--main-color);
 }
 .portfolio .bottom-holder .bigSection .posts-holder {
   margin-top: 0;
