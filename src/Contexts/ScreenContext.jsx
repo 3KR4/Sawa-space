@@ -85,7 +85,7 @@ export const ScreenProvider = ({ children }) => {
         setUserPage(data.data);
       }
     } catch (err) {
-      console.error("Error fetching stories", err);
+      console.error("Error fetching userData", err);
       addNotification({
         type: "error",
         message: "Failed to load user data",
@@ -114,7 +114,7 @@ export const ScreenProvider = ({ children }) => {
           if (isMounted) {
             setStories(data.data);
             setCurrentUserStory(
-              data.data.find((x) => x.author[0]._id == userData._id) || {}
+              data?.data?.find((x) => x?.author[0]?._id == userData?._id) || {}
             );
           }
         } catch (err) {
