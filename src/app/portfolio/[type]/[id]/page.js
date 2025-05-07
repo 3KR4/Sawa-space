@@ -2,7 +2,13 @@
 import "@/Styles/user.css";
 import "@/Styles/forms.css";
 import "@/Styles/marketplace.css";
-import React, { useState, use, useEffect, useContext } from "react";
+import React, {
+  useState,
+  use,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CutText from "@/utils/CutText";
@@ -23,7 +29,7 @@ import { pageService } from "@/services/api/pageService";
 import Slider from "@mui/material/Slider";
 import Product from "@/components/shop/Product";
 import ReactPaginate from "react-paginate";
-
+import { productService } from "@/services/api/productService";
 import { FaAngleRight, FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import {
   MdModeEditOutline,
@@ -40,7 +46,7 @@ import { HiUsers } from "react-icons/hi2";
 import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
-  const { getUser } = useContext(ScreenContext);
+  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
   const router = useRouter();
   const pathname = usePathname();
   // const searchParams = useSearchParams();
@@ -70,6 +76,7 @@ export default function Portfolio({ params }) {
   const [userPhotos, setUserPhotos] = useState([]);
   const [userAllPhotos, setUserAllPhotos] = useState([]);
   const [pagePhotos, setPagePhotos] = useState(1);
+  const [products, setProducts] = useState([]);
 
   const [userFriends, setUserFriends] = useState([]);
   const [userSendedReqs, setUserSendedReqs] = useState([]);
@@ -163,7 +170,7 @@ export default function Portfolio({ params }) {
   };
 
   useEffect(() => {
-    fetch_user_friends(id);
+    type === "user" && fetch_user_friends(id);
   }, []);
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -207,6 +214,8 @@ export default function Portfolio({ params }) {
         user_sended_Request();
         user_received_Request();
       }
+    } else if (currentSelectedData === "products") {
+      loadProducts();
     }
   }, [currentSelectedData]);
 
@@ -266,7 +275,7 @@ export default function Portfolio({ params }) {
         ...prev,
         category: cleanedCategories, // update state without empty strings
       }));
-      await getUser("page");
+      await fetchPageData();
 
       addNotification({
         type: "success",
@@ -384,6 +393,47 @@ export default function Portfolio({ params }) {
       );
     }
   };
+  const loadProducts = useCallback(async () => {
+    // if (isFetching.current || !hasMore) return;
+
+    // isFetching.current = true;
+    // setLoading(true);
+
+    try {
+      const res = await productService.getProducts(
+        "page",
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        15
+      );
+
+      const newProducts = res?.data?.data || [];
+      setProducts((prev) => [...prev, ...newProducts]);
+
+      // const lastPage = res?.data?.lastPage || 1;
+      // setHeighstPrice((prev) =>
+      //   filters.minP || filters.maxP ? prev : res?.data?.highestPrice || 5000000
+      // );
+      // setTotalCount(res?.data?.totalCount);
+
+      // if (filters.page < lastPage) {
+      //   setFilters((prev) => ({ ...prev, page: prev.page + 1 }));
+      // } else {
+      //   setHasMore(false);
+      // }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      isFetching.current = false;
+      // setLoading(false);
+    }
+  }, []);
 
   return (
     <div
@@ -882,7 +932,7 @@ export default function Portfolio({ params }) {
                               key={x._id}
                               className="chat"
                               onClick={(e) =>
-                                handleMenus(e, "user-Info", null, x)
+                                handleMenus(e, "user-Info", x._id)
                               }
                             >
                               <Image
@@ -1228,13 +1278,16 @@ export default function Portfolio({ params }) {
                 (userReceivedReqs?.length ||
                   actionLoading.includes("profile-received-friends-req")) && (
                   <>
-                    <div className="actions">
-                      <h4>
-                        {translations?.portfolio?.all}
-                        {` `}
-                        {translations?.auth?.friend_requests}
-                      </h4>
-                    </div>
+                    {userReceivedReqs?.length ? (
+                      <div className="actions">
+                        <h4>
+                          {translations?.portfolio?.all}
+                          {` `}
+                          {translations?.auth?.friend_requests}
+                        </h4>
+                      </div>
+                    ) : null}
+
                     <div className="friends small">
                       {actionLoading.includes("profile-received-friends-req")
                         ? Array.from({ length: 4 }).map((_, index) => (
@@ -1315,13 +1368,16 @@ export default function Portfolio({ params }) {
                 (userSendedReqs?.length ||
                   actionLoading.includes("profile-sended-friends-req")) && (
                   <>
-                    <div className="actions">
-                      <h4>
-                        {translations?.portfolio?.all}
-                        {` `}
-                        {translations?.auth?.sent_requests}
-                      </h4>
-                    </div>
+                    {userSendedReqs?.length ? (
+                      <div className="actions">
+                        <h4>
+                          {translations?.portfolio?.all}
+                          {` `}
+                          {translations?.auth?.sent_requests}
+                        </h4>
+                      </div>
+                    ) : null}
+
                     <div className="friends small">
                       {actionLoading.includes("profile-sended-friends-req")
                         ? Array.from({ length: 2 }).map((_, index) => (
@@ -1388,13 +1444,16 @@ export default function Portfolio({ params }) {
               {(userFriends?.length ||
                 actionLoading.includes("profile-friends")) && (
                 <>
-                  <div className="actions">
-                    <h4>
-                      {translations?.portfolio?.all}
-                      {` `}
-                      {translations?.sidechats?.friends}
-                    </h4>
-                  </div>
+                  {userFriends?.length ? (
+                    <div className="actions">
+                      <h4>
+                        {translations?.portfolio?.all}
+                        {` `}
+                        {translations?.sidechats?.friends}
+                      </h4>
+                    </div>
+                  ) : null}
+
                   <div className="friends">
                     {actionLoading.includes("profile-friends")
                       ? Array.from({ length: 10 }).map((_, index) => (
@@ -1417,18 +1476,16 @@ export default function Portfolio({ params }) {
                           </ContentLoader>
                         ))
                       : userFriends?.map((x) => (
-                          <div
-                            key={`${x._id}-${Date.now()}`}
-                            onClick={(e) =>
-                              handleMenus(e, "user-Info", null, x)
-                            }
-                          >
+                          <div key={`${x._id}-${Date.now()}`}>
                             <div>
                               <Image
                                 className="rounded"
                                 src={x?.img?.url || "/users/default.svg"}
                                 fill
                                 alt={`user Image`}
+                                onClick={(e) =>
+                                  handleMenus(e, "user-Info", x._id)
+                                }
                               />
                               <h4>
                                 {x?.firstname} {""} {x?.lastname}

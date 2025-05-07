@@ -1,11 +1,9 @@
 "use client";
-import { createContext, useContext, useRef, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { useSearchParams } from "next/navigation";
-import { postService } from "@/services/api/postService";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 
@@ -13,6 +11,7 @@ export const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
+  const [screenSizeWidth, setScreenSizeWidth] = useState("large");
   const { addNotification } = useNotification();
   const {
     someThingHappen,
@@ -20,7 +19,29 @@ export const ScreenProvider = ({ children }) => {
     singleProvider,
     setSingleProvider,
   } = useContext(MenusContext);
-  const [screenSizeWidth, setScreenSizeWidth] = useState("large");
+
+  const pathname = usePathname();
+
+  const [userData, setUserData] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+    return null;
+  });
+  const [userPage, setUserPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedPage = localStorage.getItem("page");
+      return storedPage ? JSON.parse(storedPage) : null;
+    }
+    return null;
+  });
+  const [stories, setStories] = useState([]);
+  const [storyloading, setStoryloading] = useState(false);
+  const [currentUserStory, setCurrentUserStory] = useState({});
+  const [actionLoading, setActionLoading] = useState([]);
+
+  // Set screen size
   useEffect(() => {
     function getScreenSize() {
       const width = window.innerWidth;
@@ -37,53 +58,16 @@ export const ScreenProvider = ({ children }) => {
     };
 
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const pathname = usePathname();
 
-  const [userData, setUserData] = useState(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
-    }
-    return null;
-  });
-
-  useEffect(() => {
-    console.log("test settingLocalStorage");
-
-    if (userData) {
-      console.log("settingLocalStorage");
-      localStorage.setItem("user", JSON.stringify(userData));
-    }
-  }, [userData]);
-
-  const [userPage, setUserPage] = useState(() => {
-    if (typeof window !== "undefined") {
-      const storedPage = localStorage.getItem("page");
-      return storedPage ? JSON.parse(storedPage) : null;
-    }
-    return null;
-  });
-
-  useEffect(() => {
-    if (userPage) {
-      localStorage.setItem("page", JSON.stringify(userPage));
-    }
-  }, [userPage]);
-
-  const getUser = async (type = "user") => {
+  // Fetch user data
+  const fetchUserData = async () => {
     try {
-      if (type == "user") {
-        const { data } = await userService.getUserData(userData?._id);
-        setUserData(data.data);
-      } else {
-        const { data } = await pageService.getPageData(userPage?._id);
-        setUserPage(data.data);
-      }
+      const { data } = await userService.getUserData(userData._id);
+      setUserData(data.data);
     } catch (err) {
       console.error("Error fetching userData", err);
       addNotification({
@@ -95,13 +79,35 @@ export const ScreenProvider = ({ children }) => {
     }
   };
 
-  const [stories, setStories] = useState([]);
-  const [storyloading, setStoryloading] = useState(false);
-  const [currentUserStory, setCurrentUserStory] = useState({});
+  // Fetch page data
+  const fetchPageData = async () => {
+    try {
+      const { data } = await pageService.getPageData(userPage._id);
+      setUserPage(data.data);
+    } catch (err) {
+      console.error("Error fetching pageData", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load page data",
+      });
+    } finally {
+      setSomeThingHappen({});
+    }
+  };
 
+  // Initialize user and page from localStorage (if available)
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    const localPage = JSON.parse(localStorage.getItem("page"));
+
+    if (localUser?._id) fetchUserData();
+    if (localPage?._id) fetchPageData();
+  }, []);
+
+  // Fetch stories
   useEffect(() => {
     if (
-      userData ||
+      userData?._id ||
       (someThingHappen.type === "stories" && someThingHappen.event === "delete")
     ) {
       setStoryloading(true);
@@ -114,7 +120,7 @@ export const ScreenProvider = ({ children }) => {
           if (isMounted) {
             setStories(data.data);
             setCurrentUserStory(
-              data?.data?.find((x) => x?.author[0]?._id == userData?._id) || {}
+              data?.data?.find((x) => x?.author[0]?._id === userData?._id) || {}
             );
           }
         } catch (err) {
@@ -134,7 +140,7 @@ export const ScreenProvider = ({ children }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, [someThingHappen.stories, someThingHappen.type]);
+  }, [someThingHappen.stories, someThingHappen.type, userData?._id]);
 
   // const searchParams = useSearchParams();
   // const type = searchParams.get("type");
@@ -178,8 +184,6 @@ export const ScreenProvider = ({ children }) => {
   //   }
   // }, [postId, type]);
 
-  const [actionLoading, setActionLoading] = useState([]);
-
   return (
     <ScreenContext.Provider
       value={{
@@ -194,9 +198,10 @@ export const ScreenProvider = ({ children }) => {
         setCurrentUserStory,
         storyloading,
         setStoryloading,
-        getUser,
+        fetchUserData,
         userPage,
         setUserPage,
+        fetchPageData,
         actionLoading,
         setActionLoading,
       }}

@@ -7,7 +7,7 @@ import { getCroppedImg } from "@/utils/cropImage";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaRotate } from "react-icons/fa6";
 import { IoMdResize } from "react-icons/io";
-
+import { useLanguage } from "../Contexts/LanguageContext";
 export default function ImageCropper({
   type,
   imageURL,
@@ -16,6 +16,7 @@ export default function ImageCropper({
   inputRef,
   setState,
 }) {
+  const { translations, locale, changeLanguage } = useLanguage();
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -125,6 +126,7 @@ export default function ImageCropper({
             </button>
             <button
               className="main-button"
+              type="button"
               onClick={() => inputRef.current.click()}
             >
               change
@@ -143,6 +145,7 @@ export default function ImageCropper({
           >
             <FaCloudUploadAlt size={48} />
             <p>Click to upload {type}</p>
+            <h1>{translations?.forms?.click_her}</h1>
           </div>
         </div>
       )}

@@ -16,11 +16,13 @@ import { HiUsers } from "react-icons/hi2";
 import { GoBookmarkSlashFill } from "react-icons/go";
 
 import { RiShareForwardFill } from "react-icons/ri";
+import { FaHeartPulse } from "react-icons/fa6";
 
 function SettingMenu() {
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, setActionLoading, setUserData } = useContext(ScreenContext);
+  const { userData, actionLoading, setActionLoading, setUserData } =
+    useContext(ScreenContext);
 
   const {
     settingsMenuRef,
@@ -59,6 +61,8 @@ function SettingMenu() {
 
       await userService.makeFriendRequest(selectedDev?.postOwner);
       setSettingMenu(false);
+
+      // Update current user data
       setUserData((prev) => ({
         ...prev,
         friendRequests: {
@@ -66,18 +70,22 @@ function SettingMenu() {
           sent: [...(prev?.friendRequests?.sent || []), selectedDev?.postOwner],
         },
       }));
+
+      // Update post author's data (author is array)
       selectedDev.setCurrentPost((prev) => ({
         ...prev,
-        author: {
-          ...prev.author,
-          friendRequests: {
-            ...prev.author[0]?.friendRequests,
-            received: [
-              ...(prev.author[0]?.friendRequests?.received || []),
-              userData?._id,
-            ],
+        author: [
+          {
+            ...prev.author[0],
+            friendRequests: {
+              ...prev.author[0]?.friendRequests,
+              received: [
+                ...(prev.author[0]?.friendRequests?.received || []),
+                userData?._id,
+              ],
+            },
           },
-        },
+        ],
       }));
 
       addNotification({
@@ -99,50 +107,162 @@ function SettingMenu() {
 
   const cancelFriendRequest = async () => {
     try {
-      setActionLoading((prev) => [...prev, `send-friend-request`]);
+      setActionLoading((prev) => [...prev, `cancel-friend-request`]);
 
       await userService.cancelRequest(selectedDev?.postOwner);
       setSettingMenu(false);
+
       setUserData((prev) => ({
         ...prev,
         friendRequests: {
           ...prev?.friendRequests,
-          sent: [
-            ...(prev.friendRequests?.sent.filter(
-              (x) => x !== selectedDev?.postOwner
-            ) || []),
-          ],
+          sent: prev.friendRequests?.sent.filter(
+            (x) => x !== selectedDev?.postOwner
+          ),
         },
       }));
 
       selectedDev.setCurrentPost((prev) => ({
         ...prev,
-        author: {
-          ...prev.author,
-          friendRequests: {
-            ...prev.author[0]?.friendRequests,
-            received: [
-              ...(prev.friendRequests?.received.filter(
+        author: [
+          {
+            ...prev.author[0],
+            friendRequests: {
+              ...prev.author[0]?.friendRequests,
+              received: prev.author[0]?.friendRequests?.received?.filter(
                 (x) => x !== userData?._id
-              ) || []),
-            ],
+              ),
+            },
           },
-        },
+        ],
       }));
     } catch (err) {
-      console.error("Failed to send friend request", err);
+      console.error("Failed to cancel friend request", err);
       addNotification({
         type: "error",
-        message: "Failed to send friend request.",
+        message: "Failed to cancel friend request.",
       });
     } finally {
       setActionLoading((prev) =>
-        prev.filter((x) => x !== `send-friend-request`)
+        prev.filter((x) => x !== `cancel-friend-request`)
       );
     }
   };
 
-  console.log(selectedDev.isThereFriendRequest);
+  const confirm_remove_friend_request = async (action) => {
+    try {
+      setActionLoading((prev) => [
+        ...prev,
+        `${action ? "confirm" : "remove"}-friend-request`,
+      ]);
+      await userService.interactWithFriendReq(selectedDev?.postOwner, action);
+      setSettingMenu(false);
+
+      if (action) {
+        // Accept friend request
+        setUserData((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            received: prev.friendRequests?.received.filter(
+              (x) => x !== selectedDev?.postOwner
+            ),
+          },
+          friends: [...(prev.friends || []), selectedDev?.postOwner],
+        }));
+
+        selectedDev.setCurrentPost((prev) => ({
+          ...prev,
+          author: [
+            {
+              ...prev.author[0],
+              friendRequests: {
+                ...prev.author[0].friendRequests,
+                sent: prev.author[0].friendRequests?.sent?.filter(
+                  (x) => x !== userData?._id
+                ),
+              },
+              friends: [...(prev.author[0].friends || []), userData?._id],
+            },
+          ],
+        }));
+      } else {
+        // Decline or remove request
+        setUserData((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            received: prev.friendRequests?.received.filter(
+              (x) => x !== selectedDev?.postOwner
+            ),
+          },
+        }));
+
+        selectedDev.setCurrentPost((prev) => ({
+          ...prev,
+          author: [
+            {
+              ...prev.author[0],
+              friendRequests: {
+                ...prev.author[0]?.friendRequests,
+                sent: prev.author[0]?.friendRequests?.sent?.filter(
+                  (x) => x !== userData?._id
+                ),
+              },
+            },
+          ],
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to interact with this friend request", err);
+      addNotification({
+        type: "error",
+        message: "Failed to interact with this friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter(
+          (x) => x !== `${action ? "confirm" : "remove"}-friend-request`
+        )
+      );
+    }
+  };
+
+  const removeFriend = async () => {
+    try {
+      setActionLoading((prev) => [...prev, "danger remove-friend"]);
+
+      await userService.removeFriend(selectedDev?.postOwner);
+      setSettingMenu(false);
+
+      setUserData((prev) => ({
+        ...prev,
+        friends:
+          prev?.friends?.filter((x) => x !== selectedDev?.postOwner) || [],
+      }));
+
+      selectedDev.setCurrentPost((prev) => ({
+        ...prev,
+        author: [
+          {
+            ...prev.author[0],
+            friends:
+              prev.author[0]?.friends?.filter((x) => x !== userData?._id) || [],
+          },
+        ],
+      }));
+    } catch (err) {
+      console.error("Failed to remove friend", err);
+      addNotification({
+        type: "error",
+        message: "Failed to remove friend.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "danger remove-friend")
+      );
+    }
+  };
 
   const postActions = [
     {
@@ -170,9 +290,11 @@ function SettingMenu() {
       show:
         !selectedDev.isPostPage &&
         !selectedDev.isMyPost &&
-        !selectedDev.isThereFriendRequest &&
+        !selectedDev.isSendedFriendRequest &&
+        !selectedDev.isReceivedFriendRequest &&
         !selectedDev.isMyFriend,
       label: translations?.actions?.add_friend,
+      className: "send-friend-request",
       icon: <HiUsers />,
       onClick: sendFriendRequest,
     },
@@ -180,25 +302,48 @@ function SettingMenu() {
       show:
         !selectedDev.isPostPage &&
         !selectedDev.isMyPost &&
-        selectedDev.isThereFriendRequest,
+        selectedDev.isSendedFriendRequest,
       label:
         translations?.actions?.cancel_friend_request || "cancel friend request",
+      className: "cancel-friend-request",
       icon: <HiUsers />,
       onClick: cancelFriendRequest,
+    },
+    {
+      show:
+        !selectedDev.isPostPage &&
+        !selectedDev.isMyPost &&
+        selectedDev.isReceivedFriendRequest,
+      label:
+        translations?.actions?.accept_friend_request || "accept friend request",
+      className: "confirm-friend-request",
+      icon: <HiUsers />,
+      onClick: () => confirm_remove_friend_request(true), // ✅ FIXED
+    },
+    {
+      show:
+        !selectedDev.isPostPage &&
+        !selectedDev.isMyPost &&
+        selectedDev.isReceivedFriendRequest,
+      label:
+        translations?.actions?.remove_friend_request || "remove friend request",
+      className: "remove-friend-request",
+      icon: <HiUsers />,
+      onClick: () => confirm_remove_friend_request(false), // ✅ FIXED
     },
     {
       show: !selectedDev.isMyPost,
       isSeparator: true,
     },
-    {
-      show: !selectedDev.isMyPost,
-      label: translations?.actions?.hide,
-      icon: <BiSolidHide />,
-      className: "warning",
-      onClick: () => {
-        // handle hide
-      },
-    },
+    // {
+    //   show: !selectedDev.isMyPost,
+    //   label: translations?.actions?.hide,
+    //   icon: <BiSolidHide />,
+    //   className: "warning",
+    //   onClick: () => {
+    //     // handle hide
+    //   },
+    // },
     {
       show: !selectedDev.isMyPost,
       label: translations?.actions?.report,
@@ -218,25 +363,26 @@ function SettingMenu() {
     },
     {
       show:
-        !selectedDev.isMyPost || selectedDev.isMyPost || selectedDev.isMyFriend,
+        selectedDev.isMyPost ||
+        (!selectedDev.isMyPost && selectedDev.isMyFriend),
       isSeparator: true,
     },
     {
       show: selectedDev.isMyFriend,
       label: translations?.actions?.remove_friend,
       icon: <IoPersonRemove />,
-      className: "danger",
-      onClick: sendFriendRequest,
+      className: "danger remove-friend",
+      onClick: removeFriend,
     },
-    {
-      show: !selectedDev.isMyPost,
-      label: translations?.actions?.block,
-      icon: <MdBlock />,
-      className: "danger",
-      onClick: () => {
-        // handle block
-      },
-    },
+    // {
+    //   show: !selectedDev.isMyPost,
+    //   label: translations?.actions?.block,
+    //   icon: <MdBlock />,
+    //   className: "danger",
+    //   onClick: () => {
+    //     // handle block
+    //   },
+    // },
     {
       show: selectedDev.isMyPost,
       label: translations?.actions?.remove_post,
@@ -270,10 +416,16 @@ function SettingMenu() {
               ) : (
                 <button
                   key={action.label || idx}
-                  className={action.className || ""}
+                  className={`main-button ${
+                    actionLoading.includes(action?.className) ? "loading" : ""
+                  } ${action?.className}`}
                   onClick={action.onClick}
                 >
-                  {action.icon} {action.label}
+                  <div className="lds-dual-ring"></div>
+
+                  <span>
+                    {action.icon} {action.label}
+                  </span>
                 </button>
               )
             ) : null

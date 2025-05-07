@@ -30,8 +30,7 @@ function ImgForm() {
   const { openImgForm, setOpenImgForm, setDangerEvent, dangerEventRef } =
     useContext(MenusContext);
   const { handleMenus } = useContext(DynamicMenusContext);
-  const { getUser } = useContext(ScreenContext);
-
+  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
 
   const imgFormMenuRef = useRef(null);
   const inputFileRef = useRef(null);
@@ -71,7 +70,6 @@ function ImgForm() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
 
   useEffect(() => {
     if (openImgForm?.event === "edit") {
@@ -140,7 +138,12 @@ function ImgForm() {
             ? "You updated your image successfully."
             : "You added your image successfully.",
       });
-      await getUser(openImgForm.portfolio);
+      if (openImgForm.portfolio === "user") {
+        await fetchUserData();
+      } else {
+        await fetchPageData();
+      }
+
       setOpenImgForm(false);
     } catch (err) {
       console.log(err);
@@ -248,7 +251,7 @@ function ImgForm() {
                 <FaCloudUploadAlt size={48} />
                 <p>{translations?.forms?.click_to_uploud_image_her}</p>
                 <h1>{translations?.forms?.click_her}</h1>
-              </div>  
+              </div>
             </div>
           )}
           <input

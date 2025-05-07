@@ -147,10 +147,7 @@ function Post({ data = {}, focused = false }) {
     <div className="bottom">
       <div
         className="left emojesCounter"
-        onClick={(e) => {
-          setOpenUsersReact("post");
-          handleMenus(e, "usersReact", currentPost?._id);
-        }}
+
       >
         {currentPost?.reacts && currentPost?.reactCount > 0 && (
           <>
@@ -409,9 +406,15 @@ function Post({ data = {}, focused = false }) {
                   } ${postOwnerData?.lastname} img`}
                   width={40}
                   height={40}
-                  onClick={(e) =>
-                    handleMenus(e, "user-Info", null, postOwnerData)
-                  }
+                  style={{
+                    cursor:
+                      isMyPost || currentPost?.pageId ? "default" : "pointer",
+                  }}
+                  onClick={(e) => {
+                    !isMyPost &&
+                      !currentPost?.pageId &&
+                      handleMenus(e, "user-Info", postOwnerData?._id);
+                  }}
                 />
                 <div className="info">
                   <h5>
@@ -425,12 +428,7 @@ function Post({ data = {}, focused = false }) {
                   </h5>
                   <span>{ConvertTime(currentPost?.data, locale, "post")}</span>
                 </div>
-                {pagee && (
-                  <FaPager
-                    className="creatorType"
-                    onClick={(e) => handleMenus(e, "page-Info", postOwnerData)}
-                  />
-                )}
+                {pagee && <FaPager className="creatorType" />}
 
                 {/* // currentPost?.creator == "community" ? (
                 //   <FaUsers
@@ -441,29 +439,35 @@ function Post({ data = {}, focused = false }) {
                 //   />
                 // ) : null} */}
               </div>
-              <HiDotsVertical
-                className="settingDotsIco"
-                onClick={(e) => {
-                  handleMenus(e, "settingMenu-post", currentPost?._id, {
-                    isMyPost,
-                    isMyPage,
-                    isInFavorite: false,
-                    postOwner: postOwnerData?._id,
-                    isMyFriend: userData?.friends?.includes(
-                      currentPost?.author[0]?._id
-                    ),
-                    isThereFriendRequest:
-                      userData?.friendRequests?.sent?.includes(
+              {userData && userData._id && (
+                <HiDotsVertical
+                  className="settingDotsIco"
+                  onClick={(e) => {
+                    handleMenus(e, "settingMenu-post", currentPost?._id, {
+                      isMyPost,
+                      isMyPage,
+                      isInFavorite: false,
+                      postOwner: postOwnerData?._id,
+                      isMyFriend: userData?.friends?.includes(
                         currentPost?.author[0]?._id
                       ),
-                    isPostPage: currentPost.pageId ? true : false,
-                    isFollowedPage: false,
-                    isCommunity: false,
-                    isMeJoinedThisCommunity: false,
-                    setCurrentPost,
-                  });
-                }}
-              />
+                      isSendedFriendRequest:
+                        userData?.friendRequests?.sent?.includes(
+                          currentPost?.author[0]?._id
+                        ),
+                      isReceivedFriendRequest:
+                        userData?.friendRequests?.received?.includes(
+                          currentPost?.author[0]?._id
+                        ),
+                      isPostPage: currentPost.pageId ? true : false,
+                      isFollowedPage: false,
+                      isCommunity: false,
+                      isMeJoinedThisCommunity: false,
+                      setCurrentPost,
+                    });
+                  }}
+                />
+              )}
             </div>
             <div className="middle">
               {currentPost?.link && (
@@ -472,9 +476,14 @@ function Post({ data = {}, focused = false }) {
                     <div key={index}>
                       {currentPost?.link.length === 1 ? null : `${index + 1} -`}
 
-                      <Link key={index} href={x}>
+                      <a
+                        key={index}
+                        href={x}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {x}
-                      </Link>
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -693,11 +702,17 @@ function Post({ data = {}, focused = false }) {
                         ? userData?.img?.url || "/users/default.svg"
                         : postOwnerData?.img.url || "/users/default.svg"
                     }
+                    style={{
+                      cursor:
+                        isMyPost || currentPost?.pageId ? "default" : "pointer",
+                    }}
                     alt={`${postOwnerData?.firstname} ${postOwnerData?.lastname}`}
                     width={40}
                     height={40}
                     className={`rounded`}
                     onClick={(e) =>
+                      !isMyPost &&
+                      !currentPost?.pageId &&
                       handleMenus(e, "user-Info", postOwnerData?._id)
                     }
                   />
@@ -709,29 +724,35 @@ function Post({ data = {}, focused = false }) {
                   </div>
                 </div>
                 <div className="icons-holder">
-                  <HiDotsVertical
-                    className="settingDotsIco"
-                    onClick={(e) => {
-                      handleMenus(e, "settingMenu-post", currentPost?._id, {
-                        isMyPost,
-                        isMyPage,
-                        isInFavorite: false,
-                        postOwner: postOwnerData?._id,
-                        isMyFriend: userData?.friends?.includes(
-                          currentPost?.author[0]?._id
-                        ),
-                        isThereFriendRequest:
-                          userData?.friendRequests?.sent?.includes(
+                  {userData && userData._id && (
+                    <HiDotsVertical
+                      className="settingDotsIco"
+                      onClick={(e) => {
+                        handleMenus(e, "settingMenu-post", currentPost?._id, {
+                          isMyPost,
+                          isMyPage,
+                          isInFavorite: false,
+                          postOwner: postOwnerData?._id,
+                          isMyFriend: userData?.friends?.includes(
                             currentPost?.author[0]?._id
                           ),
-                        isPostPage: currentPost.pageId ? true : false,
-                        isFollowedPage: false,
-                        isCommunity: false,
-                        isMeJoinedThisCommunity: false,
-                        setCurrentPost,
-                      });
-                    }}
-                  />
+                          isSendedFriendRequest:
+                            userData?.friendRequests?.sent?.includes(
+                              currentPost?.author[0]?._id
+                            ),
+                          isReceivedFriendRequest:
+                            userData?.friendRequests?.received?.includes(
+                              currentPost?.author[0]?._id
+                            ),
+                          isPostPage: currentPost.pageId ? true : false,
+                          isFollowedPage: false,
+                          isCommunity: false,
+                          isMeJoinedThisCommunity: false,
+                          setCurrentPost,
+                        });
+                      }}
+                    />
+                  )}
                   <IoClose
                     className="close closeMenu"
                     onClick={() => {
@@ -806,9 +827,14 @@ function Post({ data = {}, focused = false }) {
                         {currentPost?.link.length === 1
                           ? null
                           : `${index + 1} -`}
-                        <Link key={index} href={x}>
+                        <a
+                          key={index}
+                          href={x}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {x}
-                        </Link>
+                        </a>
                       </div>
                     ))}
                   </div>

@@ -53,7 +53,7 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
   };
 
   const author =
-    Array.isArray(data?.author) && data.author.length > 0
+    Array.isArray(data?.author) && data.author?.length > 0
       ? data.author[0]
       : null;
 
@@ -62,10 +62,10 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
   return (
     <div
       onClick={() => {
-        smallView && fetchUserStories(author._id);
+        smallView && fetchUserStories(author?._id);
       }}
       className={`story ${smallView ? "smallView" : ""} ${
-        smallStoryLoad == author._id ? "loading" : ""
+        smallStoryLoad == author?._id ? "loading" : ""
       }`}
       style={{
         background:
@@ -104,7 +104,7 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
       {smallView && <span className="hiddenContent"></span>}
 
       {data?.info?.link && (
-        <Link
+        <a
           href={data?.info?.link}
           target="_blank"
           id="link"
@@ -121,7 +121,7 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
           }}
         >
           {data?.info?.link}
-        </Link>
+        </a>
       )}
 
       {data?.img &&
@@ -177,12 +177,12 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
 
               <Image
                 className="rounded"
-                src={author.img?.url || "/users/default.svg"}
-                alt={`${author.firstname} img`}
+                src={author?.img?.url || "/users/default.svg"}
+                alt={`${author?.firstname} img`}
                 width={smallView ? 48 : 40}
                 height={smallView ? 48 : 40}
                 onClick={(e) =>
-                  !smallView && handleMenus(e, "user-Info", author._id)
+                  !smallView && handleMenus(e, "user-Info", author?._id)
                 }
               />
               <div className="info">
@@ -190,12 +190,12 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
                   className="ellipsisText"
                   style={{ fontSize: smallView ? "0.7rem" : "14px" }}
                 >
-                  {author._id === userData._id ? (
+                  {author?._id === userData._id ? (
                     <>{translations?.story?.your_story}</>
                   ) : (
                     <>
-                      {author.firstname} {``}
-                      {author.lastname}
+                      {author?.firstname} {``}
+                      {author?.lastname}
                     </>
                   )}
                 </h5>
@@ -221,7 +221,7 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
       {/* {!smallView && data?.mentions && data?.mentions.length > 0 && (
         <div className="mentions view">
           <h5>
-            {author.firstname} {translations?.post?.mention}
+            {author?.firstname} {translations?.post?.mention}
           </h5>
           {data?.mentions?.map((x, index) => (
             <button

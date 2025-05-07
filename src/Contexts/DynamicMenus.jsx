@@ -26,8 +26,10 @@ export const MenuProvider = ({ children }) => {
     const cursorX = event.clientX;
 
     const menuWidth =
-      type.includes("Info") || type == "usersSelection" || type == "emojiHolder"
+      type == "usersSelection" || type == "emojiHolder"
         ? 340
+        : type.includes("Info")
+        ? 370
         : 255;
 
     const menuHeight =

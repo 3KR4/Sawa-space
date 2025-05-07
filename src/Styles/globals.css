@@ -260,16 +260,52 @@ body.ar .goBackSvg {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 12px !important;
+  border-radius: 6px !important;
   margin: 0 10px;
+  background: transparent;
+  text-align: unset;
+  justify-content: unset;
 }
 .sideMenu > button:hover {
   background: var(--border-color);
 }
+.sideMenu > button span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--title-color) !important;
+}
+.sideMenu > button:hover span {
+  color: var(--title-color) !important;
+}
+.sideMenu > button .lds-dual-ring:after {
+  border-color: var(--title-color) transparent var(--title-color) transparent !important;
+}
+.sideMenu > button svg {
+  color: var(--title-color) !important;
+}
+.sideMenu > button.warning:hover span,
+.sideMenu > button.warning:hover svg {
+  color: white !important;
+}
+
+.sideMenu button.danger span {
+  color: var(--title-color) !important;
+}
+.sideMenu button.danger:hover span {
+  color: white !important;
+}
 .sideMenu button.danger:hover {
-  color: white;
+}
+.sideMenu button.danger:hover svg {
+  color: white !important;
+}
+.sideMenu button.danger:hover {
   background-color: var(--red-color);
+}
+.sideMenu button.danger:hover span {
+  color: white;
 }
 .sideMenu button.danger:hover svg,
 .sideMenu button.warning:hover svg {
@@ -435,6 +471,10 @@ body.ar .notification span.before {
   transition: 0.3s;
   opacity: 1;
   background: transparent !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
 }
 .main-button.loading span {
   opacity: 0;
@@ -2111,6 +2151,7 @@ body.ar .action-holder.forComments .top svg {
   min-width: 100%;
   backdrop-filter: unset;
   background: var(--body-color) !important;
+  z-index: 3;
 }
 body:has(.focusedMsg.active) header,
 body:has(.focusedMsg.active) .chats {
@@ -2258,6 +2299,9 @@ body:has(.focusedMsg.active) {
 }
 .focusedMsg .post .actions .curentUserReact:hover {
   background: var(--third-color);
+}
+.focusedMsg .post .emojesCounter {
+  min-width: unset;
 }
 .curentUserReact {
   cursor: pointer;
@@ -2570,9 +2614,22 @@ label.checkbox > span {
 .info-menu.sideMenu {
   background: var(--body-color);
   padding: 15px;
-  width: 340px;
+  width: 370px;
   gap: 10px;
   z-index: 101;
+}
+.info-menu.sideMenu.loading {
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.info-menu.sideMenu.loading > .lds-dual-ring {
+  color: var(--title-color);
+}
+.info-menu.sideMenu.loading > .lds-dual-ring:after {
+  width: 35px;
+  height: 35px;
 }
 .info-menu.sideMenu img {
   position: relative !important;
@@ -2634,9 +2691,10 @@ label.checkbox > span {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
 }
 .info-menu.sideMenu .actions > * {
-  width: -webkit-fill-available;
+  width: fit-content;
 }
 
 .info-menu svg.close {
@@ -4202,6 +4260,7 @@ body.ar .swiper-container .Product * {
   }
   .notfication-holder {
     width: 96%;
+    top: 50px;
   }
   .stories .navigations-icons.forStories svg {
     width: 27px !important;

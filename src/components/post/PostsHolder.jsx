@@ -43,55 +43,50 @@ function PostsHolder(param) {
   const [postsloading, setPostsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-useEffect(() => {
-  let timeoutId;
-  let isMounted = true;
+  useEffect(() => {
+    let timeoutId;
+    let isMounted = true;
 
-  const fetchPosts = async (retry = false) => {
-    setPostsLoading(true);
-    timeoutId = setTimeout(async () => {
-      try {
-        const res = await postService.getPosts(page, param.type, param.id);
-        if (isMounted) {
-          setPosts((prev) => {
-            const newPosts = [...prev, ...res.data.data];
-            return newPosts.length > 30 ? newPosts.slice(-25) : newPosts;
-          });
-          setHasMore(page < res.data.last_page);
+    const fetchPosts = async (retry = false) => {
+      setPostsLoading(true);
+      timeoutId = setTimeout(async () => {
+        try {
+          const res = await postService.getPosts(page, param.type, param.id);
+          if (isMounted) {
+            setPosts((prev) => {
+              const newPosts = [...prev, ...res.data.data];
+              return newPosts.length > 30 ? newPosts.slice(-25) : newPosts;
+            });
+            setHasMore(page < res.data.last_page);
+          }
+        } catch (err) {
+          const errorMessage = err?.response?.data || err.message;
+
+          if (
+            errorMessage.includes(
+              "Cannot set property 'userreact' of undefined"
+            ) &&
+            !retry
+          ) {
+            // Try again once
+            console.warn("Retrying post fetch due to userreact error...");
+            fetchPosts(true);
+          } else {
+            console.error("Error fetching posts", err);
+          }
+        } finally {
+          if (isMounted) setPostsLoading(false);
         }
-      } catch (err) {
-        const errorMessage = err?.response?.data || err.message;
+      }, 1500);
+    };
 
-        if (
-          errorMessage.includes(
-            "Cannot set property 'userreact' of undefined"
-          ) &&
-          !retry
-        ) {
-          // Try again once
-          console.warn("Retrying post fetch due to userreact error...");
-          fetchPosts(true);
-        } else {
-          console.error("Error fetching posts", err);
-          addNotification({
-            type: "error",
-            message: "Failed to load posts. Please try again.",
-          });
-        }
-      } finally {
-        if (isMounted) setPostsLoading(false);
-      }
-    }, 1500);
-  };
+    fetchPosts();
 
-  fetchPosts();
-
-  return () => {
-    isMounted = false;
-    clearTimeout(timeoutId);
-  };
-}, [page]);
-
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [page]);
 
   useEffect(() => {
     if (

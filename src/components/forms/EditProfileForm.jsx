@@ -35,8 +35,14 @@ import { CircleAlert } from "lucide-react";
 
 export default function EditProfileForm({ editType, setEditType }) {
   const { addNotification } = useNotification();
-  const { setUserData, userData, userPage, setUserPage, getUser } =
-    useContext(ScreenContext);
+  const {
+    setUserData,
+    userData,
+    userPage,
+    setUserPage,
+    fetchUserData,
+    fetchPageData,
+  } = useContext(ScreenContext);
 
   const { translations, locale } = useLanguage();
 
@@ -152,7 +158,11 @@ export default function EditProfileForm({ editType, setEditType }) {
       editType === "user"
         ? await userService.editUserData(userData._id, payload)
         : await pageService.editPageData(payload);
-      await getUser(editType);
+      if (editType === "user") {
+        await fetchUserData();
+      } else {
+        await fetchPageData();
+      }
       setEditType(null);
       addNotification({
         type: "success",

@@ -728,7 +728,7 @@ function StoryForm() {
                         </label>
 
                         <div className="selectOptions Holder">
-                          <button className="selectedValue">
+                          <button type="button" className="selectedValue">
                             <h5>{storyData.settings.body.family}</h5>
                             <FaAngleDown />
                           </button>
@@ -1225,7 +1225,7 @@ function StoryForm() {
                   </DraggableElement>
                 ))}
 
-                <div className="top forUser">
+                <div className="top forUser" style={{ flexDirection: "row" }}>
                   <div className="left">
                     <Image
                       className="rounded"
@@ -1233,7 +1233,7 @@ function StoryForm() {
                       alt={"/users/default.svg"}
                       width={40}
                       height={40}
-                      onClick={(e) => handleMenus(e, "user-Info", data.user.id)}
+                      onClick={(e) => handleMenus(e, "user-Info", data.author[0]._id)}
                     />
                     <div className="info">
                       <h5>
@@ -1259,7 +1259,7 @@ function StoryForm() {
                     {selectedUsersNames?.map((x, index) => (
                       <button
                         key={index}
-                        onClick={(e) => handleMenus(e, "user-Info", x.userId)}
+                        onClick={(e) => handleMenus(e, "user-Info", x.author[0]?._id)}
                       >
                         @{x}
                       </button>

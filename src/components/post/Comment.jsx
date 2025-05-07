@@ -110,7 +110,7 @@ function Comment({
           width={40}
           height={40}
           unoptimized
-          onClick={(e) => handleMenus(e, "user-Info", null, data?.author[0])}
+          onClick={(e) => handleMenus(e, "user-Info", data?.author[0]?._id)}
         />
         <span></span>
       </div>

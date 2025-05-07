@@ -18,7 +18,7 @@ import { storyService } from "@/services/api/storyService";
 function DangerEvent() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { getUser } = useContext(ScreenContext);
+  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
 
   const {
     dangerEvent,
@@ -111,7 +111,11 @@ function DangerEvent() {
         type: "success",
         message: "Image deleted successfully.",
       });
-      await getUser(dangerEvent.for);
+      if (dangerEvent.for === "user") {
+        await fetchUserData();
+      } else {
+        await fetchPageData();
+      }
     } catch (err) {
       console.log(err);
       addNotification({ type: "error", message: "Failed to delete image." });

@@ -226,7 +226,6 @@ export default function Header() {
               localStorage.removeItem("user");
               localStorage.removeItem("page");
               localStorage.removeItem("authToken");
-              window.location.reload();
             }}
           >
             <TbLogout2 /> {translations?.header?.logout}
@@ -336,7 +335,7 @@ export default function Header() {
         )}
       </nav>
 
-      {userData ? (
+      {userData && userData._id ? (
         <div className="events">
           {screenSize === "small" ? (
             <>

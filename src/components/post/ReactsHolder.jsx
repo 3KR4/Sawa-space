@@ -10,7 +10,7 @@ import { postService } from "@/services/api/postService";
 import { FaPlus } from "react-icons/fa6";
 
 function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
-  const { screenSize } = useContext(ScreenContext);
+  const { userData } = useContext(ScreenContext);
   const [loading, setLoading] = useState(false);
   const { addNotification } = useNotification();
 
@@ -87,10 +87,18 @@ function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
       });
     } catch (err) {
       console.error(err);
-      addNotification({
-        type: "error",
-        message: "Cannot react right now, please try again later.",
-      });
+      if (userData && userData._id) {
+        addNotification({
+          type: "error",
+          message: "Cannot react right now, please try again later.",
+        });
+      } else {
+        addNotification({
+          type: "warning",
+          message: "You have to log in first",
+        });
+      }
+
     } finally {
       setReactsHolder(false);
       setLoading(false);

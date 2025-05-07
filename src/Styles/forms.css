@@ -103,6 +103,7 @@ input::placeholder {
 .selectHolder .error svg,
 .specificHolder .error svg {
   color: #c81d1d;
+  width: 16px;
 }
 form button.remove {
   display: flex;
@@ -913,6 +914,9 @@ body.ar .focusedMsg .body > div > h4 {
   border-radius: 5px;
   transition: 0.3s;
 }
+.addingDetails .productImages {
+  background: var(--border-color);
+}
 .uploadlabel {
   position: relative;
   display: flex;
@@ -1435,9 +1439,23 @@ body.ar .storyForm .setting-holder .main-title {
   align-items: center;
   gap: 7px;
 }
+.cropperContainer .controls .hold {
+  gap: 8px;
+}
 .cropperContainer .actions {
   display: flex;
   gap: 7px;
+}
+.register-page .cropperContainer .actions .main-button {
+  padding: 10px 18px !important;
+  background: var(--border-color);
+  color: var(--title-color);
+}
+.register-page .cropperContainer .actions .main-button:last-child:hover {
+  background: var(--main-color);
+}
+.cropperContainer .actions .main-button {
+  flex: 1;
 }
 .cropperContainer .controls .hold {
   margin: auto;

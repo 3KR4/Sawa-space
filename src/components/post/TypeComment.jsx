@@ -115,10 +115,18 @@ function TypeComment({
         setOriginalImg(null);
       } catch (err) {
         console.error("Error updating comment", err);
-        addNotification({
-          type: "error",
-          message: "Failed to update your comment",
-        });
+
+        if (userData && userData._id) {
+          addNotification({
+            type: "error",
+            message: "Failed to update your comment",
+          });
+        } else {
+          addNotification({
+            type: "warning",
+            message: "You have to log in first",
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -183,10 +191,18 @@ function TypeComment({
         setOriginalImg(null);
       } catch (err) {
         console.error("Error creating comment", err);
-        addNotification({
-          type: "error",
-          message: "Failed to post Your Comment",
-        });
+
+        if (userData && userData._id) {
+          addNotification({
+            type: "error",
+            message: "Failed to post Your Comment",
+          });
+        } else {
+          addNotification({
+            type: "warning",
+            message: "You have to log in first",
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -236,7 +252,9 @@ function TypeComment({
             width={40}
             height={40}
           />
-          {userData?.firstname} {userData?.lastname}
+          {userData && userData._id
+            ? `${userData?.firstname} ${userData?.lastname}`
+            : "no user yet"}
         </div>
         <div className="right">
           {screenSize === "large" && (

@@ -13,6 +13,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
+import ImageCropper from "@/components/ImageCropper";
 
 import {
   LockKeyhole,
@@ -55,7 +56,7 @@ export default function Auth() {
   const [passEye, setPassEye] = useState({ password: false, confirm: false });
   const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [birthDate, setBirthDate] = useState(null);
-
+  const [selectedFileURL, setSelectedFileURL] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -146,7 +147,7 @@ export default function Auth() {
       if (selectedFile) {
         const formDataImage = new FormData();
         formDataImage.append("img", selectedFile);
-        await userService.uploadUserImage(userId, formDataImage);
+        await userService.upload_img_cover(userId, "img", formDataImage);
       }
 
       // Always fetch the latest user data after creation + optional image upload
@@ -175,28 +176,7 @@ export default function Auth() {
 
   const maxDate = new Date();
   const minDate = new Date(1900, 0, 1);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.match("image.*")) {
-      addNotification({
-        type: "warnign",
-        message: "Please select an image file (JPEG, PNG, etc.)",
-      });
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      addNotification({
-        type: "warnign",
-        message: "File size too large (max 5MB)",
-      });
-      return;
-    }
-    setSelectedFile(file);
-  };
+  const imageInputRef = useRef();
 
   return (
     <>
@@ -220,36 +200,18 @@ export default function Auth() {
               onSubmit={handleAdditionalDetailsSubmit}
               className={addingDetails ? "addingDetails" : ""}
             >
-              <div className="userImg rounded">
-                <Image
-                  style={{ opacity: selectedFile ? "1" : "0.85" }}
-                  className="rounded"
-                  src={
-                    selectedFile
-                      ? URL.createObjectURL(selectedFile)
-                      : "/users/default.svg"
-                  }
-                  alt="User Cover"
-                  fill
-                />
-                <div
-                  className="editICo rounded"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <MdModeEditOutline />
-                </div>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="image-upload-input"
-                />
-              </div>
+              <ImageCropper
+                type={`img`}
+                imageURL={selectedFileURL}
+                setImageURL={setSelectedFileURL}
+                aspect={1}
+                inputRef={imageInputRef}
+                setState={setSelectedFile}
+              />
+              <hr />
 
               {/* Birth Date */}
-              <div className="Date-Picker">
+              <div className="Date-Picker" style={{ background: "#e8e8e8" }}>
                 <div
                   className=""
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}

@@ -544,7 +544,7 @@ function SingleDetails() {
                             width={50}
                             height={50}
                             onClick={(e) =>
-                              handleMenus(e, "user-Info", xAuthor)
+                              handleMenus(e, "user-Info", xAuthor?._id)
                             }
                           />
                           <div className="info">
