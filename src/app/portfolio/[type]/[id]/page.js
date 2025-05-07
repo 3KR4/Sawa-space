@@ -55,7 +55,7 @@ export default function Portfolio({ params }) {
   const {
     userData,
     userPage,
-    setUserPage,
+    setUserData,
     screenSize,
     actionLoading,
     setActionLoading,
@@ -75,7 +75,6 @@ export default function Portfolio({ params }) {
   const [productSearch, setProductSearch] = useState("");
   const [userPhotos, setUserPhotos] = useState([]);
   const [userAllPhotos, setUserAllPhotos] = useState([]);
-  const [pagePhotos, setPagePhotos] = useState(1);
   const [products, setProducts] = useState([]);
 
   const [userFriends, setUserFriends] = useState([]);
@@ -84,6 +83,189 @@ export default function Portfolio({ params }) {
 
   const [originalCats, setOriginalCats] = useState([]);
   const [productsSmallView, setProductsSmallView] = useState([]);
+
+  const isMyFriend = userData?.friends?.includes(currentPortfolio?._id);
+  const isSendedFriendRequest = userData?.friendRequests?.sent?.includes(
+    currentPortfolio?._id
+  );
+  const isReceivedFriendRequest = userData?.friendRequests?.received?.includes(
+    currentPortfolio?._id
+  );
+
+  const sendFriendRequestTop = async () => {
+    try {
+      setActionLoading((prev) => [...prev, "send-friend-request"]);
+
+      await userService.makeFriendRequest(currentPortfolio?._id);
+
+      setUserData((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev.friendRequests,
+          sent: [...(prev.friendRequests?.sent || []), currentPortfolio?._id],
+        },
+      }));
+
+      setCurrentPortfolio((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev.friendRequests,
+          received: [...(prev.friendRequests?.received || []), userData._id],
+        },
+      }));
+
+      addNotification({ type: "success", message: "Friend request sent." });
+    } catch (err) {
+      console.error("Send friend request failed", err);
+
+      if (userData && userData._id) {
+        addNotification({
+          type: "error",
+          message: "Failed to send friend request.",
+        });
+      } else {
+        addNotification({
+          type: "warning",
+          message: "You have to log in first",
+        });
+      }
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "send-friend-request")
+      );
+    }
+  };
+
+  // Cancel sent request
+  const cancelFriendRequestTop = async () => {
+    try {
+      setActionLoading((prev) => [...prev, "cancel-friend-request"]);
+
+      await userService.cancelRequest(currentPortfolio?._id);
+
+      setUserData((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev.friendRequests,
+          sent: prev.friendRequests?.sent?.filter(
+            (x) => x !== currentPortfolio?._id
+          ),
+        },
+      }));
+
+      setCurrentPortfolio((prev) => ({
+        ...prev,
+        friendRequests: {
+          ...prev.friendRequests,
+          received: prev.friendRequests?.received?.filter(
+            (x) => x !== userData._id
+          ),
+        },
+      }));
+
+      addNotification({ type: "info", message: "Friend request canceled." });
+    } catch (err) {
+      console.error("Cancel friend request failed", err);
+      addNotification({
+        type: "error",
+        message: "Failed to cancel friend request.",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "cancel-friend-request")
+      );
+    }
+  };
+
+  // Confirm or remove received friend request
+  const confirm_remove_friend_requestTop = async (action) => {
+    const actionKey = `${action ? "confirm" : "remove"}-friend-request`;
+    try {
+      setActionLoading((prev) => [...prev, actionKey]);
+
+      await userService.interactWithFriendReq(currentPortfolio?._id, action);
+
+      if (action) {
+        // Accepting request
+        setUserData((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            received: prev.friendRequests?.received?.filter(
+              (x) => x !== currentPortfolio?._id
+            ),
+          },
+          friends: [...(prev.friends || []), currentPortfolio?._id],
+        }));
+
+        setCurrentPortfolio((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+          },
+          friends: [...(prev.friends || []), userData._id],
+        }));
+
+        addNotification({
+          type: "success",
+          message: "Friend request accepted.",
+        });
+      } else {
+        // Decline/remove request
+        setUserData((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            received: prev.friendRequests?.received?.filter(
+              (x) => x !== selectedDev
+            ),
+          },
+        }));
+
+        setCurrentUserData((prev) => ({
+          ...prev,
+          friendRequests: {
+            ...prev.friendRequests,
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+          },
+        }));
+
+        addNotification({ type: "info", message: "Friend request removed." });
+      }
+    } catch (err) {
+      console.error("Failed to interact with friend request", err);
+      addNotification({
+        type: "error",
+        message: "Friend request interaction failed.",
+      });
+    } finally {
+      setActionLoading((prev) => prev.filter((x) => x !== actionKey));
+    }
+  };
+  // Remove friend
+  const removeFriendTop = async () => {
+    try {
+      setActionLoading((prev) => [...prev, "remove-friend"]);
+
+      await userService.removeFriend(currentPortfolio?._id);
+
+      setUserData((prev) => ({
+        ...prev,
+        friends: prev.friends?.filter((x) => x !== currentPortfolio?._id),
+      }));
+
+      setCurrentPortfolio((prev) => ({
+        ...prev,
+        friends: prev.friends?.filter((x) => x !== userData._id),
+      }));
+    } catch (err) {
+      console.error("Remove friend failed", err);
+      addNotification({ type: "error", message: "Failed to remove friend." });
+    } finally {
+      setActionLoading((prev) => prev.filter((x) => x !== "remove-friend"));
+    }
+  };
 
   const fetch_portfolio_photos = async (type, page, limit) => {
     setActionLoading((prev) => [...prev, "profile-photos"]);
@@ -393,6 +575,7 @@ export default function Portfolio({ params }) {
       );
     }
   };
+
   const loadProducts = useCallback(async () => {
     // if (isFetching.current || !hasMore) return;
 
@@ -560,22 +743,83 @@ export default function Portfolio({ params }) {
                       ? translations?.actions?.edit_profile
                       : translations?.actions?.edit_page}
                   </button>
-                ) : type === "page" ? (
-                  <button className="main-button">
-                    <IoMdPersonAdd />
-                    {translations?.portfolio?.follow}
+                ) : isMyFriend ? (
+                  <button
+                    className={`main-button ${
+                      actionLoading.includes("remove-friend") ? "loading" : ""
+                    }`}
+                    onClick={removeFriendTop}
+                  >
+                    <span>
+                      <IoMdPersonAdd /> Remove Friend
+                    </span>
+                    <div className="lds-dual-ring"></div>
                   </button>
-                ) : (
+                ) : isSendedFriendRequest ? (
+                  <button
+                    className={`main-button ${
+                      actionLoading.includes("cancel-friend-request")
+                        ? "loading"
+                        : ""
+                    }`}
+                    onClick={cancelFriendRequestTop}
+                  >
+                    <span>
+                      <IoMdPersonAdd /> Cancel Request
+                    </span>
+                    <div className="lds-dual-ring"></div>
+                  </button>
+                ) : isReceivedFriendRequest ? (
                   <>
-                    <button className="main-button">
-                      <IoMdPersonAdd />
-                      {translations?.actions?.add_friend}
+                    <button
+                      className={`main-button ${
+                        actionLoading.includes("confirm-friend-request")
+                          ? "loading"
+                          : ""
+                      }`}
+                      onClick={() => confirm_remove_friend_requestTop(true)}
+                    >
+                      <span>
+                        <IoMdPersonAdd /> Confirm Request
+                      </span>
+                      <div className="lds-dual-ring"></div>
                     </button>
-                    <button className="main-button">
-                      <AiFillMessage />
-                      {translations?.portfolio?.message}
+                    <button
+                      className={`main-button danger ${
+                        actionLoading.includes("remove-friend-request")
+                          ? "loading"
+                          : ""
+                      }`}
+                      onClick={() => confirm_remove_friend_requestTop(false)}
+                    >
+                      <span>
+                        <IoMdPersonAdd /> Decline Request
+                      </span>
+                      <div className="lds-dual-ring"></div>
                     </button>
                   </>
+                ) : (
+                  <button
+                    className={`main-button ${
+                      actionLoading.includes("send-friend-request")
+                        ? "loading"
+                        : ""
+                    }`}
+                    onClick={sendFriendRequestTop}
+                  >
+                    <span>
+                      <IoMdPersonAdd /> Add Friend
+                    </span>
+                    <div className="lds-dual-ring"></div>
+                  </button>
+                )}
+
+                {/* Message button shown always if not your own profile */}
+                {!isMyPage && !isMyProfile && (
+                  <button className="main-button">
+                    <AiFillMessage />
+                    {translations?.portfolio?.message}
+                  </button>
                 )}
               </div>
             </div>
@@ -664,18 +908,6 @@ export default function Portfolio({ params }) {
                 {translations?.portfolio?.about}
               </button>
             </div>
-            <button
-              className={`main-button`}
-              onClick={(e) =>
-                handleMenus(
-                  e,
-                  type === "user" ? "settingMenu-user" : "settingMenu-page",
-                  id
-                )
-              }
-            >
-              <BsThreeDots />
-            </button>
           </div>
         </nav>
       </div>

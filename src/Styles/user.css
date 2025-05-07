@@ -849,4 +849,10 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
     color: var(--title-color) !important;
     font-weight: 500;
   }
+  .portfolio .bigSection .friends {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .portfolio nav .top h4 {
+        text-align: center;
+  }
 }
