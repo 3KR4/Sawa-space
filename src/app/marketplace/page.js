@@ -1,6 +1,12 @@
 "use client";
 export const dynamic = "force-dynamic";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import { products } from "@/utils/Data";
 import { departements } from "@/utils/Data";
 import "@/Styles/marketplace.css";
@@ -13,9 +19,13 @@ import { productService } from "@/services/api/productService";
 import ContentLoader from "react-content-loader";
 import Product from "@/components/shop/Product";
 import { useLanguage } from "@/Contexts/LanguageContext";
-import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
+import { ScreenContext } from "@/Contexts/ScreenContext";
+
+import { IoGrid, IoSearch, IoClose } from "react-icons/io5";
+
 export default function MarketPlace() {
   const { translations } = useLanguage();
+  const { screenSize } = useContext(ScreenContext);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,13 +40,13 @@ export default function MarketPlace() {
 
   const [filters, setFilters] = useState(initialFilters);
   const [products, setProducts] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [heighstPrice, setHeighstPrice] = useState();
   const [totalCount, setTotalCount] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [productSearch, setProductSearch] = useState(filters.search || "");
   const isFetching = useRef(false);
+  const [mobileFilters, setMobileFilters] = useState(false);
 
   // Update URL when filters change
   const updateURL = useCallback(
@@ -61,14 +71,13 @@ export default function MarketPlace() {
       setFilters(updated);
       updateURL(updated);
       setProducts([]);
-      setHasMore(true);
     },
     [filters, updateURL]
   );
 
   // Load products based on current filters
   const loadProducts = useCallback(async () => {
-    if (isFetching.current || !hasMore) return;
+    if (isFetching.current) return;
 
     isFetching.current = true;
     setLoading(true);
@@ -84,7 +93,7 @@ export default function MarketPlace() {
         filters.minP,
         filters.maxP,
         filters.page,
-        6
+        12
       );
 
       const newProducts = res?.data?.data || [];
@@ -96,15 +105,13 @@ export default function MarketPlace() {
       );
       setTotalCount(res?.data?.totalCount);
       setLastPage(res?.data?.lastPage);
-
-      setHasMore(filters.page < lastPage);
     } catch (err) {
       console.error(err);
     } finally {
       isFetching.current = false;
       setLoading(false);
     }
-  }, [filters, hasMore]);
+  }, [filters]);
 
   // Load products when filters change
   useEffect(() => {
@@ -142,62 +149,114 @@ export default function MarketPlace() {
 
   return (
     <div className={`marketplace`}>
-      <SideSection>
+      <SideSection mobileFilters={mobileFilters}>
         <MarketSideSection
           heighstPrice={heighstPrice}
           onFilterChange={handleFilterChange}
           currentFilters={filters}
           clearFilters={clearFilters}
+          setMobileFilters={setMobileFilters}
         />
       </SideSection>
 
       {filters.dep || filters.search ? (
         <div className="grid-products">
           <div className="top">
-            <div
-              className="search-holderr"
-              style={{
-                padding: productSearch.length !== 0 ? "0 0 0 10px" : "0 10px",
-              }}
-            >
-              <IoSearch
-                className="searchIco"
-                onClick={() =>
-                  document.getElementById("searchInProductsInput").focus()
-                }
-              />
-              <div className="middle">
-                <h4
-                  style={{
-                    opacity: productSearch.length !== 0 ? "0" : "1",
-                  }}
+            <div>
+              <div
+                className="search-holderr"
+                style={{
+                  padding: productSearch.length !== 0 ? "0 0 0 10px" : "0 10px",
+                }}
+              >
+                <IoSearch
+                  className="searchIco"
                   onClick={() =>
                     document.getElementById("searchInProductsInput").focus()
                   }
-                >
-                  {translations?.placeHolders?.search_in_products}
-                </h4>
-                <input
-                  id="searchInProductsInput"
-                  type="text"
-                  value={productSearch}
-                  onChange={(e) => setProductSearch(e.target.value)}
                 />
+                <div className="middle">
+                  <h4
+                    style={{
+                      opacity: productSearch.length !== 0 ? "0" : "1",
+                    }}
+                    onClick={() =>
+                      document.getElementById("searchInProductsInput").focus()
+                    }
+                  >
+                    {translations?.placeHolders?.search_in_products}
+                  </h4>
+                  <input
+                    id="searchInProductsInput"
+                    type="text"
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                  />
+                </div>
+                {productSearch.length > 0 && (
+                  <IoClose
+                    className="delete"
+                    onClick={() => setProductSearch("")}
+                  />
+                )}
               </div>
-              {productSearch.length > 0 && (
-                <IoClose
-                  className="delete"
-                  onClick={() => setProductSearch("")}
-                />
-              )}
+
+              <span>{totalCount} products found</span>
             </div>
-            <button className="main-button" onClick={clearFilters}>
-              Clear Filters
-            </button>
-            <span>{totalCount} matching products</span>
+            <div>
+              {screenSize === "small" && (
+                <button
+                  className="main-button"
+                  onClick={() => setMobileFilters(true)}
+                >
+                  <IoGrid /> Filters
+                </button>
+              )}
+
+              <div className="active-filters">
+                {filters.dep && (
+                  <div className="filter-chip">
+                    {filters.dep}
+                    <IoClose
+                      onClick={() => handleFilterChange({ dep: null })}
+                    />
+                  </div>
+                )}
+                {filters.search && (
+                  <div className="filter-chip">
+                    {filters.search}
+                    <IoClose
+                      onClick={() => handleFilterChange({ search: null })}
+                    />
+                  </div>
+                )}
+                {filters.minP && (
+                  <div className="filter-chip">
+                    Min: {filters.minP}
+                    <IoClose
+                      onClick={() => handleFilterChange({ minP: null })}
+                    />
+                  </div>
+                )}
+                {filters.maxP && (
+                  <div className="filter-chip">
+                    Max: {filters.maxP}
+                    <IoClose
+                      onClick={() => handleFilterChange({ maxP: null })}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="products">
+          <div
+            className="products"
+            style={{
+              background: loading ? "white" : "",
+              padding: loading ? "10px" : "",
+            }}
+          >
             {loading
               ? Array.from({ length: 10 }).map((_, index) => (
                   <ContentLoader

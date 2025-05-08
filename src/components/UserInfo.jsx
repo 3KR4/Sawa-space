@@ -10,7 +10,7 @@ import { users } from "@/utils/Data";
 import SettingMenu from "@/components/providers/SettingMenu";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useNotification } from "@/Contexts/NotificationContext";
-
+import { pageService } from "@/services/api/pageService";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
@@ -31,14 +31,22 @@ function UserInfo() {
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
+      let res;
       try {
-        const { data } = await userService.getUserData(selectedDev);
-        setCurrentUserData(data.data);
+        if (selectedDev.type === "user") {
+          res = await userService.getUserData(selectedDev.id);
+        } else {
+          res = await pageService.getPageData(selectedDev.id);
+        }
+        setCurrentUserData(res.data.data);
       } catch (err) {
         console.error("Error fetching userData", err);
         addNotification({
           type: "error",
-          message: "Failed to load user data",
+          message:
+            selectedDev.type === "user"
+              ? "Failed to load user data"
+              : "Failed to load page data",
         });
       } finally {
         setLoading(false);
@@ -271,7 +279,9 @@ function UserInfo() {
             <div className="info">
               <div className="top">
                 <h4>
-                  {currentUserData?.firstname} {``} {currentUserData?.lastname}
+                  {selectedDev.type === "page"
+                    ? `${currentUserData?.pagename}`
+                    : `${currentUserData?.firstname} ${currentUserData?.lastname}`}
                 </h4>
                 <IoClose
                   onClick={() => {
@@ -280,11 +290,14 @@ function UserInfo() {
                   className="close"
                 />
               </div>
-              <p>
-                {currentUserData?.friends?.length === 0
-                  ? "no friends yet"
-                  : `${currentUserData?.friends?.length} friends`}
-              </p>
+              {selectedDev.type === "user" && (
+                <p>
+                  {currentUserData?.friends?.length === 0
+                    ? "no friends yet"
+                    : `${currentUserData?.friends?.length} friends`}
+                </p>
+              )}
+
               {Object.values(currentUserData?.info || {}).some(
                 (value) => value !== "" && value !== null && value !== undefined
               ) && (
@@ -308,81 +321,88 @@ function UserInfo() {
             </div>
           </div>
           <div className="actions">
-            {isMyFriend ? (
-              <button
-                className={`main-button ${
-                  actionLoading.includes("remove-friend") ? "loading" : ""
-                }`}
-                onClick={removeFriend}
-              >
-                <span>
-                  <IoMdPersonAdd /> Remove Friend
-                </span>
-                <div className="lds-dual-ring"></div>
-              </button>
-            ) : isSendedFriendRequest ? (
-              <button
-                className={`main-button ${
-                  actionLoading.includes("cancel-friend-request")
-                    ? "loading"
-                    : ""
-                }`}
-                onClick={cancelFriendRequest}
-              >
-                <span>
-                  <IoMdPersonAdd /> Cancel Request
-                </span>
-                <div className="lds-dual-ring"></div>
-              </button>
-            ) : isReceivedFriendRequest ? (
-              <>
+            {selectedDev.type === "user" &&
+              (isMyFriend ? (
                 <button
                   className={`main-button ${
-                    actionLoading.includes("confirm-friend-request")
-                      ? "loading"
-                      : ""
+                    actionLoading.includes("remove-friend") ? "loading" : ""
                   }`}
-                  onClick={() => confirm_remove_friend_request(true)}
+                  onClick={removeFriend}
                 >
                   <span>
-                    <IoMdPersonAdd /> Confirm request
+                    <IoMdPersonAdd /> Remove Friend
                   </span>
                   <div className="lds-dual-ring"></div>
                 </button>
+              ) : isSendedFriendRequest ? (
                 <button
-                  className={`main-button danger ${
-                    actionLoading.includes("remove-friend-request")
+                  className={`main-button ${
+                    actionLoading.includes("cancel-friend-request")
                       ? "loading"
                       : ""
                   }`}
-                  onClick={() => confirm_remove_friend_request(false)}
+                  onClick={cancelFriendRequest}
                 >
                   <span>
-                    <IoMdPersonAdd /> Decline request
+                    <IoMdPersonAdd /> Cancel Request
                   </span>
                   <div className="lds-dual-ring"></div>
                 </button>
-              </>
-            ) : (
-              <button
-                className={`main-button ${
-                  actionLoading.includes("send-friend-request") ? "loading" : ""
-                }`}
-                onClick={sendFriendRequest}
-              >
-                <span>
-                  <IoMdPersonAdd /> Add Friend
-                </span>
-                <div className="lds-dual-ring"></div>
-              </button>
-            )}
-
+              ) : isReceivedFriendRequest ? (
+                <>
+                  <button
+                    className={`main-button ${
+                      actionLoading.includes("confirm-friend-request")
+                        ? "loading"
+                        : ""
+                    }`}
+                    onClick={() => confirm_remove_friend_request(true)}
+                  >
+                    <span>
+                      <IoMdPersonAdd /> Confirm request
+                    </span>
+                    <div className="lds-dual-ring"></div>
+                  </button>
+                  <button
+                    className={`main-button danger ${
+                      actionLoading.includes("remove-friend-request")
+                        ? "loading"
+                        : ""
+                    }`}
+                    onClick={() => confirm_remove_friend_request(false)}
+                  >
+                    <span>
+                      <IoMdPersonAdd /> Decline request
+                    </span>
+                    <div className="lds-dual-ring"></div>
+                  </button>
+                </>
+              ) : (
+                <button
+                  className={`main-button ${
+                    actionLoading.includes("send-friend-request")
+                      ? "loading"
+                      : ""
+                  }`}
+                  onClick={sendFriendRequest}
+                >
+                  <span>
+                    <IoMdPersonAdd /> Add Friend
+                  </span>
+                  <div className="lds-dual-ring"></div>
+                </button>
+              ))}
             <Link
-              href={`/portfolio/user/${currentUserData?._id}`}
+              style={{
+                width: selectedDev.type === "page" ? "100%" : "fit-content",
+              }}
+              href={`/portfolio/${true ? "user" : "page"}/${
+                currentUserData?._id
+              }`}
               className="main-button"
             >
               <span>
-                <FaEye /> see profile
+                <FaEye /> {true ? "see profile" : "view page"}
               </span>
             </Link>
           </div>

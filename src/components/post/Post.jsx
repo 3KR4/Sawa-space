@@ -145,10 +145,7 @@ function Post({ data = {}, focused = false }) {
 
   const bottomAction = () => (
     <div className="bottom">
-      <div
-        className="left emojesCounter"
-
-      >
+      <div className="left emojesCounter">
         {currentPost?.reacts && currentPost?.reactCount > 0 && (
           <>
             {Object.entries(currentPost.reacts)
@@ -407,13 +404,13 @@ function Post({ data = {}, focused = false }) {
                   width={40}
                   height={40}
                   style={{
-                    cursor:
-                      isMyPost || currentPost?.pageId ? "default" : "pointer",
+                    cursor: isMyPost ? "default" : "pointer",
                   }}
                   onClick={(e) => {
                     !isMyPost &&
-                      !currentPost?.pageId &&
-                      handleMenus(e, "user-Info", postOwnerData?._id);
+                      handleMenus(e, "user-Info", postOwnerData?._id, {
+                        type: currentPost?.pageId ? "page" : "user",
+                      });
                   }}
                 />
                 <div className="info">
@@ -703,8 +700,7 @@ function Post({ data = {}, focused = false }) {
                         : postOwnerData?.img.url || "/users/default.svg"
                     }
                     style={{
-                      cursor:
-                        isMyPost || currentPost?.pageId ? "default" : "pointer",
+                      cursor: isMyPost ? "default" : "pointer",
                     }}
                     alt={`${postOwnerData?.firstname} ${postOwnerData?.lastname}`}
                     width={40}
@@ -712,8 +708,9 @@ function Post({ data = {}, focused = false }) {
                     className={`rounded`}
                     onClick={(e) =>
                       !isMyPost &&
-                      !currentPost?.pageId &&
-                      handleMenus(e, "user-Info", postOwnerData?._id)
+                      handleMenus(e, "user-Info", postOwnerData?._id, {
+                        type: currentPost?.pageId ? "page" : "user",
+                      })
                     }
                   />
                   <div className="info">
