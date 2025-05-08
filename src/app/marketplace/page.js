@@ -12,8 +12,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { productService } from "@/services/api/productService";
 import ContentLoader from "react-content-loader";
 import Product from "@/components/shop/Product";
-
+import { useLanguage } from "@/Contexts/LanguageContext";
+import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 export default function MarketPlace() {
+  const { translations } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -32,7 +34,8 @@ export default function MarketPlace() {
   const [loading, setLoading] = useState(false);
   const [heighstPrice, setHeighstPrice] = useState();
   const [totalCount, setTotalCount] = useState(0);
-
+  const [lastPage, setLastPage] = useState(0);
+  const [productSearch, setProductSearch] = useState(filters.search || "");
   const isFetching = useRef(false);
 
   // Update URL when filters change
@@ -54,15 +57,13 @@ export default function MarketPlace() {
   // Handle filter changes
   const handleFilterChange = useCallback(
     (newFilters) => {
-      setFilters((prev) => {
-        const updated = { ...prev, ...newFilters, page: 1 }; // Reset to page 1 on filter change
-        updateURL(updated);
-        return updated;
-      });
-      setProducts([]); // Clear products to show loading state
+      const updated = { ...filters, ...newFilters, page: 1 };
+      setFilters(updated);
+      updateURL(updated);
+      setProducts([]);
       setHasMore(true);
     },
-    [updateURL]
+    [filters, updateURL]
   );
 
   // Load products based on current filters
@@ -83,23 +84,20 @@ export default function MarketPlace() {
         filters.minP,
         filters.maxP,
         filters.page,
-        15
+        6
       );
 
       const newProducts = res?.data?.data || [];
-      setProducts((prev) => [...prev, ...newProducts]);
+      setProducts(newProducts);
 
       const lastPage = res?.data?.lastPage || 1;
       setHeighstPrice((prev) =>
         filters.minP || filters.maxP ? prev : res?.data?.highestPrice || 5000000
       );
       setTotalCount(res?.data?.totalCount);
+      setLastPage(res?.data?.lastPage);
 
-      if (filters.page < lastPage) {
-        setFilters((prev) => ({ ...prev, page: prev.page + 1 }));
-      } else {
-        setHasMore(false);
-      }
+      setHasMore(filters.page < lastPage);
     } catch (err) {
       console.error(err);
     } finally {
@@ -115,8 +113,21 @@ export default function MarketPlace() {
 
   // Handle page change
   const handlePageChange = (e) => {
-    handleFilterChange({ page: e.selected + 1 });
+    const updated = {
+      ...filters,
+      page: e.selected + 1,
+    };
+    setFilters(updated);
+    setProducts([]);
+    updateURL(updated); // 👈 Sync URL with new page
   };
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      handleFilterChange({ search: productSearch });
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [productSearch]);
 
   // Clear all filters
   const clearFilters = () => {
@@ -143,7 +154,43 @@ export default function MarketPlace() {
       {filters.dep || filters.search ? (
         <div className="grid-products">
           <div className="top">
-            {" "}
+            <div
+              className="search-holderr"
+              style={{
+                padding: productSearch.length !== 0 ? "0 0 0 10px" : "0 10px",
+              }}
+            >
+              <IoSearch
+                className="searchIco"
+                onClick={() =>
+                  document.getElementById("searchInProductsInput").focus()
+                }
+              />
+              <div className="middle">
+                <h4
+                  style={{
+                    opacity: productSearch.length !== 0 ? "0" : "1",
+                  }}
+                  onClick={() =>
+                    document.getElementById("searchInProductsInput").focus()
+                  }
+                >
+                  {translations?.placeHolders?.search_in_products}
+                </h4>
+                <input
+                  id="searchInProductsInput"
+                  type="text"
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                />
+              </div>
+              {productSearch.length > 0 && (
+                <IoClose
+                  className="delete"
+                  onClick={() => setProductSearch("")}
+                />
+              )}
+            </div>
             <button className="main-button" onClick={clearFilters}>
               Clear Filters
             </button>
@@ -216,6 +263,7 @@ export default function MarketPlace() {
                 ))}
           </div>
           <ReactPaginate
+            pageCount={lastPage}
             marginPagesDisplayed={1}
             pageRangeDisplayed={3}
             breakLabel="..."
