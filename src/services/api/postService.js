@@ -22,6 +22,9 @@ export const postService = {
     const url = type === "page" ? "/page/update/" : "/post/";
     return apiClient.put(`${url}${id}`, data);
   },
+  deletePost: (id) => {
+    return apiClient.delete(`/post/${id}`);
+  },
   uploadPostImages: async (type, postId, imageFiles) => {
     const url = type === "page" ? "/page/post/" : "/post/";
     return apiClient.post(`${url}img/${postId}`, imageFiles, {
@@ -66,5 +69,8 @@ export const postService = {
   //! React
   makeReact: (postId, react) => {
     return apiClient.post(`/post/react/${postId}`, react);
+  },
+  getReacts: (postId, react) => {
+    return apiClient.get(`/post/${postId}/react?like=${react}`);
   },
 };

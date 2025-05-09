@@ -63,7 +63,8 @@ export default function Portfolio({ params }) {
     actionLoading,
     setActionLoading,
   } = useContext(ScreenContext);
-  const { setOpenImgForm } = useContext(MenusContext);
+  const { setOpenImgForm, someThingHappen, setSomeThingHappen } =
+    useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
   const { id, type } = use(params);
@@ -638,6 +639,17 @@ export default function Portfolio({ params }) {
   useEffect(() => {
     loadProducts();
   }, [filters, loadProducts]);
+  useEffect(() => {
+    if (
+      someThingHappen.type === "product" &&
+      (someThingHappen.event === "delete" ||
+        someThingHappen.event === "edit" ||
+        (someThingHappen.event === "create" && filters.page === 1))
+    ) {
+      loadProducts();
+      setSomeThingHappen({});
+    }
+  }, [someThingHappen, filters.page, loadProducts]);
 
   const handlePageChange = (e) => {
     const updated = {
@@ -648,13 +660,7 @@ export default function Portfolio({ params }) {
     setProducts([]);
     updateURL(updated); // 👈 Sync URL with new page
   };
-  const handleCategoryChange = (selectedCategories) => {
-    handleFilterChange({ category: selectedCategories.join(",") });
-  };
 
-  const handleAvailabilityChange = (status) => {
-    handleFilterChange({ availability: status });
-  };
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       handleFilterChange({ search: productSearch });
@@ -948,16 +954,18 @@ export default function Portfolio({ params }) {
                   {translations?.portfolio?.products}
                 </button>
               )}
+              {type === "user" && (
+                <button
+                  className={`main-button ${
+                    currentSelectedData == "photos" ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentSelectedData("photos")}
+                >
+                  <IoMdPhotos />
+                  {translations?.portfolio?.photos}
+                </button>
+              )}
 
-              <button
-                className={`main-button ${
-                  currentSelectedData == "photos" ? "active" : ""
-                }`}
-                onClick={() => setCurrentSelectedData("photos")}
-              >
-                <IoMdPhotos />
-                {translations?.portfolio?.photos}
-              </button>
               <button
                 className={`main-button ${
                   currentSelectedData == "about" ? "active" : ""
@@ -1224,7 +1232,9 @@ export default function Portfolio({ params }) {
                               key={x._id}
                               className="chat"
                               onClick={(e) =>
-                                handleMenus(e, "user-Info", x._id)
+                                handleMenus(e, "user-Info", x?._id, {
+                                  type: "user",
+                                })
                               }
                             >
                               <Image
@@ -1311,7 +1321,7 @@ export default function Portfolio({ params }) {
                 )}
               </div>
               <div className="row sorts-holder">
-                <div
+                {/* <div
                   className="select-holder"
                   onClick={() =>
                     setCurentOpendSelectHolder((prev) => (prev == 1 ? null : 1))
@@ -1341,7 +1351,7 @@ export default function Portfolio({ params }) {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div> */}
                 <div
                   className="select-holder"
                   onClick={() =>
@@ -1425,7 +1435,9 @@ export default function Portfolio({ params }) {
                                   fill
                                   alt={`user Image`}
                                   onClick={(e) =>
-                                    handleMenus(e, "user-Info", x._id)
+                                    handleMenus(e, "user-Info", x?._id, {
+                                      type: "user",
+                                    })
                                   }
                                 />
                                 <h4>
@@ -1513,7 +1525,9 @@ export default function Portfolio({ params }) {
                                   fill
                                   alt={`user Image`}
                                   onClick={(e) =>
-                                    handleMenus(e, "user-Info", x._id)
+                                    handleMenus(e, "user-Info", x?._id, {
+                                      type: "user",
+                                    })
                                   }
                                 />
                                 <h4>
@@ -1587,7 +1601,9 @@ export default function Portfolio({ params }) {
                                 fill
                                 alt={`user Image`}
                                 onClick={(e) =>
-                                  handleMenus(e, "user-Info", x._id)
+                                  handleMenus(e, "user-Info", x?._id, {
+                                    type: "user",
+                                  })
                                 }
                               />
                               <h4>
@@ -1696,84 +1712,89 @@ export default function Portfolio({ params }) {
           ) : currentSelectedData === "products" ? (
             <>
               <div className="grid-products">
-                <div className="top">
-                  {screenSize === "small" && (
-                    <button
-                      className="main-button"
-                      onClick={() => setMobileFilters(true)}
-                    >
-                      <IoGrid /> Filters
-                    </button>
-                  )}
+                {["dep", "minP", "maxP", "availability", "category"].some(
+                  (key) => filters[key]
+                ) && (
+                  <div className="top">
+                    {screenSize === "small" && (
+                      <button
+                        className="main-button"
+                        onClick={() => setMobileFilters(true)}
+                      >
+                        <IoGrid /> Filters
+                      </button>
+                    )}
 
-                  <div className="active-filters">
-                    {filters.dep ? (
-                      <div className="filter-chip">
-                        {filters.dep}
-                        <IoClose
-                          onClick={() => handleFilterChange({ dep: null })}
-                        />
-                      </div>
-                    ) : null}
+                    <div className="active-filters">
+                      <h4 className="filter-chip">Filters:</h4>
+                      {filters.dep ? (
+                        <div className="filter-chip">
+                          {filters.dep}
+                          <IoClose
+                            onClick={() => handleFilterChange({ dep: null })}
+                          />
+                        </div>
+                      ) : null}
 
-                    {filters.minP ? (
-                      <div className="filter-chip">
-                        Min: {filters.minP}
-                        <IoClose
-                          onClick={() => handleFilterChange({ minP: null })}
-                        />
-                      </div>
-                    ) : null}
+                      {filters.minP ? (
+                        <div className="filter-chip">
+                          Min: {filters.minP}
+                          <IoClose
+                            onClick={() => handleFilterChange({ minP: null })}
+                          />
+                        </div>
+                      ) : null}
 
-                    {filters.maxP ? (
-                      <div className="filter-chip">
-                        Max: {filters.maxP}
-                        <IoClose
-                          onClick={() => handleFilterChange({ maxP: null })}
-                        />
-                      </div>
-                    ) : null}
+                      {filters.maxP ? (
+                        <div className="filter-chip">
+                          Max: {filters.maxP}
+                          <IoClose
+                            onClick={() => handleFilterChange({ maxP: null })}
+                          />
+                        </div>
+                      ) : null}
 
-                    {filters.availability ? (
-                      <div className="filter-chip">
-                        {filters.availability === "inStock"
-                          ? "In Stock"
-                          : "Out of Stock"}
-                        <IoClose
-                          onClick={() =>
-                            handleFilterChange({ availability: null })
-                          }
-                        />
-                      </div>
-                    ) : null}
+                      {filters.availability ? (
+                        <div className="filter-chip">
+                          {filters.availability === "inStock"
+                            ? "In Stock"
+                            : "Out of Stock"}
+                          <IoClose
+                            onClick={() =>
+                              handleFilterChange({ availability: null })
+                            }
+                          />
+                        </div>
+                      ) : null}
 
-                    {filters.category
-                      ? filters.category.split(",").map((cat, index) => (
-                          <div className="filter-chip" key={index}>
-                            {decodeURIComponent(cat)}
-                            <IoClose
-                              onClick={() => {
-                                const newCategories = filters.category
-                                  .split(",")
-                                  .filter((c) => c !== cat);
-                                handleFilterChange({
-                                  category:
-                                    newCategories.length > 0
-                                      ? newCategories.join(",")
-                                      : null,
-                                });
-                              }}
-                            />
-                          </div>
-                        ))
-                      : null}
+                      {filters.category
+                        ? filters.category.split(",").map((cat, index) => (
+                            <div className="filter-chip" key={index}>
+                              {decodeURIComponent(cat)}
+                              <IoClose
+                                onClick={() => {
+                                  const newCategories = filters.category
+                                    .split(",")
+                                    .filter((c) => c !== cat);
+                                  handleFilterChange({
+                                    category:
+                                      newCategories.length > 0
+                                        ? newCategories.join(",")
+                                        : null,
+                                  });
+                                }}
+                              />
+                            </div>
+                          ))
+                        : null}
+                    </div>
+                    <div>
+                      <span className="totalProducts">
+                        {totalCount} products found
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="totalProducts">
-                      {totalCount} products found
-                    </span>
-                  </div>
-                </div>
+                )}
 
                 <div
                   className="products"
@@ -1864,7 +1885,7 @@ export default function Portfolio({ params }) {
                         </ContentLoader>
                       ))
                     : products.map((x) => (
-                        <Product key={x._id} data={x} viewOwner={true} />
+                        <Product key={x._id} data={x} viewOwner={false} />
                       ))}
                 </div>
                 <ReactPaginate

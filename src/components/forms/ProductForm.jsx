@@ -223,7 +223,8 @@ function ProductForm() {
       if (openProductForm.type === "edit") {
         response = await productService.editProduct(
           openProductForm.productId,
-          productData
+          productData,
+          userPage._id
         );
       } else {
         response = await productService.createProduct(

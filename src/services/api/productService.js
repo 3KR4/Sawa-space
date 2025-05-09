@@ -56,8 +56,12 @@ export const productService = {
     return apiClient.post(`/product/create/page/${id}`, body);
   },
 
-  editProduct: (id, data) => {
-    return apiClient.put(`/product/${id}`, data);
+  editProduct: (id, data, pageId) => {
+    return apiClient.put(`/product/${id}/data`, data, {
+      headers: {
+        pageid: pageId,
+      },
+    });
   },
 
   getProduct: async (id) => {

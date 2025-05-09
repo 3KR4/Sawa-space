@@ -1132,6 +1132,7 @@ body.ar .search-holder svg.delete {
 .search-holderr h4 {
   font-weight: 400;
   font-size: 15px;
+  color: var(--title-color) !important;
 }
 .search-holderr input {
   color: var(--title-color);
@@ -3419,6 +3420,8 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
   background: var(--body-color);
   border-radius: 15px 15px 10px 10px;
   overflow: hidden;
+      height: fit-content;
+    padding-bottom: 3px;
 }
 body.ar .swiper-container .Product,
 body.ar .swiper-container .Product * {
@@ -3484,6 +3487,25 @@ body.ar .swiper-container .Product * {
 }
 .Product .content > div:last-child {
   padding: 6px 10px;
+}
+.Product .content > div:last-child svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 18px;
+  background: var(--section-color);
+  width: -webkit-fill-available;
+  height: 30px;
+  border-radius: 7px;
+  padding: 7px;
+}
+.Product .content > div:last-child svg:hover {
+  background: #b4e2ff;
+}
+.Product .content > div:last-child svg:last-child:hover {
+  color: white;
+  background: var(--red-color);
 }
 .Product .row {
   display: flex;

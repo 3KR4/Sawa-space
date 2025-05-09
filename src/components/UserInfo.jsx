@@ -28,6 +28,9 @@ function UserInfo() {
   const [currentUserData, setCurrentUserData] = useState();
   const [loading, setLoading] = useState(true);
 
+  console.log(currentUserData);
+  console.log(userData);
+
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -82,13 +85,13 @@ function UserInfo() {
     try {
       setActionLoading((prev) => [...prev, "send-friend-request"]);
 
-      await userService.makeFriendRequest(selectedDev);
+      await userService.makeFriendRequest(selectedDev.id);
 
       setUserData((prev) => ({
         ...prev,
         friendRequests: {
           ...prev.friendRequests,
-          sent: [...(prev.friendRequests?.sent || []), selectedDev],
+          sent: [...(prev.friendRequests?.sent || []), selectedDev.id],
         },
       }));
 
@@ -127,13 +130,13 @@ function UserInfo() {
     try {
       setActionLoading((prev) => [...prev, "cancel-friend-request"]);
 
-      await userService.cancelRequest(selectedDev);
+      await userService.cancelRequest(selectedDev.id);
 
       setUserData((prev) => ({
         ...prev,
         friendRequests: {
           ...prev.friendRequests,
-          sent: prev.friendRequests?.sent?.filter((x) => x !== selectedDev),
+          sent: prev.friendRequests?.sent?.filter((x) => x !== selectedDev.id),
         },
       }));
 
@@ -167,7 +170,7 @@ function UserInfo() {
     try {
       setActionLoading((prev) => [...prev, actionKey]);
 
-      await userService.interactWithFriendReq(selectedDev, action);
+      await userService.interactWithFriendReq(selectedDev.id, action);
 
       if (action) {
         // Accepting request
@@ -176,10 +179,10 @@ function UserInfo() {
           friendRequests: {
             ...prev.friendRequests,
             received: prev.friendRequests?.received?.filter(
-              (x) => x !== selectedDev
+              (x) => x !== selectedDev.id
             ),
           },
-          friends: [...(prev.friends || []), selectedDev],
+          friends: [...(prev.friends || []), selectedDev.id],
         }));
 
         setCurrentUserData((prev) => ({
@@ -202,7 +205,7 @@ function UserInfo() {
           friendRequests: {
             ...prev.friendRequests,
             received: prev.friendRequests?.received?.filter(
-              (x) => x !== selectedDev
+              (x) => x !== selectedDev.id
             ),
           },
         }));
@@ -233,11 +236,11 @@ function UserInfo() {
     try {
       setActionLoading((prev) => [...prev, "remove-friend"]);
 
-      await userService.removeFriend(selectedDev);
+      await userService.removeFriend(selectedDev.id);
 
       setUserData((prev) => ({
         ...prev,
-        friends: prev.friends?.filter((x) => x !== selectedDev),
+        friends: prev.friends?.filter((x) => x !== selectedDev.id),
       }));
 
       setCurrentUserData((prev) => ({

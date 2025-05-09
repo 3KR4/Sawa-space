@@ -663,6 +663,9 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
 .portfolio .sideSection .Filter-Holder.cats .main-button.add-btn {
   padding: 6px 10px !important;
 }
+.portfolio .pagination {
+  margin: 10px 0;
+}
 
 @media (min-width: 1700px) {
   .portfolio .posts-holder .post .images.small img {

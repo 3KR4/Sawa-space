@@ -182,7 +182,10 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
                 width={smallView ? 48 : 40}
                 height={smallView ? 48 : 40}
                 onClick={(e) =>
-                  !smallView && handleMenus(e, "user-Info", author?._id)
+                  !smallView &&
+                  handleMenus(e, "user-Info", author?._id, {
+                    type: "user",
+                  })
                 }
               />
               <div className="info">

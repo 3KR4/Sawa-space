@@ -77,6 +77,7 @@ function SingleDetails() {
     singleProvider,
     setSingleProvider,
     someThingHappen,
+    infoMenuRef,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -97,6 +98,7 @@ function SingleDetails() {
         usersreactMenuRef,
         usersSelectionRef,
         emojiHolderRef,
+        infoMenuRef,
       ];
 
       // Check if the click was inside an element with class .reactsHolder.sideMenu
@@ -494,7 +496,10 @@ function SingleDetails() {
                           handleMenus(
                             e,
                             "user-Info",
-                            currentUserStory?.author[0]
+                            currentUserStory?.author[0]?._id,
+                            {
+                              type: "user",
+                            }
                           )
                         }
                       />
@@ -544,7 +549,9 @@ function SingleDetails() {
                             width={50}
                             height={50}
                             onClick={(e) =>
-                              handleMenus(e, "user-Info", xAuthor?._id)
+                              handleMenus(e, "user-Info", xAuthor?._id, {
+                                type: "user",
+                              })
                             }
                           />
                           <div className="info">
@@ -615,7 +622,10 @@ function SingleDetails() {
                                 handleMenus(
                                   e,
                                   "user-Info",
-                                  currentUserStory?.author[0]?._id
+                                  currentUserStory?.author[0]?._id,
+                                  {
+                                    type: "user",
+                                  }
                                 )
                               }
                             />
@@ -673,7 +683,9 @@ function SingleDetails() {
                                 width={50}
                                 height={50}
                                 onClick={(e) =>
-                                  handleMenus(e, "user-Info", xAuthor?._id)
+                                  handleMenus(e, "user-Info", xAuthor?._id, {
+                                    type: "user",
+                                  })
                                 }
                               />
                               <div className="info">

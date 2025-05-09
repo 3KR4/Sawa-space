@@ -14,6 +14,7 @@ import { ScreenContext } from "@/Contexts/ScreenContext";
 
 import { IoClose } from "react-icons/io5";
 import { storyService } from "@/services/api/storyService";
+import { productService } from "@/services/api/productService";
 
 function DangerEvent() {
   const { locale, translations } = useLanguage();
@@ -72,7 +73,6 @@ function DangerEvent() {
       setDangerEvent(null);
     }
   };
-
   const deleteStory = async () => {
     setLoading(true);
     try {
@@ -84,6 +84,50 @@ function DangerEvent() {
       setSomeThingHappen({
         event: "delete",
         type: "stories",
+      });
+    } catch (err) {
+      addNotification({
+        type: "error",
+        message: err.response.data,
+      });
+    } finally {
+      setLoading(false);
+      setDangerEvent(null);
+    }
+  };
+  const deletePost = async () => {
+    setLoading(true);
+    try {
+      await postService.deletePost(selectedDev.id);
+      addNotification({
+        type: "success",
+        message: "your post has been delete successfully",
+      });
+      setSomeThingHappen({
+        event: "delete",
+        type: "post",
+      });
+    } catch (err) {
+      addNotification({
+        type: "error",
+        message: err.response.data,
+      });
+    } finally {
+      setLoading(false);
+      setDangerEvent(null);
+    }
+  };
+  const deleteProduct = async () => {
+    setLoading(true);
+    try {
+      await productService.deleteProduct(dangerEvent.id);
+      addNotification({
+        type: "success",
+        message: "this product has been delete successfully",
+      });
+      setSomeThingHappen({
+        type: "product",
+        event: "delete",
       });
     } catch (err) {
       addNotification({
@@ -129,6 +173,8 @@ function DangerEvent() {
   const deleteHandlers = {
     delete_comment: deleteComment,
     delete_story: deleteStory,
+    remove_post: deletePost,
+    delete_product: deleteProduct,
     delete_img: deleteImg,
   };
 

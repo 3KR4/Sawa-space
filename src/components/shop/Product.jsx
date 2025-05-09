@@ -6,9 +6,10 @@ import Image from "next/image";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useLanguage } from "../../Contexts/LanguageContext";
+import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
 
 function Product({ data, viewOwner }) {
-  const { setOpenPostForm } = useContext(MenusContext);
+  const { setDangerEvent, setOpenProductForm } = useContext(MenusContext);
   const { locale, translations, changeLanguage } = useLanguage();
   const { pathname, screenSize } = useContext(ScreenContext);
   const [activeImg, setActiveImg] = useState(data?.img?.[0] || null);
@@ -42,7 +43,7 @@ function Product({ data, viewOwner }) {
 
         <div>
           <div className="row">
-            <div className="price">
+            <div className="price" style={{ flexWrap: "wrap" }}>
               {data?.sale && data?.sale !== 0 ? (
                 <>
                   <span className="originalPrice">${data?.Price}</span>
@@ -55,12 +56,16 @@ function Product({ data, viewOwner }) {
                 <span className="currentPrice">${data?.Price}</span>
               )}
             </div>
-            {data?.category && (
-              <h5 className="category ellipsisText">{data?.category}</h5>
-            )}
+            {viewOwner ? (
+              data?.category && (
+                <h5 className="category ellipsisText">{data.category}</h5>
+              )
+            ) : data?.sale && data.sale !== 0 ? (
+              <span className="salePercentage">-{data.sale}% off</span>
+            ) : null}
           </div>
         </div>
-        {viewOwner && (
+        {viewOwner ? (
           <>
             <hr />
             <div className="row last">
@@ -74,12 +79,30 @@ function Product({ data, viewOwner }) {
                 <h4>{data?.pageDetails[0]?.pagename}</h4>
               </div>
               {data?.sale && data?.sale !== 0 ? (
-                <span className="salePercentage">
-                  -{data?.sale < 10 ? `0${data.sale}` : data.sale}% off
-                </span>
+                <span className="salePercentage">-{data.sale}% off</span>
               ) : null}
             </div>
           </>
+        ) : (
+          <div className="row last">
+            <FaRegEdit
+              onClick={() => {
+                setOpenProductForm({
+                  type: "edit",
+                  productId: data?._id,
+                });
+              }}
+            />
+            <FaTrashAlt
+              onClick={() => {
+                setDangerEvent({
+                  id: data?._id,
+                  type: "delete_product",
+                  message: "are you sure you want to remove this product",
+                });
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

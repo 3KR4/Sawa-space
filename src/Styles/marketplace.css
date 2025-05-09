@@ -407,6 +407,7 @@ body:has(.marketplace) header {
 }
 .bigSection .grid-products .products {
   grid-template-columns: repeat(auto-fill, minmax(327px, 1fr));
+  align-items: center;
 }
 @media (max-width: 992x) {
   body:has(.marketplace) header {
