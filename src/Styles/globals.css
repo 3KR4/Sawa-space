@@ -1410,6 +1410,19 @@ header .events .menu.createMenu svg {
   font-size: 20px;
 }
 
+.holder:has(.big-loader) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+}
+.big-loader {
+  width: 500px;
+  height: 500px;
+  max-width: 95%;
+  max-height: 95%;
+}
+
 .posts-holder {
   display: flex;
   align-items: center;
@@ -3945,7 +3958,7 @@ body.ar .swiper-container .Product * {
     width: 100vw;
     padding: 0;
     overflow: unset;
-    height: 99vh;
+    padding-bottom: 60px;
   }
   body > main > .holder {
     overflow: unset;
@@ -4320,6 +4333,10 @@ body.ar .swiper-container .Product * {
   }
   .focusedMsg .stories .storySection {
     gap: 0px;
+  }
+  .big-loader {
+    width: 250px;
+    height: 250px;
   }
 }
 @media (max-width: 500px) {

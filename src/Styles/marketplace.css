@@ -24,6 +24,7 @@ body:has(.marketplace) header {
   height: fit-content;
   position: sticky;
   top: 80px;
+  overflow: auto;
 }
 .sideSection hr {
   background: #e0e0e0;
@@ -373,18 +374,18 @@ body:has(.marketplace) header {
   align-items: center;
   justify-content: space-between;
 }
-.marketplace .grid-products .top span {
+.totalProducts {
   border: 1px solid var(--main-color);
   border-radius: 5px;
   padding: 3px 10px;
   font-weight: 500;
   color: var(--paragraph-color);
 }
-.marketplace .grid-products .top .active-filters {
+.active-filters {
   display: flex;
   gap: 7px;
 }
-.marketplace .grid-products .top .active-filters .filter-chip {
+.active-filters .filter-chip {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -395,17 +396,27 @@ body:has(.marketplace) header {
   font-weight: 400;
   color: var(--paragraph-color);
 }
-.marketplace .grid-products .top .active-filters svg {
+.active-filters svg {
   color: var(--red-color);
   font-size: 16px;
 }
-.marketplace .grid-products .products {
+.grid-products .products {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 7px;
 }
-
+.bigSection .grid-products .products {
+  grid-template-columns: repeat(auto-fill, minmax(327px, 1fr));
+}
+@media (max-width: 992x) {
+  body:has(.marketplace) header {
+    margin-left: 0px;
+  }
+}
 @media (max-width: 786px) {
+  body:has(.marketplace) header {
+    margin-left: 0px;
+  }
   body > main > .holder:has(.marketplace) {
     height: 100%;
     padding-top: 60px;
@@ -416,7 +427,7 @@ body:has(.marketplace) header {
   }
   .marketplace {
     height: 100%;
-    padding: 0;
+    padding: 0 9px;
   }
   body .marketplace .shop {
     width: 100%;
@@ -444,8 +455,18 @@ body:has(.marketplace) header {
   .sideSection.active {
     left: 0%;
   }
-  .marketplace .grid-products .top span {
+  .sideSection svg.close {
+    border: none;
+    position: absolute;
+    right: 14px;
+    top: 3px;
+  }
+  .totalProducts {
     font-size: 15px;
+  }
+  .sideSection .totalProducts {
+    margin-bottom: 10px;
+    padding: 7px 10px;
   }
   .marketplace .grid-products .top > div:last-child {
     flex-direction: column;
@@ -455,7 +476,15 @@ body:has(.marketplace) header {
   .marketplace .grid-products .top .main-button {
     padding: 9px !important;
   }
+  .shop .productSection {
+    gap: 6px;
+  }
   .shop .productSection .top .left-title {
     font-size: 16px;
+  }
+  .navigations-icons svg {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
   }
 }

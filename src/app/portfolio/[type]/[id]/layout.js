@@ -2,7 +2,7 @@
 import React, { Suspense } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
-export default function MarketplaceLayout({ children }) {
+export default function PortfolioLayout({ children }) {
   return (
     <Suspense
       fallback={

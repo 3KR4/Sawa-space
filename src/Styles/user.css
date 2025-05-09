@@ -199,11 +199,11 @@ body.ar .portfolio nav .top .right {
 .portfolio .bottom-holder .side-menu > * {
   background: var(--body-color);
   border-radius: 10px;
-  padding: 15px 17px;
   border: 0.5px solid #e8e8e8;
 }
 .portfolio .bottom-holder .side-menu:has(.Filter-Holder) > * {
   border: unset;
+  padding: 0;
 }
 .portfolio .bottom-holder .side-menu .top {
   display: flex;
@@ -489,7 +489,6 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   align-items: center;
   gap: 7px;
   padding: 7px 9px;
-  cursor: pointer;
   transition: 0.3s;
   justify-content: space-between;
   border: 2px solid var(--border-color);
@@ -499,6 +498,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   position: relative !important;
   width: 60px !important;
   height: 60px !important;
+  cursor: pointer;
 }
 .portfolio .bigSection .friends.small > div img {
   width: 48px !important;
@@ -555,6 +555,21 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 .portfolio .bigSection .grid-products {
   padding: 0;
   grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+}
+.portfolio .bigSection .grid-products .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--body-color);
+  padding: 15px 13px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.portfolio .bigSection .grid-products .top .totalProducts {
+  font-size: 14px;
 }
 .portfolio .bigSection:not(:has(.grid-products)) .photos img {
   position: relative !important;
@@ -853,6 +868,6 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
     grid-template-columns: repeat(1, 1fr);
   }
   .portfolio nav .top h4 {
-        text-align: center;
+    text-align: center;
   }
 }

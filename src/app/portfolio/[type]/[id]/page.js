@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useContext,
   useCallback,
+  useRef,
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,13 +31,15 @@ import Slider from "@mui/material/Slider";
 import Product from "@/components/shop/Product";
 import ReactPaginate from "react-paginate";
 import { productService } from "@/services/api/productService";
+import MarketSideSection from "@/components/shop/MarketSideSection";
+import SideSection from "@/components/providers/SideSection";
+
 import { FaAngleRight, FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import {
   MdModeEditOutline,
   MdEdit,
   MdOutlineKeyboardArrowDown,
 } from "react-icons/md";
-import { FaPlus } from "react-icons/fa6";
 
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdPersonAdd, IoMdPhotos } from "react-icons/io";
@@ -81,7 +84,6 @@ export default function Portfolio({ params }) {
   const [userSendedReqs, setUserSendedReqs] = useState([]);
   const [userReceivedReqs, setUserReceivedReqs] = useState([]);
 
-  const [originalCats, setOriginalCats] = useState([]);
   const [productsSmallView, setProductsSmallView] = useState([]);
 
   const isMyFriend = userData?.friends?.includes(currentPortfolio?._id);
@@ -422,59 +424,10 @@ export default function Portfolio({ params }) {
     ],
     [12, 24, 48, 96],
   ];
-  const [selectedCat, setSelectedCat] = useState([]);
-  const [availability, setAvailability] = useState("");
+
   const [sortType, setSortType] = useState("default");
   const [pageSize, setPageSize] = useState(12);
   const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
-  const [startEditCats, setStartEditCats] = useState(false);
-
-  const handleAddMoreCats = () => {
-    const allFilled = currentPortfolio.category?.every(
-      (cat) => cat.trim() !== ""
-    );
-    if (allFilled) {
-      setCurrentPortfolio((prev) => ({
-        ...prev,
-        category: [...prev.category, ""],
-      }));
-    }
-  };
-
-  const handleUpdateCategory = async () => {
-    try {
-      setActionLoading((prev) => [...prev, "category"]);
-
-      const cleanedCategories = currentPortfolio.category.filter(
-        (cat) => cat.trim() !== ""
-      );
-
-      await pageService.updateCategories({
-        category: cleanedCategories,
-      });
-
-      setCurrentPortfolio((prev) => ({
-        ...prev,
-        category: cleanedCategories, // update state without empty strings
-      }));
-      await fetchPageData();
-
-      addNotification({
-        type: "success",
-        message: "Categories updated successfully.",
-      });
-
-      setStartEditCats(false);
-    } catch (err) {
-      console.error("Failed to update categories:", err);
-      addNotification({
-        type: "error",
-        message: "Failed to update categories. Try again.",
-      });
-    } finally {
-      setActionLoading((prev) => prev.filter((x) => x !== "category"));
-    }
-  };
 
   const sendFriendRequest = async (id) => {
     try {
@@ -576,47 +529,154 @@ export default function Portfolio({ params }) {
     }
   };
 
-  const loadProducts = useCallback(async () => {
-    // if (isFetching.current || !hasMore) return;
+  const searchParams = useSearchParams();
 
-    // isFetching.current = true;
-    // setLoading(true);
+  // Initialize filters state from URL params
+  const initialFilters = {
+    dep: searchParams.get("dep") || null,
+    search: searchParams.get("search") || null,
+    minP: searchParams.get("minP") || null,
+    maxP: searchParams.get("maxP") || null,
+    page: parseInt(searchParams.get("page")) || 1,
+    category: searchParams.get("category") || null,
+    availability: searchParams.get("availability") || null,
+  };
+  const [filters, setFilters] = useState(initialFilters);
+  const [loading, setLoading] = useState(false);
+  const [heighstPrice, setHeighstPrice] = useState();
+  const [totalCount, setTotalCount] = useState(0);
+  const [lastPage, setLastPage] = useState(0);
+  const isFetching = useRef(false);
+  const [mobileFilters, setMobileFilters] = useState(false);
+
+  console.log("filters", filters);
+
+  // Update URL when filters change
+  const updateURL = useCallback(
+    (newFilters) => {
+      const params = new URLSearchParams();
+
+      Object.entries(newFilters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          params.set(
+            key,
+            Array.isArray(value) ? value.join(",") : value.toString()
+          );
+        }
+      });
+
+      router.replace(`?${params.toString()}`);
+    },
+    [router]
+  );
+
+  // Handle filter changes
+  const handleFilterChange = useCallback(
+    (newFilters) => {
+      let updated;
+
+      // إذا كان التغيير هو department، نمسح الفلاتر الأخرى
+      if (newFilters.dep !== undefined && newFilters.dep !== filters.dep) {
+        updated = {
+          dep: newFilters.dep,
+          search: null,
+          minP: null,
+          maxP: null,
+          page: 1,
+        };
+        setProductSearch(""); // إفراغ حقل البحث
+      } else {
+        updated = { ...filters, ...newFilters, page: 1 };
+      }
+
+      setFilters(updated);
+      updateURL(updated);
+      setProducts([]);
+    },
+    [filters, updateURL]
+  );
+
+  // Load products based on current filters
+  const loadProducts = useCallback(async () => {
+    if (isFetching.current) return;
+
+    isFetching.current = true;
+    setLoading(true);
 
     try {
       const res = await productService.getProducts(
         "page",
         id,
+        filters.search,
         null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
+        filters.category,
+        filters.availability,
+        filters.minP,
+        filters.maxP,
+        filters.page,
         15
       );
 
       const newProducts = res?.data?.data || [];
-      setProducts((prev) => [...prev, ...newProducts]);
+      setProducts(newProducts);
 
-      // const lastPage = res?.data?.lastPage || 1;
-      // setHeighstPrice((prev) =>
-      //   filters.minP || filters.maxP ? prev : res?.data?.highestPrice || 5000000
-      // );
-      // setTotalCount(res?.data?.totalCount);
-
-      // if (filters.page < lastPage) {
-      //   setFilters((prev) => ({ ...prev, page: prev.page + 1 }));
-      // } else {
-      //   setHasMore(false);
-      // }
+      const lastPage = res?.data?.lastPage || 1;
+      setHeighstPrice((prev) =>
+        filters.minP || filters.maxP ? prev : res?.data?.highestPrice || 5000000
+      );
+      setTotalCount(res?.data?.totalCount);
+      setLastPage(res?.data?.lastPage);
     } catch (err) {
       console.error(err);
     } finally {
       isFetching.current = false;
-      // setLoading(false);
+      setLoading(false);
     }
-  }, []);
+  }, [filters]);
+
+  // Load products when filters change
+  useEffect(() => {
+    loadProducts();
+  }, [filters, loadProducts]);
+
+  const handlePageChange = (e) => {
+    const updated = {
+      ...filters,
+      page: e.selected + 1,
+    };
+    setFilters(updated);
+    setProducts([]);
+    updateURL(updated); // 👈 Sync URL with new page
+  };
+  const handleCategoryChange = (selectedCategories) => {
+    handleFilterChange({ category: selectedCategories.join(",") });
+  };
+
+  const handleAvailabilityChange = (status) => {
+    handleFilterChange({ availability: status });
+  };
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      handleFilterChange({ search: productSearch });
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [productSearch]);
+
+  const clearFilters = (overrideFilters = {}) => {
+    const cleared = {
+      dep: null,
+      search: null,
+      minP: null,
+      maxP: null,
+      page: 1,
+      ...overrideFilters,
+    };
+    setFilters(cleared);
+    setProductSearch("");
+    setProducts([]);
+    updateURL(cleared);
+  };
 
   return (
     <div
@@ -1185,205 +1245,20 @@ export default function Portfolio({ params }) {
                 )}
             </>
           ) : (
-            <>
-              <div className="Filter-Holder forCat">
-                <h4 className="filter-title">
-                  {translations?.market_place?.availability}
-                </h4>
-                <ul>
-                  <li
-                    className={`${availability === "inStock" ? "active" : ""}`}
-                    onClick={() => {
-                      setAvailability((perv) =>
-                        perv === "inStock" ? "" : "inStock"
-                      );
-                    }}
-                  >
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        className="input"
-                        checked={availability === "inStock" ? true : false}
-                      />
-                      <span className="custom-checkbox"></span>
-                    </label>
-                    {translations?.market_place?.in_stock}
-                  </li>
-                  <li
-                    className={`${
-                      availability === "outOfStock" ? "active" : ""
-                    }`}
-                    onClick={() => {
-                      setAvailability((perv) =>
-                        perv === "outOfStock" ? "" : "outOfStock"
-                      );
-                    }}
-                  >
-                    <label className="checkbox">
-                      <input
-                        type="checkbox"
-                        className="input"
-                        checked={availability === "outOfStock" ? true : false}
-                      />
-                      <span className="custom-checkbox"></span>
-                    </label>
-                    {translations?.market_place?.out_of_stock}
-                  </li>
-                </ul>
-              </div>
-              <div className="Filter-Holder forPrice">
-                <h4 className="filter-title">
-                  {translations?.market_place?.filter_by_price}
-                </h4>
-                <p className="filter-paragraph">
-                  {translations?.market_place?.enter_min_and_max_price}
-                </p>
-                <div className="price-input">
-                  <div className="field">
-                    <span>{translations?.market_place?.min}</span>
-                    <h3>{priceRangevalue[0]}</h3>
-                  </div>
-                  <div className="separator">-</div>
-                  <div className="field">
-                    <h3>{priceRangevalue[1]}</h3>
-                    <span>{translations?.market_place?.max}</span>
-                  </div>
-                </div>
-                <Slider
-                  className="priceSlider"
-                  getAriaLabel={() => "Minimum distance shift"}
-                  value={priceRangevalue}
-                  // onChange={handlePriceRangeChange}
-                  min={10}
-                  max={10000}
-                  sx={{
-                    "& .MuiSlider-thumb": {
-                      width: 15,
-                      height: 15,
-                    },
-                    "& .MuiSlider-thumb:hover, & .MuiSlider-thumb.Mui-focusVisible":
-                      {
-                        boxShadow: "0px 0px 0px 7px rgb(94 94 94 / 16%)",
-                      },
-                  }}
-                />
-              </div>
-
-              <div className="Filter-Holder forCat cats">
-                <h4 className="filter-title">
-                  {translations?.market_place?.filter_by_categories}
-                  {isMyPage &&
-                    (startEditCats ? (
-                      <button
-                        type="button"
-                        className="main-button add-btn"
-                        onClick={handleAddMoreCats}
-                      >
-                        <FaPlus />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="main-button add-btn"
-                        onClick={() => {
-                          setOriginalCats(currentPortfolio.category);
-                          setStartEditCats(true);
-                        }}
-                      >
-                        <MdEdit />
-                      </button>
-                    ))}
-                </h4>
-                <ul>
-                  {currentPortfolio?.category?.map((cat, index) => (
-                    <li
-                      key={index}
-                      className={`ellipsisText ${
-                        selectedCat.includes(cat) && !startEditCats
-                          ? "active"
-                          : ""
-                      }`}
-                      onClick={() => {
-                        if (!startEditCats) {
-                          setSelectedCat((prev) =>
-                            prev.includes(cat)
-                              ? prev.filter((c) => c !== cat)
-                              : [...prev, cat]
-                          );
-                        }
-                      }}
-                    >
-                      {!startEditCats ? (
-                        <>
-                          <label className="checkbox">
-                            <input
-                              type="checkbox"
-                              className="input"
-                              checked={selectedCat.includes(cat)}
-                              readOnly
-                            />
-                            <span className="custom-checkbox"></span>
-                          </label>
-                          {cat}
-                        </>
-                      ) : (
-                        <>
-                          <input
-                            type="text"
-                            value={cat}
-                            onChange={(e) => {
-                              const newCats = [...currentPortfolio.category];
-                              newCats[index] = e.target.value;
-                              setCurrentPortfolio((prev) => ({
-                                ...prev,
-                                category: newCats,
-                              }));
-                            }}
-                          />
-                          <FaTrashAlt
-                            onClick={() =>
-                              setCurrentPortfolio((prev) => ({
-                                ...prev,
-                                category: prev.category?.filter(
-                                  (_, i) => i !== index
-                                ),
-                              }))
-                            }
-                          />
-                        </>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {startEditCats && (
-                  <div className="btns rowHolder actions">
-                    <button
-                      type="button"
-                      className="main-button secondary"
-                      onClick={() => {
-                        setCurrentPortfolio((prev) => ({
-                          ...prev,
-                          category: originalCats,
-                        }));
-                        setStartEditCats(false);
-                      }}
-                    >
-                      <span>{translations?.actions?.cancel}</span>
-                    </button>
-
-                    <button
-                      className={`main-button ${
-                        actionLoading.includes("category") ? "loading" : ""
-                      }`}
-                      onClick={handleUpdateCategory}
-                    >
-                      <div className="lds-dual-ring"></div>
-                      <span>{translations?.actions?.save_changes}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
+            <SideSection mobileFilters={mobileFilters}>
+              <MarketSideSection
+                type={"page"}
+                heighstPrice={heighstPrice}
+                onFilterChange={handleFilterChange}
+                currentFilters={filters}
+                clearFilters={clearFilters}
+                setMobileFilters={setMobileFilters}
+                totalCount={totalCount}
+                isMyPage={isMyPage}
+                categories={currentPortfolio?.category}
+                setCurrentPortfolio={setCurrentPortfolio}
+              />
+            </SideSection>
           )}
         </div>
 
@@ -1542,18 +1417,16 @@ export default function Portfolio({ params }) {
                             </ContentLoader>
                           ))
                         : userReceivedReqs?.map((x) => (
-                            <div
-                              key={`${x._id}-${Date.now()}`}
-                              onClick={(e) =>
-                                handleMenus(e, "user-Info", x._id)
-                              }
-                            >
+                            <div key={`${x._id}-${Date.now()}`}>
                               <div>
                                 <Image
                                   className="rounded"
                                   src={x?.img?.url || "/users/default.svg"}
                                   fill
                                   alt={`user Image`}
+                                  onClick={(e) =>
+                                    handleMenus(e, "user-Info", x._id)
+                                  }
                                 />
                                 <h4>
                                   {x?.firstname} {""} {x?.lastname}
@@ -1632,18 +1505,16 @@ export default function Portfolio({ params }) {
                             </ContentLoader>
                           ))
                         : userSendedReqs?.map((x) => (
-                            <div
-                              key={`${x._id}-${Date.now()}`}
-                              onClick={(e) =>
-                                handleMenus(e, "user-Info", x._id)
-                              }
-                            >
+                            <div key={`${x._id}-${Date.now()}`}>
                               <div>
                                 <Image
                                   className="rounded"
                                   src={x?.img?.url || "/users/default.svg"}
                                   fill
                                   alt={`user Image`}
+                                  onClick={(e) =>
+                                    handleMenus(e, "user-Info", x._id)
+                                  }
                                 />
                                 <h4>
                                   {x?.firstname} {""} {x?.lastname}
@@ -1824,46 +1695,195 @@ export default function Portfolio({ params }) {
             )
           ) : currentSelectedData === "products" ? (
             <>
-              <div className="photos grid-products">
-                {actionLoading.includes("page-products")
-                  ? Array.from({ length: 10 }).map((_, index) => (
-                      <ContentLoader
-                        width={120}
-                        height={120}
-                        speed={4}
-                        viewBox="0 0 120 120"
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#ecebeb"
-                      >
-                        <rect
-                          x="160"
-                          y="120"
-                          rx="3"
-                          ry="3"
-                          width="100%"
-                          height="120"
+              <div className="grid-products">
+                <div className="top">
+                  {screenSize === "small" && (
+                    <button
+                      className="main-button"
+                      onClick={() => setMobileFilters(true)}
+                    >
+                      <IoGrid /> Filters
+                    </button>
+                  )}
+
+                  <div className="active-filters">
+                    {filters.dep ? (
+                      <div className="filter-chip">
+                        {filters.dep}
+                        <IoClose
+                          onClick={() => handleFilterChange({ dep: null })}
                         />
-                      </ContentLoader>
-                    ))
-                  : products.map((x, index) => (
-                      <Product key={index} data={x} type="in_seller_page" />
-                    ))}
+                      </div>
+                    ) : null}
+
+                    {filters.minP ? (
+                      <div className="filter-chip">
+                        Min: {filters.minP}
+                        <IoClose
+                          onClick={() => handleFilterChange({ minP: null })}
+                        />
+                      </div>
+                    ) : null}
+
+                    {filters.maxP ? (
+                      <div className="filter-chip">
+                        Max: {filters.maxP}
+                        <IoClose
+                          onClick={() => handleFilterChange({ maxP: null })}
+                        />
+                      </div>
+                    ) : null}
+
+                    {filters.availability ? (
+                      <div className="filter-chip">
+                        {filters.availability === "inStock"
+                          ? "In Stock"
+                          : "Out of Stock"}
+                        <IoClose
+                          onClick={() =>
+                            handleFilterChange({ availability: null })
+                          }
+                        />
+                      </div>
+                    ) : null}
+
+                    {filters.category
+                      ? filters.category.split(",").map((cat, index) => (
+                          <div className="filter-chip" key={index}>
+                            {decodeURIComponent(cat)}
+                            <IoClose
+                              onClick={() => {
+                                const newCategories = filters.category
+                                  .split(",")
+                                  .filter((c) => c !== cat);
+                                handleFilterChange({
+                                  category:
+                                    newCategories.length > 0
+                                      ? newCategories.join(",")
+                                      : null,
+                                });
+                              }}
+                            />
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                  <div>
+                    <span className="totalProducts">
+                      {totalCount} products found
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  className="products"
+                  style={{
+                    background: loading ? "white" : "",
+                    padding: loading ? "10px" : "",
+                  }}
+                >
+                  {loading
+                    ? Array.from({ length: 10 }).map((_, index) => (
+                        <ContentLoader
+                          key={index}
+                          speed={1}
+                          width="100%"
+                          height="100%"
+                          viewBox="0 0 300 300"
+                          backgroundColor="#f3f3f3"
+                          foregroundColor="#ecebeb"
+                        >
+                          {/* Image Placeholder */}
+                          <rect
+                            x="0"
+                            y="0"
+                            rx="8"
+                            ry="8"
+                            width="100%"
+                            height="68%"
+                          />
+
+                          {/* Name Placeholder */}
+                          <rect
+                            x="5"
+                            y="212"
+                            rx="2"
+                            ry="2"
+                            width="100%"
+                            height="15"
+                          />
+
+                          {/* Price Placeholder */}
+                          <rect
+                            x="5"
+                            y="235"
+                            rx="4"
+                            ry="2"
+                            width="150"
+                            height="10"
+                          />
+                          <rect
+                            x="195"
+                            y="235"
+                            rx="4"
+                            ry="2"
+                            width="100"
+                            height="10"
+                          />
+
+                          {/* User Info Placeholder */}
+                          <circle cx="22" cy="280" r="20" />
+                          <rect
+                            x="50"
+                            y="267"
+                            rx="2"
+                            ry="2"
+                            width="100"
+                            height="10"
+                          />
+                          <rect
+                            x="50"
+                            y="285"
+                            rx="2"
+                            ry="2"
+                            width="50"
+                            height="10"
+                          />
+
+                          {/* Social Icons Placeholder */}
+
+                          {/* Discount Placeholder */}
+                          <rect
+                            x="250"
+                            y="280"
+                            rx="2"
+                            ry="2"
+                            width="50"
+                            height="10"
+                          />
+                        </ContentLoader>
+                      ))
+                    : products.map((x) => (
+                        <Product key={x._id} data={x} viewOwner={true} />
+                      ))}
+                </div>
+                <ReactPaginate
+                  pageCount={lastPage}
+                  marginPagesDisplayed={1}
+                  pageRangeDisplayed={3}
+                  breakLabel="..."
+                  nextLabel="next >"
+                  previousLabel="< prev"
+                  pageLinkClassName="page-num"
+                  previousLinkClassName="page-num btns"
+                  nextLinkClassName="page-num btns"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  forcePage={filters.page - 1} // Ensure the current page is shown
+                  onPageChange={handlePageChange}
+                  renderOnZeroPageCount={null}
+                />
               </div>
-              <ReactPaginate
-                pageCount={pageSize}
-                marginPagesDisplayed={1}
-                pageRangeDisplayed={3}
-                breakLabel="..."
-                nextLabel="next >"
-                previousLabel="< prev"
-                pageLinkClassName="page-num"
-                previousLinkClassName="page-num btns"
-                nextLinkClassName="page-num btns"
-                containerClassName="pagination"
-                activeClassName="active"
-                onPageChange={(e) => setPage(e.selected + 1)}
-                renderOnZeroPageCount={null}
-              />
             </>
           ) : (
             <ul className="about">

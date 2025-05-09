@@ -48,6 +48,8 @@ export default function MarketPlace() {
   const isFetching = useRef(false);
   const [mobileFilters, setMobileFilters] = useState(false);
 
+  console.log("filters", filters);
+
   // Update URL when filters change
   const updateURL = useCallback(
     (newFilters) => {
@@ -55,11 +57,11 @@ export default function MarketPlace() {
 
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value !== null && value !== undefined && value !== "") {
-          params.set(key, value.toString());
+          params.set(key, key === "page" ? parseInt(value) : value.toString());
         }
       });
 
-      router.push(`?${params.toString()}`);
+      router.replace(`?${params.toString()}`);
     },
     [router]
   );
@@ -67,7 +69,22 @@ export default function MarketPlace() {
   // Handle filter changes
   const handleFilterChange = useCallback(
     (newFilters) => {
-      const updated = { ...filters, ...newFilters, page: 1 };
+      let updated;
+
+      // إذا كان التغيير هو department، نمسح الفلاتر الأخرى
+      if (newFilters.dep !== undefined && newFilters.dep !== filters.dep) {
+        updated = {
+          dep: newFilters.dep,
+          search: null,
+          minP: null,
+          maxP: null,
+          page: 1,
+        };
+        setProductSearch(""); // إفراغ حقل البحث
+      } else {
+        updated = { ...filters, ...newFilters, page: 1 };
+      }
+
       setFilters(updated);
       updateURL(updated);
       setProducts([]);
@@ -118,7 +135,6 @@ export default function MarketPlace() {
     loadProducts();
   }, [filters, loadProducts]);
 
-  // Handle page change
   const handlePageChange = (e) => {
     const updated = {
       ...filters,
@@ -136,30 +152,35 @@ export default function MarketPlace() {
     return () => clearTimeout(delayDebounce);
   }, [productSearch]);
 
-  // Clear all filters
-  const clearFilters = () => {
-    handleFilterChange({
+  const clearFilters = (overrideFilters = {}) => {
+    const cleared = {
       dep: null,
       search: null,
       minP: null,
       maxP: null,
       page: 1,
-    });
+      ...overrideFilters,
+    };
+    setFilters(cleared);
+    setProductSearch("");
+    setProducts([]);
+    updateURL(cleared);
   };
-
   return (
     <div className={`marketplace`}>
       <SideSection mobileFilters={mobileFilters}>
         <MarketSideSection
+          type={"market"}
           heighstPrice={heighstPrice}
           onFilterChange={handleFilterChange}
           currentFilters={filters}
           clearFilters={clearFilters}
           setMobileFilters={setMobileFilters}
+          totalCount={totalCount}
         />
       </SideSection>
 
-      {filters.dep || filters.search ? (
+      {filters.dep ? (
         <div className="grid-products">
           <div className="top">
             <div>
@@ -201,7 +222,7 @@ export default function MarketPlace() {
                 )}
               </div>
 
-              <span>{totalCount} products found</span>
+              <span className="totalProducts">{totalCount} products found</span>
             </div>
             <div>
               {screenSize === "small" && (
@@ -214,38 +235,31 @@ export default function MarketPlace() {
               )}
 
               <div className="active-filters">
-                {filters.dep && (
+                {filters.dep ? (
                   <div className="filter-chip">
                     {filters.dep}
                     <IoClose
                       onClick={() => handleFilterChange({ dep: null })}
                     />
                   </div>
-                )}
-                {filters.search && (
-                  <div className="filter-chip">
-                    {filters.search}
-                    <IoClose
-                      onClick={() => handleFilterChange({ search: null })}
-                    />
-                  </div>
-                )}
-                {filters.minP && (
+                ) : null}
+
+                {filters.minP ? (
                   <div className="filter-chip">
                     Min: {filters.minP}
                     <IoClose
                       onClick={() => handleFilterChange({ minP: null })}
                     />
                   </div>
-                )}
-                {filters.maxP && (
+                ) : null}
+                {filters.maxP ? (
                   <div className="filter-chip">
                     Max: {filters.maxP}
                     <IoClose
                       onClick={() => handleFilterChange({ maxP: null })}
                     />
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
