@@ -106,6 +106,7 @@ function DangerEvent() {
       setSomeThingHappen({
         event: "delete",
         type: "post",
+        postId: selectedDev.id,
       });
     } catch (err) {
       addNotification({

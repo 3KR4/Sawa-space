@@ -2165,7 +2165,7 @@ body.ar .action-holder.forComments .top svg {
   min-width: 100%;
   backdrop-filter: unset;
   background: var(--body-color) !important;
-  z-index: 3;
+  z-index: 50;
 }
 body:has(.focusedMsg.active) header,
 body:has(.focusedMsg.active) .chats {
@@ -2330,14 +2330,26 @@ body:has(.focusedMsg.active) {
 
 .reactsMenu.MenuOfUsers {
   min-height: 220px;
+  padding: 0px !important;
 }
 .MenuOfUsers .user {
-  padding: 6px 9px !important;
+  padding: 6px 13px !important;
   border-radius: 5px !important;
   cursor: pointer !important;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px !important;
+  border-radius: unset !important;
+}
+.MenuOfUsers .user .info {
+  justify-content: space-between;
+  width: 100%;
+}
+.MenuOfUsers .user .info span {
+  font-size: 17px;
 }
 .MenuOfUsers .holder {
   max-height: 173px !important;
+  padding-right: 0px !important;
 }
 .MenuOfUsers .topFilter {
   padding: 8px 5px 3px;
@@ -2347,17 +2359,23 @@ body:has(.focusedMsg.active) {
 }
 
 .MenuOfUsers .topFilter button {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
-  background: #eeeeee;
   border-radius: 5px;
   width: 37px;
   height: 30px;
   color: var(--title-color);
+  border: 1px solid var(--border-color);
 }
 .MenuOfUsers .topFilter button:hover,
 .MenuOfUsers .topFilter button.active {
   background: var(--second-section-color);
+}
+.MenuOfUsers .topFilter button:first-child:hover,
+.MenuOfUsers .topFilter button:first-child.active {
+  background: var(--main-color);
+  color: white;
+  font-size: 14px;
 }
 
 .post .middle > .actions svg:hover,
@@ -2630,7 +2648,7 @@ label.checkbox > span {
   padding: 15px;
   width: 370px;
   gap: 10px;
-  z-index: 101;
+  z-index: 102;
 }
 .info-menu.sideMenu.loading {
   height: 170px;
@@ -3420,8 +3438,8 @@ body.ar .focusedMsg .stories .navigations-icons.forStories button svg {
   background: var(--body-color);
   border-radius: 15px 15px 10px 10px;
   overflow: hidden;
-      height: fit-content;
-    padding-bottom: 3px;
+  height: fit-content;
+  padding-bottom: 3px;
 }
 body.ar .swiper-container .Product,
 body.ar .swiper-container .Product * {

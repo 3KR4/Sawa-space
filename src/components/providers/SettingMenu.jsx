@@ -266,7 +266,7 @@ function SettingMenu() {
 
   const postActions = [
     {
-      show: selectedDev.isMyPost,
+      show: selectedDev.isMyPost || selectedDev.isMyPage,
       label: translations?.forms?.edit_post,
       icon: <MdEdit />,
       onClick: () => {
@@ -345,7 +345,7 @@ function SettingMenu() {
     //   },
     // },
     {
-      show: !selectedDev.isMyPost,
+      show: !selectedDev.isMyPost && !selectedDev.isMyPage,
       label: translations?.actions?.report,
       icon: <MdReport />,
       className: "warning",
@@ -384,7 +384,7 @@ function SettingMenu() {
     //   },
     // },
     {
-      show: selectedDev.isMyPost,
+      show: selectedDev.isMyPost || selectedDev.isMyPage,
       label: translations?.actions?.remove_post,
       icon: <FaTrashAlt />,
       className: "danger",

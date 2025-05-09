@@ -30,6 +30,8 @@ export const MenuProvider = ({ children }) => {
         ? 340
         : type.includes("Info")
         ? 370
+        : type == "usersReact"
+        ? 280
         : 255;
 
     const menuHeight =
@@ -80,7 +82,7 @@ export const MenuProvider = ({ children }) => {
     setMenuPosition({ top, left });
   };
 
-  const handleMenus2 = (event, type, id) => {
+  const handleMenus2 = (event, type, id, info) => {
     if (event && typeof event.preventDefault === "function") {
       event.preventDefault();
     }
@@ -107,7 +109,8 @@ export const MenuProvider = ({ children }) => {
       setInfoMenu(true);
     }
 
-    id && setSelectedDev(id);
+    info && setSelectedDev({ id, ...info });
+    id && !info && setSelectedDev(id);
     setMenuPosition2({ top, left });
   };
 

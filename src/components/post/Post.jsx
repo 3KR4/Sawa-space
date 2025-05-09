@@ -145,21 +145,33 @@ function Post({ data = {}, focused = false }) {
 
   const bottomAction = () => (
     <div className="bottom">
-      <div className="left emojesCounter">
-        {currentPost?.reacts && currentPost?.reactCount > 0 && (
-          <>
-            {Object.entries(currentPost.reacts)
+      {currentPost?.reactCount > 0 && (
+        <div
+          className="left emojesCounter"
+          onClick={(e) => {
+            handleMenus(e, "usersReact");
+            const filteredReacts = Object.entries(currentPost.reacts || {})
               .filter(([, count]) => count > 0)
               .sort(([, a], [, b]) => b - a)
-              .slice(0, 2)
-              .map(([emoji], index) => (
-                <p key={index}>{emoji}</p>
-              ))}
+              .slice(0, 5);
 
-            <p>{currentPost?.reactCount}</p>
-          </>
-        )}
-      </div>
+            setOpenUsersReact({
+              postId: currentPost._id,
+              filters: filteredReacts,
+            });
+          }}
+        >
+          {Object.entries(currentPost.reacts || {})
+            .filter(([, count]) => count > 0)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 3)
+            .map(([emoji], index) => (
+              <p key={index}>{emoji}</p>
+            ))}
+
+          <p>{currentPost.reactCount}</p>
+        </div>
+      )}
 
       {screenSize !== "small" && (
         <div className="actions mid">
@@ -445,17 +457,21 @@ function Post({ data = {}, focused = false }) {
                       isMyPage,
                       isInFavorite: false,
                       postOwner: postOwnerData?._id,
-                      isMyFriend: userData?.friends?.includes(
-                        currentPost?.author[0]?._id
-                      ),
-                      isSendedFriendRequest:
-                        userData?.friendRequests?.sent?.includes(
-                          currentPost?.author[0]?._id
-                        ),
-                      isReceivedFriendRequest:
-                        userData?.friendRequests?.received?.includes(
-                          currentPost?.author[0]?._id
-                        ),
+                      isMyFriend: !currentPost.pageId
+                        ? userData?.friends?.includes(
+                            currentPost?.author[0]?._id
+                          )
+                        : null,
+                      isSendedFriendRequest: !currentPost.pageId
+                        ? userData?.friendRequests?.sent?.includes(
+                            currentPost?.author[0]?._id
+                          )
+                        : null,
+                      isReceivedFriendRequest: !currentPost.pageId
+                        ? userData?.friendRequests?.received?.includes(
+                            currentPost?.author[0]?._id
+                          )
+                        : null,
                       isPostPage: currentPost.pageId ? true : false,
                       isFollowedPage: false,
                       isCommunity: false,

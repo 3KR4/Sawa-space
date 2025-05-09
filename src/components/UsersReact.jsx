@@ -1,31 +1,48 @@
 "use client";
-import React from "react";
-import { useState, useContext, useEffect, useRef } from "react";
-import Image from "next/image";
-import { messages } from "@/utils/Data";
-
+import React, { useState, useContext, useEffect } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { postService } from "@/services/api/postService";
 
 function UsersReact() {
-  const { usersreactMenuRef } = useContext(MenusContext);
-
-  const {
-    menuPosition,
-    selectedDev,
-    openUsersReact,
-    setOpenUsersReact,
-    handleMenus2,
-  } = useContext(DynamicMenusContext);
+  const { usersreactMenuRef, infoMenuRef } = useContext(MenusContext);
+  const { menuPosition, openUsersReact, setOpenUsersReact, handleMenus2 } =
+    useContext(DynamicMenusContext);
 
   const [emojiFilter, setEmojiFilter] = useState("all");
+  const [usersReacts, setUsersReact] = useState([]);
+
+  const filters = openUsersReact?.filters?.map(([emoji]) => emoji) || [];
+
+  // Fetch reacts
+  useEffect(() => {
+    const fetchReacts = async () => {
+      if (!openUsersReact?.postId) return;
+      try {
+        const emojiQuery = emojiFilter === "all" ? "" : emojiFilter;
+        const { data } = await postService.getReacts(
+          openUsersReact.postId,
+          emojiQuery
+        );
+        setUsersReact(data?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch reacts", err);
+        setUsersReact([]);
+      }
+    };
+    fetchReacts();
+  }, [openUsersReact, emojiFilter]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
+      const isClickOutsideUsersReact =
         usersreactMenuRef.current &&
-        !usersreactMenuRef.current.contains(event.target)
-      ) {
+        !usersreactMenuRef.current.contains(event.target);
+
+      const isClickOutsideInfoMenu =
+        !infoMenuRef.current || !infoMenuRef.current.contains(event.target);
+
+      if (isClickOutsideUsersReact && isClickOutsideInfoMenu) {
         setOpenUsersReact(null);
       }
     };
@@ -35,18 +52,6 @@ function UsersReact() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const currentUserReacts =
-    openUsersReact === "message"
-      ? messages.find((msg) => msg.id === selectedDev)
-      : openUsersReact === "post"
-      ? posts.find((post) => post.id === selectedDev)
-      : null;
-
-  const msgsEmojis =
-    openUsersReact === "message"
-      ? currentUserReacts?.emojis
-      : currentUserReacts?.reacts;
 
   return (
     <div
@@ -59,65 +64,44 @@ function UsersReact() {
         left: `${menuPosition.left}px`,
       }}
     >
-      {/* <div className="topFilter">
-        {openUsersReact === "message" ? (
-          <h1>All Emojis</h1>
-        ) : (
-          <>
-            <button
-              onClick={() => setEmojiFilter("all")}
-              className={`${emojiFilter == "all" ? "active" : ""}`}
-            >
-              All
-            </button>
-            {msgsEmojis?.topUseage.map((x, index) => (
-              <button
-                onClick={() => setEmojiFilter(x)}
-                className={`${emojiFilter == x ? "active" : ""}`}
-                key={index}
-              >
-                {x}
-              </button>
-            ))}
-          </>
-        )}
+      <div className="topFilter">
+        <button
+          onClick={() => setEmojiFilter("all")}
+          className={emojiFilter === "all" ? "active" : ""}
+        >
+          All
+        </button>
+        {filters.map((x, index) => (
+          <button
+            onClick={() => setEmojiFilter(x)}
+            className={emojiFilter === x ? "active" : ""}
+            key={index}
+          >
+            {x}
+          </button>
+        ))}
       </div>
 
-      {openUsersReact === "message" ? (
-        <div className="holder">
-          {msgsEmojis?.map((x) => (
-            <div key={x} className="user">
-              <div className="info">
-                <Image
-                  className={`rounded`}
-                  src={x?.user?.img ? x?.user?.img : null}
-                  width={40}
-                  height={40}
-                  alt={`user Image`}
-                />
-                <h4>{x?.user?.name}</h4>
-              </div>
-              <span>{x?.emoji}</span>
+      <div className="holder forPost">
+        {usersReacts?.map((x) => (
+          <div
+            key={x._id}
+            className="user"
+            onClick={(e) =>
+              handleMenus2(e, "user-Info", x?.author[0]?._id, {
+                type: "user",
+              })
+            }
+          >
+            <div className="info">
+              <h4 className="ellipsisText">
+                {x?.author[0]?.firstname} {x?.author[0]?.lastname}
+              </h4>
+              <span>{x?.react}</span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="holder forPost">
-          {msgsEmojis?.users
-            ?.filter((x) => emojiFilter === "all" || x.emoji === emojiFilter)
-            .map((x) => (
-              <div
-                key={x.id}
-                className="user"
-                onClick={(e) => handleMenus2(e, "user-Info", x.id)}
-              >
-                <div className="info">
-                  <h4>{x?.name}</h4>
-                </div>
-              </div>
-            ))}
-        </div>
-      )} */}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

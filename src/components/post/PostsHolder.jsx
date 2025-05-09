@@ -121,6 +121,13 @@ function PostsHolder(param) {
       );
       setSomeThingHappen("");
     }
+    if (
+      someThingHappen?.type === "post" &&
+      someThingHappen?.event === "delete"
+    ) {
+      setPosts((prev) => prev.filter((x) => x._id !== someThingHappen.postId));
+      setSomeThingHappen("");
+    }
   }, [someThingHappen.type]);
 
   useEffect(() => {
