@@ -30,6 +30,8 @@ function Product({ data, viewOwner, focused = false }) {
   const [swiperRef, setSwiperRef] = useState(null);
   const [activeImg, setActiveImg] = useState(data?.img[0] || null);
 
+  console.log("product", data);
+
   return (
     <div className="Product post">
       {!focused ? (
@@ -196,7 +198,7 @@ function Product({ data, viewOwner, focused = false }) {
               <div className="top">
                 <div className="left">
                   <Image
-                    src={userPage?.img?.url || "/users/default.svg"}
+                    src={data?.pageDetails[0]?.img?.url || "/users/default.svg"}
                     style={{
                       cursor: "pointer",
                     }}
@@ -206,13 +208,13 @@ function Product({ data, viewOwner, focused = false }) {
                     className={`rounded`}
                     onClick={(e) =>
                       !isMyPost &&
-                      handleMenus(e, "user-Info", userPage?._id, {
+                      handleMenus(e, "user-Info", data?.pageid, {
                         type: "page",
                       })
                     }
                   />
                   <div className="info">
-                    <h5>{userPage?.pagename}</h5>
+                    <h5>{data?.pageDetails[0]?.pagename}</h5>
                   </div>
                 </div>
                 <div className="icons-holder">

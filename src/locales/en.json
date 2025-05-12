@@ -242,6 +242,8 @@
   "forms": {
     "create_post": "create post",
     "edit_post": "edit post",
+    "create_group": "create group",
+    "edit_group": "edit group",
     "add_to_your_post": "add to your post",
     "click_or_drop_images_her": "click or drop images her",
     "click_to_uploud_image_her": "click to uploud image her",

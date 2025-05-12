@@ -33,7 +33,7 @@ main {
   --body-color: #ffffff;
   --main-color: #ff8e31;
   --second-color: #ccebff;
-  --third-color: #ffc692;
+  --third-color: #ffa95a;
   --title-color: #454545;
   --second-section-color: #d5d5d5;
   --paragraph-color: #858585;
@@ -682,6 +682,7 @@ body.ar .chats > .top div {
   direction: rtl !important;
 }
 .chats > .top div a {
+  width: 100%;
   display: flex;
 }
 
@@ -718,7 +719,7 @@ body.ar .chats > .top div {
   font-size: 16px;
   padding: 6px 12px !important;
   z-index: 2;
-  background: #ffa95a;
+  background: var(--third-color);
 }
 .chats .no-friend-yet-svg a:hover {
   background: var(--main-color);
@@ -758,6 +759,9 @@ body.ar .chats > .top div {
   opacity: 0;
   font-size: 1px;
 }
+.chats.hide .no-friend-yet-svg {
+  padding: 0 5px;
+}
 .chats.hide .no-friend-yet-svg img {
   width: 100%;
   left: -2px;
@@ -793,7 +797,7 @@ body.ar .chats > .top div {
   background: var(--main-color);
 }
 .chats .filters li.active {
-  background: var(--main-color);
+  background: var(--third-color);
 }
 .chats .filters li.active svg,
 .chats .filters li:hover svg {
@@ -1010,11 +1014,9 @@ body.ar .chats.hide .holder {
   padding: 0 2px;
 }
 .chats.hide .chatico {
-  display: flex;
-  font-size: 33px;
-  color: var(--main-color);
+  display: none;
 }
-.chats.hide hr {
+.chats.hide .chats.hide hr {
   margin: 6px 0 9px;
 }
 .chats.hide .open-close svg {
@@ -2247,6 +2249,7 @@ body:has(.focusedMsg.active) {
 
 .focusedMsg .post .middle {
   flex: 1;
+  margin-top: 10px;
 }
 .focusedMsg .post .comments {
   padding: 0px 0 10px;

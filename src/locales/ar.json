@@ -244,6 +244,8 @@
   "forms": {
     "create_post": "انشاء منشور",
     "edit_post": "تعديل المنشور",
+    "create_group": "انشاء دردشة جماعية",
+    "edit_group": "تعديل بيانات الدردشة",
     "add_to_your_post": "قم بالاضافة علي منشورك",
     "click_or_drop_images_her": "انقر او القي الصور هنا",
     "click_to_uploud_image_her": "قم بالضغط هنا لرفع صورتك",

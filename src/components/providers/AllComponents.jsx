@@ -8,7 +8,7 @@ import UsersSelection from "@/components/UsersSelection";
 import PostForm from "@/components/forms/PostForm";
 import ImgForm from "@/components/forms/ImgForm";
 import DangerEvent from "@/components/forms/DangerEvent";
-import EditProfileForm from "@/components/forms/EditProfileForm";
+import GroupForm from "@/components/forms/GroupForm";
 import SingleDetails from "@/components/SingleDetails";
 import UserInfo from "@/components/UserInfo";
 import SettingMenu from "@/components/providers/SettingMenu";
@@ -29,6 +29,7 @@ function AllComponents() {
     dangerEvent,
     singleProvider,
     openShare,
+    openGroupForm,
   } = useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
@@ -65,6 +66,7 @@ function AllComponents() {
       {openPostForm && <PostForm />}
       {openStoryForm && <StoryForm />}
       {openProductForm && <ProductForm />}
+      {openGroupForm && <GroupForm />}
       {openImgForm && <ImgForm />}
       {dangerEvent && <DangerEvent />}
       {openUsersReact && <UsersReact />}

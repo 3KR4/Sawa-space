@@ -16,6 +16,7 @@ export const MenusProvider = ({ children }) => {
   const [openStoryForm, setOpenStoryForm] = useState(false);
   const [openImgForm, setOpenImgForm] = useState(false);
   const [openProductForm, setOpenProductForm] = useState(false);
+  const [openGroupForm, setOpenGroupForm] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [dangerEvent, setDangerEvent] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -64,6 +65,8 @@ export const MenusProvider = ({ children }) => {
         setSomeThingHappen,
         openShare,
         setOpenShare,
+        openGroupForm,
+        setOpenGroupForm,
       }}
     >
       {children}

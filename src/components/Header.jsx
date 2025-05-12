@@ -40,6 +40,7 @@ export default function Header() {
     setOpenStoryForm,
     setSingleProvider,
     setOpenProductForm,
+    setOpenGroupForm,
   } = useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
   const { pathname, screenSize, userData, userPage, setUserData } =
@@ -152,8 +153,8 @@ export default function Header() {
             </button>
           )}
 
-          <button>
-            <HiUsers /> {translations?.header?.creategroup}
+          <button onClick={() => setOpenGroupForm(true)}>
+            <FaUsers /> {translations?.header?.creategroup}
           </button>
           {!userPage && (
             <button
@@ -167,9 +168,9 @@ export default function Header() {
             </button>
           )}
 
-          <button>
-            <FaUsers /> {translations?.header?.createcommunity}
-          </button>
+          {/* <button>
+            <HiUsers /> {translations?.header?.createcommunity}
+          </button> */}
         </ul>
       </div>
     </li>

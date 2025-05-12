@@ -3,9 +3,10 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CutText from "@/utils/CutText";
-import { users } from "@/utils/Data";
 import ContentLoader from "react-content-loader";
 import { MenusContext } from "@/Contexts/MenusContext";
+import { chatService } from "@/services/api/chatService";
+import {} from "@/Contexts/LanguageContext";
 
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
@@ -33,7 +34,7 @@ import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
   const [hideChats, setHideChats] = useState(false);
-  const { screenSize, screenSizeWidth } = useContext(ScreenContext);
+  const { screenSize, screenSizeWidth, userData } = useContext(ScreenContext);
   const { translations, locale } = useLanguage();
 
   const [chatsCurrentFilter, setChatsCurrentFilter] = useState("allchats");
@@ -78,11 +79,28 @@ export default function Chats() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const [userChats, setUserChats] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 0); // Adjust as needed
-  }, []);
+    const fetchUserChats = async () => {
+      setLoading(true);
+      try {
+        const { data } = await chatService.getUserChats();
+
+        setUserChats(data.data);
+      } catch (err) {
+        console.error("Error fetching userChats", err);
+        addNotification({
+          type: "error",
+          message: "Failed to load user chats",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (userData && userData?._id) fetchUserChats();
+  }, [userData]);
 
   return (
     <div className={`chats ${hideChats ? "hide" : "active"}`}>
@@ -105,17 +123,14 @@ export default function Chats() {
           {translations?.sidechats?.friends}
         </div>
         <FaUserFriends className="chatico" />
-        <div className="search-holder">
-          <IoSearch />
-          <input
-            type="text"
-            placeholder={translations?.placeHolders?.search_her}
-          />
-          <IoClose className="delete" />
+        <div className="no-friend-yet-svg">
+          <Link className="main-button" href={"/discover/people"}>
+            <FaPlus /> <span>{translations?.chats?.discover_people}</span>
+          </Link>
         </div>
       </div>
       <hr />
-      {!users.length ? (
+      {userChats.length || loading ? (
         <>
           <ul className="filters">
             <li
@@ -207,71 +222,70 @@ export default function Chats() {
                     </ContentLoader>
                   </div>
                 ))
-              : users?.map((x) => (
-                  <Link
-                    key={x.id}
-                    href={`/chat/${x.id}`}
-                    className={`chat ${curentUserId == x.id && "active"}`}
-                    onClick={() => setCurentUserId(x.id)}
-                    onContextMenu={(e) => {
-                      handleMessageActions(e);
-                      setCurentUserId(x.id);
-                    }}
-                  >
-                    <Image
-                      className={`${x.newStatus && "status"} rounded`}
-                      src={x.img}
-                      width={45}
-                      height={45}
-                      alt={`user Image`}
-                    />
-                    <div className="content">
-                      <div className="top">
-                        <h4>
-                          {CutText(
-                            x.name,
-                            screenSizeWidth < 786
-                              ? 20
-                              : screenSizeWidth < 992
-                              ? 9
-                              : screenSizeWidth < 1100
-                              ? 12
-                              : 14
+              : userChats?.map((x) => {
+                  const friend = x.userDetails.find(
+                    (x) => x._id !== userData?._id
+                  );
+                  return (
+                    <Link
+                      key={x._id}
+                      href={`/chat/${x?._id}`}
+                      className={`chat ${curentUserId == x?._id && "active"}`}
+                      onClick={() => setCurentUserId(x?._id)}
+                      onContextMenu={(e) => {
+                        handleMessageActions(e);
+                        setCurentUserId(x?._id);
+                      }}
+                    >
+                      <Image
+                        className={`${
+                          friend?.newStatus ? "status" : ""
+                        } rounded`}
+                        src={
+                          x?.isgroup
+                            ? x?.img?.url
+                              ? x?.img?.url
+                              : "/users/group.svg"
+                            : friend?.img?.url
+                        }
+                        width={45}
+                        height={45}
+                        alt={`user Image`}
+                      />
+                      <div className="content">
+                        <div className="top">
+                          <h4>
+                            {x?.isgroup
+                              ? x?.chatName
+                              : `${friend?.firstname} ${friend?.lastname}`}
+                          </h4>
+                          <span>
+                            {ConvertTime(x?.createdAt, locale, "chat")}
+                          </span>
+                        </div>
+                        <div className="bottom">
+                          <p>
+                            {x?.lastMessage?.type == "img" ? (
+                              <>
+                                <IoImageOutline /> {translations?.chats?.image}
+                              </>
+                            ) : x?.lastMessage?.type == "sticker" ? (
+                              <>
+                                <PiStickerDuotone />{" "}
+                                {translations?.chats?.sticker}
+                              </>
+                            ) : (
+                              x?.lastMessage
+                            )}
+                          </p>
+                          {x?.unReadCounter > 0 && (
+                            <span className="count">{x?.unReadCounter}</span>
                           )}
-                        </h4>
-                        <span>{ConvertTime(x?.lastMsgTime, locale)}</span>
+                        </div>
                       </div>
-                      <div className="bottom">
-                        <p>
-                          {x.lastMessage.type == "img" ? (
-                            <>
-                              <IoImageOutline /> {translations?.chats?.image}
-                            </>
-                          ) : x.lastMessage.type == "sticker" ? (
-                            <>
-                              <PiStickerDuotone />{" "}
-                              {translations?.chats?.sticker}
-                            </>
-                          ) : (
-                            CutText(
-                              x.lastMessage.content,
-                              screenSizeWidth < 786
-                                ? 36
-                                : screenSizeWidth < 992
-                                ? 21
-                                : screenSizeWidth < 1100
-                                ? 26
-                                : 28
-                            )
-                          )}
-                        </p>
-                        {x.unReadCounter > 0 && (
-                          <span className="count">{x.unReadCounter}</span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
           </div>
         </>
       ) : (

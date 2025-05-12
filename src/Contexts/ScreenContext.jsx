@@ -180,7 +180,7 @@ export const ScreenProvider = ({ children }) => {
       try {
         const { data } = await productService.getSingleProduct(productId);
 
-        const product = data?.data;
+        const product = data?.data[0];
         if (product) {
           setSingleProvider({
             type: "product",
