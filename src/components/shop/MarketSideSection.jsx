@@ -39,7 +39,7 @@ function MarketSideSection({
   setMobileFilters,
   totalCount,
   isMyPage,
-  categories,
+  currentPortfolio,
   setCurrentPortfolio,
 }) {
   const { screenSize, actionLoading, setActionLoading, fetchPageData } =
@@ -71,9 +71,12 @@ function MarketSideSection({
   const [selectedCat, setSelectedCat] = useState([]);
   const availability = currentFilters.availability || "";
   const [startEditCats, setStartEditCats] = useState(false);
+
   const handleAddMoreCats = () => {
-    const allFilled = categories?.every((cat) => cat.trim() !== "");
-    if (allFilled) {
+    const allFilled = currentPortfolio.category?.every(
+      (cat) => cat.trim() !== ""
+    );
+    if (allFilled || currentPortfolio.category.length === 0) {
       setCurrentPortfolio((prev) => ({
         ...prev,
         category: [...prev.category, ""],
@@ -85,7 +88,9 @@ function MarketSideSection({
     try {
       setActionLoading((prev) => [...prev, "category"]);
 
-      const cleanedCategories = categories.filter((cat) => cat.trim() !== "");
+      const cleanedCategories = currentPortfolio.category.filter(
+        (cat) => cat.trim() !== ""
+      );
 
       await pageService.updateCategories({
         category: cleanedCategories,
@@ -255,118 +260,136 @@ function MarketSideSection({
           </ul>
         </div>
       )}
-      {type === "page" && (
-        <div className="Filter-Holder forCat cats">
-          <h4 className="filter-title">
-            {translations?.market_place?.filter_by_categories}
-            {isMyPage &&
-              (startEditCats ? (
-                <button
-                  type="button"
-                  className="main-button add-btn"
-                  onClick={handleAddMoreCats}
-                >
-                  <FaPlus />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="main-button add-btn"
-                  onClick={() => {
-                    setOriginalCats(categories);
-                    setStartEditCats(true);
-                  }}
-                >
-                  <MdEdit />
-                </button>
-              ))}
-          </h4>
-          <ul>
-            {categories?.map((cat, index) => {
-              const isSelected =
-                currentFilters.category?.split(",").includes(cat) &&
-                !startEditCats;
+      {type === "page" &&
+        (isMyPage || currentPortfolio.category.length > 0) && (
+          <div className="Filter-Holder forCat cats">
+            <h4 className="filter-title">
+              {
+                translations?.market_place?.[
+                  currentPortfolio.category.length > 0
+                    ? `filter_by_categories`
+                    : `add_categories_to_filter_with`
+                ]
+              }
+              {isMyPage &&
+                (startEditCats ? (
+                  <button
+                    type="button"
+                    className="main-button add-btn"
+                    onClick={handleAddMoreCats}
+                  >
+                    <FaPlus />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="main-button add-btn"
+                    onClick={() => {
+                      setOriginalCats(currentPortfolio.category);
+                      setStartEditCats(true);
+                    }}
+                  >
+                    {currentPortfolio.category.length === 0 ? (
+                      <FaPlus />
+                    ) : (
+                      <MdEdit />
+                    )}
+                  </button>
+                ))}
+            </h4>
+            <ul>
+              {currentPortfolio.category?.map((cat, index) => {
+                const isSelected =
+                  currentFilters.category?.split(",").includes(cat) &&
+                  !startEditCats;
 
-              return (
-                <li
-                  key={index}
-                  className={`ellipsisText ${isSelected ? "active" : ""}`}
-                  onClick={() => {
-                    if (!startEditCats) handleToggleCategory(cat);
-                  }}
-                >
-                  {!startEditCats ? (
-                    <>
-                      <label className="checkbox">
+                return (
+                  <li
+                    key={index}
+                    className={`ellipsisText ${isSelected ? "active" : ""}`}
+                    onClick={() => {
+                      if (!startEditCats) handleToggleCategory(cat);
+                    }}
+                  >
+                    {!startEditCats ? (
+                      <>
+                        <label className="checkbox">
+                          <input
+                            type="checkbox"
+                            className="input"
+                            checked={isSelected}
+                            readOnly
+                          />
+                          <span className="custom-checkbox"></span>
+                        </label>
+                        {cat}
+                      </>
+                    ) : (
+                      <>
                         <input
-                          type="checkbox"
-                          className="input"
-                          checked={isSelected}
-                          readOnly
+                          type="text"
+                          value={cat}
+                          onChange={(e) => {
+                            const newCats = [...currentPortfolio.category];
+                            newCats[index] = e.target.value;
+                            setCurrentPortfolio((prev) => ({
+                              ...prev,
+                              category: newCats,
+                            }));
+                          }}
                         />
-                        <span className="custom-checkbox"></span>
-                      </label>
-                      {cat}
-                    </>
-                  ) : (
-                    <>
-                      <input
-                        type="text"
-                        value={cat}
-                        onChange={(e) => {
-                          const newCats = [...categories];
-                          newCats[index] = e.target.value;
-                          setCurrentPortfolio((prev) => ({
-                            ...prev,
-                            category: newCats,
-                          }));
-                        }}
-                      />
-                      <FaTrashAlt
-                        onClick={() =>
-                          setCurrentPortfolio((prev) => ({
-                            ...prev,
-                            category: prev.category?.filter(
-                              (_, i) => i !== index
-                            ),
-                          }))
-                        }
-                      />
-                    </>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-          {startEditCats && (
-            <div className="btns rowHolder actions">
-              <button
-                type="button"
-                className="main-button secondary"
-                onClick={() => {
-                  setCurrentPortfolio((prev) => ({
-                    ...prev,
-                    category: originalCats,
-                  }));
-                  setStartEditCats(false);
+                        <FaTrashAlt
+                          onClick={() =>
+                            setCurrentPortfolio((prev) => ({
+                              ...prev,
+                              category: prev.category?.filter(
+                                (_, i) => i !== index
+                              ),
+                            }))
+                          }
+                        />
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            {startEditCats && (
+              <div
+                className="btns rowHolder actions"
+                style={{
+                  display: `flex`,
+                  alignItems: `center`,
+                  justifyContent: `space-between`,
                 }}
               >
-                <span>{translations?.actions?.cancel}</span>
-              </button>
+                <button
+                  type="button"
+                  className="main-button secondary"
+                  onClick={() => {
+                    setCurrentPortfolio((prev) => ({
+                      ...prev,
+                      category: originalCats,
+                    }));
+                    setStartEditCats(false);
+                  }}
+                >
+                  <span>{translations?.actions?.cancel}</span>
+                </button>
 
-              <button
-                className={`main-button ${
-                  actionLoading.includes("category") ? "loading" : ""
-                }`}
-                onClick={handleUpdateCategory}
-              >
-                <div className="lds-dual-ring"></div>
-                <span>{translations?.actions?.save_changes}</span>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+                <button
+                  className={`main-button ${
+                    actionLoading.includes("category") ? "loading" : ""
+                  }`}
+                  onClick={handleUpdateCategory}
+                >
+                  <div className="lds-dual-ring"></div>
+                  <span>{translations?.actions?.save_changes}</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
     </>
   );
 }

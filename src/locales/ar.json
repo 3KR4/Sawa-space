@@ -143,6 +143,8 @@
     "following_pages": "الصفحات التي اتابعها فقط",
     "filter_by_price": "تصفية حسب الأسعار",
     "filter_by_categories": "تصفية حسب الأقسام",
+    "add_categories_to_filter_with": "قم بأضافت فئات للبحث من خلالها",
+
     "enter_min_and_max_price": "أدخل الحد الأدنى والحد الأقصى للسعر",
     "min": "الحد الأدنى",
     "max": "الحد الأقصى",

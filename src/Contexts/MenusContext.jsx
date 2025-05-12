@@ -10,11 +10,13 @@ export const MenusProvider = ({ children }) => {
   const usersreactMenuRef = useRef(null);
   const usersSelectionRef = useRef(null);
   const dangerEventRef = useRef(null);
+  const shareFomrRef = useRef(null);
 
   const [openPostForm, setOpenPostForm] = useState(false);
   const [openStoryForm, setOpenStoryForm] = useState(false);
   const [openImgForm, setOpenImgForm] = useState(false);
   const [openProductForm, setOpenProductForm] = useState(false);
+  const [openShare, setOpenShare] = useState(false);
   const [dangerEvent, setDangerEvent] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUsersNames, setSelectedUsersNames] = useState([]);
@@ -36,6 +38,7 @@ export const MenusProvider = ({ children }) => {
         settingsMenuRef,
         dangerEventRef,
         closeImgHolderRef,
+        shareFomrRef,
         selectedUsers,
         setSelectedUsers,
         selectedUsersNames,
@@ -59,6 +62,8 @@ export const MenusProvider = ({ children }) => {
         setDangerEvent,
         someThingHappen,
         setSomeThingHappen,
+        openShare,
+        setOpenShare,
       }}
     >
       {children}

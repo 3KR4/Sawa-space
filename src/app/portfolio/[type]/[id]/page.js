@@ -353,9 +353,41 @@ export default function Portfolio({ params }) {
       );
     }
   };
+  const fetch_page_products = async () => {
+    setActionLoading((prev) => [...prev, "page-side-products"]);
+
+    try {
+      const { data } = await productService.getProducts(
+        "page",
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        7
+      );
+
+      console.log("small products", data.data);
+      setProductsSmallView(data.data);
+    } catch (err) {
+      console.error("Error fetching page products", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load page products",
+      });
+    } finally {
+      setActionLoading((prev) =>
+        prev.filter((x) => x !== "page-side-products")
+      );
+    }
+  };
 
   useEffect(() => {
     type === "user" && fetch_user_friends(id);
+    type === "page" && fetch_page_products();
   }, []);
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -426,9 +458,8 @@ export default function Portfolio({ params }) {
     [12, 24, 48, 96],
   ];
 
-  const [sortType, setSortType] = useState("default");
+  // const [sortType, setSortType] = useState("default");
   const [pageSize, setPageSize] = useState(12);
-  const [priceRangevalue, setPriceRangevalue] = useState([10, 100000]);
 
   const sendFriendRequest = async (id) => {
     try {
@@ -532,7 +563,6 @@ export default function Portfolio({ params }) {
 
   const searchParams = useSearchParams();
 
-  // Initialize filters state from URL params
   const initialFilters = {
     dep: searchParams.get("dep") || null,
     search: searchParams.get("search") || null,
@@ -550,9 +580,6 @@ export default function Portfolio({ params }) {
   const isFetching = useRef(false);
   const [mobileFilters, setMobileFilters] = useState(false);
 
-  console.log("filters", filters);
-
-  // Update URL when filters change
   const updateURL = useCallback(
     (newFilters) => {
       const params = new URLSearchParams();
@@ -571,7 +598,6 @@ export default function Portfolio({ params }) {
     [router]
   );
 
-  // Handle filter changes
   const handleFilterChange = useCallback(
     (newFilters) => {
       let updated;
@@ -597,7 +623,6 @@ export default function Portfolio({ params }) {
     [filters, updateURL]
   );
 
-  // Load products based on current filters
   const loadProducts = useCallback(async () => {
     if (isFetching.current) return;
 
@@ -635,7 +660,6 @@ export default function Portfolio({ params }) {
     }
   }, [filters]);
 
-  // Load products when filters change
   useEffect(() => {
     loadProducts();
   }, [filters, loadProducts]);
@@ -692,17 +716,20 @@ export default function Portfolio({ params }) {
     >
       <div className="top">
         <div className="cover">
-          <Image
-            src={
-              isMyProfile
-                ? userData?.cover?.url
-                : isMyPage
-                ? userPage?.cover?.url
-                : currentPortfolio?.cover?.url
-            }
-            alt="User Cover"
-            fill
-          />
+          {currentPortfolio?.cover?.url ? (
+            <Image
+              src={
+                isMyProfile
+                  ? userData?.cover?.url
+                  : isMyPage
+                  ? userPage?.cover?.url
+                  : currentPortfolio?.cover?.url
+              }
+              alt="User Cover"
+              fill
+            />
+          ) : null}
+
           {(isMyProfile || isMyPage) && (
             <div
               className="editICo"
@@ -1129,60 +1156,62 @@ export default function Portfolio({ params }) {
                   </div>
                 )}
               {currentSelectedData !== "products" &&
-                type === "page" &&
-                (productsSmallView?.length ||
-                  actionLoading.includes("page-products")) && (
-                  <div className="images">
-                    {productsSmallView?.length && (
-                      <div className="top">
-                        <h4> {translations?.portfolio?.products}</h4>
-                        {products?.length > 6 && (
-                          <button
-                            onClick={() => setCurrentSelectedData("products")}
-                          >
-                            {translations?.portfolio?.see_all}{" "}
-                            {translations?.portfolio?.products} <FaAngleRight />
-                          </button>
-                        )}
-                      </div>
-                    )}
+              type === "page" &&
+              (productsSmallView?.length ||
+                actionLoading.includes("page-side-products")) ? (
+                <div className="images">
+                  {productsSmallView?.length && (
+                    <div className="top">
+                      <h4> {translations?.portfolio?.products}</h4>
+                      {productsSmallView?.length > 6 && (
+                        <button
+                          onClick={() => setCurrentSelectedData("products")}
+                        >
+                          {translations?.portfolio?.see_all}{" "}
+                          {translations?.portfolio?.products} <FaAngleRight />
+                        </button>
+                      )}
+                    </div>
+                  )}
 
-                    <div className="hold">
-                      {loading
-                        ? Array.from({ length: 6 }).map((_, index) => (
-                            <ContentLoader
-                              width={120}
-                              height={120}
-                              speed={4}
-                              viewBox="0 0 120 120"
-                              backgroundColor="#f3f3f3"
-                              foregroundColor="#ecebeb"
-                            >
-                              <rect
-                                x="160"
-                                y="120"
-                                rx="3"
-                                ry="3"
-                                width="100%"
-                                height="120"
-                              />
-                            </ContentLoader>
-                          ))
-                        : products.slice(0, 6).map((x, index) => (
+                  <div className="hold">
+                    {actionLoading.includes("page-side-products")
+                      ? Array.from({ length: 6 }).map((_, index) => (
+                          <ContentLoader
+                            width={120}
+                            height={120}
+                            speed={4}
+                            viewBox="0 0 120 120"
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                          >
+                            <rect
+                              x="160"
+                              y="120"
+                              rx="3"
+                              ry="3"
+                              width="100%"
+                              height="120"
+                            />
+                          </ContentLoader>
+                        ))
+                      : productsSmallView.slice(0, 6).map((x, index) => (
+                          <div>
                             <Image
                               key={index}
-                              src={x.images[0]}
+                              src={x?.img[0]?.newpath?.url}
                               alt=""
                               fill
-                              style={{ objectFit: "contain" }}
+                              style={{ objectFit: "cover" }}
                               onClick={() => {
                                 handleImageClick(x.id, index);
                               }}
                             />
-                          ))}
-                    </div>
+                          </div>
+                        ))}
                   </div>
-                )}
+                </div>
+              ) : null}
               {type !== "page" &&
                 currentSelectedData !== "friends" &&
                 (userFriends?.length ||
@@ -1265,7 +1294,7 @@ export default function Portfolio({ params }) {
                 setMobileFilters={setMobileFilters}
                 totalCount={totalCount}
                 isMyPage={isMyPage}
-                categories={currentPortfolio?.category}
+                currentPortfolio={currentPortfolio}
                 setCurrentPortfolio={setCurrentPortfolio}
               />
             </SideSection>

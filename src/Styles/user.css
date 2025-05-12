@@ -283,6 +283,10 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   border-radius: 6px;
   scale: 1;
   transition: 0.3s;
+  cursor: pointer;
+}
+.portfolio .bottom-holder .side-menu .images .smallProduct {
+  position: relative;
 }
 .portfolio .bottom-holder .side-menu .images .hold .post-imgs-hold {
   display: grid;
@@ -297,8 +301,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   position: relative;
 }
 .post-imgs-hold.single {
-  display: flex !important
-  ;
+  display: flex !important;
 }
 .portfolio
   .bottom-holder
@@ -852,6 +855,7 @@ body.ar .portfolio .inputHolder input:not(:placeholder-shown) {
   .portfolio .right-btns {
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
   .portfolio .right-btns .main-button {
     flex: 1;

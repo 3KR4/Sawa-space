@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import EmojesHolder from "@/components/post/EmojesHolder";
@@ -16,6 +16,7 @@ import UsersReact from "@/components/UsersReact";
 import StoryForm from "@/components/forms/StoryForm";
 import ProductForm from "@/components/forms/ProductForm";
 import Notification from "@/components/Notification";
+import ShareForm from "@/components/ShareForm";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
 
@@ -27,6 +28,7 @@ function AllComponents() {
     openImgForm,
     dangerEvent,
     singleProvider,
+    openShare,
   } = useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
@@ -68,6 +70,7 @@ function AllComponents() {
       {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}
       {emojiHolder && <EmojesHolder />}
+      {openShare && <ShareForm />}
     </>
   );
 }

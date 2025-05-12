@@ -103,10 +103,10 @@ function PostsHolder(param) {
     ) {
       setPosts((prev) => {
         const filteredPosts = prev.filter(
-          (post) => post._id !== someThingHappen?.post?._id
+          (post) => post?._id !== someThingHappen?.post?._id
         );
-
-        return [someThingHappen.post, ...filteredPosts];
+        console.log(someThingHappen?.post);
+        return [someThingHappen?.post, ...filteredPosts];
       });
 
       setSomeThingHappen("");

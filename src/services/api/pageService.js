@@ -11,6 +11,9 @@ export const pageService = {
   getPageData: async (id) => {
     return apiClient.get(`/page/${id}`);
   },
+  getAllPages: async (name) => {
+    return apiClient.get(`/page?name=${name}`);
+  },
 
   getCategories: async (id) => {
     return apiClient.get(`/page/${id}/category`);

@@ -1173,6 +1173,49 @@ body.ar .focusedMsg .storyForm .body .top {
 body.ar .focusedMsg .storyForm {
   padding: 0 !important;
 }
+
+.shareForm {
+  padding: 12px 15px !important;
+}
+.focusedMsg .shareForm .top {
+  padding: 0;
+}
+.focusedMsg .shareForm .social-holder {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  border: 2px dashed var(--border-color);
+  width: fit-content;
+  border-radius: 10px;
+  padding: 6px 16px;
+  margin: 4px auto;
+}
+.focusedMsg .shareForm .social-holder img {
+  width: 40px;
+  cursor: pointer;
+}
+.focusedMsg .shareForm .link-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 4px 4px 4px 7px;
+  gap: 5px;
+  align-items: center;
+}
+.focusedMsg .shareForm .link-holder svg {
+  font-size: 17px;
+}
+.focusedMsg .shareForm .link-holder input {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 400;
+}
+.focusedMsg .shareForm .link-holder .main-button {
+  margin-left: 10px;
+}
+
 .storyForm .background-colors .holder {
   display: flex;
   gap: 5px;

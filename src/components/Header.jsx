@@ -308,7 +308,7 @@ export default function Header() {
             <span>{translations?.header?.chats}</span>
           </Link>
           <Link
-            href="/pages"
+            href="/discover/pages"
             className={pathname.includes("/pages") ? "active" : ""}
           >
             <LiaPagerSolid /> <span>{translations?.header?.pages}</span>

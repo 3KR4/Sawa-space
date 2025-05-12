@@ -189,7 +189,11 @@ function DangerEvent() {
   };
 
   return (
-    <div className={`focusedMsg FormMenu ${dangerEvent ? "active" : ""}`}>
+    <div
+      className={`focusedMsg danger-event FormMenu ${
+        dangerEvent ? "active" : ""
+      }`}
+    >
       <div className="body dangerEvent" ref={dangerEventRef}>
         <div className="top">
           <h4>{translations?.actions?.[dangerEvent.type]}</h4>

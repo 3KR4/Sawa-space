@@ -1506,6 +1506,17 @@ header .events .menu.createMenu svg {
   gap: 5px;
   align-items: center;
 }
+.post .top .icons-holder .share-ico {
+  background: var(--section-color);
+  width: 31px;
+  height: 31px;
+  border-radius: 8px;
+  padding: 8px;
+}
+.post .top .icons-holder .share-ico:hover {
+  background: var(--main-color) !important;
+  color: white;
+}
 .focusedMsg.forPosts .icons-holder .closeMenu {
   position: relative;
   left: unset;
@@ -1641,11 +1652,32 @@ body.ar .post .top .left .creatorType {
   cursor: pointer;
   height: 400px;
 }
+.all-img-holder {
+  position: relative;
+}
+.post .middle .all-img-holder .hasMoreImgs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 29px;
+  color: white;
+  background: var(--back-grident);
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
+}
 .post .middle .images {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
+
 .post .images img {
   width: unset !important;
   height: unset !important;
@@ -2274,6 +2306,9 @@ body:has(.focusedMsg.active) {
   padding: 7px;
   height: 34px;
   color: var(--paragraph-color);
+}
+.focusedMsg.forPosts .post .bottom .actions {
+  margin: auto;
 }
 .action-holder.forComments .actions svg {
   padding: 2px;
@@ -3450,15 +3485,15 @@ body.ar .swiper-container .Product * {
   display: flex;
   cursor: pointer;
 }
-.Product .image-holder .backimg {
+.backimg {
   position: absolute;
   width: 100%;
   height: 100%;
 }
-.Product .image-holder .backimg img {
+.backimg img {
   object-fit: cover;
 }
-.Product .image-holder .backimg::after {
+.backimg::after {
   content: "";
   position: absolute;
   top: 0;
@@ -3536,6 +3571,24 @@ body.ar .swiper-container .Product * {
   font-size: 13px;
   font-weight: 600;
 }
+.focusedMsg .Product .row.last {
+  padding: 15px 20px;
+}
+.focusedMsg .Product .row.last svg {
+  width: -webkit-fill-available;
+  background: var(--section-color);
+  padding: 9px;
+  height: 34px;
+  border-radius: 7px;
+}
+.focusedMsg .Product .row.last svg:hover {
+  color: white;
+  background: var(--main-color);
+}
+.focusedMsg .Product .row.last svg.danger:hover {
+  color: white;
+  background: var(--red-color);
+}
 .Product .row img {
   position: relative !important;
   width: 38px !important;
@@ -3583,9 +3636,40 @@ body.ar .swiper-container .Product * {
   font-size: 14px;
   min-width: max-content;
 }
-.Product .location {
+
+.Product .about-hr {
+  margin: 8px 0 6px;
 }
-.Product .deliveryService {
+.Product .about-items {
+  background: var(--section-color);
+  padding: 12px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.Product .about-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: flex-start;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 5px 0;
+}
+.Product .about-item:first-child {
+  padding: 0px 0 5px;
+}
+.Product .about-item:last-child {
+  border: none;
+  padding-bottom: unset;
+}
+.FormMenu .about-group span {
+  color: var(--paragraph-color);
+  font-size: 14px;
+}
+.Product strong {
+  color: var(--title-color);
+  font-size: 13px;
 }
 
 .pagination {
@@ -3633,6 +3717,93 @@ body.ar .swiper-container .Product * {
   cursor: no-drop;
 }
 
+.discover {
+  padding: 15px;
+}
+.discover .top {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--body-color);
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  border-left: 4px solid var(--main-color);
+  padding-left: 20px;
+}
+.discover .top h3 {
+  font-size: 17px;
+}
+.discover .top .search-holderr {
+  width: 240px;
+}
+.discover .top .search-holderr .middle {
+  width: 100%;
+}
+.discover .peaple {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
+}
+.discover .peaple .user {
+  border-radius: 10px 10px 15px 15px;
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+.discover .peaple .user .holder {
+}
+.discover .peaple .user .cover:not(:has(img)) {
+  height: 116px;
+  background: var(--second-section-color);
+}
+.discover .peaple .user .cover img {
+  position: relative !important;
+  aspect-ratio: 16 / 6;
+  border-radius: 0 0 25px 25px;
+  height: unset !important;
+}
+
+.discover .peaple .user .info {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: -32px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+}
+.discover .peaple .user .info .profile-img {
+  position: relative !important;
+  width: 75px !important;
+  height: 75px !important;
+  border: 3px solid var(--title-color);
+  padding: 0px;
+  background: var(--second-section-color);
+}
+
+.discover .peaple .user .info .hold {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.discover.pages .peaple .user .info h4 {
+  margin-top: -38px;
+}
+.discover .peaple .user .info p {
+}
+.discover .peaple .user .actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+}
+.discover .peaple .user .actions > * {
+  flex-grow: 1;
+  padding: 6px 5px !important;
+}
+
 @media (min-width: 1700px) {
   header nav {
     position: absolute;
@@ -3647,6 +3818,9 @@ body.ar .swiper-container .Product * {
   }
   .focusedMsg .stories .storySection {
     width: 36%;
+  }
+  .discover .peaple {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 @media (max-width: 1600px) {
@@ -3669,6 +3843,18 @@ body.ar .swiper-container .Product * {
 
   .focusedMsg .stories .storySection {
     width: 40%;
+  }
+  .discover .peaple {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 138px;
+  }
+  .discover .peaple .user .cover img {
+    height: 134px !important;
+  }
+  .discover .peaple .user .info h4 {
+    font-size: 15px;
   }
 }
 @media (max-width: 1400px) {
@@ -3727,6 +3913,26 @@ body.ar .swiper-container .Product * {
   .home .posts-holder {
     width: 100% !important;
   }
+  .discover .peaple .user .info {
+    margin-top: -26px;
+  }
+  .discover .peaple .user .info .profile-img {
+    width: 65px !important;
+    height: 65px !important;
+  }
+
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 133px;
+  }
+  .discover .peaple .user .cover:not(:has(img)) + .info {
+    margin-top: -22px;
+  }
+  .discover .peaple .user .actions {
+    margin-top: auto;
+  }
+  .discover .peaple .user .info p {
+    font-size: 14px;
+  }
 }
 @media (max-width: 1200px) {
   body:has(.chats.active) main header nav svg {
@@ -3746,6 +3952,12 @@ body.ar .swiper-container .Product * {
 
   .focusedMsg .stories .storySection {
     width: 50%;
+  }
+  .discover .peaple {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .post .middle .all-img-holder .hasMoreImgs {
+    font-size: 22px;
   }
 }
 @media (max-width: 1100px) {
@@ -3775,6 +3987,10 @@ body.ar .swiper-container .Product * {
   }
   body > main {
     overflow-x: hidden;
+  }
+  .post .middle .all-img-holder .hasMoreImgs {
+    font-size: 22px;
+    border-radius: 6px;
   }
 }
 @media (max-width: 992px) {
@@ -3976,6 +4192,25 @@ body.ar .swiper-container .Product * {
     gap: 6px;
     align-items: center;
   }
+  .discover {
+    padding-top: 0;
+  }
+  .discover .peaple .user .actions {
+    flex-direction: column;
+    align-items: unset;
+  }
+  .discover .peaple .user .actions > * {
+    width: unset !important;
+  }
+  .discover .peaple .user .cover img {
+    height: 100px !important;
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 100px;
+  }
+  .discover .top {
+    justify-content: space-between;
+  }
 }
 
 /*! 786 */
@@ -4011,7 +4246,7 @@ body.ar .swiper-container .Product * {
     gap: 10px;
     transition: 0.3s;
   }
-  body:has(header.active) .home {
+  body:has(header.active) main > .holder {
     padding-top: 60px !important;
   }
 
@@ -4147,6 +4382,9 @@ body.ar .swiper-container .Product * {
   .post .images.big img {
     width: 32% !important;
     max-height: 122px;
+  }
+  .post .middle .all-img-holder .hasMoreImgs {
+    font-size: 17px;
   }
   .post .comments {
     padding: 10px;
@@ -4377,6 +4615,56 @@ body.ar .swiper-container .Product * {
   .big-loader {
     width: 250px;
     height: 250px;
+  }
+
+  .discover .peaple {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .discover .peaple .user .info {
+    margin-top: -46px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .discover .peaple .user .info p {
+    text-align: center;
+  }
+  .discover .peaple .user .cover img {
+    height: 80px !important;
+    border-radius: unset;
+  }
+  .discover .peaple .user .info h4 {
+    text-align: center;
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 80px;
+  }
+  .discover .peaple .user .cover:not(:has(img)) + .info {
+    margin-top: -42px;
+  }
+  .discover .peaple .user .actions {
+    gap: 5px;
+  }
+  .discover .peaple .user .info .hold {
+    align-items: center;
+    width: 100%;
+  }
+
+  .discover .top .search-holderr {
+    width: unset;
+    flex: 1;
+  }
+  .discover .top h3 {
+    font-size: 16px;
+  }
+  .discover .top {
+    padding-left: 10px;
+  }
+  .discover.pages .peaple .user .info h4 {
+    margin-top: 2px;
+  }
+  .discover .peaple .user .info h4 {
+    max-width: 100%;
   }
 }
 @media (max-width: 500px) {

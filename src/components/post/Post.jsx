@@ -52,6 +52,7 @@ function Post({ data = {}, focused = false }) {
     setSingleProvider,
     someThingHappen,
     setSomeThingHappen,
+    setOpenShare,
   } = useContext(MenusContext);
   const { handleMenus, setOpenUsersReact, selectedDev } =
     useContext(DynamicMenusContext);
@@ -226,12 +227,13 @@ function Post({ data = {}, focused = false }) {
           </div>
           <div>
             <PiShareFat
-              onClick={() => {
-                const postUrl = `${window.location.origin}?type=${
-                  author ? "user" : "page"
-                }&&post=${currentPost._id}`;
-                navigator.clipboard.writeText(postUrl);
-              }}
+              onClick={() =>
+                setOpenShare(
+                  `${window.location.origin}?type=${
+                    author ? "user" : "page"
+                  }&&post=${currentPost._id}`
+                )
+              }
             />
           </div>
         </div>
@@ -501,7 +503,6 @@ function Post({ data = {}, focused = false }) {
                   ))}
                 </div>
               )}
-
               {currentPost?.paragraph && <pre>{currentPost?.paragraph}</pre>}
 
               {currentPost?.img &&
@@ -530,33 +531,43 @@ function Post({ data = {}, focused = false }) {
                     />
                   </div>
                 ) : (
-                  <div
-                    className={`images ${
-                      currentPost?.img.length >= 4
-                        ? "big"
-                        : currentPost?.img.length === 3
-                        ? "mid"
-                        : "small"
-                    }`}
-                  >
-                    {currentPost?.img.map((img, index) => (
-                      <Image
-                        key={index}
-                        src={img.newpath.url}
-                        alt={`Post Image ${index + 1}`}
-                        fill
-                        onClick={() => {
-                          setSingleProvider({
-                            type: "post",
-                            sharing_data: currentPost,
-                            focused_img_index: index,
-                          });
-                        }}
-                      />
-                    ))}
+                  <div className="all-img-holder">
+                    {currentPost?.img?.length > 5 && (
+                      <span className="hasMoreImgs">
+                        +{currentPost?.img?.length - 5}
+                      </span>
+                    )}
+                    <div
+                      className={`images ${
+                        currentPost?.img.length >= 4
+                          ? "big"
+                          : currentPost?.img.length === 3
+                          ? "mid"
+                          : "small"
+                      }`}
+                    >
+                      {currentPost?.img?.slice(0, 5)?.map((img, index) => (
+                        <>
+                          <Image
+                            key={index}
+                            src={img.newpath.url}
+                            alt={`Post Image ${index + 1}`}
+                            fill
+                            onClick={() => {
+                              setSingleProvider({
+                                type: "post",
+                                sharing_data: currentPost,
+                                focused_img_index: index,
+                              });
+                            }}
+                          />
+                        </>
+                      ))}
+                    </div>
                   </div>
                 )
               ) : null}
+
               {/* {currentPost?.mentions?.length > 0 && (
                 <div className="mentions view">
                   <h5>
@@ -731,7 +742,13 @@ function Post({ data = {}, focused = false }) {
                   />
                   <div className="info">
                     <h5>
-                      {postOwnerData?.firstname} {postOwnerData?.lastname}
+                      {isMyPost
+                        ? `${userData?.firstname} ${userData?.lastname}`
+                        : isMyPage
+                        ? userPage?.pagename
+                        : author
+                        ? `${postOwnerData?.firstname} ${postOwnerData?.lastname}`
+                        : postOwnerData?.pagename}
                     </h5>
                     <span>{ConvertTime(currentPost?.data, locale)}</span>
                   </div>
@@ -746,17 +763,21 @@ function Post({ data = {}, focused = false }) {
                           isMyPage,
                           isInFavorite: false,
                           postOwner: postOwnerData?._id,
-                          isMyFriend: userData?.friends?.includes(
-                            currentPost?.author[0]?._id
-                          ),
-                          isSendedFriendRequest:
-                            userData?.friendRequests?.sent?.includes(
-                              currentPost?.author[0]?._id
-                            ),
-                          isReceivedFriendRequest:
-                            userData?.friendRequests?.received?.includes(
-                              currentPost?.author[0]?._id
-                            ),
+                          isMyFriend: !currentPost.pageId
+                            ? userData?.friends?.includes(
+                                currentPost?.author[0]?._id
+                              )
+                            : null,
+                          isSendedFriendRequest: !currentPost.pageId
+                            ? userData?.friendRequests?.sent?.includes(
+                                currentPost?.author[0]?._id
+                              )
+                            : null,
+                          isReceivedFriendRequest: !currentPost.pageId
+                            ? userData?.friendRequests?.received?.includes(
+                                currentPost?.author[0]?._id
+                              )
+                            : null,
                           isPostPage: currentPost.pageId ? true : false,
                           isFollowedPage: false,
                           isCommunity: false,

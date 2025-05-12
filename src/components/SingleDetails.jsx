@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import Post from "@/components/post/Post";
+import Product from "@/components/shop/Product";
 import ImageCropper from "@/components/ImageCropper";
 import { useForm } from "react-hook-form";
 import Cropper from "react-easy-crop";
@@ -54,7 +55,6 @@ function SingleDetails() {
   const { addNotification } = useNotification();
 
   const { translations, locale } = useLanguage();
-  const direction = locale === "ar" ? "rtl" : "ltr";
 
   const {
     register,
@@ -78,6 +78,8 @@ function SingleDetails() {
     setSingleProvider,
     someThingHappen,
     infoMenuRef,
+    shareFomrRef,
+    dangerEventRef,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -87,6 +89,7 @@ function SingleDetails() {
     screenSize,
     stories,
     userData,
+    userPage,
     currentUserStory,
     setUserPage,
   } = useContext(ScreenContext);
@@ -99,6 +102,8 @@ function SingleDetails() {
         usersSelectionRef,
         emojiHolderRef,
         infoMenuRef,
+        shareFomrRef,
+        dangerEventRef,
       ];
 
       // Check if the click was inside an element with class .reactsHolder.sideMenu
@@ -108,8 +113,15 @@ function SingleDetails() {
       const storyFormBody = document.querySelector(
         ".focusedMsg.FormMenu.story-form"
       );
+      const shareFormBody = document.querySelector(".focusedMsg.share");
+      const dangerEventBody = document.querySelector(
+        ".focusedMsg.danger-event"
+      );
+
       const isInsideReactsHolder = reactsHolderElement?.contains(event.target);
       const isInsideStoryForm = storyFormBody?.contains(event.target);
+      const isInsideShareForm = shareFormBody?.contains(event.target);
+      const isInsideDangerEvent = dangerEventBody?.contains(event.target);
 
       const isInsideAllowedRef = allowedRefs.some(
         (ref) => ref.current && ref.current.contains(event.target)
@@ -120,7 +132,9 @@ function SingleDetails() {
         !closeImgHolderRef.current.contains(event.target) &&
         !isInsideAllowedRef &&
         !isInsideReactsHolder &&
-        !isInsideStoryForm
+        !isInsideStoryForm &&
+        !isInsideShareForm &&
+        !isInsideDangerEvent
       ) {
         setSingleProvider(false);
       }
@@ -418,6 +432,12 @@ function SingleDetails() {
     >
       {singleProvider.type === "post" ? (
         <Post data={singleProvider?.sharing_data} focused={true} />
+      ) : singleProvider.type === "product" ? (
+        <Product
+          data={singleProvider?.sharing_data}
+          viewOwner={singleProvider?.sharing_data?.pageid === userPage?._id}
+          focused={true}
+        />
       ) : dataSwiperType === "comment" ? (
         <div className="hold OneImg">
           {imgFocus && (

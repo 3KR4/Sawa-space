@@ -64,7 +64,7 @@ export const productService = {
     });
   },
 
-  getProduct: async (id) => {
+  getSingleProduct: async (id) => {
     return apiClient.get(`/product/${id}`);
   },
 

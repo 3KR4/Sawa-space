@@ -1,11 +1,13 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
+import { usePathname } from "next/navigation";
+import { postService } from "@/services/api/postService";
+import { productService } from "@/services/api/productService";
 
 export const ScreenContext = createContext();
 
@@ -142,47 +144,65 @@ export const ScreenProvider = ({ children }) => {
     }
   }, [someThingHappen.stories, someThingHappen.type, userData?._id]);
 
-  // const searchParams = useSearchParams();
-  // const type = searchParams.get("type");
-  // const postId = searchParams.get("post");
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const type = searchParams.get("type");
+    const postId = searchParams.get("post");
+    const productId = searchParams.get("product");
+    const getSinglePost = async () => {
+      try {
+        const { data } = await postService.getSinglePost(type, postId);
 
-  // useEffect(() => {
-  //   const getSinglePost = async () => {
-  //     try {
-  //       const { data } = await postService.getSinglePost(type, postId);
+        const post = data?.data[0];
+        if (post) {
+          if (post?.img?.length > 0) {
+            setSingleProvider({
+              type: "post",
+              sharing_data: post,
+            });
+          } else {
+            setSomeThingHappen({
+              type: "post",
+              event: "shared",
+              post: { ...post, isShared: true },
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        addNotification({
+          type: "error",
+          message: "something went wrong while fetching post",
+        });
+      }
+    };
+    const getSingleProduct = async () => {
+      try {
+        const { data } = await productService.getSingleProduct(productId);
 
-  //       const post = data?.data?.[0];
-  //       if (post) {
-  //         if (post.img.length > 0) {
-  //           setSingleProvider({
-  //             type: "post",
-  //             sharing_data: post,
-  //           });
-  //         } else {
-  //           setSomeThingHappen({
-  //             type: "post",
-  //             event: "shared",
-  //             post: { ...post, isShared: true },
-  //           });
-  //         }
-  //       } else {
-  //         addNotification({
-  //           type: "warning",
-  //           message: "Post not found",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       addNotification({
-  //         type: "error",
-  //         message: "something went wrong while fetching post",
-  //       });
-  //     }
-  //   };
+        const product = data?.data;
+        if (product) {
+          setSingleProvider({
+            type: "product",
+            sharing_data: product,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        addNotification({
+          type: "error",
+          message: "product not found",
+        });
+      }
+    };
 
-  //   if (postId) {
-  //     getSinglePost();
-  //   }
-  // }, [postId, type]);
+    if (postId) {
+      getSinglePost();
+    }
+    if (productId) {
+      getSingleProduct();
+    }
+  }, []);
 
   return (
     <ScreenContext.Provider

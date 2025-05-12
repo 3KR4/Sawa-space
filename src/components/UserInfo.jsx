@@ -28,9 +28,6 @@ function UserInfo() {
   const [currentUserData, setCurrentUserData] = useState();
   const [loading, setLoading] = useState(true);
 
-  console.log(currentUserData);
-  console.log(userData);
-
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -275,7 +272,7 @@ function UserInfo() {
           <div className="holder">
             <Image
               className={`rounded`}
-              src={currentUserData?.img?.url || "/user/default.svg"}
+              src={currentUserData?.img?.url || "/users/default.svg"}
               alt={currentUserData?.firstname || currentUserData?.pagename}
               fill
             />
@@ -399,13 +396,14 @@ function UserInfo() {
               style={{
                 width: selectedDev.type === "page" ? "100%" : "fit-content",
               }}
-              href={`/portfolio/${true ? "user" : "page"}/${
-                currentUserData?._id
-              }`}
+              href={`/portfolio/${
+                selectedDev.type === "user" ? "user" : "page"
+              }/${currentUserData?._id}`}
               className="main-button"
             >
               <span>
-                <FaEye /> {true ? "see profile" : "view page"}
+                <FaEye />{" "}
+                {selectedDev.type === "user" ? "see profile" : "view page"}
               </span>
             </Link>
           </div>

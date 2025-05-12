@@ -21,6 +21,10 @@ export const userService = {
     return apiClient.get(`/user/${userId}`);
   },
 
+  getAllUsers: async (name) => {
+    return apiClient.get(`/user?name=${name}`);
+  },
+
   editUserData: async (userId, body) => {
     return apiClient.put(`/user/${userId}`, body);
   },
