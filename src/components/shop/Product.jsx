@@ -11,6 +11,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useLanguage } from "../../Contexts/LanguageContext";
 import ContentLoader from "react-content-loader";
+import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 
 import { PiShareFat } from "react-icons/pi";
 import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
@@ -18,6 +19,7 @@ import { IoClose } from "react-icons/io5";
 
 function Product({ data, viewOwner, focused = false }) {
   const { translations, locale } = useLanguage();
+  const { handleMenus } = useContext(DynamicMenusContext);
   const { screenSize, userData, userPage } = useContext(ScreenContext);
   const {
     setDangerEvent,
@@ -206,12 +208,11 @@ function Product({ data, viewOwner, focused = false }) {
                     width={40}
                     height={40}
                     className={`rounded`}
-                    onClick={(e) =>
-                      !isMyPost &&
+                    onClick={(e) => {
                       handleMenus(e, "user-Info", data?.pageid, {
                         type: "page",
-                      })
-                    }
+                      });
+                    }}
                   />
                   <div className="info">
                     <h5>{data?.pageDetails[0]?.pagename}</h5>

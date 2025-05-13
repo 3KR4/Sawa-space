@@ -222,9 +222,9 @@ function Post({ data = {}, focused = false }) {
               />
             </div>
           )}
-          <div>
+          {/* <div>
             <IoLink />
-          </div>
+          </div> */}
           <div>
             <PiShareFat
               onClick={() =>
@@ -633,9 +633,9 @@ function Post({ data = {}, focused = false }) {
                     }}
                   />
                 </div>
-                <div>
+                {/* <div>
                   <IoLink />
-                </div>
+                </div> */}
                 <div>
                   <PiShareFat
                     onClick={() => {
@@ -929,9 +929,9 @@ function Post({ data = {}, focused = false }) {
                         />
                       </div>
                     )}
-                    <div>
+                    {/* <div>
                       <IoLink />
-                    </div>
+                    </div> */}
                     <div>
                       <PiShareFat
                         onClick={() => {

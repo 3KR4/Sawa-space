@@ -79,8 +79,8 @@ export default function Chats() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const [userChats, setUserChats] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [userChats, setUserChats] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserChats = async () => {
@@ -290,9 +290,6 @@ export default function Chats() {
         </>
       ) : (
         <div className="no-friend-yet-svg">
-          <Link className="main-button" href={"/discover/people"}>
-            <FaPlus /> <span>{translations?.chats?.discover_people}</span>
-          </Link>
           <p>{translations?.chats?.find_friends_and_start_chatting}</p>
           <img
             src={"/Svgs/dont Has Friends Yet.svg"}

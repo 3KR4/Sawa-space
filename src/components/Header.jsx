@@ -266,35 +266,37 @@ export default function Header() {
             />
           </div>
         )}
-        <div
-          ref={phoneSearchRef}
-          className={`search-holder ${phoneSearch ? "active" : ""}`}
-        >
-          <div className="theInput">
-            <IoSearch />
-            <input
-              type="text"
-              placeholder={translations?.placeHolders?.search_anything}
-            />
-            <IoClose className="delete" />
+        {screenSize === "small" && (
+          <div
+            ref={phoneSearchRef}
+            className={`search-holder ${phoneSearch ? "active" : ""}`}
+          >
+            <div className="theInput">
+              <IoSearch />
+              <input
+                type="text"
+                placeholder={translations?.placeHolders?.search_anything}
+              />
+              <IoClose className="delete" />
+            </div>
+            <div className="result">
+              <ul>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+                <li>wwwwwwwwwww</li>
+              </ul>
+            </div>
           </div>
-          <div className="result">
-            <ul>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-              <li>wwwwwwwwwww</li>
-            </ul>
-          </div>
-        </div>
+        )}
       </div>
       <nav ref={phoneMenuRef} className={phoneMenu ? "active" : ""}>
         <div className="hold">
@@ -314,13 +316,13 @@ export default function Header() {
           >
             <LiaPagerSolid /> <span>{translations?.header?.pages}</span>
           </Link>
-          <Link
+          {/* <Link
             href="/communities"
             className={pathname.includes("/communities") ? "active" : ""}
           >
             <RiUserCommunityLine />{" "}
             <span>{translations?.header?.communities}</span>
-          </Link>
+          </Link> */}
           <Link
             href="/marketplace"
             className={pathname.includes("/marketplace") ? "active" : ""}
@@ -342,12 +344,12 @@ export default function Header() {
             <>
               {creation()}
               {user()}
-              {Notfication()}
+              {/* {Notfication()} */}
             </>
           ) : (
             <>
               {creation()}
-              {Notfication()}
+              {/* {Notfication()} */}
               {user()}
             </>
           )}

@@ -157,10 +157,11 @@ function ProductForm() {
       setLoadingContent(false);
       const fetchProduct = async () => {
         try {
-          const response = await productService.getProduct(
+          const response = await productService.getSingleProduct(
             openProductForm.productId
           );
-          const product = response?.data?.data;
+          const product = response?.data?.data[0];
+          console.log(response);
 
           if (product) {
             setMessageText(product.details || "");

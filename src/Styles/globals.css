@@ -1691,7 +1691,7 @@ body.ar .post .top .left .creatorType {
 }
 
 .post .images.big img {
-  width: 32.4% !important;
+    flex-grow: 1;
   max-height: 214px;
 }
 .post .images.big img:first-child,
@@ -4449,6 +4449,9 @@ body.ar .swiper-container .Product * {
     width: -webkit-fill-available;
     padding: 7px;
     height: 36px;
+  }
+  .focusedMsg .post .middle > .actions .reacts  svg {
+    width: fit-content;
   }
   .posts-holder .post .bottom > .actions > div > svg {
     width: 36px;

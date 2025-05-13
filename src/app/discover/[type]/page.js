@@ -461,7 +461,7 @@ export default function Discover({ params }) {
                           </>
                         ) : (
                           <button
-                            className={`main-button active ${
+                            className={`main-button ${
                               actionLoading.includes(
                                 `send-friend-request-${user?._id}`
                               )

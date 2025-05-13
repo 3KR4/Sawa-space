@@ -261,6 +261,11 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   overflow-wrap: anywhere;
   flex-wrap: wrap;
 }
+.portfolio .bottom-holder .side-menu .about li a {
+    color: #0055ff;
+    font-weight: 400;
+    text-decoration: underline;
+}
 .portfolio .bottom-holder .side-menu .about li span {
   font-weight: 500;
   font-size: 15px;
