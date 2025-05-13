@@ -53,11 +53,11 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
   };
 
   const author =
-    Array.isArray(data?.author) && data.author?.length > 0
-      ? data.author[0]
+    Array.isArray(data?.author) && data?.author?.length > 0
+      ? data?.author[0]
       : null;
 
-  const isMyStory = author?._id == userData._id;
+  const isMyStory = author?._id == userData?._id;
 
   return (
     <div
@@ -71,8 +71,8 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
         background:
           data?.info?.settings?.backGround === undefined
             ? "transparent"
-            : data?.info?.settings?.backGround.type === "gradient"
-            ? `linear-gradient(${data?.info?.settings?.backGround.deg}deg, ${data?.info?.settings?.backGround.first} ${data?.info?.settings?.backGround.first_Acquisition}%, ${data?.info?.settings?.backGround.second} ${data?.info?.settings?.backGround.second_Acquisition}%)`
+            : data?.info?.settings?.backGround?.type === "gradient"
+            ? `linear-gradient(${data?.info?.settings?.backGround?.deg}deg, ${data?.info?.settings?.backGround?.first} ${data?.info?.settings?.backGround?.first_Acquisition}%, ${data?.info?.settings?.backGround?.second} ${data?.info?.settings?.backGround?.second_Acquisition}%)`
             : data?.info?.settings?.backGround?.color,
       }}
     >
@@ -111,13 +111,15 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
           className={`storyBody link`}
           style={{
             position: "absolute",
-            fontSize: `${adjustSize(data?.info?.settings.link.size)}px`,
+            fontSize: `${adjustSize(data?.info?.settings?.link?.size)}px`,
             textDecoration: "underline",
             left: `50%`,
             top: `50%`,
             transform: `translate(calc(-50% + ${adjustSize(
-              data?.info?.settings.link.x
-            )}px), calc(-50% + ${adjustSize(data?.info?.settings.link.y)}px))`,
+              data?.info?.settings?.link?.x
+            )}px), calc(-50% + ${adjustSize(
+              data?.info?.settings?.link?.y
+            )}px))`,
           }}
         >
           {data?.info?.link}
@@ -193,7 +195,7 @@ function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
                   className="ellipsisText"
                   style={{ fontSize: smallView ? "0.7rem" : "14px" }}
                 >
-                  {author?._id === userData._id ? (
+                  {author?._id === userData?._id ? (
                     <>{translations?.story?.your_story}</>
                   ) : (
                     <>
