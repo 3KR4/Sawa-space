@@ -409,6 +409,53 @@ body:has(.marketplace) header {
   grid-template-columns: repeat(auto-fill, minmax(327px, 1fr));
   align-items: center;
 }
+
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pagination li .page-num,
+.pagination li.break {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 6px;
+  color: var(--title-color);
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+}
+.pagination li.active .page-num,
+.pagination li:hover .page-num {
+  background: var(--main-color);
+  color: white;
+  font-weight: 600;
+}
+.pagination li.active .page-num {
+  background: var(--back-grident);
+}
+.pagination li.next a,
+.pagination li.previous a {
+  width: 80px;
+  height: 40px;
+}
+.pagination li.break a {
+  transform: translateY(-2px);
+}
+.pagination li.disabled .page-num {
+  background: var(--body-color) !important;
+  color: var(--title-color) !important;
+  cursor: no-drop;
+}
+
 @media (max-width: 992x) {
   body:has(.marketplace) header {
     margin-left: 0px;

@@ -1,4 +1,6 @@
 "use client";
+import "@/Styles/components/story.css";
+
 import React, {
   useState,
   useEffect,
@@ -134,7 +136,11 @@ export default function Home() {
                     className="userStory-creation story"
                     onClick={() => setOpenStoryForm(true)}
                   >
-                    <Image src={userData?.img?.url || `/users/default.svg`} fill alt="userImg" />
+                    <Image
+                      src={userData?.img?.url || `/users/default.svg`}
+                      fill
+                      alt="userImg"
+                    />
                     <div className="bottom">
                       <div className="svg-holder">
                         <IoMdAddCircleOutline />

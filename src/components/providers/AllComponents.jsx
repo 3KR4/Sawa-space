@@ -1,4 +1,7 @@
 "use client";
+import "@/Styles/components/notification.css";
+import "@/Styles/components/side-menus.css";
+
 import React from "react";
 import { useContext } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
@@ -46,7 +49,7 @@ function AllComponents() {
   return (
     <>
       <div
-        className="notfication-holder"
+        className="notification-holder"
         style={{
           transform:
             curentNotficationClosedCount > 0 &&

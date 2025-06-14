@@ -1,0 +1,379 @@
+.sideMenu {
+  position: fixed;
+  z-index: 101;
+  background: var(--body-color);
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px 0px #b8b8b8;
+  display: flex;
+  flex-direction: column;
+  scale: 0.5;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, scale 0.3s;
+  width: 255px;
+  gap: 0px;
+  padding: 8px 0;
+  border: 1px solid var(--border-color);
+}
+.sideMenu.active {
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
+}
+.sideMenu > h4 {
+  margin: 10px 15px;
+  margin-bottom: 4px;
+}
+.sideMenu hr {
+  margin: 5px 0;
+}
+.sideMenu > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px !important;
+  border-radius: 6px !important;
+  margin: 0 10px;
+  background: transparent;
+  text-align: unset;
+  justify-content: unset;
+}
+.sideMenu > button:hover {
+  background: var(--border-color);
+}
+.sideMenu > button span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--title-color) !important;
+}
+.sideMenu > button:hover span {
+  color: var(--title-color) !important;
+}
+.sideMenu > button .lds-dual-ring:after {
+  border-color: var(--title-color) transparent var(--title-color) transparent !important;
+}
+.sideMenu > button svg {
+  color: var(--title-color) !important;
+}
+.sideMenu > button.warning:hover span,
+.sideMenu > button.warning:hover svg {
+  color: white !important;
+}
+
+.sideMenu button.danger span {
+  color: var(--title-color) !important;
+}
+.sideMenu button.danger:hover span {
+  color: white !important;
+}
+
+.sideMenu button.danger:hover svg {
+  color: white !important;
+}
+.sideMenu button.danger:hover {
+  background-color: var(--red-color);
+}
+.sideMenu button.danger:hover span {
+  color: white;
+}
+.sideMenu button.danger:hover svg,
+.sideMenu button.warning:hover svg {
+  color: white;
+}
+.sideMenu button.warning:hover {
+  color: white;
+  background-color: #ef8d32;
+}
+.sideMenu button svg {
+  font-size: 17px;
+}
+.sideMenu.reactsHolder {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  padding: 0;
+  width: fit-content;
+  transform: translateX(-50%);
+}
+body.ar .comments .sideMenu.reactsHolder {
+  left: unset;
+  right: 0;
+}
+.sideMenu.reactsHolder .reacts {
+  margin: 0;
+  padding: 6px 8px;
+  transition: 0.3s;
+}
+.sideMenu.reactsHolder .reacts.loading {
+  opacity: 0.5;
+}
+.sideMenu.reactsHolder .reacts > * {
+  width: 32px;
+  height: 32px;
+}
+.sideMenu.reactsHolder .reacts > svg {
+  background: var(--section-color);
+  color: var(--paragraph-color);
+  width: 30px;
+  height: 30px;
+}
+.sideMenu.reactsHolder .reacts > svg:hover {
+  background: var(--main-color);
+  color: white !important;
+}
+.sideMenu .reacts {
+  margin: 0;
+  padding: 5px;
+}
+.sideMenu .reacts > * {
+  width: 32px;
+  height: 32px;
+}
+.sideMenu .reacts > svg {
+  background: var(--section-color);
+  color: var(--paragraph-color);
+  width: 30px;
+  height: 30px;
+  padding: 6px !important;
+  min-height: 30px !important;
+}
+.sideMenu .reacts > svg:hover {
+  background: var(--main-color);
+  color: white !important;
+}
+.info-menu.sideMenu {
+  background: var(--body-color);
+  padding: 15px;
+  width: 370px;
+  gap: 10px;
+  z-index: 102;
+}
+.info-menu.sideMenu.loading {
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.info-menu.sideMenu.loading > .lds-dual-ring {
+  color: var(--title-color);
+}
+.info-menu.sideMenu.loading > .lds-dual-ring:after {
+  width: 35px;
+  height: 35px;
+}
+.info-menu.sideMenu img {
+  position: relative !important;
+  width: 100px !important;
+  height: 100px !important;
+}
+.info-menu.sideMenu .info {
+  width: 70%;
+}
+.info-menu.sideMenu .holder {
+  display: flex;
+  gap: 12px;
+}
+.info-menu.sideMenu img {
+  position: relative !important;
+  width: 85px !important;
+  height: 85px !important;
+}
+.info-menu.sideMenu .info .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.info-menu.sideMenu .info > p {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 8px;
+  margin-top: -2px;
+}
+.info-menu.sideMenu .info > h5 {
+  margin-bottom: 1px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.info-menu.sideMenu .info .top div {
+  font-size: 18px;
+}
+.info-menu.sideMenu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.info-menu.sideMenu .info ul li {
+  font-size: 14px;
+  color: var(--title-color);
+  font-weight: 500;
+}
+.info-menu.sideMenu .info ul span {
+  color: var(--paragraph-color);
+  font-weight: 500;
+}
+.info-menu.sideMenu .actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.info-menu.sideMenu .actions > * {
+  width: fit-content;
+}
+.info-menu svg.close {
+  width: 27px;
+  height: 27px;
+}
+
+.usersSelection {
+  width: 340px !important;
+}
+.usersSelection h1 {
+  font-size: 18px;
+  margin: 10px 15px -2px;
+}
+.usersSelection .search-chosen {
+  background: var(--body-color);
+  margin: 10px;
+  border-radius: 5px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.usersSelection ul.result {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  padding: 10px 10px 0;
+}
+.usersSelection ul li {
+  background: var(--main-color);
+  color: white;
+  padding: 5px 7px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.usersSelection input {
+  border-bottom: 2px solid var(--border-color);
+  border-radius: 0;
+  padding: 9px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Rubik";
+  transition: 0.3s;
+}
+.personChat .messages .search-chosen:has(.result) input {
+  padding: 7px 15px;
+}
+.usersSelection input:focus,
+.usersSelection input:not(:placeholder-shown) {
+  border-color: var(--main-color);
+}
+.usersSelection .mainbtn {
+  background: var(--main-color);
+  color: white;
+  padding: 12px;
+  border-radius: 7px;
+  font-family: "Rubik";
+  font-size: 14px;
+  margin: 0 10px 10px;
+}
+.usersSelection h4 {
+  margin: 12px 16px 10px;
+  font-size: 14px;
+  color: var(--paragraph-color);
+}
+.usersSelection .holder {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 7px 10px;
+  overflow: auto;
+  max-height: 362px;
+}
+.usersSelection .holder .chat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 11px;
+  border-radius: 7px;
+  gap: 10px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.usersSelection .holder .chat:hover {
+  background: var(--border-color);
+}
+.usersSelection .holder .chat .name-lastmessage {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+.usersSelection .holder .chat .name-lastmessage h4 {
+  margin: 0;
+}
+.usersSelection .holder .top {
+  flex: 1;
+}
+.usersSelection .holder .top div {
+  margin: 0;
+  color: var(--title-color);
+}
+.usersSelection .holder .top p {
+  font-size: 15px;
+}
+.settingMenu-post {
+  z-index: 1001 !important;
+}
+
+.reactsMenu.MenuOfUsers {
+  min-height: 220px;
+  padding: 0px !important;
+}
+.MenuOfUsers .user {
+  padding: 6px 13px !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px !important;
+  border-radius: unset !important;
+}
+.MenuOfUsers .user .info {
+  justify-content: space-between;
+  width: 100%;
+}
+.MenuOfUsers .user .info span {
+  font-size: 17px;
+}
+.MenuOfUsers .holder {
+  max-height: 173px !important;
+  padding-right: 0px !important;
+}
+.MenuOfUsers .topFilter {
+  padding: 8px 5px 3px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.MenuOfUsers .topFilter button {
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 5px;
+  width: 37px;
+  height: 30px;
+  color: var(--title-color);
+  border: 1px solid var(--border-color);
+}
+.MenuOfUsers .topFilter button:hover,
+.MenuOfUsers .topFilter button.active {
+  background: var(--second-section-color);
+}
+.MenuOfUsers .topFilter button:first-child:hover,
+.MenuOfUsers .topFilter button:first-child.active {
+  background: var(--main-color);
+  color: white;
+  font-size: 14px;
+}

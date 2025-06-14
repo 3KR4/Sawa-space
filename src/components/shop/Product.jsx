@@ -1,4 +1,5 @@
 "use client";
+import "@/Styles/components/product.css";
 
 import React, { useContext, useState, useRef } from "react";
 import Image from "next/image";

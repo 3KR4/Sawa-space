@@ -1,0 +1,197 @@
+.discover {
+  padding: 15px;
+}
+.discover .top {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--body-color);
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  border-left: 4px solid var(--main-color);
+  padding-left: 20px;
+}
+.discover .top h3 {
+  font-size: 17px;
+}
+.discover .top .search-holderr {
+  width: 240px;
+}
+.discover .top .search-holderr .middle {
+  width: 100%;
+}
+.discover .peaple {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
+}
+.discover .peaple .user {
+  border-radius: 10px 10px 15px 15px;
+  background: var(--body-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+.discover .peaple .user .cover:not(:has(img)) {
+  height: 116px;
+  background: var(--second-section-color);
+}
+.discover .peaple .user .cover img {
+  position: relative !important;
+  aspect-ratio: 16 / 6;
+  border-radius: 0 0 25px 25px;
+  height: unset !important;
+}
+.discover .peaple .user .info {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: -32px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+}
+.discover .peaple .user .info .profile-img {
+  position: relative !important;
+  width: 75px !important;
+  height: 75px !important;
+  border: 3px solid var(--title-color);
+  padding: 0px;
+  background: var(--second-section-color);
+}
+.discover .peaple .user .info .hold {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.discover.pages .peaple .user .info h4 {
+  margin-top: -38px;
+}
+.discover .peaple .user .actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+}
+.discover .peaple .user .actions > * {
+  flex-grow: 1;
+  padding: 6px 5px !important;
+}
+@media (max-width: 1700px) {
+  .discover .peaple {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media (max-width: 1500px) {
+  .discover .peaple {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 138px;
+  }
+  .discover .peaple .user .cover img {
+    height: 134px !important;
+  }
+  .discover .peaple .user .info h4 {
+    font-size: 15px;
+  }
+}
+@media (max-width: 1300px) {
+  .discover .peaple .user .info {
+    margin-top: -26px;
+  }
+  .discover .peaple .user .info .profile-img {
+    width: 65px !important;
+    height: 65px !important;
+  }
+
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 133px;
+  }
+  .discover .peaple .user .cover:not(:has(img)) + .info {
+    margin-top: -22px;
+  }
+  .discover .peaple .user .actions {
+    margin-top: auto;
+  }
+  .discover .peaple .user .info p {
+    font-size: 14px;
+  }
+}
+@media (max-width: 1200px) {
+  .discover .peaple {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 992px) {
+  .discover {
+    padding-top: 0;
+  }
+  .discover .peaple .user .actions {
+    flex-direction: column;
+    align-items: unset;
+  }
+  .discover .peaple .user .actions > * {
+    width: unset !important;
+  }
+  .discover .peaple .user .cover img {
+    height: 100px !important;
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 100px;
+  }
+  .discover .top {
+    justify-content: space-between;
+  }
+}
+@media (max-width: 786px) {
+  .discover .peaple {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .discover .peaple .user .info {
+    margin-top: -46px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .discover .peaple .user .info p {
+    text-align: center;
+  }
+  .discover .peaple .user .cover img {
+    height: 80px !important;
+    border-radius: unset;
+  }
+  .discover .peaple .user .info h4 {
+    text-align: center;
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 80px;
+  }
+  .discover .peaple .user .cover:not(:has(img)) + .info {
+    margin-top: -42px;
+  }
+  .discover .peaple .user .actions {
+    gap: 5px;
+  }
+  .discover .peaple .user .info .hold {
+    align-items: center;
+    width: 100%;
+  }
+  .discover .top .search-holderr {
+    width: unset;
+    flex: 1;
+  }
+  .discover .top h3 {
+    font-size: 16px;
+  }
+  .discover .top {
+    padding-left: 10px;
+  }
+  .discover.pages .peaple .user .info h4 {
+    margin-top: 2px;
+  }
+  .discover .peaple .user .info h4 {
+    max-width: 100%;
+  }
+}

@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import "@/Styles/components/header.css";
+
 import {
   IoSearch,
   IoClose,
@@ -243,19 +245,11 @@ export default function Header() {
       }`}
     >
       <div className="logo">
-        <Link href="/" style={{ display: "flex" }}>
-          <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
-        </Link>
-        {screenSize === "small" && (
-          <div className="icons">
-            <FaSearch
-              ref={searchBtnRef}
-              className={`search-btn ${phoneSearch ? "active" : ""}`}
-              onClick={() => {
-                setPhoneMenu(false); // Close menu first
-                setPhoneSearch((prev) => !prev); // Then toggle search
-              }}
-            />
+        <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+          <Link href="/" style={{ display: "flex" }}>
+            <Image src={"/logo.png"} width={80} height={80} alt={`logo`} />
+          </Link>
+          {screenSize === "small" && (
             <IoMenu
               ref={menuBtnRef}
               className={phoneMenu ? "active" : ""}
@@ -264,38 +258,61 @@ export default function Header() {
                 setPhoneMenu((prev) => !prev); // Then toggle menu
               }}
             />
-          </div>
-        )}
+          )}
+        </div>
+
         {screenSize === "small" && (
-          <div
-            ref={phoneSearchRef}
-            className={`search-holder ${phoneSearch ? "active" : ""}`}
-          >
-            <div className="theInput">
-              <IoSearch />
-              <input
-                type="text"
-                placeholder={translations?.placeHolders?.search_anything}
+          <>
+            <div className="icons">
+              <FaSearch
+                ref={searchBtnRef}
+                className={`search-btn ${phoneSearch ? "active" : ""}`}
+                onClick={() => {
+                  setPhoneMenu(false); // Close menu first
+                  setPhoneSearch((prev) => !prev); // Then toggle search
+                }}
               />
-              <IoClose className="delete" />
+              {userData && userData._id && (
+                <div className="events">
+                  <>
+                    {creation()}
+                    {Notfication()}
+                    {user()}
+                  </>
+                </div>
+              )}
             </div>
-            <div className="result">
-              <ul>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-                <li>wwwwwwwwwww</li>
-              </ul>
+
+            <div
+              ref={phoneSearchRef}
+              className={`search-holder ${phoneSearch ? "active" : ""}`}
+            >
+              <div className="theInput">
+                <IoSearch />
+                <input
+                  type="text"
+                  placeholder={translations?.placeHolders?.search_anything}
+                />
+                <IoClose className="delete" />
+              </div>
+              <div className="result">
+                <ul>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                  <li>wwwwwwwwwww</li>
+                </ul>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
       <nav ref={phoneMenuRef} className={phoneMenu ? "active" : ""}>
@@ -338,23 +355,17 @@ export default function Header() {
         )}
       </nav>
 
-      {userData && userData._id ? (
+      {userData && userData._id && screenSize !== "small" && (
         <div className="events">
-          {screenSize === "small" ? (
-            <>
-              {creation()}
-              {user()}
-              {/* {Notfication()} */}
-            </>
-          ) : (
-            <>
-              {creation()}
-              {/* {Notfication()} */}
-              {user()}
-            </>
-          )}
+          <>
+            {creation()}
+            {Notfication()}
+            {user()}
+          </>
         </div>
-      ) : screenSize !== "small" ? (
+      )}
+
+      {!userData && !userData._id ? (
         <Link className="letsPegin" href="/auth">
           {translations?.header?.lets_begin}
           <FaStar />

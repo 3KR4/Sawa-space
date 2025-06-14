@@ -5,7 +5,8 @@ import dynamic from "next/dynamic";
 import Chats from "@/components/chat/Chats";
 import { ScreenContext } from "@/Contexts/ScreenContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
-import "@/Styles/chat.css"
+import "@/Styles/chat.css";
+import "@/Styles/components/side-chats.css";
 
 export default function ChatHomePage() {
   const { translations, locale } = useLanguage();

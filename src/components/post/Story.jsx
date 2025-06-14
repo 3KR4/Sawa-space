@@ -1,4 +1,5 @@
 "use client";
+import "@/Styles/components/story.css";
 
 import React from "react";
 import { useState, useContext, useEffect, useCallback } from "react";

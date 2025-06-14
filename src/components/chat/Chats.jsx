@@ -1,4 +1,6 @@
 "use client";
+import "@/Styles/components/side-chats.css";
+
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";

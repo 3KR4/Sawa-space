@@ -1,4 +1,5 @@
 "use client";
+import "@/Styles/components/post.css";
 
 import React from "react";
 import { useState, useEffect, useContext, useRef, useCallback } from "react";

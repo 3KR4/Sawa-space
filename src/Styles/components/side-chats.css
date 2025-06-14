@@ -1,0 +1,488 @@
+.chats {
+  background: var(--body-color);
+  width: 334px;
+  border-radius: 11px;
+  padding: 9px 0 0;
+  height: 97vh;
+  position: sticky;
+  top: 12px;
+  transition: 0.4s;
+  outline: 1px solid var(--border-color);
+  margin-right: 12px;
+}
+body.ar .chats {
+  margin-right: unset;
+  margin-left: 12px;
+}
+.chats .open-close {
+  position: absolute;
+  top: 50%;
+  color: white;
+  transform: translateY(-50%);
+  background: var(--back-grident);
+  border-radius: 0px 15px 15px 0px;
+  height: 45px;
+  padding: 6px;
+  width: 9px;
+  right: -12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: right 0.2s, width 0.3s;
+}
+.chats .open-close:hover,
+.chats.hide:hover .open-close {
+  width: 27px;
+  right: -27px;
+  transition: right 0.4s, width 0.3s;
+}
+body.ar .chats .open-close {
+  left: -12px;
+  right: unset;
+  border-radius: 15px 0px 0px 15px;
+  transition: left 0.2s, width 0.3s;
+}
+body.ar .chats .open-close:hover,
+body.ar .chats.hide:hover .open-close {
+  right: unset;
+  left: -27px;
+  transition: left 0.4s, width 0.3s;
+}
+.chats .open-close svg {
+  color: white;
+  font-size: 18px;
+}
+body.ar .chats .open-close svg {
+  transform: translateX(-1px) rotate(180deg);
+}
+body.ar .chats .open-close:hover svg,
+body.ar .chats.hide:hover .open-close svg {
+  transform: translateX(1px) rotate(180deg);
+}
+.chats > .top {
+  display: flex;
+  gap: 19px;
+  align-items: center;
+  padding: 0px 19px;
+  transition: 0.3s;
+}
+.chats.hide > .top {
+  gap: 0;
+}
+.chats > .top div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+}
+.chats.hide > .top div {
+  font-size: 0px;
+}
+body.ar .chats > .top div {
+  direction: rtl !important;
+}
+.chats > .top div a {
+  width: 100%;
+  display: flex;
+}
+
+.chats .search-holder input {
+  padding: 6px 33px 6px 34px !important;
+  width: 100% !important;
+}
+
+.chats hr {
+  margin: 10px 0 12px;
+  padding: 0px 19px;
+}
+
+.chats .no-friend-yet-svg {
+  width: 334px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+  gap: 9px;
+}
+.chats .no-friend-yet-svg a {
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 6px 12px !important;
+  z-index: 2;
+  background: var(--third-color);
+}
+.chats .no-friend-yet-svg a:hover {
+  background: var(--main-color);
+}
+.chats .no-friend-yet-svg a span {
+  transition: 0.3s;
+}
+.chats.hide .no-friend-yet-svg a span {
+  font-size: 0px;
+}
+.chats.hide .no-friend-yet-svg a {
+  gap: 0px;
+}
+.chats .no-friend-yet-svg a svg {
+  color: white;
+  font-size: 17px;
+}
+.chats.hide .no-friend-yet-svg a svg {
+  font-size: 22px;
+}
+.chats .no-friend-yet-svg p {
+  font-size: 17px;
+  font-weight: 500;
+  opacity: 1;
+  transition: 0.3s;
+}
+.chats .no-friend-yet-svg img {
+  width: 114%;
+  position: absolute;
+  left: 0;
+  top: 52px;
+  opacity: 1;
+  transition: 0.3s;
+  z-index: 1;
+}
+.chats.hide .no-friend-yet-svg p {
+  opacity: 0;
+  font-size: 1px;
+}
+.chats.hide .no-friend-yet-svg {
+  padding: 0 5px;
+}
+.chats.hide .no-friend-yet-svg img {
+  width: 100%;
+  left: -2px;
+  top: -15px;
+  opacity: 0;
+}
+
+.chats .filters {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 16px;
+  gap: 5px;
+  padding: 0px 19px;
+}
+.chats .filters li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 35px;
+  overflow: hidden;
+  transition: 0.35s;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.chats .filters li.active,
+.chats .filters li:hover {
+  width: 97px !important;
+  justify-content: center;
+  border-radius: 5px;
+  color: white;
+  background: var(--main-color);
+}
+.chats .filters li.active {
+  background: var(--third-color);
+}
+.chats .filters li.active svg,
+.chats .filters li:hover svg {
+  color: white;
+}
+.chats .filters:has(li:not(.active):hover) li.active {
+  width: 35px !important;
+  background: transparent;
+  justify-content: unset;
+}
+.chats .filters:has(li:not(.active):hover) li.active svg {
+  color: var(--title-color);
+}
+.chats .filters li:nth-child(3).active,
+.chats .filters li:nth-child(3):hover {
+  width: 108px !important;
+}
+
+.chats .filters li:first-child.active,
+.chats .filters li:first-child:hover {
+  width: 105px !important;
+}
+body.ar .chats .filters li,
+body.ar .chats .filters li {
+  max-height: 31px;
+}
+body.ar .chats .filters li.active,
+body.ar .chats .filters li:hover {
+  width: 114px !important;
+}
+body.ar .chats .filters li.active,
+body.ar .chats .filters li:hover {
+  width: 114px !important;
+}
+body.ar .chats .filters li:nth-child(2).active,
+body.ar .chats .filters li:nth-child(2):hover {
+  width: 123px !important;
+}
+body.ar .chats .filters li:nth-child(4).active,
+body.ar .chats .filters li:nth-child(4):hover {
+  width: 121px !important;
+}
+
+.chats .filters li svg {
+  min-width: 23px;
+  min-height: 23px;
+}
+.chats .filters li:nth-child(5) svg {
+  min-width: 25px;
+  min-height: 17px;
+}
+.chats .holder {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  overflow-y: auto;
+  max-height: 85.8vh;
+  overflow-x: hidden;
+}
+.chats .chat {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: 0.4s;
+  border-radius: 8px;
+  padding: 7px 5px;
+  gap: 9px;
+  cursor: pointer;
+  min-width: 320px;
+}
+.chats.active .chat:hover,
+.chats.active .chat.active {
+  background: var(--border-color);
+}
+body.ar .chats.active .chat {
+  padding: 7px 5px;
+}
+.chats .chat img.status {
+  outline: 2px solid var(--main-color);
+  padding: 2px;
+}
+.chats .chat:hover .content,
+.chats .chat.active .content {
+  padding-right: 5px;
+}
+.chats .chat .content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  transition: 0.3s;
+}
+.chats .chat .top {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  transition: 0.3s;
+  justify-content: space-between;
+}
+.chats .chat .top span {
+  color: var(--paragraph-color);
+  font-weight: 500;
+  width: max-content;
+  font-size: 13px;
+}
+
+.chats .chat .bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  font-size: 13px;
+  transition: 0.3s;
+}
+.chats .chat .bottom p {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.chats .chat .bottom span.count {
+  background: var(--back-grident);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: rgb(44, 44, 44);
+  font-size: 12px;
+  transition: 0.3s;
+  color: white;
+}
+.chats .chatico {
+  display: none;
+}
+
+.chats .userMenu {
+  position: fixed;
+  border-radius: 7px;
+  overflow: hidden;
+  width: auto;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  background: var(--section-color);
+  box-shadow: 0px 0px 8px 1px #d1d1d1;
+}
+.chats .userMenu.active {
+  opacity: 1;
+  visibility: visible;
+}
+.chats .userMenu .top {
+  justify-content: space-between;
+  padding: 10px 13px 10px 15px;
+  margin: 0;
+  margin-bottom: 0;
+  background: var(--back-grident);
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+}
+.chats .userMenu .top svg {
+  color: white;
+  font-size: 19px;
+}
+.chats .userMenu ul {
+  padding: 6px;
+}
+.chats .userMenu li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+  cursor: pointer;
+}
+.chats.hide .chat {
+  width: 46px;
+  min-height: 53px;
+  padding: 7px 0;
+  position: relative;
+}
+.chats.hide .chat {
+  max-height: 50px;
+}
+.chats.hide .chat .bottom span.count {
+  font-size: 12px;
+  position: absolute;
+  left: -4px;
+  top: 0;
+  padding: 1px 4px;
+}
+.chats.hide .filters,
+.chats.hide .search-holder {
+  display: none;
+}
+.chats.hide {
+  min-width: unset;
+  width: 60px;
+  padding: 13px 3px;
+}
+.chats.hide > .top {
+  padding: 0;
+  justify-content: center;
+}
+.chats.hide .holder {
+  padding: 0 5px;
+  overflow-y: hidden;
+  max-height: 90vh;
+}
+body.ar .chats.hide .holder {
+  padding: 0 2px;
+}
+.chats.hide .chatico {
+  display: none;
+}
+.chats.hide .chats.hide hr {
+  margin: 6px 0 9px;
+}
+.chats.hide .open-close svg {
+  rotate: 180deg;
+}
+
+@media (max-width: 1300px) {
+  body:has(.chats.active) .home {
+    flex-direction: column;
+    align-items: center;
+  }
+  body:has(.chats.active) .home .stories-holder {
+    max-width: 100%;
+    min-width: unset !important;
+    position: relative;
+    top: 0;
+    gap: 7px;
+  }
+  body:has(.chats.active) .home .stories-holder .stories-grid {
+    display: flex !important;
+  }
+  body:has(.chats.active) > main {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 1100px) {
+  .chats {
+    width: 308px;
+  }
+  .chats .chat {
+    min-width: 290px;
+    gap: 6px;
+  }
+}
+@media (max-width: 992px) {
+  .chats .chat {
+    min-width: 262px;
+  }
+
+  .chats {
+    width: 278px;
+  }
+  .chats {
+    height: 98vh;
+  }
+  .chats .filters li {
+    font-size: 13px;
+    width: 33px;
+  }
+  .chats .filters li:nth-child(5) svg {
+    min-width: 20px;
+    min-height: 16px;
+  }
+  .chats .filters li svg {
+    min-width: 18px;
+  }
+}
+@media (max-width: 786px) {
+  .chats .holder {
+    max-height: 88vh;
+    padding-bottom: 20px;
+  }
+
+  .chats .no-friend-yet-svg {
+    width: 100%;
+  }
+  .chats .no-friend-yet-svg img {
+    width: 100%;
+    position: relative;
+    left: unset;
+    top: unset;
+  }
+}

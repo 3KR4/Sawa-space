@@ -1,0 +1,657 @@
+header {
+  z-index: 100;
+  display: flex;
+  padding: 7px 17px 7px 19px;
+  position: sticky;
+  top: 12px;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: space-between;
+  outline: 1px solid var(--border-color);
+  background-color: var(--body-color);
+  transition: 0.5s !important;
+}
+body.ar header {
+  margin-right: unset;
+  margin-left: 12px;
+}
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: -5px;
+}
+header .logo img {
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+header .logo > * > svg,
+header .logo > * > * > li {
+  border: 1px solid #e1e1e1;
+}
+header .logo > * > svg {
+  padding: 8px !important;
+}
+header .logo > * > * > li {
+  padding: 8px;
+}
+header .logo > * > * > li svg {
+  padding: unset;
+}
+header .logo > * a + svg {
+  padding: 5px !important;
+}
+header .events > li.notifications {
+    padding: 6px;
+}
+.search-holder {
+  position: relative;
+}
+header .search-holder input {
+  padding: 7px 28px 7px 30px;
+}
+body.ar header .search-holder svg.delete {
+  left: 2px;
+}
+.search-holder input {
+  font-size: 14px;
+  padding: 7px 33px 7px 34px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  width: 190px;
+  transition: 0.3s;
+}
+.search-holder:has(input:focus) svg:first-child,
+.search-holder:has(input:not(:placeholder-shown)) svg:first-child {
+  color: var(--main-color);
+}
+.search-holder input:focus,
+.search-holder input:not(:placeholder-shown) {
+  border: 1px solid var(--main-color);
+  width: 230px;
+}
+.search-holder svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #828282;
+}
+.search-holder svg.delete {
+  right: 4px;
+  left: unset;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+}
+.search-holder svg.delete:hover {
+  color: var(--red-color);
+}
+body.ar .search-holder svg {
+  left: unset;
+  right: 10px;
+}
+body.ar .search-holder svg.delete {
+  left: 10px;
+  right: unset;
+}
+.search-holder .result {
+  display: none;
+}
+
+.search-holderr {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  gap: 5px;
+  overflow: hidden;
+}
+.search-holderr svg {
+}
+.search-holderr svg.searchIco {
+}
+.search-holderr .middle {
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-holderr h4 {
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--title-color) !important;
+}
+.search-holderr input {
+  color: var(--title-color);
+  font-weight: 500;
+  font-size: 15px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+.search-holderr:has(input:-webkit-autofill) {
+  background: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+}
+.search-holderr svg.delete {
+  background: var(--red-color);
+  color: white;
+  font-size: 17px;
+  padding: 6px;
+  width: 33px;
+  height: 100%;
+}
+
+header nav .hold {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+header nav a {
+  padding: 11px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--title-color);
+  transition: 0.3s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+header nav a:hover {
+  color: var(--title-color) !important;
+}
+header nav a svg {
+  font-size: 19px;
+}
+header nav a:hover svg,
+header nav a.active svg {
+  color: white;
+}
+header nav a.active {
+  color: white;
+  background: var(--back-grident);
+}
+header nav a:hover {
+  color: white !important;
+  background: var(--back-grident);
+}
+header nav a span {
+  width: max-content;
+}
+
+header .letsPegin {
+  background: var(--third-color);
+  color: white;
+  padding: 10px 10px 10px 13px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+header .letsPegin:hover {
+  background: var(--main-color);
+}
+header .letsPegin svg {
+  color: white;
+  transform: translateY(-1px);
+}
+header .events {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+header .events > li {
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+header .events li:hover {
+  background: var(--main-color);
+  border-color: transparent;
+}
+header .events li:hover > svg {
+  color: white;
+}
+header .events li span.length {
+  position: absolute;
+  right: -4px;
+  top: -6px;
+  font-size: 11px;
+  font-weight: 100;
+  background: var(--back-grident);
+  color: var(--body-color);
+  border-radius: 4px;
+  padding: 2px 4px;
+
+  transition: 0.3s;
+}
+
+body.ar header .events li span.length {
+  left: -5px;
+  right: unset;
+}
+header .events li:hover span.length {
+  color: var(--body-color);
+  background-color: var(--title-color);
+}
+header .events li img {
+  width: 40px;
+  height: 40px;
+}
+header .events li.user {
+  border: none;
+  padding: 0;
+  background: transparent !important;
+}
+header .events > li.user > svg {
+  position: absolute;
+  right: -2px;
+  top: 23px;
+  font-size: 14px;
+  background: var(--title-color) !important;
+  color: white;
+  border-radius: 50%;
+  padding: 1px;
+  width: unset;
+  height: unset;
+  z-index: 1;
+  border: none;
+}
+header .events > li.user:has(.menu.active) > svg {
+  right: 0;
+  top: 0;
+  rotate: -360deg;
+  color: var(--body-color);
+  font-size: 40px;
+  padding: 8px;
+  background: var(--back-grident) !important;
+}
+header .events > li.user > svg.x {
+  opacity: 0;
+}
+header .events > li.user:has(.menu.active) > svg.x {
+  opacity: 1;
+}
+header .events > li.user:has(.menu.active) > svg.angle {
+  opacity: 0;
+}
+header .events li.notifications svg {
+  font-size: 23px;
+}
+
+header .events .menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: -moz-fit-content;
+  background: var(--body-color);
+  border-radius: 8px;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.35s;
+  z-index: 100;
+  box-shadow: 0px 0px 15px 0px #b8b8b8;
+}
+header .events .menu {
+  right: -24px;
+  top: 50px;
+  width: 270px;
+}
+body.ar header .events .menu {
+  right: unset;
+  left: -10px;
+}
+header .events .menu.active {
+  visibility: visible;
+  opacity: 1;
+  top: 52px;
+}
+
+header .events .menu ul {
+  padding: 9px;
+  padding-top: 6px;
+}
+header .events .menu > .title {
+  border-radius: 0;
+  background: var(--back-grident);
+  padding: 16px 22px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.3s;
+  font-weight: 500;
+}
+body.ar header .events .createMenu > .title {
+  justify-content: flex-end;
+}
+header .events .userMenu > .title:hover {
+  background: var(--border-color);
+  color: var(--title-color);
+}
+header .events .userMenu ul > button:last-child:hover {
+  color: white;
+  background: var(--red-color);
+}
+header .events .menu > a svg {
+  color: white !important;
+}
+header .events .menu > a:hover svg {
+  color: var(--title-color) !important;
+}
+header .events .userMenu ul > button:last-child:hover svg {
+  color: white !important;
+}
+header .events .menu button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 15px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--title-color);
+  width: 100%;
+  font-family: "Rubik";
+}
+header .events .menu button:hover {
+  background: var(--border-color);
+}
+
+header .events .menu button a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.3s;
+  width: 100%;
+}
+header .events .menu button a svg {
+  transform: translateY(1px);
+}
+header .events .menu button:has(a):hover {
+  background: var(--main-color);
+}
+header .events .menu button:hover a,
+header .events .menu button:hover a svg {
+  color: white !important;
+}
+header .events .menu button a span {
+  text-align: left;
+}
+body.ar header .events .menu button a span {
+  text-align: right;
+}
+header .events .menu svg {
+  font-size: 24px;
+  color: var(--title-color) !important;
+}
+
+header .events .menu.createMenu svg {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+}
+
+@media (min-width: 1700px) {
+  header nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+@media (max-width: 1600px) {
+  body:has(.chats.active) main header nav svg {
+    display: none;
+  }
+}
+@media (max-width: 1500px) {
+  .focusedMsg .post .right-info {
+    min-width: 37%;
+    max-width: 37%;
+  }
+
+  .focusedMsg .stories .storySection {
+    width: 40%;
+  }
+  .discover .peaple {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .discover .peaple .user .cover:not(:has(img)) {
+    height: 138px;
+  }
+  .discover .peaple .user .cover img {
+    height: 134px !important;
+  }
+  .discover .peaple .user .info h4 {
+    font-size: 15px;
+  }
+}
+@media (max-width: 1300px) {
+  header nav a {
+    padding: 11px 12px;
+  }
+
+  header .logo img {
+    margin: -4px 0 -4px -3px;
+  }
+}
+@media (max-width: 1200px) {
+  body:has(.chats.active) main header nav svg {
+    display: flex;
+    font-size: 25px;
+  }
+  header nav a {
+    padding: 8px 15px;
+  }
+  body:has(.chats.active) main header nav span {
+    display: none;
+  }
+}
+@media (max-width: 1100px) {
+  header nav a {
+    padding: 8px 9px;
+  }
+}
+@media (max-width: 992px) {
+  header {
+    margin-right: 0;
+  }
+  header::before {
+    top: -12px;
+  }
+  header .logo img {
+    width: 35px;
+    height: 35px;
+  }
+  body main header nav span {
+    display: none;
+  }
+  header nav a svg {
+    font-size: 25px;
+  }
+  header .search-holder {
+    position: absolute;
+    top: 0;
+    width: 99%;
+    left: 0px;
+    transition: 0.3s;
+    visibility: hidden;
+    z-index: -1;
+    opacity: 0;
+  }
+  header .search-holder.active {
+    visibility: visible;
+    z-index: 10;
+    opacity: 1;
+    top: 53px;
+    background: white;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    padding: 7px;
+    height: fit-content;
+  }
+  header .search-holder .theInput {
+    position: relative;
+  }
+  .search-holder input {
+    width: 100%;
+    padding: 9px 33px 9px 34px;
+  }
+  .search-holder input:focus,
+  .search-holder input:not(:placeholder-shown) {
+    width: 100%;
+  }
+  header .logo .icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  header .logo svg {
+    display: flex;
+    font-size: 26px;
+    width: 35px;
+    height: 35px;
+    padding: 4px;
+    color: #686868;
+    transition: 0.3s;
+    border-radius: 6px;
+  }
+  header .logo svg.active {
+    border: none;
+    color: white;
+    background: var(--back-grident);
+  }
+
+  header .events > li,
+  header .events > li img {
+    width: 35px;
+    height: 35px;
+  }
+  header nav {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+}
+@media (min-width: 786px) {
+  header::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    top: -14px;
+    left: 0;
+    height: 13px;
+    background-color: var(--section-color);
+  }
+}
+@media (max-width: 786px) {
+  body > main {
+    gap: 10px;
+  }
+  header {
+    position: sticky;
+    gap: 0;
+    top: 0;
+    margin: 0;
+    padding: 9px 11px 9px 16px;
+    width: 100%;
+    flex-direction: column;
+  }
+  header.hidden {
+    transform: translateY(-45px);
+  }
+  body:has(header.hidden) > main {
+    margin-top: -50px;
+  }
+
+  header:has(.search-holder.active).hidden,
+  header:has(nav.active).hidden {
+    top: 7px;
+  }
+  header .logo {
+    width: 100%;
+    justify-content: space-between;
+  }
+  header .events li span.length {
+    top: -5px;
+    padding: 1px 3px;
+  }
+  body main header nav {
+    width: 86%;
+    height: 0;
+    overflow: hidden;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s;
+    position: relative;
+    left: unset;
+    transform: unset;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  body main header:has(nav.active) {
+    gap: 10px;
+  }
+  body main header nav.active {
+    height: 37px;
+    overflow: unset;
+    opacity: 1;
+  }
+  body main header nav:has(.letsPegin).active {
+    height: 82px;
+  }
+  body main header nav.active .letsPegin {
+    padding: 7px 15px 7px 15px;
+    font-size: 14px;
+  }
+  header nav a {
+    flex: 1;
+    justify-content: center;
+    padding: 6px 9px;
+
+    border: 1px solid var(--border-color);
+  }
+  header .events {
+    gap: 5px;
+  }
+  header .events > li.user:has(.menu.active) > svg {
+    right: -3px;
+    top: -2px;
+    padding: 8px;
+  }
+  header .events .menu {
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    bottom: 54px !important;
+    top: unset !important;
+  }
+  header .events .menu.active {
+    bottom: 55px;
+    top: unset;
+  }
+}

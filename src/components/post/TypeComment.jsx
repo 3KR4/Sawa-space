@@ -1,4 +1,6 @@
 "use client";
+import "@/Styles/components/actions-holder.css";
+
 import { useState, useContext, useRef, useEffect } from "react";
 import Image from "next/image";
 import { ScreenContext } from "@/Contexts/ScreenContext";

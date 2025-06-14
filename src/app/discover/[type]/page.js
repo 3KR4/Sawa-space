@@ -1,4 +1,6 @@
 "use client";
+import "@/Styles/components/discover.css";
+
 import "@/Styles/user.css";
 import "@/Styles/forms.css";
 import "@/Styles/marketplace.css";

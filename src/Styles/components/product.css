@@ -1,0 +1,199 @@
+.Product {
+  border: 2px solid var(--border-color);
+  background: var(--body-color);
+  border-radius: 15px 15px 10px 10px;
+  overflow: hidden;
+  height: fit-content;
+  padding-bottom: 3px;
+}
+body.ar .swiper-container .Product,
+body.ar .swiper-container .Product * {
+  direction: rtl !important;
+}
+.Product .image-holder {
+  position: relative;
+  display: flex;
+  cursor: pointer;
+}
+.backimg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.backimg img {
+  object-fit: cover;
+}
+.backimg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px);
+}
+.Product .image-holder .mainImg {
+  object-fit: contain;
+  position: relative !important;
+  height: 220px !important;
+  border-radius: 20px 20px 0 0;
+}
+.Product .image-holder .counter-viewer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 3px;
+}
+.Product .image-holder .counter-viewer span {
+  position: relative;
+  flex: 1;
+  border-bottom: 4px solid var(--paragraph-color);
+  transition: 0.3s;
+}
+.Product .image-holder .counter-viewer span:hover {
+  border-bottom: 4px solid var(--main-color);
+}
+.Product .image-holder .counter-viewer span.action {
+  border-bottom: 4px solid var(--main-color);
+}
+.Product .content {
+  padding-top: 4px;
+}
+.Product .content:not(:has(.last)) {
+  padding-bottom: 2px;
+}
+.Product .content > div {
+  padding: 2px 10px;
+}
+.Product .content > div:last-child {
+  padding: 6px 10px;
+}
+.Product .content > div:last-child svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 18px;
+  background: var(--section-color);
+  width: -webkit-fill-available;
+  height: 30px;
+  border-radius: 7px;
+  padding: 7px;
+}
+.Product .content > div:last-child svg:hover {
+  background: #b4e2ff;
+}
+.Product .content > div:last-child svg:last-child:hover {
+  color: white;
+  background: var(--red-color);
+}
+.Product .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--title-color);
+  gap: 5px;
+}
+.Product .row.last {
+  font-size: 13px;
+  font-weight: 600;
+}
+.focusedMsg .Product .row.last {
+  padding: 15px 20px;
+}
+.focusedMsg .Product .row.last svg {
+  width: -webkit-fill-available;
+  background: var(--section-color);
+  padding: 9px;
+  height: 34px;
+  border-radius: 7px;
+}
+.focusedMsg .Product .row.last svg:hover {
+  color: white;
+  background: var(--main-color);
+}
+.focusedMsg .Product .row.last svg.danger:hover {
+  color: white;
+  background: var(--red-color);
+}
+.Product .row img {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+}
+.Product .row.loc-serv {
+  margin-bottom: 5px;
+  justify-content: start;
+}
+.Product .row.loc-serv > * {
+  font-size: 13px;
+  font-weight: 500;
+}
+.Product .title {
+  font-weight: 500;
+  padding: 3px 9px 0;
+}
+.Product .category {
+  max-width: 35%;
+  text-align: right;
+}
+.Product .price {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 6px 0;
+}
+.Product .price .originalPrice {
+  font-weight: 500;
+  color: var(--paragraph-color);
+  font-size: 16px;
+  text-decoration: line-through;
+}
+.Product .price .currentPrice {
+  font-weight: 700;
+  color: var(--title-color);
+}
+.Product .salePercentage {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--main-color);
+  font-size: 14px;
+  min-width: max-content;
+}
+
+.Product .about-hr {
+  margin: 8px 0 6px;
+}
+.Product .about-items {
+  background: var(--section-color);
+  padding: 12px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.Product .about-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: flex-start;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 5px 0;
+}
+.Product .about-item:first-child {
+  padding: 0px 0 5px;
+}
+.Product .about-item:last-child {
+  border: none;
+  padding-bottom: unset;
+}
+.FormMenu .about-group span {
+  color: var(--paragraph-color);
+  font-size: 14px;
+}
+.Product strong {
+  color: var(--title-color);
+  font-size: 13px;
+}

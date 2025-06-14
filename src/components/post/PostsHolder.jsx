@@ -1,4 +1,6 @@
 "use client";
+import "@/Styles/components/post.css";
+
 import React, {
   useState,
   useEffect,

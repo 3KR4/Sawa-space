@@ -1,5 +1,7 @@
 "use client";
+
 import { useContext } from "react";
+
 import Header from "@/components/Header";
 import AllComponents from "@/components/providers/AllComponents";
 import Chats from "@/components/chat/Chats";
@@ -10,6 +12,7 @@ import { InputActionsProvider } from "@/Contexts/InputActionsContext";
 import { NotificationProvider } from "@/Contexts/NotificationContext";
 import { LanguageProvider } from "@/Contexts/LanguageContext";
 import "@/Styles/globals.css";
+import "@/Styles/components/side-chats.css";
 
 export default function RootLayout({ children }) {
   return (

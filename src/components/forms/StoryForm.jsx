@@ -1,5 +1,6 @@
 "use client";
 import "@/Styles/forms.css";
+import "@/Styles/components/story.css";
 import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -1233,7 +1234,9 @@ function StoryForm() {
                       alt={"/users/default.svg"}
                       width={40}
                       height={40}
-                      onClick={(e) => handleMenus(e, "user-Info", data.author[0]._id)}
+                      onClick={(e) =>
+                        handleMenus(e, "user-Info", data.author[0]._id)
+                      }
                     />
                     <div className="info">
                       <h5>
@@ -1259,7 +1262,9 @@ function StoryForm() {
                     {selectedUsersNames?.map((x, index) => (
                       <button
                         key={index}
-                        onClick={(e) => handleMenus(e, "user-Info", x.author[0]?._id)}
+                        onClick={(e) =>
+                          handleMenus(e, "user-Info", x.author[0]?._id)
+                        }
                       >
                         @{x}
                       </button>

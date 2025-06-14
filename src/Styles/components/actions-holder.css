@@ -1,0 +1,131 @@
+.action-holder.forComments {
+  border-radius: 7px;
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  margin-right: 14px;
+}
+.focusedMsg.forPosts .action-holder.forComments {
+  margin-right: 0 !important;
+}
+.action-holder.forComments .top {
+  align-items: unset;
+  display: flex;
+}
+
+.action-holder.forComments .top textarea {
+  resize: none;
+  padding: 12px;
+  flex: 1;
+  min-height: 100px;
+}
+.action-holder.forComments .top:has(img) textarea {
+  padding-right: 0px;
+}
+body.ar .action-holder.forComments .top:has(img) textarea {
+  padding-right: 12px;
+  padding-left: 0px;
+}
+.action-holder.forComments .top img {
+  width: 173px;
+  border-radius: 8px;
+  height: 120px !important;
+  margin: 7px;
+  object-fit: cover;
+}
+.focusedMsg .action-holder.forComments .top img {
+  width: 120px;
+  border-radius: 8px;
+  height: 101px !important;
+}
+.action-holder.forComments .top svg {
+  width: 20px;
+  height: 20px;
+  right: 0;
+}
+body.ar .action-holder.forComments .top svg {
+  left: 0 !important;
+  right: unset !important;
+}
+.action-holder.forComments .actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 13px 7px 10px;
+  padding-left: 10px;
+  border-top: 1px solid var(--border-color);
+}
+.action-holder.forComments .actions .left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--title-color);
+}
+.action-holder.forComments .actions .right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.action-holder.forComments .actions .right svg:first-child {
+  font-size: 16px;
+}
+.action-holder.forComments .actions .right svg {
+  font-size: 18px;
+}
+.action-holder.forComments .actions .right button {
+  background: var(--back-grident);
+  color: white;
+  padding: 11px 15px !important;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 13px;
+}
+.action-holder.forComments .actions .right button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--paragraph-color);
+}
+
+.action-holder.forComments .actions svg {
+  padding: 2px;
+  width: 21px;
+  height: 21px;
+  background: transparent;
+}
+
+.focusedMsg .stories .storySection .action-holder.forComments {
+  width: 100%;
+}
+
+@media (max-width: 786px) {
+  .action-holder.forComments .actions {
+    padding: 6px;
+  }
+  .action-holder.forComments .actions .left {
+    font-size: 13px;
+    line-height: 1;
+  }
+  .action-holder.forComments .actions .right button {
+    padding: 11px 11px;
+    width: max-content;
+    font-size: 12px;
+  }
+  .action-holder.forComments .actions .right {
+    gap: 8px;
+    width: fit-content;
+  }
+  .action-holder.forComments .top img {
+    width: 135px;
+    border-radius: 8px;
+    height: 100% !important;
+    object-fit: cover;
+    margin: 0;
+    height: unset;
+    max-height: 100px;
+  }
+  .action-holder.forComments .top svg {
+    right: 3px !important;
+    top: 3px !important;
+  }
+}
