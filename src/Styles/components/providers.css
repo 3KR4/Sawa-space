@@ -43,7 +43,7 @@ body .sideSection + div {
   padding-bottom: 14px;
 }
 .sideSection .top svg {
-  background: var(--section-color);
+  background: var(--body-color);
   padding: 4px;
   font-size: 27px;
   border-radius: 6px;
@@ -106,7 +106,7 @@ body .sideSection + div {
   height: 100vh;
   min-width: 100%;
   backdrop-filter: unset;
-  background: var(--body-color) !important;
+  background: var(--section-color) !important;
   z-index: 50;
 }
 body:has(.focusedMsg.active) header,
@@ -167,7 +167,7 @@ body:has(.focusedMsg.active) {
 }
 .focusedMsg .stories .singleStory:hover,
 .focusedMsg .stories .singleStory.active {
-  background: var(--section-color);
+  background: var(--body-color);
 }
 .focusedMsg .stories .singleStory .info {
   flex: 1;
@@ -210,7 +210,7 @@ body.ar .focusedMsg .stories .navigations-icons.forStories {
   direction: rtl !important;
 }
 .focusedMsg .stories .navigations-icons.forStories button svg {
-  background: var(--section-color);
+  background: var(--body-color);
   width: 35px;
   height: 35px;
   border-radius: 10px;

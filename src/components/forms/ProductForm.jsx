@@ -10,7 +10,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { productService } from "@/services/api/productService";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { departements } from "@/utils/Data";
 
 import {
@@ -50,19 +50,10 @@ import FormControl from "@mui/material/FormControl";
 function ProductForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage } = useContext(ScreenContext);
+  const { userData, userPage } = useContext(fetchingContext);
 
-  const {
-    selectedUsers,
-    setSelectedUsers,
-    selectedUsersNames,
-    setSelectedUsersNames,
-    setSelectionMenuTitle,
-    openProductForm,
-    setOpenProductForm,
-    usersSelectionRef,
-    setSomeThingHappen,
-  } = useContext(MenusContext);
+  const { openForm, setOpenForm, setSomeThingHappen } =
+    useContext(MenusContext);
 
   const { handleMenus, selectedDev } = useContext(DynamicMenusContext);
   const { messageText, setMessageText, InputRef, emojiHolderRef } =
@@ -116,7 +107,7 @@ function ProductForm() {
     setImages((prevImages) => {
       const removed = prevImages[index];
       const updatedImages = prevImages.filter((_, i) => i !== index);
-      if (removed?.publicid && openProductForm.type === "edit") {
+      if (removed?.publicid && openForm.mode === "edit") {
         setRemovedImages((prev) => [...prev, removed.publicid]);
       }
       return updatedImages;
@@ -143,7 +134,7 @@ function ProductForm() {
         return;
       }
 
-      setOpenProductForm(false);
+      setOpenForm(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -153,12 +144,12 @@ function ProductForm() {
   }, []);
 
   useEffect(() => {
-    if (openProductForm.type === "edit") {
+    if (openForm.mode === "edit") {
       setLoadingContent(false);
       const fetchProduct = async () => {
         try {
           const response = await productService.getSingleProduct(
-            openProductForm.productId
+            openForm.productId
           );
           const product = response?.data?.data[0];
           console.log(response);
@@ -203,7 +194,7 @@ function ProductForm() {
       setRemovedImages([]);
       reset();
     }
-  }, [openProductForm]);
+  }, [openForm]);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -221,9 +212,9 @@ function ProductForm() {
 
     try {
       let response;
-      if (openProductForm.type === "edit") {
+      if (openForm.mode === "edit") {
         response = await productService.editProduct(
-          openProductForm.productId,
+          openForm.productId,
           productData,
           userPage._id
         );
@@ -240,8 +231,8 @@ function ProductForm() {
         const formData = new FormData();
         newImages.forEach((img) => formData.append("imgs", img));
         await productService.uploudProductImg(
-          openProductForm.type === "edit"
-            ? openProductForm.productId
+          openForm.mode === "edit"
+            ? openForm.productId
             : response.data.productid,
           userPage?._id,
           formData
@@ -249,12 +240,12 @@ function ProductForm() {
       }
 
       // Delete removed images (only when editing)
-      if (openProductForm.type === "edit" && removedImages.length > 0) {
+      if (openForm.mode === "edit" && removedImages.length > 0) {
         for (const publicid of removedImages) {
           try {
             await productService.updateProductImg(
-              openProductForm.type === "edit"
-                ? openProductForm.productId
+              openForm.mode === "edit"
+                ? openForm.productId
                 : response.data.productid,
               userPage?._id,
               publicid
@@ -269,7 +260,7 @@ function ProductForm() {
       addNotification({
         type: "success",
         message:
-          openProductForm.type === "edit"
+          openForm.mode === "edit"
             ? "Product updated successfully"
             : "Product created successfully",
       });
@@ -283,9 +274,9 @@ function ProductForm() {
       };
 
       // Reset form and close
-      setOpenProductForm(false);
+      setOpenForm(false);
       setSomeThingHappen({
-        event: openProductForm.type === "edit" ? "edit" : "create",
+        event: openForm.mode === "edit" ? "edit" : "create",
         type: "product",
         data: finalProductData,
       });
@@ -317,37 +308,30 @@ function ProductForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`focusedMsg FormMenu ${openProductForm ? "active" : ""} `}
+      className={`focusedMsg FormMenu ${openForm ? "active" : ""} `}
     >
       <div
         className={`body postForm ${
-          loadingContent || openProductForm.type !== "edit"
-            ? "contentLoaded"
-            : ""
+          loadingContent || openForm.mode !== "edit" ? "contentLoaded" : ""
         }`}
         ref={formMenuRef}
       >
-        {!loadingContent && openProductForm.type === "edit" && (
+        {!loadingContent && openForm.mode === "edit" && (
           <div className="lds-dual-ring big-loader"></div>
         )}
 
         <div className="top">
           <h4>
-            {openProductForm.type === "edit"
+            {openForm.mode === "edit"
               ? translations?.market_place?.edit_product
               : translations?.market_place?.create_product}
           </h4>
-          <IoClose
-            className="close"
-            onClick={() => setOpenProductForm(false)}
-          />
+          <IoClose className="close" onClick={() => setOpenForm(false)} />
         </div>
         <div
           style={{
             overflow:
-              !loadingContent && openProductForm.type === "edit"
-                ? "hidden"
-                : "auto",
+              !loadingContent && openForm.mode === "edit" ? "hidden" : "auto",
           }}
         >
           <div className="inputHolder">
@@ -798,7 +782,7 @@ function ProductForm() {
             disabled={loading || (images?.length < 1 && isSubmited)}
           >
             <span>
-              {openProductForm.type === "edit"
+              {openForm.mode === "edit"
                 ? translations?.market_place?.edit_product
                 : translations?.market_place?.create_product}
             </span>

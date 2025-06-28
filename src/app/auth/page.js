@@ -9,7 +9,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useRouter } from "next/navigation";
 import { MdModeEditOutline } from "react-icons/md";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
@@ -34,7 +34,7 @@ import { IoEarthOutline } from "react-icons/io5";
 
 export default function Auth() {
   const { addNotification } = useNotification();
-  const { setUserData, setUserPage } = useContext(ScreenContext);
+  const { setUserData, setUserPage } = useContext(fetchingContext);
 
   const { translations, locale } = useLanguage();
   const router = useRouter();
@@ -128,6 +128,10 @@ export default function Auth() {
 
     const completeData = {
       ...formData,
+      Settings: {
+        mode: "light",
+        lang: "en",
+      },
       info: {
         birthDate,
         region: e.target.region.value,

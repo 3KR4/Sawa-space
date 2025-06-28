@@ -9,7 +9,7 @@ import "@/Styles/chat.css";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useLanguage } from "../../Contexts/LanguageContext";
 import ContentLoader from "react-content-loader";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
@@ -21,13 +21,9 @@ import { IoClose } from "react-icons/io5";
 function Product({ data, viewOwner, focused = false }) {
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
-  const { screenSize, userData, userPage } = useContext(ScreenContext);
-  const {
-    setDangerEvent,
-    setOpenProductForm,
-    setSingleProvider,
-    setOpenShare,
-  } = useContext(MenusContext);
+  const { screenSize, userData, userPage } = useContext(fetchingContext);
+  const { setDangerEvent, setOpenForm, setSingleProvider, setShareLink } =
+    useContext(MenusContext);
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   const [swiperRef, setSwiperRef] = useState(null);
@@ -117,8 +113,9 @@ function Product({ data, viewOwner, focused = false }) {
               <div className="row last">
                 <FaRegEdit
                   onClick={() => {
-                    setOpenProductForm({
-                      type: "edit",
+                    setOpenForm({
+                      for: "product",
+                      mode: "edit",
                       productId: data?._id,
                     });
                   }}
@@ -223,7 +220,7 @@ function Product({ data, viewOwner, focused = false }) {
                   <PiShareFat
                     className="share-ico"
                     onClick={() =>
-                      setOpenShare(
+                      setShareLink(
                         `${window.location.origin}?product=${data?._id}`
                       )
                     }
@@ -244,8 +241,9 @@ function Product({ data, viewOwner, focused = false }) {
                 <div className="row last">
                   <FaRegEdit
                     onClick={() => {
-                      setOpenProductForm({
-                        type: "edit",
+                      setOpenForm({
+                        for: "product",
+                        mode: "edit",
                         productId: data?._id,
                       });
                     }}

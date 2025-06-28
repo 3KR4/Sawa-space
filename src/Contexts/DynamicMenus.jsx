@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useRef, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 export const DynamicMenusContext = createContext();
 
@@ -7,11 +7,11 @@ export const MenuProvider = ({ children }) => {
   // Dynamic Menus
   const [infoMenu, setInfoMenu] = useState(false);
   const [settingMenu, setSettingMenu] = useState(false);
+  const [settingMenuType, setSettingMenuType] = useState("");
   const [openUsersSelection, setOpenUsersSelection] = useState(false);
   const [openUsersReact, setOpenUsersReact] = useState(false);
   const [emojiHolder, setEmojiHolder] = useState(false);
   const [selectedDev, setSelectedDev] = useState(false);
-  const [settingMenuType, setSettingMenuType] = useState("");
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [menuPosition2, setMenuPosition2] = useState({ top: 0, left: 0 });
 

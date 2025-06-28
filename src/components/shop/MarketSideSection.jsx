@@ -6,7 +6,7 @@ import Slider from "@mui/material/Slider";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { departements } from "@/utils/Data";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
 import {
@@ -43,7 +43,7 @@ function MarketSideSection({
   setCurrentPortfolio,
 }) {
   const { screenSize, actionLoading, setActionLoading, fetchPageData } =
-    useContext(ScreenContext);
+    useContext(fetchingContext);
   const { addNotification } = useNotification();
 
   const { locale, translations } = useLanguage();

@@ -28,7 +28,7 @@ import ConvertTime from "@/utils/ConvertTime";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import Comment from "@/components/post/Comment";
 import Story from "@/components/post/Story";
 import ActionsBtns from "@/components/post/ActionsBtns";
@@ -67,20 +67,14 @@ function SingleDetails() {
   } = useForm();
 
   const {
+    Refs,
     dataSwiperType,
     dataForSwiper,
     imgIndex,
-    usersreactMenuRef,
-    usersSelectionRef,
-    setOpenStoryForm,
-    settingsMenuRef,
-    closeImgHolderRef,
+    setOpenForm,
     singleProvider,
     setSingleProvider,
     someThingHappen,
-    infoMenuRef,
-    shareFomrRef,
-    dangerEventRef,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -93,18 +87,18 @@ function SingleDetails() {
     userPage,
     currentUserStory,
     setUserPage,
-  } = useContext(ScreenContext);
+  } = useContext(fetchingContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       const allowedRefs = [
-        settingsMenuRef,
-        usersreactMenuRef,
-        usersSelectionRef,
         emojiHolderRef,
-        infoMenuRef,
-        shareFomrRef,
-        dangerEventRef,
+        Refs.settings,
+        Refs.usersReact,
+        Refs.usersSelection,
+        Refs.info,
+        Refs.shareForm,
+        Refs.dangerEvent,
       ];
 
       // Check if the click was inside an element with class .reactsHolder.sideMenu
@@ -129,8 +123,8 @@ function SingleDetails() {
       );
 
       if (
-        closeImgHolderRef.current &&
-        !closeImgHolderRef.current.contains(event.target) &&
+        Refs.closeImgHolder.current &&
+        !Refs.closeImgHolder.current.contains(event.target) &&
         !isInsideAllowedRef &&
         !isInsideReactsHolder &&
         !isInsideStoryForm &&
@@ -426,7 +420,7 @@ function SingleDetails() {
 
   return (
     <div
-      ref={closeImgHolderRef}
+      ref={Refs.closeImgHolder}
       className={`focusedMsg ${!pathname.includes("chat") ? "forPosts" : ""} ${
         singleProvider.type ? "active" : ""
       } ${singleProvider.type}`}
@@ -474,7 +468,7 @@ function SingleDetails() {
                 <div
                   className="createStory"
                   onClick={() => {
-                    setOpenStoryForm(true);
+                    setOpenForm({ for: "story" });
                   }}
                 >
                   <FaPlus />
@@ -544,7 +538,7 @@ function SingleDetails() {
                 <h4>{translations?.story?.friends_stories}</h4>
                 <div className="usersStories">
                   {stories
-                    ?.filter((x) => x?.author[0]?._id !== userData._id)
+                    ?.filter((x) => x?.author[0]?._id !== userData?._id)
                     ?.map((x) => {
                       const xAuthor = Array.isArray(x?.author)
                         ? x.author[0]

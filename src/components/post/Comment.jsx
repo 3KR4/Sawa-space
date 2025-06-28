@@ -5,7 +5,7 @@ import ReactsHolder from "@/components/post/ReactsHolder";
 import Image from "next/image";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import ConvertTime from "@/utils/ConvertTime";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
@@ -23,7 +23,7 @@ function Comment({
   setEditedComment,
   level = 0,
 }) {
-  const { userData } = useContext(ScreenContext);
+  const { userData } = useContext(fetchingContext);
   const { translations, locale } = useLanguage();
   const { addNotification } = useNotification();
 

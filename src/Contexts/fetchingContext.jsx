@@ -9,18 +9,14 @@ import { usePathname } from "next/navigation";
 import { postService } from "@/services/api/postService";
 import { productService } from "@/services/api/productService";
 
-export const ScreenContext = createContext();
+export const fetchingContext = createContext();
 
-export const ScreenProvider = ({ children }) => {
+export const FetchProvider = ({ children }) => {
   const [screenSize, setScreenSize] = useState("large");
-  const [screenSizeWidth, setScreenSizeWidth] = useState("large");
+
   const { addNotification } = useNotification();
-  const {
-    someThingHappen,
-    setSomeThingHappen,
-    singleProvider,
-    setSingleProvider,
-  } = useContext(MenusContext);
+  const { someThingHappen, setSomeThingHappen, setSingleProvider } =
+    useContext(MenusContext);
 
   const pathname = usePathname();
 
@@ -38,8 +34,8 @@ export const ScreenProvider = ({ children }) => {
     }
     return null;
   });
+
   const [stories, setStories] = useState([]);
-  const [storyloading, setStoryloading] = useState(false);
   const [currentUserStory, setCurrentUserStory] = useState({});
   const [actionLoading, setActionLoading] = useState([]);
 
@@ -47,7 +43,6 @@ export const ScreenProvider = ({ children }) => {
   useEffect(() => {
     function getScreenSize() {
       const width = window.innerWidth;
-      setScreenSizeWidth(width);
       if (width < 768) return "small";
       if (width < 992) return "med";
       return "large";
@@ -68,7 +63,7 @@ export const ScreenProvider = ({ children }) => {
   // Fetch user data
   const fetchUserData = async () => {
     try {
-      const { data } = await userService.getUserData(userData._id);
+      const { data } = await userService.getUserData(userData?._id);
       setUserData(data.data);
     } catch (err) {
       console.error("Error fetching userData", err);
@@ -112,7 +107,7 @@ export const ScreenProvider = ({ children }) => {
       userData?._id ||
       (someThingHappen.type === "stories" && someThingHappen.event === "delete")
     ) {
-      setStoryloading(true);
+      setActionLoading((prev) => [...prev, "storyloading"]);
       let timeoutId;
       let isMounted = true;
 
@@ -132,7 +127,7 @@ export const ScreenProvider = ({ children }) => {
             message: "Failed to load Stories. Please try again later.",
           });
         } finally {
-          setStoryloading(false);
+          setActionLoading((prev) => prev.filter((x) => x !== "storyloading"));
           setSomeThingHappen({});
         }
       }, 1500);
@@ -142,7 +137,7 @@ export const ScreenProvider = ({ children }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, [someThingHappen.stories, someThingHappen.type, userData?._id]);
+  }, [someThingHappen.stories, userData?._id]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -204,29 +199,31 @@ export const ScreenProvider = ({ children }) => {
     }
   }, []);
 
+  console.log("userData", userData);
   return (
-    <ScreenContext.Provider
+    <fetchingContext.Provider
       value={{
         pathname,
         screenSize,
-        screenSizeWidth,
+
         userData,
         setUserData,
+        userPage,
+        setUserPage,
+
         stories,
         setStories,
         currentUserStory,
         setCurrentUserStory,
-        storyloading,
-        setStoryloading,
+
         fetchUserData,
-        userPage,
-        setUserPage,
         fetchPageData,
+
         actionLoading,
         setActionLoading,
       }}
     >
       {children}
-    </ScreenContext.Provider>
+    </fetchingContext.Provider>
   );
 };

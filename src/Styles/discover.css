@@ -1,12 +1,9 @@
-.discover {
-  padding: 15px;
-}
 .discover .top {
   margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--body-color);
+  background: var(--section-color);
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 7px;
@@ -29,14 +26,14 @@
 }
 .discover .peaple .user {
   border-radius: 10px 10px 15px 15px;
-  background: var(--body-color);
+  background: var(--section-color);
   border: 1px solid var(--border-color);
   overflow: hidden;
   padding-bottom: 10px;
 }
 .discover .peaple .user .cover:not(:has(img)) {
   height: 116px;
-  background: var(--second-section-color);
+  background: var(--second-body-color);
 }
 .discover .peaple .user .cover img {
   position: relative !important;
@@ -58,7 +55,7 @@
   height: 75px !important;
   border: 3px solid var(--title-color);
   padding: 0px;
-  background: var(--second-section-color);
+  background: var(--second-body-color);
 }
 .discover .peaple .user .info .hold {
   display: flex;

@@ -4,69 +4,49 @@ import { createContext, useRef, useState } from "react";
 export const MenusContext = createContext();
 
 export const MenusProvider = ({ children }) => {
-  const settingsMenuRef = useRef(null);
-  const infoMenuRef = useRef(null);
-  const closeImgHolderRef = useRef(null);
-  const usersreactMenuRef = useRef(null);
-  const usersSelectionRef = useRef(null);
-  const dangerEventRef = useRef(null);
-  const shareFomrRef = useRef(null);
+  const Refs = {
+    settings: useRef(null),
+    info: useRef(null),
+    closeImgHolder: useRef(null),
+    usersReact: useRef(null),
+    usersSelection: useRef(null),
+    dangerEvent: useRef(null),
+    shareForm: useRef(null),
+  };
 
-  const [openPostForm, setOpenPostForm] = useState(false);
-  const [openStoryForm, setOpenStoryForm] = useState(false);
-  const [openImgForm, setOpenImgForm] = useState(false);
-  const [openProductForm, setOpenProductForm] = useState(false);
-  const [openGroupForm, setOpenGroupForm] = useState(false);
-  const [openShare, setOpenShare] = useState(false);
-  const [dangerEvent, setDangerEvent] = useState();
+  const [openForm, setOpenForm] = useState(null);
+  const [shareLink, setShareLink] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedUsersNames, setSelectedUsersNames] = useState([]);
-  const [selectionMenuTitle, setSelectionMenuTitle] = useState("");
-  const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
   const [someThingHappen, setSomeThingHappen] = useState("");
-
+  
   const [singleProvider, setSingleProvider] = useState({
-    type: "",
-    sharing_data: {},
+    type: null,
+    sharing_data: null,
     focused_id: null,
+  });
+  const [dangerEvent, setDangerEvent] = useState({
+    id: null,
+    type: null,
+    message: null,
+    for: null,
   });
 
   return (
     <MenusContext.Provider
       value={{
+        Refs,
         singleProvider,
         setSingleProvider,
-        settingsMenuRef,
-        dangerEventRef,
-        closeImgHolderRef,
-        shareFomrRef,
         selectedUsers,
         setSelectedUsers,
-        selectedUsersNames,
-        setSelectedUsersNames,
-        selectionMenuTitle,
-        setSelectionMenuTitle,
-        usersSelectionSearch,
-        openPostForm,
-        setOpenPostForm,
-        openStoryForm,
-        setOpenStoryForm,
-        openImgForm,
-        setOpenImgForm,
-        openProductForm,
-        setOpenProductForm,
-        setUsersSelectionSearch,
-        usersSelectionRef,
-        usersreactMenuRef,
-        infoMenuRef,
+        openForm,
+        setOpenForm,
         dangerEvent,
         setDangerEvent,
         someThingHappen,
         setSomeThingHappen,
-        openShare,
-        setOpenShare,
-        openGroupForm,
-        setOpenGroupForm,
+        shareLink,
+        setShareLink,
       }}
     >
       {children}

@@ -8,13 +8,10 @@ header {
   border-radius: 10px;
   justify-content: space-between;
   outline: 1px solid var(--border-color);
-  background-color: var(--body-color);
+  background-color: var(--section-color);
   transition: 0.5s !important;
 }
-body.ar header {
-  margin-right: unset;
-  margin-left: 12px;
-}
+
 header .logo {
   display: flex;
   align-items: center;
@@ -25,6 +22,9 @@ header .logo img {
   width: 40px;
   height: 40px;
   z-index: 1;
+}
+header > .events > li {
+  border: 1px solid #e1e1e1;
 }
 header .logo > * > svg,
 header .logo > * > * > li {
@@ -43,7 +43,7 @@ header .logo > * a + svg {
   padding: 5px !important;
 }
 header .events > li.notifications {
-    padding: 6px;
+  padding: 6px;
 }
 .search-holder {
   position: relative;
@@ -73,7 +73,8 @@ body.ar header .search-holder svg.delete {
 }
 .search-holder svg {
   position: absolute;
-  left: 10px;
+  left: 6px;
+  font-size: unset !important;
   top: 50%;
   transform: translateY(-50%);
   font-size: 18px;
@@ -237,7 +238,7 @@ header .events li span.length {
   font-size: 11px;
   font-weight: 100;
   background: var(--back-grident);
-  color: var(--body-color);
+  color: var(--section-color);
   border-radius: 4px;
   padding: 2px 4px;
 
@@ -249,7 +250,7 @@ body.ar header .events li span.length {
   right: unset;
 }
 header .events li:hover span.length {
-  color: var(--body-color);
+  color: var(--section-color);
   background-color: var(--title-color);
 }
 header .events li img {
@@ -270,8 +271,7 @@ header .events > li.user > svg {
   color: white;
   border-radius: 50%;
   padding: 1px;
-  width: unset;
-  height: unset;
+
   z-index: 1;
   border: none;
 }
@@ -279,7 +279,7 @@ header .events > li.user:has(.menu.active) > svg {
   right: 0;
   top: 0;
   rotate: -360deg;
-  color: var(--body-color);
+  color: var(--section-color);
   font-size: 40px;
   padding: 8px;
   background: var(--back-grident) !important;
@@ -302,7 +302,7 @@ header .events .menu {
   flex-direction: column;
   position: absolute;
   width: -moz-fit-content;
-  background: var(--body-color);
+  background: var(--section-color);
   border-radius: 8px;
   overflow: hidden;
   visibility: hidden;
@@ -548,10 +548,17 @@ header .events .menu.createMenu svg {
     width: 35px;
     height: 35px;
   }
+  header .events .menu svg {
+    width: unset;
+    height: unset;
+  }
   header nav {
     position: absolute;
     transform: translateX(-50%);
     left: 50%;
+  }
+  header .events > li.user:has(.menu.active) > svg {
+    right: -2px;
   }
 }
 @media (min-width: 786px) {
@@ -562,7 +569,7 @@ header .events .menu.createMenu svg {
     top: -14px;
     left: 0;
     height: 13px;
-    background-color: var(--section-color);
+    background-color: var(--body-color);
   }
 }
 @media (max-width: 786px) {
@@ -579,7 +586,7 @@ header .events .menu.createMenu svg {
     flex-direction: column;
   }
   header.hidden {
-    transform: translateY(-45px);
+    transform: translateY(-56px);
   }
   body:has(header.hidden) > main {
     margin-top: -50px;
@@ -637,21 +644,28 @@ header .events .menu.createMenu svg {
   header .events {
     gap: 5px;
   }
+  header .events > li.user > svg {
+    width: unset;
+    height: unset;
+    right: 0;
+    top: 21px;
+  }
   header .events > li.user:has(.menu.active) > svg {
-    right: -3px;
-    top: -2px;
+    font-size: 21px;
+    right: 0px;
+    top: -1px;
     padding: 8px;
+    width: unset;
+    height: unset;
   }
   header .events .menu {
-    position: fixed !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 90% !important;
-    bottom: 54px !important;
-    top: unset !important;
+    position: fixed;
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 80px;
   }
   header .events .menu.active {
-    bottom: 55px;
-    top: unset;
+    top: 68px;
   }
 }

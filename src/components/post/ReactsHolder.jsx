@@ -3,14 +3,14 @@
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
 
 import { FaPlus } from "react-icons/fa6";
 
 function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
-  const { userData } = useContext(ScreenContext);
+  const { userData } = useContext(fetchingContext);
   const [loading, setLoading] = useState(false);
   const { addNotification } = useNotification();
 
@@ -87,7 +87,7 @@ function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
       });
     } catch (err) {
       console.error(err);
-      if (userData && userData._id) {
+      if (userData && userData?._id) {
         addNotification({
           type: "error",
           message: "Cannot react right now, please try again later.",
@@ -98,7 +98,6 @@ function ReactsHolder({ reactsHolder, setReactsHolder, data, setState, type }) {
           message: "You have to log in first",
         });
       }
-
     } finally {
       setReactsHolder(false);
       setLoading(false);

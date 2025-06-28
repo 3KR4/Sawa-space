@@ -17,7 +17,7 @@ import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/cropImage";
 import { IoClose } from "react-icons/io5";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import Slider from "@mui/material/Slider";
 
 import { PiResizeBold } from "react-icons/pi";
@@ -27,10 +27,10 @@ import { IoMdResize } from "react-icons/io";
 function ImgForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { openImgForm, setOpenImgForm, setDangerEvent, dangerEventRef } =
+  const { openForm, setOpenForm, setDangerEvent, Refs } =
     useContext(MenusContext);
   const { handleMenus } = useContext(DynamicMenusContext);
-  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
+  const { fetchUserData, fetchPageData } = useContext(fetchingContext);
 
   const imgFormMenuRef = useRef(null);
   const inputFileRef = useRef(null);
@@ -53,18 +53,18 @@ function ImgForm() {
         return;
       }
       if (
-        dangerEventRef?.current &&
-        dangerEventRef.current.contains(event.target)
+        Refs.dangerEvent?.current &&
+        Refs.dangerEvent.current.contains(event.target)
       ) {
         return;
       }
       if (
-        dangerEventRef?.current?.parentElement &&
-        dangerEventRef?.current?.parentElement.contains(event.target)
+        Refs.dangerEvent?.current?.parentElement &&
+        Refs.dangerEvent?.current?.parentElement.contains(event.target)
       ) {
         return;
       }
-      setOpenImgForm(false);
+      setOpenForm(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -72,12 +72,12 @@ function ImgForm() {
   }, []);
 
   useEffect(() => {
-    if (openImgForm?.event === "edit") {
-      setImageURL(openImgForm.image);
+    if (openForm?.event === "edit") {
+      setImageURL(openForm.image);
     } else {
       setImageURL(null);
     }
-  }, [openImgForm]);
+  }, [openForm]);
 
   const onCropComplete = useCallback((_, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
@@ -101,14 +101,11 @@ function ImgForm() {
 
     setLoading(true);
     try {
-      if (openImgForm.event === "edit" && hasEdited) {
-        if (openImgForm.portfolio == "user") {
-          await userService.delete_img_cover(
-            openImgForm.userId,
-            openImgForm.type
-          );
+      if (openForm.event === "edit" && hasEdited) {
+        if (openForm.portfolio == "user") {
+          await userService.delete_img_cover(openForm.userId, openForm.type);
         } else {
-          await pageService.deletePage_img_cover(openImgForm.type);
+          await pageService.deletePage_img_cover(openForm.type);
         }
       }
 
@@ -121,30 +118,30 @@ function ImgForm() {
       const formData = new FormData();
       formData.append("img", croppedImageBlob);
 
-      if (openImgForm.portfolio == "user") {
+      if (openForm.portfolio == "user") {
         await userService.upload_img_cover(
-          openImgForm.userId,
-          openImgForm.type,
+          openForm.userId,
+          openForm.type,
           formData
         );
       } else {
-        await pageService.page_img_cover(openImgForm.type, formData);
+        await pageService.page_img_cover(openForm.type, formData);
       }
 
       addNotification({
         type: "success",
         message:
-          openImgForm.event === "edit"
+          openForm.event === "edit"
             ? "You updated your image successfully."
             : "You added your image successfully.",
       });
-      if (openImgForm.portfolio === "user") {
+      if (openForm.portfolio === "user") {
         await fetchUserData();
       } else {
         await fetchPageData();
       }
 
-      setOpenImgForm(false);
+      setOpenForm(false);
     } catch (err) {
       console.log(err);
       addNotification({ type: "error", message: "Something went wrong." });
@@ -154,22 +151,22 @@ function ImgForm() {
   };
 
   return (
-    <form className={`focusedMsg FormMenu  ${openImgForm ? "active" : ""}`}>
+    <form className={`focusedMsg FormMenu  ${openForm ? "active" : ""}`}>
       <div className={`body imgForm contentLoaded `} ref={imgFormMenuRef}>
         <div className="top">
           <h4>
-            {openImgForm.type === "img"
-              ? openImgForm.event === "edit"
+            {openForm.type === "img"
+              ? openForm.event === "edit"
                 ? translations?.forms?.edit_profile_img
                 : translations?.forms?.add_profile_img
-              : openImgForm.event === "edit"
+              : openForm.event === "edit"
               ? translations?.forms?.edit_profile_cover
               : translations?.forms?.add_profile_cover}
           </h4>
-          <IoClose className="close" onClick={() => setOpenImgForm(false)} />
+          <IoClose className="close" onClick={() => setOpenForm(false)} />
         </div>
 
-        <div className={`cropperContainer ${openImgForm.type}`}>
+        <div className={`cropperContainer ${openForm.type}`}>
           {imageURL ? (
             <>
               <div className="cropperBox">
@@ -178,7 +175,7 @@ function ImgForm() {
                   crop={crop}
                   zoom={zoom}
                   rotation={rotation}
-                  aspect={openImgForm.type === "img" ? 1 : 16 / 6}
+                  aspect={openForm.type === "img" ? 1 : 16 / 6}
                   onCropChange={setCrop}
                   onZoomChange={(val) => {
                     setZoom(val);
@@ -265,19 +262,19 @@ function ImgForm() {
         {imageURL && <hr style={{ marginBottom: "3px" }} />}
 
         <div className="actions">
-          {openImgForm.event === "edit" && (
+          {openForm.event === "edit" && (
             <button
               type="button"
               className={`main-button danger `}
               onClick={() => {
                 setDangerEvent({
                   type: "delete_img",
-                  for: openImgForm.portfolio,
+                  for: openForm.portfolio,
                   message: `are you sure you want to delete your ${
-                    openImgForm.portfolio === "user"
+                    openForm.portfolio === "user"
                       ? "profile"
-                      : openImgForm.portfolio
-                  } ${openImgForm.type}`,
+                      : openForm.portfolio
+                  } ${openForm.type}`,
                 });
               }}
             >

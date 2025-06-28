@@ -11,7 +11,7 @@ import { chatService } from "@/services/api/chatService";
 import {} from "@/Contexts/LanguageContext";
 
 import { useLanguage } from "@/Contexts/LanguageContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import ConvertTime from "@/utils/ConvertTime";
 
 import {
@@ -36,7 +36,7 @@ import { PiStickerDuotone } from "react-icons/pi";
 
 export default function Chats() {
   const [hideChats, setHideChats] = useState(false);
-  const { screenSize, screenSizeWidth, userData } = useContext(ScreenContext);
+  const { screenSize, userData } = useContext(fetchingContext);
   const { translations, locale } = useLanguage();
 
   const [chatsCurrentFilter, setChatsCurrentFilter] = useState("allchats");

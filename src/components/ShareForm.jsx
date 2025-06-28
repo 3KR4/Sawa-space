@@ -6,16 +6,16 @@ import { MdContentCopy } from "react-icons/md";
 
 const ShareForm = () => {
   const [isCopied, setIsCopied] = useState(false);
-  const { openShare, setOpenShare, shareFomrRef } = useContext(MenusContext);
+  const { shareLink, setShareLink, Refs } = useContext(MenusContext);
 
   const handleCopy = async (e) => {
     e.preventDefault();
     try {
-      await navigator.clipboard.writeText(openShare);
+      await navigator.clipboard.writeText(shareLink);
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
-        setOpenShare(null);
+        setShareLink(null);
       }, 2000);
     } catch (err) {
       console.error("Failed to copy: ", err);
@@ -27,21 +27,21 @@ const ShareForm = () => {
     switch (platform) {
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          openShare
+          shareLink
         )}`;
         break;
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-          openShare
+          shareLink
         )}&text=${encodeURIComponent(title)}`;
         break;
       case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          openShare
+          shareLink
         )}`;
         break;
       case "whatsapp":
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${openShare}`)}`;
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareLink}`)}`;
         break;
       default:
         break;
@@ -49,14 +49,13 @@ const ShareForm = () => {
     window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        shareFomrRef.current &&
-        !shareFomrRef.current.contains(event.target)
+        Refs.shareForm.current &&
+        !Refs.shareForm.current.contains(event.target)
       ) {
-        setOpenShare(null);
+        setShareLink(null);
       }
     };
 
@@ -67,12 +66,12 @@ const ShareForm = () => {
   }, []);
 
   return (
-    <form className={`focusedMsg share FormMenu ${openShare ? "active" : ""} `}>
-      <div className={`body shareForm contentLoaded`} ref={shareFomrRef}>
+    <form className={`focusedMsg share FormMenu ${shareLink ? "active" : ""} `}>
+      <div className={`body shareForm contentLoaded`} ref={Refs.shareForm}>
         <div className="top">
           <h4>Share This Post To</h4>
           <div>
-            <IoClose className="close" onClick={() => setOpenShare(null)} />
+            <IoClose className="close" onClick={() => setShareLink(null)} />
           </div>
         </div>
 
@@ -96,7 +95,7 @@ const ShareForm = () => {
         <h5>or copy link</h5>
         <div className="link-holder">
           <MdContentCopy />
-          <input type="text" value={openShare} readOnly />
+          <input type="text" value={shareLink} readOnly />
           <button type="button" onClick={handleCopy} className="main-button">
             {isCopied ? "Copied!" : "Copy"}
           </button>

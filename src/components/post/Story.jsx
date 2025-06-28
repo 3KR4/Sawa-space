@@ -14,14 +14,14 @@ import ConvertTime from "@/utils/ConvertTime";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
 
 import { HiDotsVertical } from "react-icons/hi";
 
 function Story({ data, smallView, fetchUserStories, smallStoryLoad }) {
-  const { screenSize, userData, stories } = useContext(ScreenContext);
+  const { screenSize, userData, stories } = useContext(fetchingContext);
   const { translations, locale } = useLanguage();
   const { handleMenus } = useContext(DynamicMenusContext);
 

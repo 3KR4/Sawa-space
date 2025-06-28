@@ -10,7 +10,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { postService } from "@/services/api/postService";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -26,17 +26,14 @@ import { CircleAlert } from "lucide-react";
 function PostForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage } = useContext(ScreenContext);
+  const { userData, userPage } = useContext(fetchingContext);
 
   const {
     selectedUsers,
     setSelectedUsers,
-    selectedUsersNames,
-    setSelectedUsersNames,
-    setSelectionMenuTitle,
-    openPostForm,
-    setOpenPostForm,
-    usersSelectionRef,
+    openForm,
+    setOpenForm,
+    Refs,
     setSomeThingHappen,
   } = useContext(MenusContext);
 
@@ -78,7 +75,7 @@ function PostForm() {
 
   const [curentOpendSelectHolder, setCurentOpendSelectHolder] = useState();
 
-  const [postType, setPostType] = useState(openPostForm?.for || "user");
+  const [postType, setPostType] = useState(openForm?.type || "user");
 
   const isDisabled = !images.length && !links.length && messageText.length < 3;
 
@@ -104,7 +101,7 @@ function PostForm() {
       const updatedImages = prevImages.filter((_, i) => i !== index);
 
       // If it's a previously uploaded image and we're editing the post
-      if (removed?.publicid && openPostForm.type === "edit") {
+      if (removed?.publicid && openForm.mode === "edit") {
         setRemovedImages((prev) => [...prev, removed.publicid]);
       }
 
@@ -178,9 +175,6 @@ function PostForm() {
       setSelectedUsers((prev) =>
         prev.filter((_, index) => index !== indexToRemove)
       );
-      setSelectedUsersNames((prev) =>
-        prev.filter((_, index) => index !== indexToRemove)
-      );
     }
   };
 
@@ -190,8 +184,8 @@ function PostForm() {
         return;
       }
       if (
-        usersSelectionRef.current &&
-        usersSelectionRef.current.contains(event.target)
+        Refs.usersSelection.current &&
+        Refs.usersSelection.current.contains(event.target)
       ) {
         return;
       }
@@ -201,7 +195,7 @@ function PostForm() {
       ) {
         return;
       }
-      setOpenPostForm(false);
+      setOpenForm(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -211,13 +205,13 @@ function PostForm() {
   }, []);
 
   useEffect(() => {
-    if (openPostForm.type === "edit") {
+    if (openForm.mode === "edit") {
       setLoadingContent(false);
       const fetchPost = async () => {
         try {
           const response = await postService.getSinglePost(
             postType,
-            openPostForm.postId
+            openForm.postId
           );
           const post = response?.data?.data?.[0];
 
@@ -253,7 +247,7 @@ function PostForm() {
       setSelectedUsers([]);
       setImages([]);
     }
-  }, [openPostForm]);
+  }, [openForm]);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -274,9 +268,9 @@ function PostForm() {
     try {
       const postIds = [];
 
-      if (openPostForm.type === "edit") {
+      if (openForm.mode === "edit") {
         // Editing a single post
-        const postId = openPostForm.postId;
+        const postId = openForm.postId;
         await postService.editPost(postType, postId, postData);
         postIds.push({ type: postType, id: postId });
       } else {
@@ -307,7 +301,7 @@ function PostForm() {
         }
 
         // Delete removed images (only when editing)
-        if (openPostForm.type === "edit" && removedImages.length > 0) {
+        if (openForm.mode === "edit" && removedImages.length > 0) {
           for (const publicid of removedImages) {
             try {
               await postService.deleteImg(type, id, publicid);
@@ -321,7 +315,7 @@ function PostForm() {
         const post = await postService.getSinglePost(type, id);
         if (post?.data?.data?.[0]) {
           setSomeThingHappen({
-            event: openPostForm.type === "edit" ? "edit" : "create",
+            event: openForm.mode === "edit" ? "edit" : "create",
             type: "post",
             post: post.data.data[0],
           });
@@ -332,7 +326,7 @@ function PostForm() {
       addNotification({
         type: "success",
         message:
-          openPostForm.type === "edit"
+          openForm.mode === "edit"
             ? "Post updated successfully."
             : postType === "together"
             ? "Posts created successfully for both user and page."
@@ -340,7 +334,7 @@ function PostForm() {
       });
 
       // Reset form state
-      setOpenPostForm(false);
+      setOpenForm(false);
       setMessageText("");
       setLinks([]);
       setTags([]);
@@ -360,34 +354,32 @@ function PostForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`focusedMsg FormMenu ${openPostForm ? "active" : ""} `}
+      className={`focusedMsg FormMenu ${openForm ? "active" : ""} `}
     >
       <div
         className={`body postForm ${
-          loadingContent || openPostForm.type !== "edit" ? "contentLoaded" : ""
+          loadingContent || openForm.mode !== "edit" ? "contentLoaded" : ""
         }`}
         ref={formMenuRef}
       >
-        {!loadingContent && openPostForm.type === "edit" && (
+        {!loadingContent && openForm.mode === "edit" && (
           <div className="lds-dual-ring big-loader"></div>
         )}
 
         <div className="top">
           <h4>
-            {openPostForm.type === "edit"
+            {openForm.mode === "edit"
               ? translations?.forms?.edit_post
               : translations?.forms?.create_post}
           </h4>
           <div>
-            <IoClose className="close" onClick={() => setOpenPostForm(false)} />
+            <IoClose className="close" onClick={() => setOpenForm(false)} />
           </div>
         </div>
         <div
           style={{
             overflow:
-              !loadingContent && openPostForm.type === "edit"
-                ? "hidden"
-                : "auto",
+              !loadingContent && openForm.mode === "edit" ? "hidden" : "auto",
           }}
         >
           <div className={`inputHolder`}>
@@ -470,13 +462,13 @@ function PostForm() {
             </div>
           )}
 
-          {selectedUsersNames.length > 0 && (
+          {selectedUsers.length > 0 && (
             <div className="inputHolder mentionsHolder">
               <h4>{translations?.forms?.Mentiond_People}</h4>
               <div className="tagsHolder">
-                {selectedUsersNames.map((name, index) => (
+                {selectedUsers.map((x, index) => (
                   <div key={index} className="tag">
-                    <span>@{name}</span>
+                    <span>@{x?.name}</span>
                     <button
                       type="button"
                       className="remove"
@@ -633,10 +625,11 @@ function PostForm() {
               />
               <VscMention
                 onClick={(e) => {
-                  handleMenus(e, "usersSelection");
-                  setSelectionMenuTitle("Tag People...");
+                  handleMenus(e, "usersSelection", null, {
+                    type: "Tag People...",
+                  });
                 }}
-                className={`${selectedUsersNames.length ? "active" : ""}`}
+                className={`${selectedUsers.length ? "active" : ""}`}
               />
               <FaHashtag
                 onClick={() => setAddHashtag((prev) => !prev)}
@@ -644,7 +637,7 @@ function PostForm() {
               />
             </div>
           </div>
-          {userPage && openPostForm.type !== "edit" && (
+          {userPage && openForm.mode !== "edit" && (
             <div
               className="select-holder"
               onClick={() => setCurentOpendSelectHolder((prev) => !prev)}
@@ -713,7 +706,7 @@ function PostForm() {
             disabled={isDisabled || loading}
           >
             <span>
-              {openPostForm.type === "edit"
+              {openForm.mode === "edit"
                 ? translations?.forms?.edit_post
                 : translations?.forms?.create_post}
             </span>

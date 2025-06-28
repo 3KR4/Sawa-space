@@ -1,23 +1,30 @@
-"use client"; // Required for Next.js App Router
+"use client";
 
 import { createContext, useState, useEffect, useContext } from "react";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [locale, setLocale] = useState("en"); // Default language
+  const { userData } = useContext(fetchingContext);
+  const [locale, setLocale] = useState("en"); // fallback default
   const [translations, setTranslations] = useState({});
 
+  // Set locale from user settings when userData is available
   useEffect(() => {
-    const savedLocale = localStorage.getItem("locale") || "en";
-    setLocale(savedLocale);
-    loadTranslations(savedLocale);
-  }, []);
+    if (userData?.Settings?.lang) {
+      const lang = userData.Settings.lang;
+      setLocale(lang);
+      loadTranslations(lang);
+    }
+  }, [userData]);
 
+  // Update <body> class based on current locale (for direction or theme needs)
   useEffect(() => {
     document.body.className = `${locale}`;
   }, [locale]);
 
+  // Dynamically load translations
   const loadTranslations = async (lang) => {
     try {
       const data = await import(`@/locales/${lang}.json`);
@@ -27,14 +34,8 @@ export const LanguageProvider = ({ children }) => {
     }
   };
 
-  const changeLanguage = (lang) => {
-    setLocale(lang);
-    localStorage.setItem("locale", lang);
-    loadTranslations(lang);
-  };
-
   return (
-    <LanguageContext.Provider value={{ locale, translations, changeLanguage }}>
+    <LanguageContext.Provider value={{ locale, translations }}>
       {children}
     </LanguageContext.Provider>
   );

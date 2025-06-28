@@ -13,7 +13,7 @@ import ConvertTime from "@/utils/ConvertTime";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { postService } from "@/services/api/postService";
 import { useRouter } from "next/navigation";
@@ -52,12 +52,12 @@ function Post({ data = {}, focused = false }) {
     setSingleProvider,
     someThingHappen,
     setSomeThingHappen,
-    setOpenShare,
+    setShareLink,
   } = useContext(MenusContext);
   const { handleMenus, setOpenUsersReact, selectedDev } =
     useContext(DynamicMenusContext);
   const { setMessageText } = useContext(InputActionsContext);
-  const { screenSize, userData, userPage } = useContext(ScreenContext);
+  const { screenSize, userData, userPage } = useContext(fetchingContext);
 
   const postId = normalizedData?._id;
   const isAuthorArray = Array.isArray(normalizedData?.author);
@@ -228,7 +228,7 @@ function Post({ data = {}, focused = false }) {
           <div>
             <PiShareFat
               onClick={() =>
-                setOpenShare(
+                setShareLink(
                   `${window.location.origin}?type=${
                     author ? "user" : "page"
                   }&&post=${currentPost._id}`
@@ -450,7 +450,7 @@ function Post({ data = {}, focused = false }) {
                 //   />
                 // ) : null} */}
               </div>
-              {userData && userData._id && (
+              {userData && userData?._id && (
                 <HiDotsVertical
                   className="settingDotsIco"
                   onClick={(e) => {
@@ -754,7 +754,7 @@ function Post({ data = {}, focused = false }) {
                   </div>
                 </div>
                 <div className="icons-holder">
-                  {userData && userData._id && (
+                  {userData && userData?._id && (
                     <HiDotsVertical
                       className="settingDotsIco"
                       onClick={(e) => {

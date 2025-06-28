@@ -19,13 +19,13 @@ import { productService } from "@/services/api/productService";
 import ContentLoader from "react-content-loader";
 import Product from "@/components/shop/Product";
 import { useLanguage } from "@/Contexts/LanguageContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 import { IoGrid, IoSearch, IoClose } from "react-icons/io5";
 
 export default function MarketPlace() {
   const { translations } = useLanguage();
-  const { screenSize } = useContext(ScreenContext);
+  const { screenSize } = useContext(fetchingContext);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -263,78 +263,108 @@ export default function MarketPlace() {
               </div>
             </div>
           </div>
-
-          <div
-            className="products"
-            style={{
-              background: loading ? "white" : "",
-              padding: loading ? "10px" : "",
-            }}
-          >
-            {loading
-              ? Array.from({ length: 10 }).map((_, index) => (
-                  <ContentLoader
-                    key={index}
-                    speed={1}
-                    width="100%"
-                    height="100%"
-                    viewBox="0 0 300 300"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-                  >
-                    {/* Image Placeholder */}
-                    <rect x="0" y="0" rx="8" ry="8" width="100%" height="68%" />
-
-                    {/* Name Placeholder */}
-                    <rect
-                      x="5"
-                      y="212"
-                      rx="2"
-                      ry="2"
+          {loading || products.length ? (
+            <div
+              className="products"
+              style={{
+                background: loading ? "white" : "",
+                padding: loading ? "10px" : "",
+              }}
+            >
+              {loading
+                ? Array.from({ length: 10 }).map((_, index) => (
+                    <ContentLoader
+                      key={index}
+                      speed={1}
                       width="100%"
-                      height="15"
-                    />
+                      height="100%"
+                      viewBox="0 0 300 300"
+                      backgroundColor="#f3f3f3"
+                      foregroundColor="#ecebeb"
+                    >
+                      {/* Image Placeholder */}
+                      <rect
+                        x="0"
+                        y="0"
+                        rx="8"
+                        ry="8"
+                        width="100%"
+                        height="68%"
+                      />
 
-                    {/* Price Placeholder */}
-                    <rect x="5" y="235" rx="4" ry="2" width="150" height="10" />
-                    <rect
-                      x="195"
-                      y="235"
-                      rx="4"
-                      ry="2"
-                      width="100"
-                      height="10"
-                    />
+                      {/* Name Placeholder */}
+                      <rect
+                        x="5"
+                        y="212"
+                        rx="2"
+                        ry="2"
+                        width="100%"
+                        height="15"
+                      />
 
-                    {/* User Info Placeholder */}
-                    <circle cx="22" cy="280" r="20" />
-                    <rect
-                      x="50"
-                      y="267"
-                      rx="2"
-                      ry="2"
-                      width="100"
-                      height="10"
-                    />
-                    <rect x="50" y="285" rx="2" ry="2" width="50" height="10" />
+                      {/* Price Placeholder */}
+                      <rect
+                        x="5"
+                        y="235"
+                        rx="4"
+                        ry="2"
+                        width="150"
+                        height="10"
+                      />
+                      <rect
+                        x="195"
+                        y="235"
+                        rx="4"
+                        ry="2"
+                        width="100"
+                        height="10"
+                      />
 
-                    {/* Social Icons Placeholder */}
+                      {/* User Info Placeholder */}
+                      <circle cx="22" cy="280" r="20" />
+                      <rect
+                        x="50"
+                        y="267"
+                        rx="2"
+                        ry="2"
+                        width="100"
+                        height="10"
+                      />
+                      <rect
+                        x="50"
+                        y="285"
+                        rx="2"
+                        ry="2"
+                        width="50"
+                        height="10"
+                      />
 
-                    {/* Discount Placeholder */}
-                    <rect
-                      x="250"
-                      y="280"
-                      rx="2"
-                      ry="2"
-                      width="50"
-                      height="10"
-                    />
-                  </ContentLoader>
-                ))
-              : products.map((x) => (
-                  <Product key={x._id} data={x} viewOwner={true} />
-                ))}
-          </div>
+                      {/* Social Icons Placeholder */}
+
+                      {/* Discount Placeholder */}
+                      <rect
+                        x="250"
+                        y="280"
+                        rx="2"
+                        ry="2"
+                        width="50"
+                        height="10"
+                      />
+                    </ContentLoader>
+                  ))
+                : products.map((x) => (
+                    <Product key={x._id} data={x} viewOwner={true} />
+                  ))}
+            </div>
+          ) : (
+            <div className="no-products-found">
+              <p>{translations?.chats?.find_friends_and_start_chatting}</p>
+              <img
+                src={"/Svgs/no-products-found.svg"}
+                alt={`no-products-found`}
+              />
+            </div>
+          )}
           <ReactPaginate
             pageCount={lastPage}
             marginPagesDisplayed={1}

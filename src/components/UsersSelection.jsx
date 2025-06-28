@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { users } from "@/utils/Data";
@@ -9,19 +9,16 @@ import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
 
 function UsersSelection() {
-  const {
-    selectedUsers,
-    setSelectedUsers,
-    selectedUsersNames,
-    setSelectedUsersNames,
-    selectionMenuTitle,
-    usersSelectionSearch,
-    setUsersSelectionSearch,
-    usersSelectionRef,
-  } = useContext(MenusContext);
+  const { selectedUsers, setSelectedUsers, Refs } = useContext(MenusContext);
 
-  const { menuPosition, openUsersSelection, setOpenUsersSelection } =
-    useContext(DynamicMenusContext);
+  const {
+    selectedDev,
+    menuPosition,
+    openUsersSelection,
+    setOpenUsersSelection,
+  } = useContext(DynamicMenusContext);
+
+  const [usersSelectionSearch, setUsersSelectionSearch] = useState("");
 
   const curentSearchUser = usersSelectionSearch
     ? users.filter((user) =>
@@ -33,13 +30,12 @@ function UsersSelection() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        usersSelectionRef.current &&
-        !usersSelectionRef.current.contains(event.target)
+        Refs.usersSelection.current &&
+        !Refs.usersSelection.current.contains(event.target)
       ) {
         setOpenUsersSelection(false);
-        if (selectionMenuTitle !== "Tag People...") {
+        if (selectedDev.type !== "Tag People...") {
           setSelectedUsers([]);
-          setSelectedUsersNames([]);
         }
       }
     };
@@ -57,48 +53,45 @@ function UsersSelection() {
 
   return (
     <div
-      ref={usersSelectionRef}
+      ref={Refs.usersSelection}
       className={`usersSelection sideMenu ${
         openUsersSelection ? "active" : ""
       }`}
       style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
     >
-      <h1>{selectionMenuTitle}</h1>
+      <h1>{selectedDev.type}</h1>
       <div className="search-chosen">
-        {selectedUsersNames.length > 0 &&
-          selectionMenuTitle !== "Tag People..." && (
-            <ul className="result">
-              {selectedUsersNames.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
-          )}
+        {selectedUsers.length > 0 && selectedDev.type !== "Tag People..." && (
+          <ul className="result">
+            {selectedUsers.map((x) => (
+              <li key={x.name}>{x.name}</li>
+            ))}
+          </ul>
+        )}
         <input
           placeholder="Search by name"
           value={usersSelectionSearch}
           onChange={(e) => setUsersSelectionSearch(e.target.value)}
         />
       </div>
-      {selectedUsersNames.length > 0 &&
-        selectionMenuTitle !== "Tag People..." && (
-          <button className="mainbtn">Forword</button>
-        )}
+      {selectedUsers.length > 0 && selectedDev.type !== "Tag People..." && (
+        <button className="mainbtn">Forword</button>
+      )}
       <div className="holder">
         {curentSearchUser?.map((x) => (
           <div
             key={x.id}
             className="chat"
             onClick={() => {
-              setSelectedUsers((prev) =>
-                prev.includes(x.id)
-                  ? prev.filter((id) => id !== x.id)
-                  : [...prev, x.id]
-              );
-              setSelectedUsersNames((prev) =>
-                prev.includes(x.name)
-                  ? prev.filter((name) => name !== x.name)
-                  : [...prev, x.name]
-              );
+              setSelectedUsers((prev) => {
+                const exists = prev.some((user) => user.id === x.id);
+
+                if (exists) {
+                  return prev.filter((user) => user.id !== x.id);
+                } else {
+                  return [...prev, x];
+                }
+              });
             }}
           >
             <Image

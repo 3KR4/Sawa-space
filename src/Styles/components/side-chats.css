@@ -1,5 +1,5 @@
 .chats {
-  background: var(--body-color);
+  background: var(--section-color);
   width: 334px;
   border-radius: 11px;
   padding: 9px 0 0;
@@ -335,7 +335,7 @@ body.ar .chats.active .chat {
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
-  background: var(--section-color);
+  background: var(--body-color);
   box-shadow: 0px 0px 8px 1px #d1d1d1;
 }
 .chats .userMenu.active {

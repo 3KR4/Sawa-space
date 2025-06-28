@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { postService } from "@/services/api/postService";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { userService } from "@/services/api/userService";
@@ -22,15 +22,10 @@ function SettingMenu() {
   const { translations } = useLanguage();
   const { addNotification } = useNotification();
   const { userData, actionLoading, setActionLoading, setUserData } =
-    useContext(ScreenContext);
+    useContext(fetchingContext);
 
-  const {
-    settingsMenuRef,
-    setDangerEvent,
-    setOpenPostForm,
-    setOpenStoryForm,
-    setSomeThingHappen,
-  } = useContext(MenusContext);
+  const { Refs, setDangerEvent, setOpenForm, setSomeThingHappen } =
+    useContext(MenusContext);
   const {
     menuPosition,
     settingMenu,
@@ -42,8 +37,8 @@ function SettingMenu() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!settingsMenuRef.current) return;
-      if (settingsMenuRef.current.contains(event.target)) {
+      if (!Refs.settings.current) return;
+      if (Refs.settings.current.contains(event.target)) {
         return;
       }
       setSettingMenu(false);
@@ -271,9 +266,10 @@ function SettingMenu() {
       icon: <MdEdit />,
       onClick: () => {
         setSettingMenu(false);
-        setOpenPostForm({
+        setOpenForm({
           for: selectedDev.isMyPost ? "user" : "page",
-          type: "edit",
+          type: selectedDev.isMyPost ? "user" : "page",
+          mode: "edit",
           postId: selectedDev.id,
         });
       },
@@ -400,7 +396,7 @@ function SettingMenu() {
 
   return (
     <div
-      ref={settingsMenuRef}
+      ref={Refs.settings}
       className={`${settingMenuType} sideMenu ${settingMenu ? "active" : ""}`}
       style={{
         top: menuPosition?.top ? `${menuPosition.top}px` : "0px",
@@ -448,7 +444,11 @@ function SettingMenu() {
               <button
                 onClick={() => {
                   setSettingMenu(false);
-                  setOpenStoryForm({ type: "edit", story: selectedDev.story });
+                  setOpenForm({
+                    for: "story",
+                    mode: "edit",
+                    story: selectedDev.story,
+                  });
                 }}
               >
                 <MdEdit /> {translations?.story?.edit_story}

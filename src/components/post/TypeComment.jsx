@@ -3,7 +3,7 @@ import "@/Styles/components/actions-holder.css";
 
 import { useState, useContext, useRef, useEffect } from "react";
 import Image from "next/image";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
@@ -25,7 +25,7 @@ function TypeComment({
   setComments,
   setCommentsCount,
 }) {
-  const { screenSize, userData } = useContext(ScreenContext);
+  const { screenSize, userData } = useContext(fetchingContext);
   const { addNotification } = useNotification();
   const { someThingHappen, setSomeThingHappen } = useContext(MenusContext);
 
@@ -118,7 +118,7 @@ function TypeComment({
       } catch (err) {
         console.error("Error updating comment", err);
 
-        if (userData && userData._id) {
+        if (userData && userData?._id) {
           addNotification({
             type: "error",
             message: "Failed to update your comment",
@@ -194,7 +194,7 @@ function TypeComment({
       } catch (err) {
         console.error("Error creating comment", err);
 
-        if (userData && userData._id) {
+        if (userData && userData?._id) {
           addNotification({
             type: "error",
             message: "Failed to post Your Comment",
@@ -254,7 +254,7 @@ function TypeComment({
             width={40}
             height={40}
           />
-          {userData && userData._id
+          {userData && userData?._id
             ? `${userData?.firstname} ${userData?.lastname}`
             : "no user yet"}
         </div>

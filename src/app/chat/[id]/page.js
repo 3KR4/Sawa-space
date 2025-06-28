@@ -16,7 +16,7 @@ import SettingMenu from "@/components/providers/SettingMenu";
 import { DynamicMenusContext } from "@/Contexts/DynamicMenus";
 import { InputActionsContext } from "@/Contexts/InputActionsContext";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 //Icons
 import { GoPin } from "react-icons/go";
 import { HiReply } from "react-icons/hi";
@@ -58,8 +58,7 @@ export default function Chat({ params }) {
     imgFocus,
     setImgFocus,
     setImgIndex,
-    closeImgHolderRef,
-    setSelectionMenuTitle,
+    Refs,
   } = useContext(MenusContext);
 
   const {
@@ -75,7 +74,7 @@ export default function Chat({ params }) {
   } = useContext(DynamicMenusContext);
   const { messageText, setMessageText, InputRef, handleEmojiClick } =
     useContext(InputActionsContext);
-  const { screenSize } = useContext(ScreenContext);
+  const { screenSize } = useContext(fetchingContext);
 
   const [curentChat, setCurentChat] = useState({});
   const [selectMode, setSelectMode] = useState(false);
@@ -195,8 +194,8 @@ export default function Chat({ params }) {
       if (
         !(
           (overviewRef.current && overviewRef.current.contains(event.target)) ||
-          (closeImgHolderRef.current &&
-            closeImgHolderRef.current.contains(event.target))
+          (Refs.closeImgHolder.current &&
+            Refs.closeImgHolder.current.contains(event.target))
         )
       ) {
         setOverViewMenu(false);
@@ -307,9 +306,10 @@ export default function Chat({ params }) {
                 </button>
                 <button
                   onClick={(e) => {
-                    selectedMsgs.length > 0 && handleMenus(e, "usersSelection");
                     selectedMsgs.length > 0 &&
-                      setSelectionMenuTitle("Forword To...");
+                      handleMenus(e, "usersSelection", null, {
+                        type: "Forword To...",
+                      });
                   }}
                 >
                   <FaShare />{" "}
@@ -514,8 +514,9 @@ export default function Chat({ params }) {
             <hr />
             <button
               onClick={(e) => {
-                handleMenus(e, "usersSelection", curentChat.id);
-                setSelectionMenuTitle("Forword To...");
+                handleMenus(e, "usersSelection", curentChat.id, {
+                  type: "Forword To...",
+                });
               }}
             >
               <HiReply style={{ transform: "rotateY(180deg)" }} />

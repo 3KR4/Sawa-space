@@ -1,6 +1,7 @@
 "use client";
 import "@/Styles/components/notification.css";
 import "@/Styles/components/side-menus.css";
+import "@/Styles/components/providers.css";
 
 import React from "react";
 import { useContext } from "react";
@@ -20,20 +21,12 @@ import StoryForm from "@/components/forms/StoryForm";
 import ProductForm from "@/components/forms/ProductForm";
 import Notification from "@/components/Notification";
 import ShareForm from "@/components/ShareForm";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { NotificationContext } from "@/Contexts/NotificationContext";
 
 function AllComponents() {
-  const {
-    openPostForm,
-    openStoryForm,
-    openProductForm,
-    openImgForm,
-    dangerEvent,
-    singleProvider,
-    openShare,
-    openGroupForm,
-  } = useContext(MenusContext);
+  const { openForm, dangerEvent, singleProvider, shareLink } =
+    useContext(MenusContext);
   const { notificationMessages, curentNotficationClosedCount } =
     useContext(NotificationContext);
 
@@ -44,7 +37,7 @@ function AllComponents() {
     openUsersReact,
     emojiHolder,
   } = useContext(DynamicMenusContext);
-  const { pathname, screenSize } = useContext(ScreenContext);
+  const { pathname, screenSize } = useContext(fetchingContext);
 
   return (
     <>
@@ -63,19 +56,19 @@ function AllComponents() {
         ))}
       </div>
 
+      {openForm?.for === "post" && <PostForm />}
+      {openForm?.for === "story" && <StoryForm />}
+      {openForm?.for === "product" && <ProductForm />}
+      {openForm?.for === "group" && <GroupForm />}
+      {openForm?.for === "image" && <ImgForm />}
       {settingMenu && <SettingMenu />}
       {singleProvider?.type && !pathname.includes("chat") && <SingleDetails />}
       {infoMenu && <UserInfo />}
-      {openPostForm && <PostForm />}
-      {openStoryForm && <StoryForm />}
-      {openProductForm && <ProductForm />}
-      {openGroupForm && <GroupForm />}
-      {openImgForm && <ImgForm />}
-      {dangerEvent && <DangerEvent />}
+      {dangerEvent?.type && <DangerEvent />}
       {openUsersReact && <UsersReact />}
       {openUsersSelection && <UsersSelection />}
       {emojiHolder && <EmojesHolder />}
-      {openShare && <ShareForm />}
+      {shareLink && <ShareForm />}
     </>
   );
 }

@@ -5,7 +5,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { postService } from "@/services/api/postService";
 
 function UsersReact() {
-  const { usersreactMenuRef, infoMenuRef } = useContext(MenusContext);
+  const { Refs } = useContext(MenusContext);
   const { menuPosition, openUsersReact, setOpenUsersReact, handleMenus2 } =
     useContext(DynamicMenusContext);
 
@@ -36,11 +36,11 @@ function UsersReact() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isClickOutsideUsersReact =
-        usersreactMenuRef.current &&
-        !usersreactMenuRef.current.contains(event.target);
+        Refs.usersReact.current &&
+        !Refs.usersReact.current.contains(event.target);
 
       const isClickOutsideInfoMenu =
-        !infoMenuRef.current || !infoMenuRef.current.contains(event.target);
+        !Refs.info.current || !Refs.info.current.contains(event.target);
 
       if (isClickOutsideUsersReact && isClickOutsideInfoMenu) {
         setOpenUsersReact(null);
@@ -55,7 +55,7 @@ function UsersReact() {
 
   return (
     <div
-      ref={usersreactMenuRef}
+      ref={Refs.usersReact}
       className={`reactsMenu MenuOfUsers sideMenu ${
         openUsersReact ? "active" : ""
       }`}

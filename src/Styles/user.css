@@ -74,7 +74,7 @@ body.ar {
   border: 0.5px solid #e8e8e8;
   display: flex;
   padding: 12px 22px;
-  background: var(--body-color);
+  background: var(--section-color);
   flex-direction: column;
 }
 .portfolio nav .top {
@@ -184,7 +184,7 @@ body.ar .portfolio nav .top .right {
 .portfolio
   .bottom-holder
   .side-menu:has(.Filter-Holder)::-webkit-scrollbar-track {
-  background: var(--body-color);
+  background: var(--section-color);
 }
 .portfolio .sideSection .Filter-Holder.forCat {
   padding: 15px 8px !important;
@@ -197,7 +197,7 @@ body.ar .portfolio nav .top .right {
   justify-content: space-between;
 }
 .portfolio .bottom-holder .side-menu > * {
-  background: var(--body-color);
+  background: var(--section-color);
   border-radius: 10px;
   border: 0.5px solid #e8e8e8;
 }
@@ -262,9 +262,9 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   flex-wrap: wrap;
 }
 .portfolio .bottom-holder .side-menu .about li a {
-    color: #0055ff;
-    font-weight: 400;
-    text-decoration: underline;
+  color: #0055ff;
+  font-weight: 400;
+  text-decoration: underline;
 }
 .portfolio .bottom-holder .side-menu .about li span {
   font-weight: 500;
@@ -298,7 +298,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   gap: 3px;
   border: 1px solid var(--border-color);
   border-radius: 7px;
-  background: var(--section-color);
+  background: var(--body-color);
   padding: 4px !important;
   transition: 0.3s;
   cursor: pointer;
@@ -375,16 +375,16 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 .portfolio .bottom-holder .side-menu .images .hold > svg,
 .portfolio .bigSection .friends > svg,
 .portfolio .bigSection .photos > svg {
-  background: var(--section-color);
+  background: var(--body-color);
   border-radius: 8px;
   width: 100%;
 }
 .portfolio .bigSection .photos > svg {
-  background: var(--body-color);
+  background: var(--section-color);
   height: 260px;
 }
 .portfolio .bigSection .friends > svg {
-  background: var(--body-color);
+  background: var(--section-color);
   height: 65px;
 }
 .portfolio .bottom-holder .friends .chat {
@@ -449,7 +449,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   padding-bottom: 25px;
 }
 .portfolio .bottom-holder .bigSection > .actions {
-  background: var(--body-color);
+  background: var(--section-color);
   padding: 19px;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;
@@ -491,7 +491,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   gap: 7px;
 }
 .portfolio .bigSection .friends > div {
-  background: var(--body-color);
+  background: var(--section-color);
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -536,7 +536,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
 
 .portfolio .bigSection .friends > div .main-button {
   font-size: 13px;
-  background: var(--section-color);
+  background: var(--body-color);
   border: 1px solid var(--border-color);
   margin: 0;
   padding: 4px 12px !important;
@@ -568,7 +568,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--body-color);
+  background: var(--section-color);
   padding: 15px 13px;
   border: 1px solid var(--border-color);
   border-radius: 7px;
@@ -592,7 +592,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   cursor: pointer;
   display: flex;
   border-radius: 7px;
-  border: 1px solid var(--second-section-color);
+  border: 1px solid var(--second-body-color);
   background: var(--third-color);
   transition: 0.3s;
 }
@@ -619,7 +619,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   width: 100%;
 }
 .bigSection .hold-photos > div svg {
-  background-color: var(--section-color);
+  background-color: var(--body-color);
   border-radius: 7px;
 }
 .portfolio .bigSection .about {
@@ -627,7 +627,7 @@ body.ar .portfolio .bottom-holder .side-menu .top button svg {
   flex-direction: column;
   gap: 8px;
   font-weight: 600;
-  background: var(--body-color);
+  background: var(--section-color);
   padding: 15px;
   border-radius: 8px;
   border: 0.5px solid #e8e8e8;

@@ -10,7 +10,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useRouter } from "next/navigation";
 import { MdModeEditOutline } from "react-icons/md";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
@@ -42,7 +42,7 @@ export default function EditProfileForm({ editType, setEditType }) {
     setUserPage,
     fetchUserData,
     fetchPageData,
-  } = useContext(ScreenContext);
+  } = useContext(fetchingContext);
 
   const { translations, locale } = useLanguage();
 
@@ -156,7 +156,7 @@ export default function EditProfileForm({ editType, setEditType }) {
 
     try {
       editType === "user"
-        ? await userService.editUserData(userData._id, payload)
+        ? await userService.editUserData(userData?._id, payload)
         : await pageService.editPageData(payload);
       if (editType === "user") {
         await fetchUserData();

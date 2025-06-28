@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import "@/Styles/components/header.css";
 
+import { userService } from "@/services/api/userService";
+import { useNotification } from "@/Contexts/NotificationContext";
+
 import {
   IoSearch,
   IoClose,
@@ -30,23 +33,24 @@ import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { LiaPagerSolid } from "react-icons/lia";
 import { MenusContext } from "@/Contexts/MenusContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useLanguage } from "../Contexts/LanguageContext";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiUsers } from "react-icons/hi2";
 import { useDefaultReduceAnimations } from "@mui/x-date-pickers/internals";
 
 export default function Header() {
-  const {
-    setOpenPostForm,
-    setOpenStoryForm,
-    setSingleProvider,
-    setOpenProductForm,
-    setOpenGroupForm,
-  } = useContext(MenusContext);
+  const { setOpenForm, setSingleProvider } = useContext(MenusContext);
   const { translations, locale, changeLanguage } = useLanguage();
-  const { pathname, screenSize, userData, userPage, setUserData } =
-    useContext(ScreenContext);
+  const {
+    pathname,
+    screenSize,
+    userData,
+    userPage,
+    setUserData,
+    fetchUserData,
+  } = useContext(fetchingContext);
+  const { addNotification } = useNotification();
 
   const [userMenu, setUserMenu] = useState(false);
   const [createMenu, setCreateMenu] = useState(false);
@@ -127,6 +131,34 @@ export default function Header() {
     };
   }, [lastScrollY, screenSize]);
 
+  const handleUserSettings = async (type, value) => {
+    const payload = {
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      password: userData.password,
+      phone: userData.phone,
+      brithdate: userData.brithdate,
+      bio: userData.bio,
+      info: userData.info,
+      Settings: {
+        ...userData.Settings,
+        [type]: value,
+      },
+    };
+
+    try {
+      await userService.editUserData(userData?._id, payload);
+      await fetchUserData();
+    } catch (err) {
+      console.error("Error fetching userData", err);
+      addNotification({
+        type: "error",
+        message: "Failed to load user data",
+      });
+    }
+  };
+
   const Notfication = () => (
     <li className="notifications">
       <MdNotificationsActive />
@@ -143,19 +175,19 @@ export default function Header() {
       <div className={`menu createMenu ${createMenu ? "active" : ""}`}>
         <h4 className="title">{translations?.header?.create}</h4>
         <ul>
-          <button onClick={() => setOpenPostForm(true)}>
+          <button onClick={() => setOpenForm({ for: "post" })}>
             <BsFillPostcardFill /> {translations?.header?.createpost}
           </button>
-          <button onClick={() => setOpenStoryForm(true)}>
+          <button onClick={() => setOpenForm({ for: "story" })}>
             <FaHistory /> {translations?.header?.createstory}
           </button>
           {userPage && (
-            <button onClick={() => setOpenProductForm(true)}>
+            <button onClick={() => setOpenForm({ for: "product" })}>
               <FaShoppingBasket /> {translations?.header?.createProduct}
             </button>
           )}
 
-          <button onClick={() => setOpenGroupForm(true)}>
+          <button onClick={() => setOpenForm({ for: "group" })}>
             <FaUsers /> {translations?.header?.creategroup}
           </button>
           {!userPage && (
@@ -219,7 +251,14 @@ export default function Header() {
             <RiColorFilterAiFill />
             {translations?.header?.display_and_accessibility}
           </button>
-          <button onClick={() => changeLanguage(locale === "en" ? "ar" : "en")}>
+          <button
+            onClick={() =>
+              handleUserSettings(
+                "lang",
+                userData?.Settings?.lang === "en" ? "ar" : "en"
+              )
+            }
+          >
             <IoLanguage /> {translations?.header?.swithlang}
           </button>
           <button
@@ -272,7 +311,7 @@ export default function Header() {
                   setPhoneSearch((prev) => !prev); // Then toggle search
                 }}
               />
-              {userData && userData._id && (
+              {userData && userData?._id && (
                 <div className="events">
                   <>
                     {creation()}
@@ -355,7 +394,7 @@ export default function Header() {
         )}
       </nav>
 
-      {userData && userData._id && screenSize !== "small" && (
+      {userData && userData?._id && screenSize !== "small" && (
         <div className="events">
           <>
             {creation()}
@@ -365,7 +404,7 @@ export default function Header() {
         </div>
       )}
 
-      {!userData && !userData._id ? (
+      {!userData && !userData?._id ? (
         <Link className="letsPegin" href="/auth">
           {translations?.header?.lets_begin}
           <FaStar />

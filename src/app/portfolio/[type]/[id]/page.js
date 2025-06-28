@@ -23,7 +23,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Masonry from "@mui/lab/Masonry";
 import PostsHolder from "@/components/post/PostsHolder";
 import EditProfileForm from "@/components/forms/EditProfileForm";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
@@ -49,7 +49,7 @@ import { HiUsers } from "react-icons/hi2";
 import { IoInformationCircleSharp, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Portfolio({ params }) {
-  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
+  const { fetchUserData, fetchPageData } = useContext(fetchingContext);
   const router = useRouter();
   const pathname = usePathname();
   // const searchParams = useSearchParams();
@@ -62,8 +62,8 @@ export default function Portfolio({ params }) {
     screenSize,
     actionLoading,
     setActionLoading,
-  } = useContext(ScreenContext);
-  const { setOpenImgForm, someThingHappen, setSomeThingHappen } =
+  } = useContext(fetchingContext);
+  const { setOpenForm, someThingHappen, setSomeThingHappen } =
     useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -113,7 +113,7 @@ export default function Portfolio({ params }) {
         ...prev,
         friendRequests: {
           ...prev.friendRequests,
-          received: [...(prev.friendRequests?.received || []), userData._id],
+          received: [...(prev.friendRequests?.received || []), userData?._id],
         },
       }));
 
@@ -121,7 +121,7 @@ export default function Portfolio({ params }) {
     } catch (err) {
       console.error("Send friend request failed", err);
 
-      if (userData && userData._id) {
+      if (userData && userData?._id) {
         addNotification({
           type: "error",
           message: "Failed to send friend request.",
@@ -161,7 +161,7 @@ export default function Portfolio({ params }) {
         friendRequests: {
           ...prev.friendRequests,
           received: prev.friendRequests?.received?.filter(
-            (x) => x !== userData._id
+            (x) => x !== userData?._id
           ),
         },
       }));
@@ -205,9 +205,9 @@ export default function Portfolio({ params }) {
           ...prev,
           friendRequests: {
             ...prev.friendRequests,
-            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData?._id),
           },
-          friends: [...(prev.friends || []), userData._id],
+          friends: [...(prev.friends || []), userData?._id],
         }));
 
         addNotification({
@@ -230,7 +230,7 @@ export default function Portfolio({ params }) {
           ...prev,
           friendRequests: {
             ...prev.friendRequests,
-            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData?._id),
           },
         }));
 
@@ -260,7 +260,7 @@ export default function Portfolio({ params }) {
 
       setCurrentPortfolio((prev) => ({
         ...prev,
-        friends: prev.friends?.filter((x) => x !== userData._id),
+        friends: prev.friends?.filter((x) => x !== userData?._id),
       }));
     } catch (err) {
       console.error("Remove friend failed", err);
@@ -734,7 +734,8 @@ export default function Portfolio({ params }) {
             <div
               className="editICo"
               onClick={() => {
-                setOpenImgForm({
+                setOpenForm({
+                  for: "image",
                   portfolio: type,
                   type: "cover",
                   event: isMyProfile
@@ -776,7 +777,8 @@ export default function Portfolio({ params }) {
                   <div
                     className="editICo rounded"
                     onClick={() => {
-                      setOpenImgForm({
+                      setOpenForm({
+                        for: "image",
                         portfolio: type,
                         type: "img",
                         event: isMyProfile

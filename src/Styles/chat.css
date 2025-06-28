@@ -127,11 +127,11 @@ body:has(.personChat) > main > .holder {
   justify-content: space-between;
   border-bottom: 2px solid #dedede;
   padding-right: 15px;
-  background: var(--body-color);
+  background: var(--section-color);
   transition: 0.3s;
 }
 .personChat > .top:has(.user:hover) {
-  background: var(--section-color);
+  background: var(--body-color);
 }
 body.ar .personChat > .top {
   padding-right: 0;
@@ -157,7 +157,7 @@ body.ar .personChat > .top {
   align-items: flex-end;
   border-top: 2px solid #dedede;
   padding: 10px;
-  background: var(--body-color);
+  background: var(--section-color);
 }
 .personChat .tools {
   display: flex;
@@ -218,7 +218,7 @@ body.ar .personChat .overViewMenu {
   right: 0;
 }
 .personChat .overViewMenu .left {
-  background: var(--body-color);
+  background: var(--section-color);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -239,7 +239,7 @@ body.ar .personChat .overViewMenu {
 }
 .personChat .overViewMenu .left li:hover,
 .personChat .overViewMenu .left li.active {
-  background: var(--section-color);
+  background: var(--body-color);
 }
 .personChat .overViewMenu .left li::before {
   content: "";
@@ -389,7 +389,7 @@ body.ar .personChat .overViewMenu .right > div {
   margin: 0 4px;
 }
 .personChat .actions .big-holder .reply {
-  background: var(--section-color);
+  background: var(--body-color);
   padding: 8px 15px;
 }
 .personChat .actions .big-holder .reply::before {
@@ -513,7 +513,7 @@ body.ar .personChat .overViewMenu .right > div {
   z-index: -1;
 }
 .personChat .top .pin-holder .right:hover {
-  background: var(--body-color);
+  background: var(--section-color);
 }
 .personChat .top .pin-holder:hover .right {
   visibility: visible;
@@ -539,7 +539,7 @@ body.ar .personChat .overViewMenu .right > div {
   background: #f1740d69;
 }
 .personChat .messages .msg .body {
-  background: var(--body-color);
+  background: var(--section-color);
   padding: 10px 13px;
   border-radius: 5px;
   max-width: 40%;
@@ -603,7 +603,7 @@ body.ar .personChat .overViewMenu .right > div {
   letter-spacing: -0.3px;
   cursor: pointer;
   gap: 0;
-  background: var(--body-color);
+  background: var(--section-color);
   border: 1px solid var(--border-color);
 }
 .personChat .messages .msg .body .reacts .counter {
@@ -681,7 +681,7 @@ body.ar .personChat .overViewMenu .right > div {
   border-radius: 5px;
 }
 .personChat .reply {
-  background: var(--section-color);
+  background: var(--body-color);
   padding: 8px 12px;
   border-radius: 4px;
   margin-left: -2px;
@@ -829,7 +829,7 @@ body.ar .personChat .messages .msg.me .body:hover .interact {
   left: 50%;
   transform: translateX(-50%);
   outline: 2px solid #dedede;
-  background: var(--body-color);
+  background: var(--section-color);
   width: max-content;
   padding: 6px 9px;
   border-radius: 5px;

@@ -18,7 +18,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { useNotification } from "@/Contexts/NotificationContext";
@@ -30,13 +30,13 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 function PostsHolder(param) {
   const { addNotification } = useNotification();
-  const { screenSize, userData, stories, currentUserStory, storyloading } =
-    useContext(ScreenContext);
+  const { screenSize, userData, stories, currentUserStory } =
+    useContext(fetchingContext);
   const { translations } = useLanguage();
   const {
     someThingHappen,
     setSomeThingHappen,
-    setOpenStoryForm,
+    setOpenForm,
     singleProvider,
     setSingleProvider,
   } = useContext(MenusContext);

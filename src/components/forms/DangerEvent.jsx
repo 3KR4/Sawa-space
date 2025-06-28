@@ -10,7 +10,7 @@ import { postService } from "@/services/api/postService";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 import { IoClose } from "react-icons/io5";
 import { storyService } from "@/services/api/storyService";
@@ -19,15 +19,15 @@ import { productService } from "@/services/api/productService";
 function DangerEvent() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
+  const { fetchUserData, fetchPageData } = useContext(fetchingContext);
 
   const {
     dangerEvent,
     setDangerEvent,
     setSomeThingHappen,
-    openImgForm,
-    setOpenImgForm,
-    dangerEventRef,
+    openForm,
+    setOpenForm,
+    Refs,
   } = useContext(MenusContext);
   const { selectedDev } = useContext(DynamicMenusContext);
   const [loading, setLoading] = useState(false);
@@ -35,8 +35,8 @@ function DangerEvent() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dangerEventRef.current &&
-        dangerEventRef.current.contains(event.target)
+        Refs.dangerEvent.current &&
+        Refs.dangerEvent.current.contains(event.target)
       ) {
         return;
       }
@@ -144,12 +144,9 @@ function DangerEvent() {
     setLoading(true);
     try {
       if (dangerEvent.for === "user") {
-        await userService.delete_img_cover(
-          openImgForm.userId,
-          openImgForm.type
-        );
+        await userService.delete_img_cover(openForm.userId, openForm.type);
       } else {
-        await pageService.deletePage_img_cover(openImgForm.type);
+        await pageService.deletePage_img_cover(openForm.type);
       }
 
       addNotification({
@@ -167,7 +164,7 @@ function DangerEvent() {
     } finally {
       setLoading(false);
       setDangerEvent(null);
-      setOpenImgForm(false);
+      setOpenForm(false);
     }
   };
 
@@ -194,7 +191,7 @@ function DangerEvent() {
         dangerEvent ? "active" : ""
       }`}
     >
-      <div className="body dangerEvent" ref={dangerEventRef}>
+      <div className="body dangerEvent" ref={Refs.dangerEvent}>
         <div className="top">
           <h4>{translations?.actions?.[dangerEvent.type]}</h4>
           <IoClose className="close" onClick={() => setDangerEvent(null)} />

@@ -15,7 +15,7 @@ import { DndContext, useDraggable } from "@dnd-kit/core";
 import Slider from "rc-slider";
 import { storyService } from "@/services/api/storyService";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 
 import "rc-slider/assets/index.css"; // Default styles
 
@@ -144,19 +144,16 @@ const backgroundColors = [
 ];
 
 function StoryForm() {
-  const { userData, setStories } = useContext(ScreenContext);
+  const { userData, setStories } = useContext(fetchingContext);
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
 
   const {
     selectedUsers,
     setSelectedUsers,
-    selectedUsersNames,
-    setSelectedUsersNames,
-    setSelectionMenuTitle,
-    openStoryForm,
-    setOpenStoryForm,
-    usersSelectionRef,
+    openForm,
+    setOpenForm,
+    Refs,
     setSomeThingHappen,
   } = useContext(MenusContext);
 
@@ -233,7 +230,7 @@ function StoryForm() {
       const removed = prev.images[index];
 
       // Track removed image only in edit mode if it has a publicid
-      if (removed?.newpath?.publicid && openStoryForm.type === "edit") {
+      if (removed?.newpath?.publicid && openForm.mode === "edit") {
         setRemovedImages((prevRemoved) => [
           ...prevRemoved,
           removed.newpath.publicid,
@@ -262,8 +259,8 @@ function StoryForm() {
         return;
       }
       if (
-        usersSelectionRef.current &&
-        usersSelectionRef.current.contains(event.target)
+        Refs.usersSelection.current &&
+        Refs.usersSelection.current.contains(event.target)
       ) {
         return;
       }
@@ -273,7 +270,7 @@ function StoryForm() {
       ) {
         return;
       }
-      setOpenStoryForm(false);
+      setOpenForm(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -285,9 +282,6 @@ function StoryForm() {
   const removeMentions = (indexToRemove, type) => {
     if (type == "mentions") {
       setSelectedUsers((prev) =>
-        prev.filter((_, index) => index !== indexToRemove)
-      );
-      setSelectedUsersNames((prev) =>
         prev.filter((_, index) => index !== indexToRemove)
       );
     }
@@ -440,9 +434,9 @@ function StoryForm() {
   };
 
   useEffect(() => {
-    if (openStoryForm.type === "edit") {
+    if (openForm.mode === "edit") {
       setLoadingContent(false);
-      const story = openStoryForm?.story;
+      const story = openForm?.story;
 
       if (story) {
         const info = story.info;
@@ -501,7 +495,7 @@ function StoryForm() {
       });
       setPrevImagesLength(0);
     }
-  }, [openStoryForm]);
+  }, [openForm]);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -515,8 +509,8 @@ function StoryForm() {
     try {
       let storyId;
 
-      if (openStoryForm.type === "edit") {
-        storyId = openStoryForm.story._id;
+      if (openForm.mode === "edit") {
+        storyId = openForm.story._id;
 
         const res = await storyService.editStory(storyId, storyContent);
 
@@ -551,14 +545,14 @@ function StoryForm() {
       addNotification({
         type: "success",
         message:
-          openStoryForm.type === "edit"
+          openForm.mode === "edit"
             ? "Your story has been updated successfully."
             : "Your story has been created successfully.",
       });
 
       // Reset form
       setRemovedImages([]);
-      setOpenStoryForm(false);
+      setOpenForm(false);
       setMessageText("");
       setStoryData({
         body: "",
@@ -597,25 +591,18 @@ function StoryForm() {
     <DndContext onDragEnd={handleDragEnd}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`focusedMsg FormMenu story-form ${
-          openStoryForm ? "active" : ""
-        }`}
+        className={`focusedMsg FormMenu story-form ${openForm ? "active" : ""}`}
       >
         <div
           className={`body storyForm ${
-            loadingContent || openStoryForm.type !== "edit"
-              ? "contentLoaded"
-              : ""
+            loadingContent || openForm.mode !== "edit" ? "contentLoaded" : ""
           }`}
           ref={formMenuRef}
         >
           <div className="formCenter">
             <div className="top">
               <h4>{translations?.story?.create_story}</h4>
-              <IoClose
-                className="close"
-                onClick={() => setOpenStoryForm(false)}
-              />
+              <IoClose className="close" onClick={() => setOpenForm(false)} />
             </div>
             <div className="bottom">
               <h4>{translations?.story?.add_to_your_story}</h4>
@@ -634,10 +621,11 @@ function StoryForm() {
                 />
                 <VscMention
                   onClick={(e) => {
-                    handleMenus(e, "usersSelection");
-                    setSelectionMenuTitle("Tag People...");
+                    handleMenus(e, "usersSelection", null, {
+                      type: "Tag People...",
+                    });
                   }}
-                  className={`${selectedUsersNames.length ? "active" : ""}`}
+                  className={`${selectedUsers.length ? "active" : ""}`}
                 />
               </div>
             </div>
@@ -1061,17 +1049,17 @@ function StoryForm() {
                   )}
                 </div>
               )}
-              {selectedUsersNames.length > 0 && <hr />}
-              {selectedUsersNames.length > 0 && (
+              {selectedUsers.length > 0 && <hr />}
+              {selectedUsers.length > 0 && (
                 <div className="setting-holder">
                   <h5 className="main-title">
                     {translations?.forms?.Mentiond_People}
                   </h5>
                   <div className="inputHolder mentionsHolder">
                     <div className="tagsHolder">
-                      {selectedUsersNames.map((name, index) => (
+                      {selectedUsers.map((x, index) => (
                         <div key={index} className="tag">
-                          <span>@{name}</span>
+                          <span>@{x?.name}</span>
                           <button
                             type="button"
                             className="remove"
@@ -1254,19 +1242,19 @@ function StoryForm() {
                   <HiDotsVertical className="settingDotsIco" />
                 </div>
 
-                {selectedUsersNames.length > 0 && (
+                {selectedUsers.length > 0 && (
                   <div className="mentions view">
                     <h5>
                       {userData?.firstname} {``} {translations?.post?.mention}
                     </h5>
-                    {selectedUsersNames?.map((x, index) => (
+                    {selectedUsers?.map((x, index) => (
                       <button
                         key={index}
                         onClick={(e) =>
                           handleMenus(e, "user-Info", x.author[0]?._id)
                         }
                       >
-                        @{x}
+                        @{x.name}
                       </button>
                     ))}
                   </div>
@@ -1280,7 +1268,7 @@ function StoryForm() {
               disabled={isDisabled || loading}
             >
               <span>
-                {openStoryForm.type === "edit"
+                {openForm.mode === "edit"
                   ? translations?.story?.edit_story
                   : translations?.story?.create_story}
               </span>

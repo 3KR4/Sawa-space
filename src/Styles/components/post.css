@@ -44,11 +44,14 @@ body:has(.posts-holder) {
   border-radius: 9px;
   width: 100%;
   overflow: hidden;
-  background: var(--body-color);
+  background: var(--section-color);
   z-index: 1;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
+}
+body.dark .post {
+  border: none;
 }
 .post.focused-from-link {
   border: 1px solid #ff8e3163;
@@ -90,7 +93,7 @@ body:has(.posts-holder) {
   align-items: center;
 }
 .post .top .icons-holder .share-ico {
-  background: var(--section-color);
+  background: var(--body-color);
   width: 31px;
   height: 31px;
   border-radius: 8px;
@@ -302,6 +305,11 @@ body.ar .post .top .left .creatorType {
   position: relative;
   min-height: 54px;
   margin-top: 6px;
+  transition: 0.3s;
+}
+body.dark .post .bottom {
+  border-top: none;
+  margin-top: 0;
 }
 .focusedMsg .post .bottom {
   min-height: unset;
@@ -316,7 +324,7 @@ body.ar .post .top .left .creatorType {
 .post .emojesCounter p {
   font-size: 18px;
   margin-left: -5px;
-  background: var(--section-color);
+  background: var(--body-color);
   border-radius: 50%;
   padding: 2px;
   cursor: pointer;
@@ -540,7 +548,7 @@ body.ar .post .comments {
   font-weight: 400;
 }
 .post .comments > .holder .comment .bottom > * {
-  background: var(--body-color);
+  background: var(--section-color);
 }
 .post .comments > .holder .comment .bottom .left {
   display: flex;
@@ -707,9 +715,8 @@ body.ar .post .comments {
 .post .middle .actions svg,
 .post .actions > div > svg,
 .post .actions div > span,
-.post .actions > svg,
-.post .actions > div > svg {
-  background: var(--section-color);
+.post .actions > svg {
+  background: var(--body-color);
   width: 70px;
   border-radius: 6px;
   padding: 7px;
@@ -985,7 +992,7 @@ body.ar .post .comments {
   .post > .actions > div {
     align-items: center;
     justify-content: center;
-    background: var(--section-color);
+    background: var(--body-color);
     height: 31px;
     border-radius: 5px;
   }

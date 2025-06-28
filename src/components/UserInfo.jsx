@@ -8,9 +8,9 @@ import Link from "next/link";
 import { userService } from "@/services/api/userService";
 import { users } from "@/utils/Data";
 import SettingMenu from "@/components/providers/SettingMenu";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { pageService } from "@/services/api/pageService";       
+import { pageService } from "@/services/api/pageService";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { MdBlock } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
@@ -23,8 +23,8 @@ function UserInfo() {
   const { selectedDev, infoMenu, setInfoMenu, menuPosition } =
     useContext(DynamicMenusContext);
   const { userData, setUserData, actionLoading, setActionLoading } =
-    useContext(ScreenContext);
-  const { infoMenuRef } = useContext(MenusContext);
+    useContext(fetchingContext);
+  const { Refs } = useContext(MenusContext);
   const [currentUserData, setCurrentUserData] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +57,7 @@ function UserInfo() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (infoMenuRef.current && !infoMenuRef.current.contains(event.target)) {
+      if (Refs.info.current && !Refs.info.current.contains(event.target)) {
         setInfoMenu(null);
       }
     };
@@ -96,7 +96,7 @@ function UserInfo() {
         ...prev,
         friendRequests: {
           ...prev.friendRequests,
-          received: [...(prev.friendRequests?.received || []), userData._id],
+          received: [...(prev.friendRequests?.received || []), userData?._id],
         },
       }));
 
@@ -104,7 +104,7 @@ function UserInfo() {
     } catch (err) {
       console.error("Send friend request failed", err);
 
-      if (userData && userData._id) {
+      if (userData && userData?._id) {
         addNotification({
           type: "error",
           message: "Failed to send friend request.",
@@ -142,7 +142,7 @@ function UserInfo() {
         friendRequests: {
           ...prev.friendRequests,
           received: prev.friendRequests?.received?.filter(
-            (x) => x !== userData._id
+            (x) => x !== userData?._id
           ),
         },
       }));
@@ -186,9 +186,9 @@ function UserInfo() {
           ...prev,
           friendRequests: {
             ...prev.friendRequests,
-            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData?._id),
           },
-          friends: [...(prev.friends || []), userData._id],
+          friends: [...(prev.friends || []), userData?._id],
         }));
 
         addNotification({
@@ -211,7 +211,7 @@ function UserInfo() {
           ...prev,
           friendRequests: {
             ...prev.friendRequests,
-            sent: prev.friendRequests?.sent?.filter((x) => x !== userData._id),
+            sent: prev.friendRequests?.sent?.filter((x) => x !== userData?._id),
           },
         }));
 
@@ -242,7 +242,7 @@ function UserInfo() {
 
       setCurrentUserData((prev) => ({
         ...prev,
-        friends: prev.friends?.filter((x) => x !== userData._id),
+        friends: prev.friends?.filter((x) => x !== userData?._id),
       }));
 
       addNotification({ type: "info", message: "Friend removed." });
@@ -256,7 +256,7 @@ function UserInfo() {
 
   return (
     <div
-      ref={infoMenuRef}
+      ref={Refs.info}
       className={`info-menu ${loading ? "loading" : ""} sideMenu ${
         infoMenu ? "active" : ""
       }`}

@@ -19,7 +19,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { useNotification } from "@/Contexts/NotificationContext";
@@ -30,12 +30,10 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 export default function Home() {
   const { addNotification } = useNotification();
-  const { userData, stories, currentUserStory, storyloading } =
-    useContext(ScreenContext);
+  const { userData, stories, currentUserStory, actionLoading } =
+    useContext(fetchingContext);
   const { translations } = useLanguage();
-  const { setOpenStoryForm, setSingleProvider } = useContext(MenusContext);
-
-  const swiperRef = useRef(null);
+  const { setOpenForm, setSingleProvider } = useContext(MenusContext);
 
   const [smallStoryLoad, setSmallStoryLoad] = useState(true);
   const fetchUserStories = async (id) => {
@@ -60,12 +58,12 @@ export default function Home() {
 
   return (
     <div className="home">
-      {userData && userData._id && (
+      {userData && userData?._id && (
         <div
           className="stories-holder"
           style={{
             minWidth: `calc(34px + ${
-              storyloading
+              actionLoading.includes(`storyloading`)
                 ? `116`
                 : (Object.keys(currentUserStory || {}).length > 0 ? 0 : 1) +
                     stories.length <
@@ -98,7 +96,7 @@ export default function Home() {
             className="stories-grid"
             style={{
               gridTemplateColumns: `repeat(${
-                storyloading
+                actionLoading.includes(`storyloading`)
                   ? 1
                   : Math.min(
                       (Object.keys(currentUserStory || {}).length > 0 ? 0 : 1) +
@@ -108,7 +106,7 @@ export default function Home() {
               }, 1fr)`,
             }}
           >
-            {storyloading ? (
+            {actionLoading.includes(`storyloading`) ? (
               <ContentLoader
                 speed={2}
                 width={"100%"}
@@ -134,7 +132,7 @@ export default function Home() {
                 ) : (
                   <div
                     className="userStory-creation story"
-                    onClick={() => setOpenStoryForm(true)}
+                    onClick={() => setOpenForm({ for: "story" })}
                   >
                     <Image
                       src={userData?.img?.url || `/users/default.svg`}
@@ -154,7 +152,7 @@ export default function Home() {
                 )}
 
                 {stories
-                  ?.filter((x) => x.author?.[0]?._id !== userData._id)
+                  ?.filter((x) => x.author?.[0]?._id !== userData?._id)
                   .slice(
                     0,
                     window.innerWidth < 768

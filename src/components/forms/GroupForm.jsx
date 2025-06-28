@@ -10,7 +10,7 @@ import { MenusContext } from "@/Contexts/MenusContext";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { chatService } from "@/services/api/chatService";
 import { useNotification } from "@/Contexts/NotificationContext";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import ImageCropper from "@/components/ImageCropper";
 
 import { FaCloudUploadAlt, FaHashtag, FaLink } from "react-icons/fa";
@@ -23,19 +23,15 @@ import { CircleAlert } from "lucide-react";
 function GroupForm() {
   const { locale, translations } = useLanguage();
   const { addNotification } = useNotification();
-  const { userData, userPage } = useContext(ScreenContext);
+  const { userData, userPage } = useContext(fetchingContext);
 
   const {
     selectedUsers,
     setSelectedUsers,
-    selectedUsersNames,
-    setSelectedUsersNames,
-    setSelectionMenuTitle,
-
-    usersSelectionRef,
+    Refs,
     setSomeThingHappen,
-    openGroupForm,
-    setOpenGroupForm,
+    openForm,
+    setOpenForm,
   } = useContext(MenusContext);
 
   const { handleMenus } = useContext(DynamicMenusContext);
@@ -67,8 +63,8 @@ function GroupForm() {
         return;
       }
       if (
-        usersSelectionRef.current &&
-        usersSelectionRef.current.contains(event.target)
+        Refs.usersSelection.current &&
+        Refs.usersSelection.current.contains(event.target)
       ) {
         return;
       }
@@ -78,7 +74,7 @@ function GroupForm() {
       ) {
         return;
       }
-      setOpenPostForm(false);
+      setOpenForm(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -89,9 +85,6 @@ function GroupForm() {
 
   const removeTag = (indexToRemove) => {
     setSelectedUsers((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
-    );
-    setSelectedUsersNames((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
   };
@@ -115,7 +108,7 @@ function GroupForm() {
         await chatService.addGroupImg(groupId, formData);
       }
 
-      if (openGroupForm.type === "edit" && removedImages.length > 0) {
+      if (openForm.type === "edit" && removedImages.length > 0) {
         try {
           await chatService.removeGroupImg(id);
         } catch (err) {
@@ -124,7 +117,7 @@ function GroupForm() {
       }
 
       setSomeThingHappen({
-        event: openGroupForm.type === "edit" ? "edit" : "create",
+        event: openForm.type === "edit" ? "edit" : "create",
         type: "group",
       });
 
@@ -132,7 +125,7 @@ function GroupForm() {
       addNotification({
         type: "success",
         message:
-          openGroupForm.type === "edit"
+          openForm.type === "edit"
             ? "Post updated successfully."
             : postType === "together"
             ? "Posts created successfully for both user and page."
@@ -140,7 +133,7 @@ function GroupForm() {
       });
 
       // Reset form state
-      setOpenPostForm(false);
+      setOpenForm(false);
       setMessageText("");
       setPageImage();
       setSelectedUsers([]);
@@ -158,37 +151,32 @@ function GroupForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`focusedMsg group FormMenu ${openGroupForm ? "active" : ""}`}
+      className={`focusedMsg group FormMenu ${openForm ? "active" : ""}`}
     >
       <div
         className={`body postForm  ${
-          loadingContent || openGroupForm.type !== "edit" ? "contentLoaded" : ""
+          loadingContent || openForm.type !== "edit" ? "contentLoaded" : ""
         }`}
         ref={formMenuRef}
       >
-        {!loadingContent && openGroupForm.type === "edit" && (
+        {!loadingContent && openForm.type === "edit" && (
           <div className="lds-dual-ring big-loader"></div>
         )}
 
         <div className="top">
           <h4>
-            {openGroupForm.type === "edit"
+            {openForm.type === "edit"
               ? translations?.forms?.edit_group
               : translations?.forms?.create_group}
           </h4>
           <div>
-            <IoClose
-              className="close"
-              onClick={() => setOpenGroupForm(false)}
-            />
+            <IoClose className="close" onClick={() => setOpenForm(false)} />
           </div>
         </div>
         <div
           style={{
             overflow:
-              !loadingContent && openGroupForm.type === "edit"
-                ? "hidden"
-                : "auto",
+              !loadingContent && openForm.type === "edit" ? "hidden" : "auto",
           }}
         >
           <div className={`inputHolder`}>
@@ -210,9 +198,9 @@ function GroupForm() {
           <div className="inputHolder mentionsHolder">
             <h4>{translations?.forms?.Mentiond_People}</h4>
             <div className="tagsHolder">
-              {selectedUsersNames.map((name, index) => (
+              {selectedUsers.map((x, index) => (
                 <div key={index} className="tag">
-                  <span>@{name}</span>
+                  <span>@{x?.name}</span>
                   <button
                     type="button"
                     className="remove"
@@ -239,7 +227,7 @@ function GroupForm() {
             disabled={isDisabled || loading}
           >
             <span>
-              {openGroupForm.type === "edit"
+              {openForm.type === "edit"
                 ? translations?.forms?.edit_group
                 : translations?.forms?.create_group}
             </span>

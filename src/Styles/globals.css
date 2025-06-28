@@ -17,22 +17,20 @@ body.ar .swiper-container,
 body.ar .swiper-container * {
   direction: ltr !important;
 }
-main {
-}
 .skeleton {
-  background: var(--body-color);
+  background: var(--section-color);
   max-width: 100%;
   height: fit-content;
 }
 :root {
-  --body-color: #ffffff;
+  --body-color: #f7f7f7;
   --main-color: #ff8e31;
   --second-color: #ccebff;
   --third-color: #ffa95a;
   --title-color: #454545;
-  --second-section-color: #d5d5d5;
+  --second-body-color: #d5d5d5;
   --paragraph-color: #858585;
-  --section-color: #f1f1f1;
+  --section-color: #ffffff;
   --section-color2: #ffffff;
   --border-color: #e8e8e8;
   --red-color: #df3a3a;
@@ -42,18 +40,18 @@ main {
 body.dark {
   --body-color: #171918;
   --title-color: #c8c8c8;
-  --second-section-color: #fff;
+  --second-body-color: #fff;
   --paragraph-color: #909090;
-  --section-color: #212121;
+  --section-color: #252728;
   --section-color2: #171918;
-  --border-color: #525252;
+  --border-color: #161616;
   --box-shadow: rgb(0 0 0 / 24%) 0px 0px 23px -5px;
 }
 body {
   padding: 0 12px;
   display: flex;
   font-family: "Rubik", sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--body-color);
 }
 
 ::-webkit-scrollbar {
@@ -177,7 +175,7 @@ svg.close {
   padding: 6px !important;
   width: 31px;
   height: 31px;
-  background: var(--section-color);
+  background: var(--body-color);
   border-radius: 6px !important;
 }
 svg.close:hover {
@@ -356,6 +354,7 @@ body > main {
 
 body > main > .holder:has(.register-page) {
   display: flex;
+  flex: 1;
 }
 
 .search-holder .search-btn {
@@ -493,7 +492,7 @@ label.checkbox > span {
   position: relative;
 }
 .selectOptions .selectedValue {
-  background: var(--section-color);
+  background: var(--body-color);
   border-radius: 6px;
   padding: 11px 10px;
   display: flex;
@@ -509,7 +508,7 @@ label.checkbox > span {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: var(--section-color);
+  background: var(--body-color);
   padding: 10px;
   width: 100%;
   top: 45px;
@@ -601,9 +600,6 @@ label.checkbox > span {
   }
   .home .stories-holder .stories-grid {
     display: flex !important;
-  }
-  body > main {
-    overflow-x: hidden;
   }
 }
 @media (max-width: 992px) {

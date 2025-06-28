@@ -1,45 +1,28 @@
 "use client";
-import "@/Styles/components/discover.css";
+import "@/Styles/discover.css";
 
 import "@/Styles/user.css";
 import "@/Styles/forms.css";
 import "@/Styles/marketplace.css";
-import React, {
-  useState,
-  use,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useState, use, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MenusContext } from "@/Contexts/MenusContext";
 import ContentLoader from "react-content-loader";
 
 import { useLanguage } from "@/Contexts/LanguageContext";
-import { useRouter, usePathname } from "next/navigation";
-import { ScreenContext } from "@/Contexts/ScreenContext";
+import { fetchingContext } from "@/Contexts/fetchingContext";
 import { useNotification } from "@/Contexts/NotificationContext";
 import { userService } from "@/services/api/userService";
 import { pageService } from "@/services/api/pageService";
 
 import { FaEye } from "react-icons/fa";
 import { IoMdPersonAdd } from "react-icons/io";
-import { AiFillMessage } from "react-icons/ai";
 import { IoPersonRemove, IoSearch, IoClose } from "react-icons/io5";
 
 export default function Discover({ params }) {
-  const { fetchUserData, fetchPageData } = useContext(ScreenContext);
-  const router = useRouter();
-  const pathname = usePathname();
-  // const searchParams = useSearchParams();
-  const { translations } = useLanguage();
   const { addNotification } = useNotification();
   const { userData, setUserData, actionLoading, setActionLoading } =
-    useContext(ScreenContext);
-  const { setOpenImgForm, someThingHappen, setSomeThingHappen } =
-    useContext(MenusContext);
+    useContext(fetchingContext);
 
   const { type } = use(params);
 
@@ -97,7 +80,7 @@ export default function Discover({ params }) {
                   ...u.friendRequests,
                   received: [
                     ...(u.friendRequests?.received || []),
-                    userData._id,
+                    userData?._id,
                   ],
                 },
               }
@@ -109,7 +92,7 @@ export default function Discover({ params }) {
     } catch (err) {
       console.error("Send friend request failed", err);
 
-      if (userData && userData._id) {
+      if (userData && userData?._id) {
         addNotification({
           type: "error",
           message: "Failed to send friend request.",
@@ -149,7 +132,7 @@ export default function Discover({ params }) {
                 friendRequests: {
                   ...u.friendRequests,
                   received: u.friendRequests?.received?.filter(
-                    (x) => x !== userData._id
+                    (x) => x !== userData?._id
                   ),
                 },
               }
@@ -196,10 +179,10 @@ export default function Discover({ params }) {
                   friendRequests: {
                     ...u.friendRequests,
                     sent: u.friendRequests?.sent?.filter(
-                      (x) => x !== userData._id
+                      (x) => x !== userData?._id
                     ),
                   },
-                  friends: [...(u.friends || []), userData._id],
+                  friends: [...(u.friends || []), userData?._id],
                 }
               : u
           )
@@ -227,7 +210,7 @@ export default function Discover({ params }) {
                   friendRequests: {
                     ...u.friendRequests,
                     sent: u.friendRequests?.sent?.filter(
-                      (x) => x !== userData._id
+                      (x) => x !== userData?._id
                     ),
                   },
                 }
@@ -267,7 +250,7 @@ export default function Discover({ params }) {
           u._id === id
             ? {
                 ...u,
-                friends: u.friends?.filter((x) => x !== userData._id),
+                friends: u.friends?.filter((x) => x !== userData?._id),
               }
             : u
         )
