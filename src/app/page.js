@@ -182,4 +182,7 @@ export default function Home() {
       <PostsHolder />
     </div>
   );
+  
 }
+
+
